@@ -1,0 +1,586 @@
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF                               [100%]
+=================================== FAILURES ===================================
+_________ test_pixel_boxes_normalize_xywh_and_keep_uncalibrated_score __________
+
+    def test_pixel_boxes_normalize_xywh_and_keep_uncalibrated_score():
+>       from services.casualty.detector import normalize_yunet_rows
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:104: ModuleNotFoundError
+___________________ test_partial_boxes_clip_to_pixel_bounds ____________________
+
+    def test_partial_boxes_clip_to_pixel_bounds():
+>       from services.casualty.detector import normalize_yunet_rows
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:112: ModuleNotFoundError
+_________________ test_successful_empty_output_is_empty[None] __________________
+
+rows = None
+
+    @pytest.mark.parametrize("rows", [None, [], np.empty((0, 15))])
+    def test_successful_empty_output_is_empty(rows):
+>       from services.casualty.detector import normalize_yunet_rows
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:119: ModuleNotFoundError
+_________________ test_successful_empty_output_is_empty[rows1] _________________
+
+rows = []
+
+    @pytest.mark.parametrize("rows", [None, [], np.empty((0, 15))])
+    def test_successful_empty_output_is_empty(rows):
+>       from services.casualty.detector import normalize_yunet_rows
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:119: ModuleNotFoundError
+_________________ test_successful_empty_output_is_empty[rows2] _________________
+
+rows = array([], shape=(0, 15), dtype=float64)
+
+    @pytest.mark.parametrize("rows", [None, [], np.empty((0, 15))])
+    def test_successful_empty_output_is_empty(rows):
+>       from services.casualty.detector import normalize_yunet_rows
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:119: ModuleNotFoundError
+_______________ test_malformed_output_fails_whole_result[rows0] ________________
+
+rows = [[10, 20, 0, 60, 0, 0, ...]]
+
+    @pytest.mark.parametrize("rows", [
+        [row(w=0)], [row(h=-1)], [row(x=100)], [row(y=-100)],
+        [row(x=float("nan"))], [row(score=float("inf"))], [row(score=1.1)],
+        [row(score=True)], [row(x="10")], [[0] * 14], [[0] * 16],
+        [row(), row(x=-100)], [row(x=1e308, w=1e308)], [row()] * 101,
+        [[10, 20, 50, 60, *([float("nan")] * 10), .9]], "not-rows",
+    ])
+    def test_malformed_output_fails_whole_result(rows):
+>       from services.casualty.detector import normalize_yunet_rows
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:131: ModuleNotFoundError
+_______________ test_malformed_output_fails_whole_result[rows1] ________________
+
+rows = [[10, 20, 50, -1, 0, 0, ...]]
+
+    @pytest.mark.parametrize("rows", [
+        [row(w=0)], [row(h=-1)], [row(x=100)], [row(y=-100)],
+        [row(x=float("nan"))], [row(score=float("inf"))], [row(score=1.1)],
+        [row(score=True)], [row(x="10")], [[0] * 14], [[0] * 16],
+        [row(), row(x=-100)], [row(x=1e308, w=1e308)], [row()] * 101,
+        [[10, 20, 50, 60, *([float("nan")] * 10), .9]], "not-rows",
+    ])
+    def test_malformed_output_fails_whole_result(rows):
+>       from services.casualty.detector import normalize_yunet_rows
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:131: ModuleNotFoundError
+_______________ test_malformed_output_fails_whole_result[rows2] ________________
+
+rows = [[100, 20, 50, 60, 0, 0, ...]]
+
+    @pytest.mark.parametrize("rows", [
+        [row(w=0)], [row(h=-1)], [row(x=100)], [row(y=-100)],
+        [row(x=float("nan"))], [row(score=float("inf"))], [row(score=1.1)],
+        [row(score=True)], [row(x="10")], [[0] * 14], [[0] * 16],
+        [row(), row(x=-100)], [row(x=1e308, w=1e308)], [row()] * 101,
+        [[10, 20, 50, 60, *([float("nan")] * 10), .9]], "not-rows",
+    ])
+    def test_malformed_output_fails_whole_result(rows):
+>       from services.casualty.detector import normalize_yunet_rows
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:131: ModuleNotFoundError
+_______________ test_malformed_output_fails_whole_result[rows3] ________________
+
+rows = [[10, -100, 50, 60, 0, 0, ...]]
+
+    @pytest.mark.parametrize("rows", [
+        [row(w=0)], [row(h=-1)], [row(x=100)], [row(y=-100)],
+        [row(x=float("nan"))], [row(score=float("inf"))], [row(score=1.1)],
+        [row(score=True)], [row(x="10")], [[0] * 14], [[0] * 16],
+        [row(), row(x=-100)], [row(x=1e308, w=1e308)], [row()] * 101,
+        [[10, 20, 50, 60, *([float("nan")] * 10), .9]], "not-rows",
+    ])
+    def test_malformed_output_fails_whole_result(rows):
+>       from services.casualty.detector import normalize_yunet_rows
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:131: ModuleNotFoundError
+_______________ test_malformed_output_fails_whole_result[rows4] ________________
+
+rows = [[nan, 20, 50, 60, 0, 0, ...]]
+
+    @pytest.mark.parametrize("rows", [
+        [row(w=0)], [row(h=-1)], [row(x=100)], [row(y=-100)],
+        [row(x=float("nan"))], [row(score=float("inf"))], [row(score=1.1)],
+        [row(score=True)], [row(x="10")], [[0] * 14], [[0] * 16],
+        [row(), row(x=-100)], [row(x=1e308, w=1e308)], [row()] * 101,
+        [[10, 20, 50, 60, *([float("nan")] * 10), .9]], "not-rows",
+    ])
+    def test_malformed_output_fails_whole_result(rows):
+>       from services.casualty.detector import normalize_yunet_rows
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:131: ModuleNotFoundError
+_______________ test_malformed_output_fails_whole_result[rows5] ________________
+
+rows = [[10, 20, 50, 60, 0, 0, ...]]
+
+    @pytest.mark.parametrize("rows", [
+        [row(w=0)], [row(h=-1)], [row(x=100)], [row(y=-100)],
+        [row(x=float("nan"))], [row(score=float("inf"))], [row(score=1.1)],
+        [row(score=True)], [row(x="10")], [[0] * 14], [[0] * 16],
+        [row(), row(x=-100)], [row(x=1e308, w=1e308)], [row()] * 101,
+        [[10, 20, 50, 60, *([float("nan")] * 10), .9]], "not-rows",
+    ])
+    def test_malformed_output_fails_whole_result(rows):
+>       from services.casualty.detector import normalize_yunet_rows
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:131: ModuleNotFoundError
+_______________ test_malformed_output_fails_whole_result[rows6] ________________
+
+rows = [[10, 20, 50, 60, 0, 0, ...]]
+
+    @pytest.mark.parametrize("rows", [
+        [row(w=0)], [row(h=-1)], [row(x=100)], [row(y=-100)],
+        [row(x=float("nan"))], [row(score=float("inf"))], [row(score=1.1)],
+        [row(score=True)], [row(x="10")], [[0] * 14], [[0] * 16],
+        [row(), row(x=-100)], [row(x=1e308, w=1e308)], [row()] * 101,
+        [[10, 20, 50, 60, *([float("nan")] * 10), .9]], "not-rows",
+    ])
+    def test_malformed_output_fails_whole_result(rows):
+>       from services.casualty.detector import normalize_yunet_rows
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:131: ModuleNotFoundError
+_______________ test_malformed_output_fails_whole_result[rows7] ________________
+
+rows = [[10, 20, 50, 60, 0, 0, ...]]
+
+    @pytest.mark.parametrize("rows", [
+        [row(w=0)], [row(h=-1)], [row(x=100)], [row(y=-100)],
+        [row(x=float("nan"))], [row(score=float("inf"))], [row(score=1.1)],
+        [row(score=True)], [row(x="10")], [[0] * 14], [[0] * 16],
+        [row(), row(x=-100)], [row(x=1e308, w=1e308)], [row()] * 101,
+        [[10, 20, 50, 60, *([float("nan")] * 10), .9]], "not-rows",
+    ])
+    def test_malformed_output_fails_whole_result(rows):
+>       from services.casualty.detector import normalize_yunet_rows
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:131: ModuleNotFoundError
+_______________ test_malformed_output_fails_whole_result[rows8] ________________
+
+rows = [['10', 20, 50, 60, 0, 0, ...]]
+
+    @pytest.mark.parametrize("rows", [
+        [row(w=0)], [row(h=-1)], [row(x=100)], [row(y=-100)],
+        [row(x=float("nan"))], [row(score=float("inf"))], [row(score=1.1)],
+        [row(score=True)], [row(x="10")], [[0] * 14], [[0] * 16],
+        [row(), row(x=-100)], [row(x=1e308, w=1e308)], [row()] * 101,
+        [[10, 20, 50, 60, *([float("nan")] * 10), .9]], "not-rows",
+    ])
+    def test_malformed_output_fails_whole_result(rows):
+>       from services.casualty.detector import normalize_yunet_rows
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:131: ModuleNotFoundError
+_______________ test_malformed_output_fails_whole_result[rows9] ________________
+
+rows = [[0, 0, 0, 0, 0, 0, ...]]
+
+    @pytest.mark.parametrize("rows", [
+        [row(w=0)], [row(h=-1)], [row(x=100)], [row(y=-100)],
+        [row(x=float("nan"))], [row(score=float("inf"))], [row(score=1.1)],
+        [row(score=True)], [row(x="10")], [[0] * 14], [[0] * 16],
+        [row(), row(x=-100)], [row(x=1e308, w=1e308)], [row()] * 101,
+        [[10, 20, 50, 60, *([float("nan")] * 10), .9]], "not-rows",
+    ])
+    def test_malformed_output_fails_whole_result(rows):
+>       from services.casualty.detector import normalize_yunet_rows
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:131: ModuleNotFoundError
+_______________ test_malformed_output_fails_whole_result[rows10] _______________
+
+rows = [[0, 0, 0, 0, 0, 0, ...]]
+
+    @pytest.mark.parametrize("rows", [
+        [row(w=0)], [row(h=-1)], [row(x=100)], [row(y=-100)],
+        [row(x=float("nan"))], [row(score=float("inf"))], [row(score=1.1)],
+        [row(score=True)], [row(x="10")], [[0] * 14], [[0] * 16],
+        [row(), row(x=-100)], [row(x=1e308, w=1e308)], [row()] * 101,
+        [[10, 20, 50, 60, *([float("nan")] * 10), .9]], "not-rows",
+    ])
+    def test_malformed_output_fails_whole_result(rows):
+>       from services.casualty.detector import normalize_yunet_rows
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:131: ModuleNotFoundError
+_______________ test_malformed_output_fails_whole_result[rows11] _______________
+
+rows = [[10, 20, 50, 60, 0, 0, ...], [-100, 20, 50, 60, 0, 0, ...]]
+
+    @pytest.mark.parametrize("rows", [
+        [row(w=0)], [row(h=-1)], [row(x=100)], [row(y=-100)],
+        [row(x=float("nan"))], [row(score=float("inf"))], [row(score=1.1)],
+        [row(score=True)], [row(x="10")], [[0] * 14], [[0] * 16],
+        [row(), row(x=-100)], [row(x=1e308, w=1e308)], [row()] * 101,
+        [[10, 20, 50, 60, *([float("nan")] * 10), .9]], "not-rows",
+    ])
+    def test_malformed_output_fails_whole_result(rows):
+>       from services.casualty.detector import normalize_yunet_rows
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:131: ModuleNotFoundError
+_______________ test_malformed_output_fails_whole_result[rows12] _______________
+
+rows = [[1e+308, 20, 1e+308, 60, 0, 0, ...]]
+
+    @pytest.mark.parametrize("rows", [
+        [row(w=0)], [row(h=-1)], [row(x=100)], [row(y=-100)],
+        [row(x=float("nan"))], [row(score=float("inf"))], [row(score=1.1)],
+        [row(score=True)], [row(x="10")], [[0] * 14], [[0] * 16],
+        [row(), row(x=-100)], [row(x=1e308, w=1e308)], [row()] * 101,
+        [[10, 20, 50, 60, *([float("nan")] * 10), .9]], "not-rows",
+    ])
+    def test_malformed_output_fails_whole_result(rows):
+>       from services.casualty.detector import normalize_yunet_rows
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:131: ModuleNotFoundError
+_______________ test_malformed_output_fails_whole_result[rows13] _______________
+
+rows = [[10, 20, 50, 60, 0, 0, ...], [10, 20, 50, 60, 0, 0, ...], [10, 20, 50, 60, 0, 0, ...], [10, 20, 50, 60, 0, 0, ...], [10, 20, 50, 60, 0, 0, ...], [10, 20, 50, 60, 0, 0, ...], ...]
+
+    @pytest.mark.parametrize("rows", [
+        [row(w=0)], [row(h=-1)], [row(x=100)], [row(y=-100)],
+        [row(x=float("nan"))], [row(score=float("inf"))], [row(score=1.1)],
+        [row(score=True)], [row(x="10")], [[0] * 14], [[0] * 16],
+        [row(), row(x=-100)], [row(x=1e308, w=1e308)], [row()] * 101,
+        [[10, 20, 50, 60, *([float("nan")] * 10), .9]], "not-rows",
+    ])
+    def test_malformed_output_fails_whole_result(rows):
+>       from services.casualty.detector import normalize_yunet_rows
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:131: ModuleNotFoundError
+_______________ test_malformed_output_fails_whole_result[rows14] _______________
+
+rows = [[10, 20, 50, 60, nan, nan, ...]]
+
+    @pytest.mark.parametrize("rows", [
+        [row(w=0)], [row(h=-1)], [row(x=100)], [row(y=-100)],
+        [row(x=float("nan"))], [row(score=float("inf"))], [row(score=1.1)],
+        [row(score=True)], [row(x="10")], [[0] * 14], [[0] * 16],
+        [row(), row(x=-100)], [row(x=1e308, w=1e308)], [row()] * 101,
+        [[10, 20, 50, 60, *([float("nan")] * 10), .9]], "not-rows",
+    ])
+    def test_malformed_output_fails_whole_result(rows):
+>       from services.casualty.detector import normalize_yunet_rows
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:131: ModuleNotFoundError
+______________ test_malformed_output_fails_whole_result[not-rows] ______________
+
+rows = 'not-rows'
+
+    @pytest.mark.parametrize("rows", [
+        [row(w=0)], [row(h=-1)], [row(x=100)], [row(y=-100)],
+        [row(x=float("nan"))], [row(score=float("inf"))], [row(score=1.1)],
+        [row(score=True)], [row(x="10")], [[0] * 14], [[0] * 16],
+        [row(), row(x=-100)], [row(x=1e308, w=1e308)], [row()] * 101,
+        [[10, 20, 50, 60, *([float("nan")] * 10), .9]], "not-rows",
+    ])
+    def test_malformed_output_fails_whole_result(rows):
+>       from services.casualty.detector import normalize_yunet_rows
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:131: ModuleNotFoundError
+_________________ test_normalizer_dimensions_are_strict[True] __________________
+
+dimension = True
+
+    @pytest.mark.parametrize("dimension", [True, 0, 1.5, 32769])
+    def test_normalizer_dimensions_are_strict(dimension):
+>       from services.casualty.detector import normalize_yunet_rows
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:138: ModuleNotFoundError
+___________________ test_normalizer_dimensions_are_strict[0] ___________________
+
+dimension = 0
+
+    @pytest.mark.parametrize("dimension", [True, 0, 1.5, 32769])
+    def test_normalizer_dimensions_are_strict(dimension):
+>       from services.casualty.detector import normalize_yunet_rows
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:138: ModuleNotFoundError
+__________________ test_normalizer_dimensions_are_strict[1.5] __________________
+
+dimension = 1.5
+
+    @pytest.mark.parametrize("dimension", [True, 0, 1.5, 32769])
+    def test_normalizer_dimensions_are_strict(dimension):
+>       from services.casualty.detector import normalize_yunet_rows
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:138: ModuleNotFoundError
+_________________ test_normalizer_dimensions_are_strict[32769] _________________
+
+dimension = 32769
+
+    @pytest.mark.parametrize("dimension", [True, 0, 1.5, 32769])
+    def test_normalizer_dimensions_are_strict(dimension):
+>       from services.casualty.detector import normalize_yunet_rows
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:138: ModuleNotFoundError
+_________________ test_artifact_pin_and_hash_are_not_optional __________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-38/test_artifact_pin_and_hash_are0')
+
+    def test_artifact_pin_and_hash_are_not_optional(tmp_path):
+        with pytest.raises(ValueError, match="revision"):
+>           artifact(tmp_path, revision="a" * 40)
+
+services/casualty/tests/test_detector.py:145: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-38/test_artifact_pin_and_hash_are0')
+changes = {'revision': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'}
+
+    def artifact(tmp_path, **changes):
+>       from services.casualty.detector import ModelArtifact
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:45: ModuleNotFoundError
+_________ test_rights_and_image_hash_precede_runtime_and_model_access __________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-38/test_rights_and_image_hash_pre0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7af842364770>
+
+    def test_rights_and_image_hash_precede_runtime_and_model_access(tmp_path, monkeypatch):
+>       from services.casualty.detector import detect_case
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:153: ModuleNotFoundError
+_________ test_current_synthetic_controls_cannot_claim_actual_detector _________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-38/test_current_synthetic_control0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7af842364b00>
+
+    def test_current_synthetic_controls_cannot_claim_actual_detector(tmp_path, monkeypatch):
+>       from services.casualty.detector import detect_case
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:170: ModuleNotFoundError
+_______________ test_missing_weights_are_explicitly_unavailable ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-38/test_missing_weights_are_expli0')
+
+    def test_missing_weights_are_explicitly_unavailable(tmp_path):
+>       from services.casualty.detector import detect_case, DetectorUnavailable
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:180: ModuleNotFoundError
+________________ test_modified_weights_fail_before_runtime_load ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-38/test_modified_weights_fail_bef0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7af8422cf770>
+
+    def test_modified_weights_fail_before_runtime_load(tmp_path, monkeypatch):
+>       from services.casualty.detector import detect_case
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:187: ModuleNotFoundError
+________________ test_missing_opencv_is_explicitly_unavailable _________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-38/test_missing_opencv_is_explici0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7af842356f10>
+
+    def test_missing_opencv_is_explicitly_unavailable(tmp_path, monkeypatch):
+        import importlib
+>       from services.casualty.detector import detect_case, DetectorUnavailable
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:199: ModuleNotFoundError
+__________ test_cpu_call_binds_verified_bytes_runtime_and_orientation __________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-38/test_cpu_call_binds_verified_b0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7af8423569c0>
+
+    def test_cpu_call_binds_verified_bytes_runtime_and_orientation(tmp_path, monkeypatch):
+>       from services.casualty.detector import detect_case, MODEL_REVISION, MODEL_URL
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:212: ModuleNotFoundError
+____________ test_empty_detection_is_no_face_after_successful_call _____________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-38/test_empty_detection_is_no_fac0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7af84239f150>
+
+    def test_empty_detection_is_no_face_after_successful_call(tmp_path, monkeypatch):
+>       from services.casualty.detector import detect_case
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:243: ModuleNotFoundError
+______________ test_runtime_failures_never_become_no_face[create] ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-38/test_runtime_failures_never_be0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7af84239fe50>
+stage = 'create'
+
+    @pytest.mark.parametrize("stage", ["create", "detect"])
+    def test_runtime_failures_never_become_no_face(tmp_path, monkeypatch, stage):
+>       from services.casualty.detector import detect_case, DetectorFailure
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:254: ModuleNotFoundError
+______________ test_runtime_failures_never_become_no_face[detect] ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-38/test_runtime_failures_never_be1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7af8423a65d0>
+stage = 'detect'
+
+    @pytest.mark.parametrize("stage", ["create", "detect"])
+    def test_runtime_failures_never_become_no_face(tmp_path, monkeypatch, stage):
+>       from services.casualty.detector import detect_case, DetectorFailure
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:254: ModuleNotFoundError
+___________ test_failed_or_mismatched_decode_cannot_load_model[None] ___________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-38/test_failed_or_mismatched_deco0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7af8423a59a0>
+decoded = None
+
+    @pytest.mark.parametrize("decoded", [None, np.zeros((90, 100, 3), dtype=np.uint8)])
+    def test_failed_or_mismatched_decode_cannot_load_model(tmp_path, monkeypatch, decoded):
+>       from services.casualty.detector import detect_case, DetectorFailure
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:266: ModuleNotFoundError
+_________ test_failed_or_mismatched_decode_cannot_load_model[decoded1] _________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-38/test_failed_or_mismatched_deco1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7af84a1ffd90>
+decoded = array([[[0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0],
+        ...,
+        [0, 0, 0],
+        [0, 0, 0],
+        [0...    [0, 0, 0],
+        ...,
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0]]], shape=(90, 100, 3), dtype=uint8)
+
+    @pytest.mark.parametrize("decoded", [None, np.zeros((90, 100, 3), dtype=np.uint8)])
+    def test_failed_or_mismatched_decode_cannot_load_model(tmp_path, monkeypatch, decoded):
+>       from services.casualty.detector import detect_case, DetectorFailure
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:266: ModuleNotFoundError
+_ test_bad_raster_dimensions_or_orientation_rejected_before_cv[invalid-raster] _
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-38/test_bad_raster_dimensions_or_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7af84a1ff690>
+data = b'invalid-raster'
+
+    @pytest.mark.parametrize("data", [b"invalid-raster", raster(width=90), raster(orientation=6)])
+    def test_bad_raster_dimensions_or_orientation_rejected_before_cv(tmp_path, monkeypatch, data):
+>       from services.casualty.detector import detect_case
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:277: ModuleNotFoundError
+_ test_bad_raster_dimensions_or_orientation_rejected_before_cv[\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00Z\x00\x00\x00d\x08\x02\x00\x00\x00\x89\xba\xb0\x88\x00\x00\x00\xd0IDATx\x9c\xed\xd0\xb1\x11\xc0 \x10\xc0\xb0\x90\xc9\x7ft*\nO\x00\x854\x81\xcfkf>\x8e\xffv\xc0[\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;b\x03\x96\x84\x02H4\xd92\x0f\x00\x00\x00\x00IEND\xaeB`\x82] _
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-38/test_bad_raster_dimensions_or_1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7af841f4fe10>
+data = b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00Z\x00\x00\x00d\x08\x02\x00\x00\x00\x89\xba\xb0\x88\x00\x00\x00\xd0IDA...8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;b\x03\x96\x84\x02H4\xd92\x0f\x00\x00\x00\x00IEND\xaeB`\x82'
+
+    @pytest.mark.parametrize("data", [b"invalid-raster", raster(width=90), raster(orientation=6)])
+    def test_bad_raster_dimensions_or_orientation_rejected_before_cv(tmp_path, monkeypatch, data):
+>       from services.casualty.detector import detect_case
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:277: ModuleNotFoundError
+_ test_bad_raster_dimensions_or_orientation_rejected_before_cv[\xff\xd8\xff\xe0\x00\x10JFIF\x00\x01\x01\x00\x00\x01\x00\x01\x00\x00\xff\xe1\x00"Exif\x00\x00MM\x00*\x00\x00\x00\x08\x00\x01\x01\x12\x00\x03\x00\x00\x00\x01\x00\x06\x00\x00\x00\x00\x00\x00\xff\xdb\x00C\x00\x08\x06\x06\x07\x06\x05\x08\x07\x07\x07\t\t\x08\n\x0c\x14\r\x0c\x0b\x0b\x0c\x19\x12\x13\x0f\x14\x1d\x1a\x1f\x1e\x1d\x1a\x1c\x1c $.' ",#\x1c\x1c(7),01444\x1f'9=82<.342\xff\xdb\x00C\x01\t\t\t\x0c\x0b\x0c\x18\r\r\x182!\x1c!22222222222222222222222222222222222222222222222222\xff\xc0\x00\x11\x08\x00d\x00d\x03\x01"\x00\x02\x11\x01\x03\x11\x01\xff\xc4\x00\x1f\x00\x00\x01\x05\x01\x01\x01\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\xff\xc4\x00\xb5\x10\x00\x02\x01\x03\x03\x02\x04\x03\x05\x05\x04\x04\x00\x00\x01}\x01\x02\x03\x00\x04\x11\x05\x12!1A\x06\x13Qa\x07"q\x142\x81\x91\xa1\x08#B\xb1\xc1\x15R\xd1\xf0$3br\x82\t\n\x16\x17\x18\x19\x1a%&'()*456789:CDEFGHIJSTUVWXYZcdefghijstuvwxyz\x83\x84\x85\x86\x87\x88\x89\x8a\x92\x93\x94\x95\x96\x97\x98\x99\x9a\xa2\xa3\xa4\xa5\xa6\xa7\xa8\xa9\xaa\xb2\xb3\xb4\xb5\xb6\xb7\xb8\xb9\xba\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xd2\xd3\xd4\xd5\xd6\xd7\xd8\xd9\xda\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xff\xc4\x00\x1f\x01\x00\x03\x01\x01\x01\x01\x01\x01\x01\x01\x01\x00\x00\x00\x00\x00\x00\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\xff\xc4\x00\xb5\x11\x00\x02\x01\x02\x04\x04\x03\x04\x07\x05\x04\x04\x00\x01\x02w\x00\x01\x02\x03\x11\x04\x05!1\x06\x12AQ\x07aq\x13"2\x81\x08\x14B\x91\xa1\xb1\xc1\t#3R\xf0\x15br\xd1\n\x16$4\xe1%\xf1\x17\x18\x19\x1a&'()*56789:CDEFGHIJSTUVWXYZcdefghijstuvwxyz\x82\x83\x84\x85\x86\x87\x88\x89\x8a\x92\x93\x94\x95\x96\x97\x98\x99\x9a\xa2\xa3\xa4\xa5\xa6\xa7\xa8\xa9\xaa\xb2\xb3\xb4\xb5\xb6\xb7\xb8\xb9\xba\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xd2\xd3\xd4\xd5\xd6\xd7\xd8\xd9\xda\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xff\xda\x00\x0c\x03\x01\x00\x02\x11\x03\x11\x00?\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00\xff\xd9] _
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-38/test_bad_raster_dimensions_or_2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7af8428de750>
+data = b'\xff\xd8\xff\xe0\x00\x10JFIF\x00\x01\x01\x00\x00\x01\x00\x01\x00\x00\xff\xe1\x00"Exif\x00\x00MM\x00*\x00\x00\x00\x08...8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00\xff\xd9'
+
+    @pytest.mark.parametrize("data", [b"invalid-raster", raster(width=90), raster(orientation=6)])
+    def test_bad_raster_dimensions_or_orientation_rejected_before_cv(tmp_path, monkeypatch, data):
+>       from services.casualty.detector import detect_case
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:277: ModuleNotFoundError
+______________ test_malformed_inference_output_raises_not_no_face ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-38/test_malformed_inference_outpu0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7af8428de390>
+
+    def test_malformed_inference_output_raises_not_no_face(tmp_path, monkeypatch):
+>       from services.casualty.detector import detect_case, DetectorFailure
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:285: ModuleNotFoundError
+____________ test_thresholds_and_cpu_limit_are_recorded_and_strict _____________
+
+    def test_thresholds_and_cpu_limit_are_recorded_and_strict():
+>       from services.casualty.detector import YuNetSettings
+E       ModuleNotFoundError: No module named 'services.casualty.detector'
+
+services/casualty/tests/test_detector.py:293: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED services/casualty/tests/test_detector.py::test_pixel_boxes_normalize_xywh_and_keep_uncalibrated_score
+FAILED services/casualty/tests/test_detector.py::test_partial_boxes_clip_to_pixel_bounds
+FAILED services/casualty/tests/test_detector.py::test_successful_empty_output_is_empty[None]
+FAILED services/casualty/tests/test_detector.py::test_successful_empty_output_is_empty[rows1]
+FAILED services/casualty/tests/test_detector.py::test_successful_empty_output_is_empty[rows2]
+FAILED services/casualty/tests/test_detector.py::test_malformed_output_fails_whole_result[rows0]
+FAILED services/casualty/tests/test_detector.py::test_malformed_output_fails_whole_result[rows1]
+FAILED services/casualty/tests/test_detector.py::test_malformed_output_fails_whole_result[rows2]
+FAILED services/casualty/tests/test_detector.py::test_malformed_output_fails_whole_result[rows3]
+FAILED services/casualty/tests/test_detector.py::test_malformed_output_fails_whole_result[rows4]
+FAILED services/casualty/tests/test_detector.py::test_malformed_output_fails_whole_result[rows5]
+FAILED services/casualty/tests/test_detector.py::test_malformed_output_fails_whole_result[rows6]
+FAILED services/casualty/tests/test_detector.py::test_malformed_output_fails_whole_result[rows7]
+FAILED services/casualty/tests/test_detector.py::test_malformed_output_fails_whole_result[rows8]
+FAILED services/casualty/tests/test_detector.py::test_malformed_output_fails_whole_result[rows9]
+FAILED services/casualty/tests/test_detector.py::test_malformed_output_fails_whole_result[rows10]
+FAILED services/casualty/tests/test_detector.py::test_malformed_output_fails_whole_result[rows11]
+FAILED services/casualty/tests/test_detector.py::test_malformed_output_fails_whole_result[rows12]
+FAILED services/casualty/tests/test_detector.py::test_malformed_output_fails_whole_result[rows13]
+FAILED services/casualty/tests/test_detector.py::test_malformed_output_fails_whole_result[rows14]
+FAILED services/casualty/tests/test_detector.py::test_malformed_output_fails_whole_result[not-rows]
+FAILED services/casualty/tests/test_detector.py::test_normalizer_dimensions_are_strict[True]
+FAILED services/casualty/tests/test_detector.py::test_normalizer_dimensions_are_strict[0]
+FAILED services/casualty/tests/test_detector.py::test_normalizer_dimensions_are_strict[1.5]
+FAILED services/casualty/tests/test_detector.py::test_normalizer_dimensions_are_strict[32769]
+FAILED services/casualty/tests/test_detector.py::test_artifact_pin_and_hash_are_not_optional
+FAILED services/casualty/tests/test_detector.py::test_rights_and_image_hash_precede_runtime_and_model_access
+FAILED services/casualty/tests/test_detector.py::test_current_synthetic_controls_cannot_claim_actual_detector
+FAILED services/casualty/tests/test_detector.py::test_missing_weights_are_explicitly_unavailable
+FAILED services/casualty/tests/test_detector.py::test_modified_weights_fail_before_runtime_load
+FAILED services/casualty/tests/test_detector.py::test_missing_opencv_is_explicitly_unavailable
+FAILED services/casualty/tests/test_detector.py::test_cpu_call_binds_verified_bytes_runtime_and_orientation
+FAILED services/casualty/tests/test_detector.py::test_empty_detection_is_no_face_after_successful_call
+FAILED services/casualty/tests/test_detector.py::test_runtime_failures_never_become_no_face[create]
+FAILED services/casualty/tests/test_detector.py::test_runtime_failures_never_become_no_face[detect]
+FAILED services/casualty/tests/test_detector.py::test_failed_or_mismatched_decode_cannot_load_model[None]
+FAILED services/casualty/tests/test_detector.py::test_failed_or_mismatched_decode_cannot_load_model[decoded1]
+FAILED services/casualty/tests/test_detector.py::test_bad_raster_dimensions_or_orientation_rejected_before_cv[invalid-raster]
+FAILED services/casualty/tests/test_detector.py::test_bad_raster_dimensions_or_orientation_rejected_before_cv[\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00Z\x00\x00\x00d\x08\x02\x00\x00\x00\x89\xba\xb0\x88\x00\x00\x00\xd0IDATx\x9c\xed\xd0\xb1\x11\xc0 \x10\xc0\xb0\x90\xc9\x7ft*\nO\x00\x854\x81\xcfkf>\x8e\xffv\xc0[\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;\xc2\x8e\xb0#\xec\x08;b\x03\x96\x84\x02H4\xd92\x0f\x00\x00\x00\x00IEND\xaeB`\x82]
+FAILED services/casualty/tests/test_detector.py::test_bad_raster_dimensions_or_orientation_rejected_before_cv[\xff\xd8\xff\xe0\x00\x10JFIF\x00\x01\x01\x00\x00\x01\x00\x01\x00\x00\xff\xe1\x00"Exif\x00\x00MM\x00*\x00\x00\x00\x08\x00\x01\x01\x12\x00\x03\x00\x00\x00\x01\x00\x06\x00\x00\x00\x00\x00\x00\xff\xdb\x00C\x00\x08\x06\x06\x07\x06\x05\x08\x07\x07\x07\t\t\x08\n\x0c\x14\r\x0c\x0b\x0b\x0c\x19\x12\x13\x0f\x14\x1d\x1a\x1f\x1e\x1d\x1a\x1c\x1c $.' ",#\x1c\x1c(7),01444\x1f'9=82<.342\xff\xdb\x00C\x01\t\t\t\x0c\x0b\x0c\x18\r\r\x182!\x1c!22222222222222222222222222222222222222222222222222\xff\xc0\x00\x11\x08\x00d\x00d\x03\x01"\x00\x02\x11\x01\x03\x11\x01\xff\xc4\x00\x1f\x00\x00\x01\x05\x01\x01\x01\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\xff\xc4\x00\xb5\x10\x00\x02\x01\x03\x03\x02\x04\x03\x05\x05\x04\x04\x00\x00\x01}\x01\x02\x03\x00\x04\x11\x05\x12!1A\x06\x13Qa\x07"q\x142\x81\x91\xa1\x08#B\xb1\xc1\x15R\xd1\xf0$3br\x82\t\n\x16\x17\x18\x19\x1a%&'()*456789:CDEFGHIJSTUVWXYZcdefghijstuvwxyz\x83\x84\x85\x86\x87\x88\x89\x8a\x92\x93\x94\x95\x96\x97\x98\x99\x9a\xa2\xa3\xa4\xa5\xa6\xa7\xa8\xa9\xaa\xb2\xb3\xb4\xb5\xb6\xb7\xb8\xb9\xba\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xd2\xd3\xd4\xd5\xd6\xd7\xd8\xd9\xda\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xff\xc4\x00\x1f\x01\x00\x03\x01\x01\x01\x01\x01\x01\x01\x01\x01\x00\x00\x00\x00\x00\x00\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\xff\xc4\x00\xb5\x11\x00\x02\x01\x02\x04\x04\x03\x04\x07\x05\x04\x04\x00\x01\x02w\x00\x01\x02\x03\x11\x04\x05!1\x06\x12AQ\x07aq\x13"2\x81\x08\x14B\x91\xa1\xb1\xc1\t#3R\xf0\x15br\xd1\n\x16$4\xe1%\xf1\x17\x18\x19\x1a&'()*56789:CDEFGHIJSTUVWXYZcdefghijstuvwxyz\x82\x83\x84\x85\x86\x87\x88\x89\x8a\x92\x93\x94\x95\x96\x97\x98\x99\x9a\xa2\xa3\xa4\xa5\xa6\xa7\xa8\xa9\xaa\xb2\xb3\xb4\xb5\xb6\xb7\xb8\xb9\xba\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xd2\xd3\xd4\xd5\xd6\xd7\xd8\xd9\xda\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xff\xda\x00\x0c\x03\x01\x00\x02\x11\x03\x11\x00?\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00(\xa2\x8a\x00\xff\xd9]
+FAILED services/casualty/tests/test_detector.py::test_malformed_inference_output_raises_not_no_face
+FAILED services/casualty/tests/test_detector.py::test_thresholds_and_cpu_limit_are_recorded_and_strict
+42 failed in 0.30s

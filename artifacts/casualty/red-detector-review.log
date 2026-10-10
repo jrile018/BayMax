@@ -1,0 +1,211 @@
+F.FFFFFFF                                                                [100%]
+=================================== FAILURES ===================================
+___________________ test_float32_threshold_boundary_is_valid ___________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-44/test_float32_threshold_boundar0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7a3eb4b9bce0>
+
+    def test_float32_threshold_boundary_is_valid(tmp_path, monkeypatch):
+        from services.casualty.detector import detect_case
+        install_fake(monkeypatch, np.asarray([row(score=.9)], dtype=np.float32))
+        data = raster()
+>       run = detect_case(control_case(data), data, artifact(tmp_path), observed_time_s=1)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+services/casualty/tests/test_detector.py:305: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+case = CaseRecord(case_id='npc-case-001', rights=RightsManifest(source_kind='staged_photo', source_reference='fixture:geometr... origin_node='school', destination_node='clinic', persons=1, urgency='urgent', source_reference='exercise:manual-001'))
+image_bytes = b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00d\x00\x00\x00d\x08\x02\x00\x00\x00\xff\x80\x02\x03\x00\x00\x00\xe8IDA...n\xcc\n\xcc\n\xcc\n\xcc\n\xcc\n\xcc\n\xcc\n\xcc\n\xcc\n\xcc\n\xcc\n6\xcbf\x02H\x8c[l\x01\x00\x00\x00\x00IEND\xaeB`\x82'
+artifact = ModelArtifact(path=PosixPath('/tmp/pytest-of-root/pytest-44/test_float32_threshold_boundar0/test-only.onnx'), sha256='...b43f2a7', ingress_reference='test-only:fabricated-ingress-record', revision='3cc26e7f1014a5ee5d74a42acee58bafc9d0a310')
+observed_time_s = 1
+settings = YuNetSettings(score_threshold=0.9, nms_threshold=0.3, top_k=50, cpu_threads=2)
+
+    def detect_case(case: CaseRecord, image_bytes: bytes, artifact: ModelArtifact, *,
+                    observed_time_s: float, settings: YuNetSettings = YuNetSettings()) -> DetectorRun:
+        """Call YuNet on exact verified bytes; root owns the truth of ingress records.
+    
+        Current C1 synthetic controls remain mock-only. Actual-model synthetic runs
+        require a later explicit data-kind contract. No dependency/asset is fetched.
+        """
+        if not isinstance(case, CaseRecord) or not isinstance(artifact, ModelArtifact) or not isinstance(settings, YuNetSettings):
+            raise ValueError("typed case, artifact and settings required")
+        verify_image(case, image_bytes, "face_detection")
+        if case.rights.source_kind == "synthetic":
+            raise ValueError("synthetic controls require explicit mock fixture provenance")
+        number(observed_time_s, "observed_time_s")
+        _validate_raster(case, image_bytes)
+        model_bytes = _verified_model_bytes(artifact)
+        cv, np = _load_runtime()
+        try:
+            cv.setNumThreads(settings.cpu_threads)
+            image = cv.imdecode(np.frombuffer(image_bytes, dtype=np.uint8),
+                                cv.IMREAD_COLOR | cv.IMREAD_IGNORE_ORIENTATION)
+            if (not isinstance(image, np.ndarray) or image.ndim != 3 or image.dtype != np.uint8
+                    or image.shape != (case.image.height, case.image.width, 3)):
+                raise DetectorFailure("OpenCV decode failed or dimensions disagree")
+        except DetectorFailure:
+            raise
+        except Exception as exc:
+            raise DetectorFailure("OpenCV decode failed") from exc
+        # Hash/load binding: OpenCV gets a private copy of these exact hashed bytes,
+        # not the input path that could change after verification. Always clean up.
+        runtime_dir = Path(__file__).resolve().parents[2] / "artifacts/casualty/runtime"
+        runtime_dir.mkdir(parents=True, exist_ok=True)
+        try:
+            with tempfile.TemporaryDirectory(prefix="yunet-", dir=runtime_dir) as temporary:
+                verified_path = Path(temporary) / "verified.onnx"
+                verified_path.write_bytes(model_bytes)
+                verified_path.chmod(0o400)
+                detector = cv.FaceDetectorYN.create(
+                    model=str(verified_path), config="", input_size=(case.image.width, case.image.height),
+                    score_threshold=settings.score_threshold, nms_threshold=settings.nms_threshold,
+                    top_k=settings.top_k, backend_id=cv.dnn.DNN_BACKEND_OPENCV,
+                    target_id=cv.dnn.DNN_TARGET_CPU)
+                detector.setInputSize((case.image.width, case.image.height))
+                _, rows = detector.detect(image)
+                try:
+                    boxes = normalize_yunet_rows(rows, width=case.image.width, height=case.image.height)
+                except (ValueError, TypeError, OverflowError) as exc:
+                    raise DetectorFailure("malformed YuNet output") from exc
+                if len(boxes) > settings.top_k or any(box.score < settings.score_threshold for box in boxes):
+>                   raise DetectorFailure("YuNet output violates declared thresholds")
+E                   services.casualty.detector.DetectorFailure: YuNet output violates declared thresholds
+
+services/casualty/detector.py:249: DetectorFailure
+________ test_malformed_empty_array_is_not_valid_no_face[wrong-columns] ________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-44/test_malformed_empty_array_is_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7a3eb43517f0>
+rows = array([], shape=(0, 14), dtype=float64)
+
+    @pytest.mark.parametrize("rows", [np.empty((0, 14)), np.empty((0, 15, 2))], ids=["wrong-columns", "wrong-rank"])
+    def test_malformed_empty_array_is_not_valid_no_face(tmp_path, monkeypatch, rows):
+        from services.casualty.detector import detect_case, normalize_yunet_rows, DetectorFailure
+>       with pytest.raises(ValueError, match="shape"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+services/casualty/tests/test_detector.py:323: Failed
+_________ test_malformed_empty_array_is_not_valid_no_face[wrong-rank] __________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-44/test_malformed_empty_array_is_1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7a3eb43acd10>
+rows = array([], shape=(0, 15, 2), dtype=float64)
+
+    @pytest.mark.parametrize("rows", [np.empty((0, 14)), np.empty((0, 15, 2))], ids=["wrong-columns", "wrong-rank"])
+    def test_malformed_empty_array_is_not_valid_no_face(tmp_path, monkeypatch, rows):
+        from services.casualty.detector import detect_case, normalize_yunet_rows, DetectorFailure
+>       with pytest.raises(ValueError, match="shape"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+services/casualty/tests/test_detector.py:323: Failed
+_____________ test_unsuccessful_detect_return_is_never_no_face[0] ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-44/test_unsuccessful_detect_retur0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7a3eb43ad150>
+retval = 0
+
+    @pytest.mark.parametrize("retval", [0, -1, None, True])
+    def test_unsuccessful_detect_return_is_never_no_face(tmp_path, monkeypatch, retval):
+        from services.casualty.detector import detect_case, DetectorFailure
+        fake = install_fake(monkeypatch, None)
+        fake.detect = lambda image: (retval, None)
+        data = raster()
+>       with pytest.raises(DetectorFailure, match="successful"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE DetectorFailure
+
+services/casualty/tests/test_detector.py:337: Failed
+_____________ test_unsuccessful_detect_return_is_never_no_face[-1] _____________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-44/test_unsuccessful_detect_retur1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7a3eb42cca50>
+retval = -1
+
+    @pytest.mark.parametrize("retval", [0, -1, None, True])
+    def test_unsuccessful_detect_return_is_never_no_face(tmp_path, monkeypatch, retval):
+        from services.casualty.detector import detect_case, DetectorFailure
+        fake = install_fake(monkeypatch, None)
+        fake.detect = lambda image: (retval, None)
+        data = raster()
+>       with pytest.raises(DetectorFailure, match="successful"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE DetectorFailure
+
+services/casualty/tests/test_detector.py:337: Failed
+____________ test_unsuccessful_detect_return_is_never_no_face[None] ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-44/test_unsuccessful_detect_retur2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7a3eb42cd450>
+retval = None
+
+    @pytest.mark.parametrize("retval", [0, -1, None, True])
+    def test_unsuccessful_detect_return_is_never_no_face(tmp_path, monkeypatch, retval):
+        from services.casualty.detector import detect_case, DetectorFailure
+        fake = install_fake(monkeypatch, None)
+        fake.detect = lambda image: (retval, None)
+        data = raster()
+>       with pytest.raises(DetectorFailure, match="successful"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE DetectorFailure
+
+services/casualty/tests/test_detector.py:337: Failed
+____________ test_unsuccessful_detect_return_is_never_no_face[True] ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-44/test_unsuccessful_detect_retur3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7a3eb42bec60>
+retval = True
+
+    @pytest.mark.parametrize("retval", [0, -1, None, True])
+    def test_unsuccessful_detect_return_is_never_no_face(tmp_path, monkeypatch, retval):
+        from services.casualty.detector import detect_case, DetectorFailure
+        fake = install_fake(monkeypatch, None)
+        fake.detect = lambda image: (retval, None)
+        data = raster()
+>       with pytest.raises(DetectorFailure, match="successful"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE DetectorFailure
+
+services/casualty/tests/test_detector.py:337: Failed
+_______________ test_runtime_directory_failure_has_typed_failure _______________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-44/test_runtime_directory_failure0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7a3eb42bf980>
+
+    def test_runtime_directory_failure_has_typed_failure(tmp_path, monkeypatch):
+        from services.casualty.detector import detect_case, DetectorFailure
+        install_fake(monkeypatch, [row()])
+        model = artifact(tmp_path)
+        data = raster()
+        def denied(*args, **kwargs):
+            raise PermissionError("test-only storage denied")
+        monkeypatch.setattr(Path, "mkdir", denied)
+        with pytest.raises(DetectorFailure, match="model call"):
+>           detect_case(control_case(data), data, model, observed_time_s=1)
+
+services/casualty/tests/test_detector.py:350: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+services/casualty/detector.py:231: in detect_case
+    runtime_dir.mkdir(parents=True, exist_ok=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (PosixPath('/workspace/knight26/worktrees/faces/artifacts/casualty/runtime'),)
+kwargs = {'parents': True, 'exist_ok': True}
+
+    def denied(*args, **kwargs):
+>       raise PermissionError("test-only storage denied")
+E       PermissionError: test-only storage denied
+
+services/casualty/tests/test_detector.py:347: PermissionError
+=========================== short test summary info ============================
+FAILED services/casualty/tests/test_detector.py::test_float32_threshold_boundary_is_valid
+FAILED services/casualty/tests/test_detector.py::test_malformed_empty_array_is_not_valid_no_face[wrong-columns]
+FAILED services/casualty/tests/test_detector.py::test_malformed_empty_array_is_not_valid_no_face[wrong-rank]
+FAILED services/casualty/tests/test_detector.py::test_unsuccessful_detect_return_is_never_no_face[0]
+FAILED services/casualty/tests/test_detector.py::test_unsuccessful_detect_return_is_never_no_face[-1]
+FAILED services/casualty/tests/test_detector.py::test_unsuccessful_detect_return_is_never_no_face[None]
+FAILED services/casualty/tests/test_detector.py::test_unsuccessful_detect_return_is_never_no_face[True]
+FAILED services/casualty/tests/test_detector.py::test_runtime_directory_failure_has_typed_failure
+8 failed, 1 passed, 42 deselected in 0.18s

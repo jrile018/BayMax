@@ -1,0 +1,18 @@
+{
+  "recorded_at": "2026-10-10T07:27:27.127599+00:00",
+  "device": "cpu",
+  "cpu_thread_cap": 2,
+  "actual_inference_performed": false,
+  "control_kind": "generated_raster_and_mocked_opencv",
+  "opencv_available": false,
+  "python": "3.14.4",
+  "numpy_version": "2.5.2",
+  "pillow_version": "12.3.0",
+  "gates": {
+    "photo_bytes_and_rights": "pending_trusted_ingress",
+    "model_artifact_sha256": "pending_trusted_ingress",
+    "opencv_runtime": "absent",
+    "actual_compatibility_latency_accuracy": "unverified",
+    "shared_integration": "pending_root_approval"
+  }
+}
