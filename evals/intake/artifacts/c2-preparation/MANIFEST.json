@@ -30,8 +30,8 @@
       "sha256": "0a1903e863073a6ec47b46bf32fddf082c877894ce7a6e74a6a26891a94a56ee"
     },
     "MODEL_VERIFIED.json": {
-      "bytes": 5901,
-      "sha256": "3d340b59d74b581ef4155a20aba52d6c9fcb5741608ae79d5920f16984f52097"
+      "bytes": 6318,
+      "sha256": "67cd26824de75a0f225173f20c907776024b5be64f09ad4e1e13cf1f7d369681"
     },
     "WHEEL_MANIFEST.json": {
       "bytes": 4012,
@@ -49,5 +49,6 @@
       "bytes": 4505,
       "sha256": "433b7200b52caea6ad5ab9c46577076afc98bb749e0008c0eb5c923dd155fee5"
     }
-  }
+  },
+  "model_verification_origin": "Controller-generated record, copied to cloud as metadata; actual cloud residency requires separate filesystem checks."
 }

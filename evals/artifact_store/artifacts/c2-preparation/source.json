@@ -1,8 +1,8 @@
 {
-  "tested_utc": "2026-10-10T07:45:35.642679+00:00",
-  "source_commit": "a2a9f70a5b66479d1cad1c9d3d9432034999dd65",
+  "tested_utc": "2026-10-10T07:54:24.748832+00:00",
+  "source_commit": "5584ebd41bf2661df65335fa5279f6f7a7df23de",
   "intake_source": {
-    "source_sha": "a2a9f70a5b66479d1cad1c9d3d9432034999dd65",
+    "source_sha": "5584ebd41bf2661df65335fa5279f6f7a7df23de",
     "source_dirty": false,
     "source_fingerprint_sha256": "021af8124cfb51fc32d5b5ec8d11cfe8eb4bca5abf7fd73ed5ba54119df7a3ef"
   },
@@ -10,6 +10,10 @@
     {
       "path": "evals/artifact_store/test_backend.py",
       "sha256": "cd68bfb992d9957a4156e784f71e0a8a08fce11278ef40fcb8784120c658f472"
+    },
+    {
+      "path": "evals/artifact_store/test_duplicate_json.py",
+      "sha256": "ee68fe731598b902a41c90b08b7468489e51867d03356ad114d0f96fb9e03857"
     },
     {
       "path": "evals/artifact_store/test_review.py",
@@ -37,11 +41,11 @@
     },
     {
       "path": "services/artifact_store/__init__.py",
-      "sha256": "4d90685679eecc03dbe5c3be00260b77a4bdeed4f9352a43c0f718f82076b159"
+      "sha256": "af635c5955b99d5e9167dfb9b74c3127e993efedf26c5809b4ec9d0ddb9df769"
     },
     {
       "path": "services/artifact_store/__main__.py",
-      "sha256": "db9c5dd4e33c662712c10d3230075919848258e3e5ab9596b6af7a67f3ab8778"
+      "sha256": "4edfef8859a1575addfb5b5fc7b417608b0039f86b1ed122e550f4eb018b0637"
     },
     {
       "path": "services/artifact_store/hf_backend.py",

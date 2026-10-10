@@ -1,6 +1,6 @@
 {
-  "source_commit": "a2a9f70a5b66479d1cad1c9d3d9432034999dd65",
-  "verification": "107 cloud tests;18 subtests;exit0",
+  "source_commit": "5584ebd41bf2661df65335fa5279f6f7a7df23de",
+  "verification": "114 cloud tests;20 subtests;exit0",
   "fictional_inputs": true,
   "real_model_inference": false,
   "live_bucket_transfer": false,
@@ -12,9 +12,14 @@
       "sha256": "aedb4ed2b8f45ddcdb0a261a40e672d2fe0edfcd5f35ea284e6e3e9224e0f648"
     },
     {
+      "path": "FINAL_61_REVIEW.initial.md",
+      "size": 9806,
+      "sha256": "8a5e6dd78f37a5abc28de777b22eefdb4a6570ef952271e05eee5c56eb451036"
+    },
+    {
       "path": "README.md",
-      "size": 1106,
-      "sha256": "44014ec45363830ee22aa3d4f87d0a0eaa607c94b99ce94511ccc21100093121"
+      "size": 1490,
+      "sha256": "590100a90ef4b4341e972de9d834353231019870186644abfc85cbbccc2db8f2"
     },
     {
       "path": "SETUP_REPORT.md",
@@ -40,6 +45,16 @@
       "path": "base-after.json",
       "size": 180,
       "sha256": "819a319d7c3552b212ade63b9edb74c25e158ea7f06c7bd82a3243b1afead022"
+    },
+    {
+      "path": "duplicate-json-green.log",
+      "size": 1108,
+      "sha256": "1318291220b667f836202f7608f80d92967901c27fdc71e05792f2cc3bc723f2"
+    },
+    {
+      "path": "duplicate-json-red.log",
+      "size": 6222,
+      "sha256": "c595ea08b14c3f82dfda51b2e785523882f78682f328c4d370939a82ae591a73"
     },
     {
       "path": "install.log",
@@ -113,13 +128,14 @@
     },
     {
       "path": "server-checks.log",
-      "size": 915,
-      "sha256": "e83eae8c54729d454acc8c4fd0e55b3d75c77383335088e19a3fc1fe4e3ac906"
+      "size": 913,
+      "sha256": "f1866b69e54a1dfc11832c9b812311bce03e944dfebc87f6d554898044fffc7e"
     },
     {
       "path": "source.json",
-      "size": 3633,
-      "sha256": "cb2fa05656ab391e93ef9800016836c314de3be1cdf86fb053fae29f14562047"
+      "size": 3790,
+      "sha256": "e9f816ff1deb734f04a96fc922810d0b7e6940726cc09d3358d151374b2732d0"
     }
-  ]
+  ],
+  "log_normalization": "Copied logs use LF; trailing console whitespace removed. Original red log retained in owned server artifacts."
 }

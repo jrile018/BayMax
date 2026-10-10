@@ -1,10 +1,10 @@
-a2a9f70a5b66479d1cad1c9d3d9432034999dd65
-........................................................................ [ 67%]
-...................................                    [100%]
-107 passed, 18 subtests passed in 0.52s
+5584ebd41bf2661df65335fa5279f6f7a7df23de
+........................................................................ [ 63%]
+..........................................           [100%]
+114 passed, 20 subtests passed in 0.55s
 Wrote /workspace/knight26/artifacts/hf/c2-followup/final-cpu-evaluation.json
 mocked_model_fixture: label/slot exact 20/20; evidence-aligned 20/20; failures 0
 rule_baseline: label/slot exact 5/20; evidence-aligned 2/20; failures 15
 {"output": "/workspace/knight26/artifacts/hf/c2-followup/final-review-trace.json", "provider": "rule_baseline", "accepted_command_count": 1, "simulator_mutation": false}
-{"source_commit": "a2a9f70a5b66479d1cad1c9d3d9432034999dd65", "intake_source": {"source_sha": "a2a9f70a5b66479d1cad1c9d3d9432034999dd65", "source_dirty": false, "source_fingerprint_sha256": "021af8124cfb51fc32d5b5ec8d11cfe8eb4bca5abf7fd73ed5ba54119df7a3ef"}, "python_files": 22}
+{"source_commit": "5584ebd41bf2661df65335fa5279f6f7a7df23de", "intake_source": {"source_sha": "5584ebd41bf2661df65335fa5279f6f7a7df23de", "source_dirty": false, "source_fingerprint_sha256": "021af8124cfb51fc32d5b5ec8d11cfe8eb4bca5abf7fd73ed5ba54119df7a3ef"}, "python_files": 23}
 EXIT_CODE:0

@@ -1,6 +1,6 @@
 {
-  "source_commit": "a2a9f70a5b66479d1cad1c9d3d9432034999dd65",
-  "verification": "107 cloud tests;18 subtests;exit0",
+  "source_commit": "5584ebd41bf2661df65335fa5279f6f7a7df23de",
+  "verification": "114 cloud tests;20 subtests;exit0",
   "fictional_inputs": true,
   "real_model_inference": false,
   "live_bucket_transfer": false,
@@ -17,9 +17,14 @@
       "sha256": "d76562bedb8a2d7cf2c974e5f3af64183ceb24ccc47376db47f39325e2105cb7"
     },
     {
+      "path": "MODEL_RESIDENCY.json",
+      "size": 3889,
+      "sha256": "dced8097daf0b4188b838fd166e61ea875357f95ef9e98fe0b412e0ea39d3f0e"
+    },
+    {
       "path": "README.md",
-      "size": 1951,
-      "sha256": "e6f408a7ab592378cc6eaeba7ef13a15e5b37e02cc8736ee5e5dfdb5e0fcf1e1"
+      "size": 2369,
+      "sha256": "06721532731a366db8849f36923cda6672086fd28b16b54a017a3d221deeb3c7"
     },
     {
       "path": "cpu-evaluation.json",
@@ -38,13 +43,13 @@
     },
     {
       "path": "server-checks.log",
-      "size": 915,
-      "sha256": "e83eae8c54729d454acc8c4fd0e55b3d75c77383335088e19a3fc1fe4e3ac906"
+      "size": 913,
+      "sha256": "f1866b69e54a1dfc11832c9b812311bce03e944dfebc87f6d554898044fffc7e"
     },
     {
       "path": "source.json",
-      "size": 3633,
-      "sha256": "cb2fa05656ab391e93ef9800016836c314de3be1cdf86fb053fae29f14562047"
+      "size": 3790,
+      "sha256": "e9f816ff1deb734f04a96fc922810d0b7e6940726cc09d3358d151374b2732d0"
     }
   ]
 }
