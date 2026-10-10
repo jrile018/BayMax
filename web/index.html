@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f4f0">
+  <title>Knight26 / Response Lab</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Knight26 Response Lab home"><span class="brand-mark" aria-hidden="true">K<span>26</span></span><span class="brand-copy">KNIGHT26 <span class="brand-slash">/</span> RESPONSE LAB</span></a>
+      <nav class="topnav" aria-label="Exercise sections"><a class="active" href="#exercise">Exercise</a><a href="#map-panel">Area map</a><a href="#data-status">Data status</a></nav>
+      <div class="top-meta"><span class="live-dot" aria-hidden="true"></span><span id="top-status">Connecting to replay</span></div>
+    </header>
+
+    <main id="exercise">
+      <section class="hero" aria-labelledby="page-title">
+        <div>
+          <div class="eyebrow"><span class="eyebrow-line"></span> WILDFIRE RESPONSE EXERCISE <span id="run-id" class="run-id">RUN --</span></div>
+          <h1 id="page-title">See every decision<br><em>on the road.</em></h1>
+          <p class="hero-copy">Follow the committed route, a changing fire perimeter, and the actual progress of each aid vehicle in one recorded exercise.</p>
+        </div>
+        <div class="hero-aside">
+          <div class="mode-pill"><span class="pill-dot"></span><span id="mode-label">Open map · training replay</span></div>
+          <p id="scenario-description">Loading exercise details...</p>
+          <span id="source-banner" class="source-banner">Checking map and scenario sources</span>
+        </div>
+      </section>
+
+      <section class="metrics" aria-label="Exercise outcomes">
+        <article class="metric"><span class="metric-label">Safe arrivals <span class="metric-unit">people</span></span><strong id="metric-safe">--</strong><span class="metric-foot">Recorded at destination</span></article>
+        <article class="metric"><span class="metric-label">Supplies delivered <span class="metric-unit">units</span></span><strong id="metric-supply">--</strong><span class="metric-foot">Counted on delivery</span></article>
+        <article class="metric"><span class="metric-label">Medical served <span class="metric-unit">people</span></span><strong id="metric-medical">--</strong><span class="metric-foot">Completed service</span></article>
+        <article class="metric metric-time"><span class="metric-label">Exercise clock</span><strong id="metric-clock">--:--</strong><span class="metric-foot">Recorded simulation time</span></article>
+      </section>
+
+      <div id="global-error" class="alert" role="alert" hidden></div>
+
+      <section class="workspace" aria-label="Map and fleet">
+        <div class="map-column">
+          <article id="map-panel" class="map-card" aria-labelledby="map-title">
+            <div class="card-heading">
+              <div><span class="section-index">01 / SITUATION MAP</span><h2 id="map-title">Paradise, California</h2><p id="map-subtitle">Road network and recorded exercise state</p></div>
+              <div class="map-heading-actions"><span id="source-chip" class="source-chip">Checking source</span><button id="reset-map" class="icon-button" type="button" aria-label="Reset map view" title="Reset map view">⌗</button></div>
+            </div>
+            <div class="map-wrap">
+              <svg id="map" role="img" aria-label="Map of the exercise area with roads, buildings, fire perimeter and vehicle routes" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <pattern id="closure-hatch" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="9" height="9" fill="#ae4932"></rect><path d="M0 0V9" stroke="#f6decf" stroke-width="4"></path></pattern>
+                  <filter id="marker-shadow" x="-100%" y="-100%" width="300%" height="300%"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#39433d" flood-opacity=".28"></feDropShadow></filter>
+                </defs>
+                <rect id="map-bg" x="0" y="0" width="1000" height="700"></rect>
+                <g id="map-scene"><g id="layer-land"></g><g id="layer-buildings"></g><g id="layer-roads"></g><g id="layer-hazards"></g><g id="layer-old-route"></g><g id="layer-route"></g><g id="layer-closures"></g><g id="layer-vehicles"></g><g id="layer-boundary"></g></g>
+              </svg>
+              <div id="map-notice" class="map-notice" hidden>No road data loaded. Routes and hazard overlays are constructed exercise illustrations.</div>
+              <div class="map-top-left"><span class="map-overline">EXERCISE AREA</span><strong id="map-area-label">Loading...</strong><span id="map-frame-label">FRAME -- / --</span></div>
+              <div class="map-bottom-left"><span class="map-scale-icon">↗</span> PAN TO EXPLORE <span class="map-spacer">·</span> SCROLL TO ZOOM</div>
+              <div class="map-zoom" aria-label="Map zoom controls"><button id="zoom-in" type="button" aria-label="Zoom in">+</button><button id="zoom-out" type="button" aria-label="Zoom out">−</button></div>
+            </div>
+            <div class="legend" aria-label="Map legend"><span><i class="legend-line route"></i>Committed route</span><span><i class="legend-line trail"></i>Completed trail</span><span><i class="legend-line prior"></i>Previous route</span><span><i class="legend-line closed"></i>Closed road</span><span><i class="legend-swatch fire"></i>Fire perimeter</span></div>
+          </article>
+
+          <div class="under-map">
+            <article class="playback-card" aria-labelledby="playback-title">
+              <div class="playback-top"><div><span class="section-index">02 / REPLAY CONTROL</span><h2 id="playback-title">Timeline</h2></div><span id="playback-clock" class="time-readout">--:--</span></div>
+              <div class="playback-controls"><button id="play-button" class="play-button" type="button" aria-label="Play replay" disabled><span id="play-glyph" aria-hidden="true">▶</span><span id="play-text">Play</span></button><button id="step-back" class="step-button" type="button" aria-label="Previous frame" disabled>⟵</button><button id="step-forward" class="step-button" type="button" aria-label="Next frame" disabled>⟶</button><label class="scrub-label" for="frame-slider">Frame <span id="frame-index">--</span></label><input id="frame-slider" type="range" min="0" max="0" value="0" disabled aria-label="Select replay frame"></div>
+              <div class="track-times"><span id="start-time">00:00</span><span id="end-time">--:--</span></div>
+            </article>
+            <article class="timeline-card" aria-labelledby="events-title"><div class="timeline-heading"><div><span class="section-index">03 / EVENT LOG</span><h2 id="events-title">What changed</h2></div><span id="event-count" class="count-pill">0 EVENTS</span></div><ol id="event-list" class="event-list"><li class="empty-state">Events appear as the replay advances.</li></ol></article>
+          </div>
+        </div>
+
+        <aside class="side-column">
+          <article class="fleet-card" aria-labelledby="fleet-title"><div class="side-heading"><span class="section-index">04 / ACTIVE FLEET</span><h2 id="fleet-title">Field units <span id="fleet-count" class="heading-count">0</span></h2><p>Select a vehicle to inspect its recorded trip.</p></div><div id="fleet-list" class="fleet-list"><p class="empty-state">Waiting for fleet snapshot...</p></div></article>
+          <article class="route-card" aria-labelledby="route-title"><div class="side-heading"><span class="section-index">05 / ROUTE AUDIT</span><h2 id="route-title">Selected route</h2></div><div id="route-audit" class="route-audit"><p class="empty-state">Select a field unit to inspect its route.</p></div></article>
+          <article class="needs-card" aria-labelledby="needs-title"><div class="side-heading"><span class="section-index">06 / DEMAND & STOCK</span><h2 id="needs-title">Aid ledger</h2><p>Recorded exercise commitments and remaining need.</p></div><div id="needs-list" class="ledger-list"><p class="empty-state">Waiting for snapshot...</p></div><div id="stock-list" class="ledger-list stock-list"></div></article>
+          <article id="data-status" class="data-card" aria-labelledby="data-title"><div class="side-heading"><span class="section-index">07 / SOURCE & COVERAGE</span><h2 id="data-title">Map confidence</h2></div><div id="coverage-list" class="coverage-list"><p class="empty-state">Checking source coverage...</p></div><form id="coord-form" class="coord-form"><label for="coord-input">Check a location <span>LAT, LON</span></label><div class="coord-input-row"><input id="coord-input" name="coordinate" type="text" inputmode="decimal" autocomplete="off" placeholder="39.7596, -121.6219" aria-describedby="coord-help"><button type="submit">Check ↗</button></div><p id="coord-help">Coverage is limited to the loaded exercise area.</p><p id="coord-result" class="coord-result" role="status" aria-live="polite"></p></form></article>
+        </aside>
+      </section>
+    </main>
+    <footer><span>KNIGHT26 / RESPONSE LAB</span><span id="footer-mode">CONSTRUCTED TRAINING REPLAY</span><span id="footer-hash">SNAPSHOT --</span></footer>
+  </div>
+</body>
+</html>

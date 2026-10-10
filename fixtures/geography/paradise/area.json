@@ -1,0 +1,55 @@
+{
+  "area_id": "paradise-ca",
+  "label": "Paradise, California",
+  "bbox_lonlat": [
+    -121.621,
+    39.742,
+    -121.591,
+    39.765
+  ],
+  "origin_lonlat": [
+    -121.607,
+    39.754
+  ],
+  "coverage": [
+    {
+      "layer": "roads",
+      "status": "unavailable",
+      "detail": "OSM acquisition failed: public host DNS resolution unavailable"
+    },
+    {
+      "layer": "buildings",
+      "status": "unavailable",
+      "detail": "OSM acquisition failed: public host DNS resolution unavailable"
+    },
+    {
+      "layer": "landuse",
+      "status": "unavailable",
+      "detail": "OSM acquisition failed: public host DNS resolution unavailable"
+    },
+    {
+      "layer": "water",
+      "status": "unavailable",
+      "detail": "OSM acquisition failed: public host DNS resolution unavailable"
+    },
+    {
+      "layer": "terrain",
+      "status": "unavailable",
+      "detail": "Not acquired"
+    },
+    {
+      "layer": "fuels",
+      "status": "unavailable",
+      "detail": "Not acquired"
+    },
+    {
+      "layer": "current_fire",
+      "status": "unavailable",
+      "detail": "Not acquired"
+    }
+  ],
+  "source_manifest": "source_manifest.json",
+  "roads": [],
+  "buildings": [],
+  "landuse": []
+}
