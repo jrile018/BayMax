@@ -97,3 +97,5 @@ body.satellite svg .road-casing{stroke:#0c2730d9;stroke-width:2.7px;vector-effec
 body.light .situation-intro{background:#d9efec}body.light .situation-card{background:#e5f2ef}
 
 #map g[hidden],.map-legend[hidden]{display:none}.legend-accepted-point{background:#21d3cf!important;border:2px solid #072e36!important;border-radius:50%}.legend-accepted-area{background:#23c9c730!important;border:2px dashed #23e5dd!important}
+
+.situation-nav{display:flex;gap:7px;padding:10px 15px;border-bottom:1px solid var(--line)}.situation-nav button{flex:1;min-height:32px;border:1px solid #4b7080;border-radius:3px;background:#1b3b48;color:var(--cyan);font-size:10px;font-weight:700}.situation-nav button:disabled{opacity:.45}.situation-mode .replay-dock{pointer-events:none;opacity:.4}.situation-mode .header-metrics{display:none}

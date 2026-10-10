@@ -98,7 +98,7 @@
     <button id="left-rail" class="collapsed-rail left-rail" type="button" aria-label="Show layers and contacts" hidden>Layers <span>›</span></button>
 
     <aside id="right-panel" class="panel right-panel" aria-label="Inspector">
-      <div class="panel-heading"><div><small>Recorded evidence</small><h2>Inspector</h2></div><button id="right-close" class="panel-close" type="button" aria-label="Close inspector">×</button></div>
+      <div class="panel-heading"><div><small id="inspector-source">Recorded evidence</small><h2>Inspector</h2></div><button id="right-close" class="panel-close" type="button" aria-label="Close inspector">×</button></div>
       <div class="inspector-tabs" role="tablist" aria-label="Inspector sections">
         <button id="tab-fleet" role="tab" type="button" aria-controls="pane-fleet" aria-selected="true">Fleet</button>
         <button id="tab-events" role="tab" type="button" aria-controls="pane-events" aria-selected="false" tabindex="-1">Events</button>
@@ -117,6 +117,7 @@
         </section>
         <section id="pane-situation" role="tabpanel" aria-labelledby="tab-situation" hidden>
           <div class="situation-intro"><strong>Accepted source situation</strong><p>Read-only evidence at the stated cutoff. Map marks in this tab use accepted source geometry; the replay remains a constructed training exercise.</p></div>
+          <div class="situation-nav"><button id="situation-fit" type="button" disabled>Fit source area</button><button id="situation-local" type="button">Fit Paradise</button></div>
           <div id="situation-content" role="status" aria-live="polite"><p class="empty-state">Open Situation to check for an accepted incident snapshot.</p></div>
         </section>
         <section id="pane-data" role="tabpanel" aria-labelledby="tab-data" hidden>

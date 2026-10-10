@@ -87,7 +87,7 @@ window.KnightSituation=(()=>{
    if(items==null)text(section,"p","situation-unknown","Unknown — no accepted current evidence");
    else if(!Array.isArray(items))text(section,"p","situation-unknown","Unknown — invalid category data");
    else if(!items.length)text(section,"p","situation-empty","No accepted current records at cutoff");
-   else for(const item of items){if(!item||typeof item!=="object")continue;section.append(recordCard(item,kind,bbox));if(!outsideLoaded(item.geometry,bbox))mapItem(group,item,kind,project)}
+   else for(const item of items){if(!item||typeof item!=="object")continue;section.append(recordCard(item,kind,bbox));mapItem(group,item,kind,project)}
    host.append(section);
   }
   const leads=snapshot.unconfirmed_leads;
