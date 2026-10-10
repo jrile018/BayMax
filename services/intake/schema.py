@@ -71,6 +71,16 @@ NEED_REQUEST = r'\b(need\w*|request\w*|pickup|necesit\w*|requiere\w*|solicita\w*
 COUNT_UNCERTAINTY = APPROX + r'|\b(between|at least|at most|more than|less than|up to)\b|[0-9]+\s*[-–]\s*[0-9]+'
 CLAUSE_NEGATION = r"\b(not|no|never|without|don't|doesn't|didn't|cannot|can't|sin|nadie)\b"
 SOON = r'\b(soon|today|tomorrow|tonight|before|within|by|pronto|hoy|ma[ñn]ana)\b'
+COMPLETED_EVENT = r'\b(?:delivered|distributed|supplied|provided|served|received|evacuated|completed|picked up|dropped off)\b'
+REQUEST_CONJUNCTION = r'\b(?:but|and|however|yet|while|whereas|then)\b'
+ACCESS_COREFERENCE = r'\b(?:it|this road|that road|the road|this route|that route|the route|this highway|that highway|the highway)\b'
+ACCESS_QUALIFIER = (
+    r'\b(?:only|except|excluding|unless|until|before|after|between|during|'
+    r'bicycles?|bikes?|cyclists?|pedestrians?|peatones?|on foot|'
+    r'vehicles?|cars?|trucks?|buses?|motorcycles?|ambulances?|'
+    r'solo|solamente|excepto|hasta|antes|despu[eé]s|entre)\b'
+    r'|\bfor\s+\d+\s+(?:minutes?|hours?|days?)\b'
+)
 
 def _object(raw, keys, path):
     if not isinstance(raw,dict) or set(raw)!=set(keys):
@@ -124,13 +134,45 @@ def detect_flags(text):
     if re.search(r'\b(pedestrians?|on foot|peatones?)\b',text,re.I): flags.add('qualified_access')
     return flags
 
-def _source_clause(report, ev):
+def _source_clause(report, ev, kind):
     # Inspect full source context, not just the model-selected shortened quote.
     starts=[m.end() for m in re.finditer(r'[.;!?\n]',report.text[:ev.start])]
     lo=starts[-1] if starts else 0
-    end=re.search(r'[.;!?\n]',report.text[ev.end:])
-    hi=ev.end+end.start() if end else len(report.text)
+    end=re.search(r'[.;!?\n]',report.text[ev.start:])
+    hi=ev.start+end.start() if end else len(report.text)
+    if kind=='need':
+        clause=report.text[lo:hi]
+        for join in re.finditer(REQUEST_CONJUNCTION,clause,re.I):
+            if (re.search(COMPLETED_EVENT,clause[:join.start()],re.I)
+                    and re.search(NEED_REQUEST,clause[join.end():],re.I)):
+                boundary_start, boundary_end=lo+join.start(),lo+join.end()
+                if ev.start>=boundary_end:
+                    lo=boundary_end
+                else:
+                    hi=boundary_start
+                break
+    if kind=='access' and ev.end>hi+1:
+        # Some access evidence includes a semicolon and its explanation.
+        # Keep that explanation, but do not borrow a following sentence.
+        if re.search(r'[.;!?\n]$', ev.quote):
+            hi=ev.end-1
+        else:
+            next_end=re.search(r'[.;!?\n]',report.text[ev.end:])
+            hi=ev.end+next_end.start() if next_end else len(report.text)
     return lo,hi,report.text[lo:hi]
+
+def _following_access_restriction(report, context_end, location):
+    # A short follow-on sentence may scope an otherwise unqualified 'open'.
+    tail=report.text[context_end+1:]
+    if not tail.strip():
+        return False
+    end=re.search(r'[.;!?\n]',tail)
+    following=tail[:end.start()] if end else tail
+    if not re.search(ACCESS_QUALIFIER,following,re.I):
+        return False
+    return bool(re.search(ACCESS_COREFERENCE,following,re.I)
+                or re.search(re.escape(location),following,re.I))
+
 
 def parse_proposal(report, payload, provider):
     if not isinstance(report,Report): raise ValidationError('expected Report')
@@ -149,9 +191,13 @@ def parse_proposal(report, payload, provider):
         _text(kind,'kind'); _text(label,'label')
         terms=NEED_TERMS if kind=='need' else ACCESS_TERMS if kind=='access' else {}
         ev=evidence(report,raw['evidence'])
+        if kind=='need' and re.search(r'[.;!?\n]', ev.quote[:-1]):
+            raise ValidationError('claim evidence must stay within one source clause')
         if label not in terms or not re.search(terms[label],ev.quote,re.I):
             raise ValidationError('claim label lacks category/status evidence')
-        context_start,context_end,context=_source_clause(report,ev)
+        context_start,context_end,context=_source_clause(report,ev,kind)
+        if kind=='need' and ev.end > context_end + 1:
+            raise ValidationError('claim evidence must stay within one source clause')
         if kind=='need' and not re.search(NEED_REQUEST,context,re.I):
             raise ValidationError('need claim must cite a positive stated request, not a completed event')
         slots={k:_slot(report,raw[k],k) for k in ('quantity','unit','urgency','location')}
@@ -172,6 +218,9 @@ def parse_proposal(report, payload, provider):
             if not inherited or loc.evidence.end>context_start or re.search(r'[.!?\n]|\b(?:at|in)\s',between,re.I):
                 raise ValidationError('location must belong to this clause or its inherited preceding place context')
         cflags=set(_flags(raw['flags'],'claim.flags'))
+        if kind=='access' and (re.search(ACCESS_QUALIFIER,context + ' ' + ev.quote,re.I)
+                               or (loc and _following_access_restriction(report,context_end,loc.value))):
+            cflags.add('qualified_access')
         if re.search(CLAUSE_NEGATION,context,re.I) and label!='unknown': cflags.add('negation')
         if slots['location'] is None: cflags.add('missing_place')
         if kind=='need' and slots['quantity'] is None: cflags.add('unknown_count')

@@ -89,6 +89,31 @@ def _evidence_counts(text: str, claims: list[dict[str, Any]]) -> tuple[int, int]
     return correct, total
 
 
+def _alignment_counts(
+    text: str, gold_claims: list[dict[str, Any]],
+    predicted: list[dict[str, Any]], matched: dict[int, int],
+) -> tuple[int, int]:
+    # Reference-span agreement is separate from source-quote validity. A quote
+    # of the entire report can be source-exact yet fail to identify the fact.
+    aligned = total = 0
+    for i, gold in enumerate(gold_claims):
+        pred = predicted[matched[i]] if i in matched else None
+        for field in ("evidence", *SLOTS):
+            gold_slot = gold.get(field) if field != "evidence" else None
+            expected = gold.get(field) if field == "evidence" else (
+                gold_slot.get("evidence") if isinstance(gold_slot, dict) else None
+            )
+            if expected is None:
+                continue
+            pred_slot = pred.get(field) if pred is not None else None
+            actual = pred_slot if field == "evidence" else (
+                pred_slot.get("evidence") if isinstance(pred_slot, dict) else None
+            )
+            total += 1
+            aligned += int(_supported(text, actual) and actual == expected)
+    return aligned, total
+
+
 def _blank_metrics() -> dict[str, dict[str, int]]:
     return defaultdict(lambda: {"numerator": 0, "denominator": 0})
 
@@ -199,6 +224,11 @@ def score_case(case: dict[str, Any], payload: dict[str, Any] | None, provider: s
         _, total_evidence = _evidence_counts(case["text"], gold_claims)
         supported = 0
     _add(metrics, "evidence_quote_support", supported, total_evidence)
+    aligned, reference_spans = _alignment_counts(case["text"], gold_claims, predicted, matched)
+    _add(metrics, "evidence_span_alignment", aligned, reference_spans)
+    _add(metrics, "evidence_aligned_report",
+         int(valid and aligned == reference_spans and len(pairs) == len(gold_claims)
+             and len(predicted) == len(gold_claims)))
     expected_signatures = Counter(signature(c) for c in gold_claims)
     actual_signatures = Counter(signature(c) for c in predicted)
     exact_claims = valid and expected_signatures == actual_signatures
@@ -323,7 +353,7 @@ def main(argv: list[str] | None = None) -> int:
             systems[provider_name] = score_system(cases, predictions, provider_name, system_type)
     output = {
         "dataset": "intake_cases_v1", "fictional": True,
-        "interpretation": "Mocked fixture scores measure harness coverage only; no real model inference was run.",
+        "interpretation": "Mocked fixture scores measure harness coverage only; no real model inference was run. exact_report compares labels, slot values, and flags; evidence_span_alignment separately compares source spans with the authored reference.",
         "systems": systems,
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -331,7 +361,8 @@ def main(argv: list[str] | None = None) -> int:
     print(f"Wrote {args.output}")
     for name, system in systems.items():
         exact = system["metrics"]["exact_report"]
-        print(f"{name}: exact {exact['numerator']}/{exact['denominator']}; failures {len(system['failures'])}")
+        alignment = system["metrics"]["evidence_aligned_report"]
+        print(f"{name}: label/slot exact {exact['numerator']}/{exact['denominator']}; evidence-aligned {alignment['numerator']}/{alignment['denominator']}; failures {len(system['failures'])}")
     return 0
 
 
