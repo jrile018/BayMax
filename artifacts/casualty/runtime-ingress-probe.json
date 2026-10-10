@@ -1,0 +1,17 @@
+{
+  "recorded_at": "2026-10-10T07:39:11.042511+00:00",
+  "actual_model_or_photo_inference": false,
+  "opencv_present": false,
+  "metadata_egress": {
+    "pypi_metadata": {
+      "reachable": false,
+      "error_type": "URLError",
+      "error": "<urlopen error [Errno 101] Network is unreachable>"
+    },
+    "yunet_metadata": {
+      "reachable": false,
+      "error_type": "URLError",
+      "error": "<urlopen error [Errno 101] Network is unreachable>"
+    }
+  }
+}
