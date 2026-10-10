@@ -160,6 +160,18 @@ class OfficialRecordTests(unittest.TestCase):
         hazard = dispatcher_synopsis(log.snapshot("2026-10-10T09:15:00Z"))["hazards"][0]
         self.assertEqual(hazard["source_zone_prefixes"], ["AZ", "CA"])
 
+    def test_nws_area_only_query_shape_preserves_cross_state_warning(self):
+        feature = nws(properties={"geocode": {"UGC": ["CAZ001", "AZZ001"]}})
+        context = IngestionContext("2026-10-10T09:14:00Z",
+            "2026-10-10T09:12:00Z", (-125, 32, -114, 42), True)
+        for url in (ACTUAL_NWS, NWS):
+            with self.subTest(url=url):
+                record, _ = build_official_record(
+                    document("nws", [feature], url), "urn:oid:alert-1",
+                    context, contract=CONTRACT)
+                self.assertIn("AZ outside queried CA area",
+                              record["source_uncertainty"])
+
     def test_unverified_transport_and_mismatched_bytes_fail(self):
         doc = document("usgs", [usgs()], USGS)
         context = IngestionContext("2026-10-10T09:14:00Z",

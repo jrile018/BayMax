@@ -127,7 +127,7 @@ def _geometry(candidate, bbox):
             raise SourceError("null NWS geometry lacks area label")
         uncertainty = (
             "NWS area association only; geometry unavailable; AOI not spatially verified")
-        query_area = re.search(r"(?:^|&)area=([A-Z]{2})$", candidate["source_url"])
+        query_area = re.search(r"[?&]area=([A-Z]{2})$", candidate["source_url"])
         prefixes = _zone_prefixes(candidate["ugc"])
         if query_area:
             outside_query = [code for code in prefixes if code != query_area.group(1)]
