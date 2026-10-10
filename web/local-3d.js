@@ -2,17 +2,24 @@
 // A bounded 3D training visualization of the existing Paradise OSM footprints.
 // Building extrusion heights and the ground plane are illustrative, not survey data.
 window.KnightLocal3D=(()=>{
- const THREE_URL="https://unpkg.com/three@0.180.0/build/three.module.js";
  const $=id=>document.getElementById(id);
  const colors=[0x4fd3df,0xf3b86d,0xcf9bf4,0x91d989,0xff8b8b,0x8fb6f5];
  let Three,renderer,scene,camera,frame=0,open=false,setupPromise=null,context=null,place=null,area=null,origin=null,span=5000;
  let fleetGroup=null,selected=undefined,cockpit=false,angle=.18,elevation=.62,distance=9000,target=null,drag=null,lastFrame=null,speeds=new Map(),lastTick=0,lastPaint=0,speedMultiplier=1;
- let controls=null,vehicleMeshes=[];
+ let controls=null,vehicleMeshes=[],coverage=null;
  const finite=n=>typeof n==="number"&&Number.isFinite(n);
  const point=p=>Array.isArray(p)&&p.length===2&&finite(p[0])&&finite(p[1]);
  const route=g=>Array.isArray(g)&&g.every(point)?g:[];
  const formatTime=seconds=>finite(seconds)?String(Math.floor(seconds/3600)).padStart(2,"0")+":"+String(Math.floor(seconds%3600/60)).padStart(2,"0")+":"+String(Math.floor(seconds%60)).padStart(2,"0"):"Unknown";
- const within=(p,b)=>point(p)&&Array.isArray(b)&&p[0]>=b[0]&&p[0]<=b[2]&&p[1]>=b[1]&&p[1]<=b[3];
+ const bounds=b=>Array.isArray(b)&&b.length===4&&b.every(finite)&&b[0]<b[2]&&b[1]<b[3];
+ const within=(p,b)=>point(p)&&bounds(b)&&p[0]>=b[0]&&p[0]<=b[2]&&p[1]>=b[1]&&p[1]<=b[3];
+ function localCoverage(){
+  const acquired=within([place.lon,place.lat],area?.coverage_bbox_lonlat);
+  const layers=Array.isArray(area?.coverage)?area.coverage:[];
+  const available=name=>acquired&&layers.some(layer=>layer.layer===name&&layer.status==="available")&&Array.isArray(area?.[name])&&area[name].length>0;
+  const roads=available("roads"),buildings=available("buildings");
+  return{roads,buildings,available:roads||buildings,training:roads&&training()?.valid===true};
+ }
  const colorFor=index=>colors[index%colors.length];
  const colorHex=index=>"#"+colorFor(index).toString(16).padStart(6,"0");
  const training=()=>window.KnightTrainingBuses;
@@ -32,18 +39,19 @@ window.KnightLocal3D=(()=>{
  }
  function buildParadise(){
   const roads=new Three.Group(),buildings=new Three.Group();scene.add(roads,buildings);
-  for(const item of (area.roads||[]).slice(0,500)){
+  for(const item of (coverage.roads?area.roads:[]).slice(0,500)){
    const geometry=route(item.geometry_lonlat);const road=line(geometry,/primary|secondary|tertiary/.test(item.highway||"")?0x9bb9b9:0x5d8892,1,1);
    if(road)roads.add(road);
   }
-  for(const [index,item] of (area.buildings||[]).slice(0,250).entries()){
+  for(const [index,item] of (coverage.buildings?area.buildings:[]).slice(0,250).entries()){
    const ring=route(item.geometry_lonlat);if(ring.length<4||ring.length>256)continue;
    const shape=new Three.Shape();for(const [i,p] of ring.entries()){const local=xyz(p);if(i===0)shape.moveTo(local.x,-local.z);else shape.lineTo(local.x,-local.z)}
    const height=12+(index*37)%46,geometry=new Three.ExtrudeGeometry(shape,{depth:height,bevelEnabled:false});geometry.rotateX(-Math.PI/2);
    const mesh=new Three.Mesh(geometry,new Three.MeshStandardMaterial({color:index%4===0?0x457589:0x315b6e,roughness:.86,metalness:.08}));
    buildings.add(mesh);
   }
-  $("local3d-coverage").textContent="Paradise OSM road lines and building footprints · illustrative extrusion heights · flat ground, no surveyed terrain";
+  $("local3d-coverage").textContent="Paradise OSM "+[coverage.roads?"road lines":null,coverage.buildings?"building footprints":null].filter(Boolean).join(" and ")+
+   (coverage.buildings?" · illustrative extrusion heights":"")+" · flat ground, no surveyed terrain"+(coverage.roads?"":" · roads unavailable; no vehicle coverage");
  }
  function buildFallback(){
   const pin=new Three.Mesh(new Three.ConeGeometry(span*.022,span*.1,6),new Three.MeshStandardMaterial({color:0xf0ba72,emissive:0x71411b}));
@@ -51,16 +59,16 @@ window.KnightLocal3D=(()=>{
   $("local3d-coverage").textContent="No verified local OSM geometry or terrain tiles for this coordinate. Flat reference grid only; no vehicle coverage.";
  }
  function rebuild(){if(!Three||!place)return;clearScene();
-  const bbox=area?.bbox_lonlat,paradise=within([place.lon,place.lat],bbox);
+  coverage=localCoverage();const paradise=coverage.available,bbox=bounds(area?.bbox_lonlat)?area.bbox_lonlat:area?.coverage_bbox_lonlat;
   origin=paradise?[(bbox[0]+bbox[2])/2,(bbox[1]+bbox[3])/2]:[place.lon,place.lat];
   span=paradise?Math.max((bbox[2]-bbox[0])*111320*Math.cos(origin[1]*Math.PI/180),(bbox[3]-bbox[1])*111320):5000;
-  target=paradise?xyz([place.lon,place.lat]):new Three.Vector3();distance=paradise&&training()?.valid?Math.max(300,Math.min(span*.72,500)):span*.72;angle=.18;elevation=.62;selected=training()?.selectedBusId;cockpit=false;lastFrame=null;speeds.clear();
+  target=paradise?xyz([place.lon,place.lat]):new Three.Vector3();distance=paradise&&training()?.valid?Math.max(300,Math.min(span*.72,500)):span*.72;angle=.18;elevation=.62;selected=coverage.training?training()?.selectedBusId:undefined;cockpit=false;lastFrame=null;speeds.clear();
   addGround();if(paradise)buildParadise();else buildFallback();
   fleetGroup=new Three.Group();scene.add(fleetGroup);
-  $("local3d-training").hidden=!paradise;
+  $("local3d-training").hidden=!coverage.training;
   $("local3d-title").textContent=place.name||"Selected coordinate";
-  $("local3d-coordinate").textContent=Number(place.lat).toFixed(4)+"°, "+Number(place.lon).toFixed(4)+"° · "+(paradise?"PARADISE TRAINING AREA":"COVERAGE UNAVAILABLE");
-  if(paradise&&!training()?.valid)$("local3d-coverage").textContent="Training fixture rejected: "+(training()?.error||"Missing data")+" · no bus markers shown";
+  $("local3d-coordinate").textContent=Number(place.lat).toFixed(4)+"°, "+Number(place.lon).toFixed(4)+"° · "+(paradise?(coverage.training?"PARADISE TRAINING AREA":"LOCAL OSM COVERAGE"):"COVERAGE UNAVAILABLE");
+  if(coverage.roads&&!training()?.valid)$("local3d-coverage").textContent+=" · training fixture rejected: "+(training()?.error||"Missing data")+"; no bus markers shown";
   update(currentFrame());cameraPose();
  }
  function selectedVehicle(vehicles){return vehicles.find(v=>v.vehicle_id===selected)||null}
@@ -81,14 +89,13 @@ window.KnightLocal3D=(()=>{
  function renderFleet(frameData){if(!fleetGroup||!context)return;frameData=currentFrame();
   for(const child of [...fleetGroup.children]){fleetGroup.remove(child);dispose(child)}vehicleMeshes=[];
   const vehicles=Array.isArray(frameData?.vehicles)?frameData.vehicles:[];
-  const paradise=within([place.lon,place.lat],area?.bbox_lonlat);
-  const candidates=paradise?vehicles.filter(v=>point(v.position_lonlat)):[];
+  const candidates=coverage?.training?vehicles.filter(v=>point(v.position_lonlat)):[];
   if(selected&&!candidates.some(v=>v.vehicle_id===selected)){selected=undefined;cockpit=false}
   if(selected===undefined&&candidates.length)selected=candidates.find(v=>v.kind==="bus")?.vehicle_id||candidates[0].vehicle_id;
   const list=$("local3d-fleet-list"),ids=["__all__",...candidates.map(v=>v.vehicle_id)];
   if(list.children.length!==ids.length||ids.some((id,index)=>list.children[index]?.dataset.vehicleId!==id)){
    const buttons=ids.map(id=>{const button=document.createElement("button");button.type="button";button.dataset.vehicleId=id;
-    button.onclick=()=>{selected=id==="__all__"?null:id;if(selected)training()?.select(selected);else cockpit=false;renderFleet(currentFrame());cameraPose()};return button});
+    button.onclick=()=>{selected=id==="__all__"?null:id;if(selected)training()?.select(selected);else{cockpit=false;frameFleet()}renderFleet(currentFrame());cameraPose()};return button});
    list.replaceChildren(...buttons);
   }
   const all=list.children[0];all.textContent="Whole fleet · "+candidates.length;all.setAttribute("aria-pressed",String(!selected));
@@ -117,6 +124,18 @@ window.KnightLocal3D=(()=>{
   if(cockpit&&!current){cockpit=false;cameraPose()}
   lastFrame=frameData||null;
  }
+ function frameFleet(){
+  if(!camera||!origin||!coverage?.training)return;
+  const points=(currentFrame()?.vehicles||[]).flatMap(v=>[...route(v.route_geometry_lonlat),...(point(v.position_lonlat)?[v.position_lonlat]:[])]).map(p=>xyz(p));
+  if(!points.length)return;
+  let minX=Infinity,maxX=-Infinity,minZ=Infinity,maxZ=-Infinity;
+  for(const p of points){minX=Math.min(minX,p.x);maxX=Math.max(maxX,p.x);minZ=Math.min(minZ,p.z);maxZ=Math.max(maxZ,p.z)}
+  target=new Three.Vector3((minX+maxX)/2,20,(minZ+maxZ)/2);
+  const vertical=camera.fov*Math.PI/360,horizontal=Math.atan(Math.tan(vertical)*camera.aspect);
+  // A padded bounding sphere fits at any orbit angle; portrait uses tighter FOV.
+  const radius=Math.max(40,Math.hypot((maxX-minX)/2,(maxZ-minZ)/2,40));
+  distance=Math.max(200,radius/Math.sin(Math.min(vertical,horizontal))*1.15);
+ }
  function cameraPose(){if(!camera||!target)return;
   const vehicle=selectedVehicle(currentFrame()?.vehicles||[]);
   if(cockpit&&vehicle&&point(vehicle.position_lonlat)){
@@ -127,14 +146,14 @@ window.KnightLocal3D=(()=>{
   }else{
    const focus=vehicle&&point(vehicle.position_lonlat)?xyz(vehicle.position_lonlat):target;
    const horizontal=Math.cos(elevation)*distance;
-   camera.position.set(focus.x+Math.sin(angle)*horizontal,Math.sin(elevation)*distance,focus.z+Math.cos(angle)*horizontal);
+   camera.position.set(focus.x+Math.sin(angle)*horizontal,focus.y+Math.sin(elevation)*distance,focus.z+Math.cos(angle)*horizontal);
    camera.lookAt(focus);$("local3d-camera").textContent="TILTED 3D OVERVIEW · FLAT GROUND";
   }
  }
- function resize(){if(!renderer)return;const canvas=$("local3d-canvas"),w=canvas.clientWidth,h=canvas.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}
+ function resize(){if(!renderer)return;const canvas=$("local3d-canvas"),w=canvas.clientWidth,h=canvas.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();if(open&&selected===null){frameFleet();cameraPose()}}
  function animate(now=0){if(!open){frame=0;return}frame=requestAnimationFrame(animate);if(lastTick&&!training()?.paused){training()?.advance(Math.min(.1,(now-lastTick)/1000)*10*speedMultiplier);if(now-lastPaint>50){renderFleet(currentFrame());lastPaint=now}}lastTick=now;cameraPose();renderer.render(scene,camera)}
  async function setup(){if(renderer)return;if(setupPromise)return setupPromise;setupPromise=(async()=>{
-  Three=await import(THREE_URL);scene=new Three.Scene();camera=new Three.PerspectiveCamera(52,1,.5,100000);
+  Three=window.KnightThree;if(!Three)throw new Error("Bundled 3D dependency unavailable");scene=new Three.Scene();camera=new Three.PerspectiveCamera(52,1,.5,100000);
   renderer=new Three.WebGLRenderer({antialias:true,powerPreference:"low-power"});renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.5));
   renderer.outputColorSpace=Three.SRGBColorSpace;$("local3d-canvas").append(renderer.domElement);
   new ResizeObserver(resize).observe($("local3d-canvas"));resize();
