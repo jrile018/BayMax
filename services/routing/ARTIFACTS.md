@@ -29,3 +29,6 @@ Expected literal proof:
 Hand-authored fictional metric roads and hazard intervals, simulated authority, explicit safe destination declarations. Directed Dijkstra is a static reference; dispatch requires bounded full-edge interval validation. Simple paths have no waiting or retreat. No live GPS, real-world wildfire safety certificate, Monte Carlo probability, or arbitrary time-dependent global optimality claim.
 
 Historical red/green logs are retained in the same artifact directory. Earlier partial-reviewed-head and all-owned-current records belong to the earlier incomplete d763eb6 head and must not be mistaken for final C1 evidence.
+
+## Actual continuation boundary
+Versioned Ledger and TripExecutor checkpoint/restore are implemented; see CHECKPOINTS.md. Updated reviewed source suite:20 ledger +53 routing,73 total. New actual mixed-resource continuation evidence is separate from the preserved C1 bundle in artifacts/routing/checkpoint-v1; checkpoint-verified-head.json/.log pin its committed source. This does not complete sourced C2 integration or C3 acceptance.

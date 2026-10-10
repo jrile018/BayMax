@@ -47,6 +47,15 @@ class TripExecutor:
         self._triggers={}
         self._lock=RLock()
 
+    def checkpoint(self):
+        from .checkpoint import make_checkpoint
+        return make_checkpoint(self)
+
+    @classmethod
+    def from_checkpoint(cls,graph,payload):
+        from .checkpoint import restore_checkpoint
+        return restore_checkpoint(cls,graph,payload)
+
     @contextmanager
     def _atomic(self):
         # Shared ledger transaction and executor rollback define one authoritative action.

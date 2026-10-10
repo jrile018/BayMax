@@ -5,6 +5,7 @@ from dataclasses import asdict
 from math import isfinite, isclose
 from threading import RLock
 from .models import Assignment, LedgerError
+from .checkpoint import json_copy,make_checkpoint,restore_checkpoint
 
 def _id(value, name):
     if not isinstance(value, str) or not value:
@@ -36,6 +37,8 @@ def _people(values):
 
 class Ledger:
     def __init__(self, vehicles, requests, destinations, stocks):
+        vehicles=tuple(vehicles); requests=tuple(requests); destinations=tuple(destinations)
+        stocks=deepcopy(stocks)
         self._lock=RLock()
         self.vehicles={}
         self.requests={}
@@ -85,7 +88,17 @@ class Ledger:
         for goods in self.stocks.values():
             for good,qty in goods.items():
                 self._initial_goods[good]=self._initial_goods.get(good,0)+qty
+        self._initial_config=json_copy(dict(vehicles=[asdict(v) for v in sorted(vehicles,key=lambda v:v.vehicle_id)],
+            requests=[asdict(r) for r in sorted(requests,key=lambda r:r.request_id)],
+            destinations=[asdict(d) for d in sorted(destinations,key=lambda d:d.destination_id)],stocks=self.stocks))
         self.check_invariants()
+
+    def checkpoint(self):
+        return make_checkpoint(self)
+
+    @classmethod
+    def from_checkpoint(cls,payload):
+        return restore_checkpoint(cls,payload)
 
     @contextmanager
     def transaction(self):
@@ -124,7 +137,7 @@ class Ledger:
             now=_seconds(now_s,"now"); loading=_seconds(loading_s,"loading"); service=_seconds(service_s,"service")
             if not isinstance(route,dict):
                 raise LedgerError("route must be a validated route dictionary")
-            fingerprint=deepcopy((vehicle_id,request_id,route,now,loading,service,person_ids,cargo))
+            fingerprint=json_copy((vehicle_id,request_id,route,now,loading,service,person_ids,cargo))
             if dispatch_id in self.assignments:
                 if self._fingerprints[dispatch_id]!=fingerprint:
                     raise LedgerError("conflicting dispatch ID")
@@ -279,7 +292,7 @@ class Ledger:
                         medical_people_served=sum(o["people"] for o in self.outcomes.values() if o["kind"]=="medical"),
                         on_time_medical_people=sum(o["people"] for o in self.outcomes.values() if o["kind"]=="medical" and o["on_time"]),
                         delivered_goods=dict(self.delivered))
-            return deepcopy(dict(vehicles=dict(sorted(self.vehicles.items())),requests=dict(sorted(self.requests.items())),
+            return json_copy(dict(vehicles=dict(sorted(self.vehicles.items())),requests=dict(sorted(self.requests.items())),
                 destinations=dict(sorted(self.destinations.items())),stocks=dict(sorted(self.stocks.items())),
                 assignments={k:asdict(v) for k,v in sorted(self.assignments.items())},person_locations=dict(sorted(self.people.items())),
                 delivered=dict(self.delivered),outcomes=dict(sorted(self.outcomes.items())),outcome_counts=counts,
