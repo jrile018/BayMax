@@ -92,6 +92,9 @@ class Refresh:
 def _https_url(url):
     if not isinstance(url, str):
         raise SourceError("URL must be text")
+    if any(char.isspace() or ord(char) < 32 or ord(char) == 127
+           for char in url):
+        raise SourceError("source URL contains whitespace or control characters")
     try:
         p = urlsplit(url)
         forbidden = p.username or p.password or p.fragment or p.port

@@ -29,7 +29,8 @@ USGS_FIELDS = (
     "properties.place", "geometry.coordinates",
 )
 NWS_PAYLOAD = ("event", "status", "message_type", "provider_item_id",
-               "feature_url", "ugc", "affected_zones", "references")
+               "feature_url", "effective_at", "area_desc", "ugc",
+               "affected_zones", "references")
 USGS_PAYLOAD = ("event_type", "status", "magnitude", "depth_km",
                 "place", "provider_item_id", "associated_ids")
 PROVIDERS = {"nws": "National Weather Service", "usgs": "US Geological Survey"}
@@ -107,6 +108,12 @@ def _inside(point, bbox):
         raise SourceError("official geometry outside incident AOI")
 
 
+def _zone_prefixes(codes):
+    return sorted({code[:2] for code in codes
+                   if isinstance(code, str)
+                   and re.fullmatch(r"[A-Z]{2}[CZ][0-9]{3}", code)})
+
+
 def _geometry(candidate, bbox):
     geometry = candidate["geometry"]
     if candidate["source_id"] == "usgs":
@@ -117,8 +124,17 @@ def _geometry(candidate, bbox):
         label = candidate["area_label"]
         if not label:
             raise SourceError("null NWS geometry lacks area label")
-        return None, "area", label, (
+        uncertainty = (
             "NWS area association only; geometry unavailable; AOI not spatially verified")
+        query_area = re.search(r"(?:^|&)area=([A-Z]{2})$", candidate["source_url"])
+        prefixes = _zone_prefixes(candidate["ugc"])
+        if query_area:
+            outside_query = [code for code in prefixes if code != query_area.group(1)]
+            if outside_query:
+                uncertainty += (
+                    "; source zones also " + ", ".join(outside_query)
+                    + " outside queried " + query_area.group(1) + " area")
+        return None, "area", label, uncertainty
     if geometry["type"] != "Polygon" or len(geometry["coordinates"]) != 1:
         raise SourceError("incident-v1 cannot represent NWS multipolygon or holes")
     ring = geometry["coordinates"][0]
@@ -199,7 +215,8 @@ def build_official_record(document, provider_item_id, context, *, contract):
         payload = {
             "event": c["event"], "status": c["status"],
             "message_type": c["message_type"], "provider_item_id": c["id"],
-            "feature_url": c["feature_url"], "ugc": list(c["ugc"]),
+            "feature_url": c["feature_url"], "effective_at": c["effective"],
+            "area_desc": c["area_label"], "ugc": list(c["ugc"]),
             "affected_zones": list(c["affected_zones"]),
             "references": [dict(ref) for ref in c["references"]],
         }
@@ -271,6 +288,18 @@ def dispatcher_synopsis(snapshot, *, max_hazards=50):
         linked.append({
             "event": record.get("payload", {}).get("event",
                        record.get("payload", {}).get("event_type")),
+            "location_label": (
+                record.get("payload", {}).get("area_desc")
+                or record.get("payload", {}).get("place")
+                or record.get("area_label")),
+            "geometry": record["geometry"],
+            "magnitude": record.get("payload", {}).get("magnitude"),
+            "depth_km": record.get("payload", {}).get("depth_km"),
+            "effective_at": record.get("payload", {}).get("effective_at"),
+            "provider_status": record.get("payload", {}).get("status"),
+            "source_zone_prefixes": _zone_prefixes(
+                record.get("payload", {}).get("ugc", [])),
+            "source_kind": record["source_kind"],
             "source_id": record["source_id"], "item_id": record["item_id"],
             "revision": record["revision"], "source_url": record["source_url"],
             "raw_sha256": record["raw_sha256"], "published_at": record["published_at"],

@@ -222,3 +222,10 @@ class AdditionalOfficialSourceTests(unittest.TestCase):
                         nws(properties={"sent":"0001-01-01T00:00:00+01:00"})):
             with self.subTest(feature=feature),self.assertRaises(SourceError):
                 parse_nws_alerts(packet(NWS,[feature]))
+
+    def test_source_url_rejects_whitespace_before_urlsplit(self):
+        for url in (" https://api.weather.gov/alerts?active=true&area=CA",
+                    "https://api.weather.gov/\nalerts?active=true&area=CA",
+                    "https://api.weather.gov/\talerts?active=true&area=CA"):
+            with self.subTest(url=url), self.assertRaises(SourceError):
+                SourcePolicy("nws", (url,))

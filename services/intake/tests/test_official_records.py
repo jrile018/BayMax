@@ -47,6 +47,9 @@ class OfficialRecordTests(unittest.TestCase):
         self.assertEqual(record["source_url"], ACTUAL_NWS)
         self.assertEqual(record["precision"], "area")
         self.assertEqual(record["valid_from"], "2026-10-11T22:00:00Z")
+        self.assertEqual(record["payload"]["effective_at"],
+                         "2026-10-10T09:01:00Z")
+        self.assertEqual(record["payload"]["area_desc"], "Example area")
         self.assertIsNone(record["valid_through"])
         self.assertEqual(record["message_expires_at"], "2026-10-10T21:00:00Z")
         self.assertIn("AOI not spatially verified", record["source_uncertainty"])
@@ -59,6 +62,9 @@ class OfficialRecordTests(unittest.TestCase):
         snap = log.snapshot("2026-10-10T09:15:00Z")
         synopsis = dispatcher_synopsis(snap)
         self.assertEqual(synopsis["hazards"][0]["source_url"], ACTUAL_NWS)
+        self.assertEqual(synopsis["hazards"][0]["location_label"], "Example area")
+        self.assertEqual(synopsis["hazards"][0]["effective_at"],
+                         "2026-10-10T09:01:00Z")
         self.assertTrue(all(v == "unknown" for v in
                             synopsis["operational_categories"].values()))
         self.assertFalse(synopsis["can_calculate_operational_outcomes"])
@@ -78,6 +84,12 @@ class OfficialRecordTests(unittest.TestCase):
                                    official_policies=official_policies(CONTRACT))
         self.assertEqual(log.append(record, verification=verification)
                          ["acceptance"]["method"], "official_policy")
+        synopsis = dispatcher_synopsis(log.snapshot("2026-10-10T09:15:00Z"))
+        hazard = synopsis["hazards"][0]
+        self.assertEqual(hazard["geometry"]["coordinates"], [-151.317, 62.569])
+        self.assertEqual(hazard["location_label"], "Example")
+        self.assertEqual(hazard["magnitude"], 2.4)
+        self.assertEqual(hazard["depth_km"], 90.7)
         wrong = IngestionContext(context.accepted_at, context.first_seen_at,
                                  (-125, 32, -114, 42), True)
         with self.assertRaises(SourceError):
@@ -121,6 +133,22 @@ class OfficialRecordTests(unittest.TestCase):
             build_official_record(
                 document("nws", [bad], ACTUAL_NWS, "2026-10-10T09:15:00Z"),
                 "urn:oid:alert-2", second_ctx, contract=CONTRACT)
+
+    def test_nws_area_only_cross_state_zones_are_explicit(self):
+        feature = nws(properties={"areaDesc":"Mixed area",
+                  "geocode":{"UGC":["CAZ001","AZZ001"]}})
+        doc = document("nws", [feature], ACTUAL_NWS)
+        context = IngestionContext("2026-10-10T09:14:00Z",
+            "2026-10-10T09:12:00Z", (-125, 32, -114, 42), True)
+        record, verification = build_official_record(
+            doc, "urn:oid:alert-1", context, contract=CONTRACT)
+        self.assertIsNone(record["geometry"])
+        self.assertIn("AZ", record["source_uncertainty"])
+        log = CONTRACT.EvidenceLog("incident-4", [-125, 32, -114, 42],
+                                   official_policies=official_policies(CONTRACT))
+        log.append(record, verification=verification)
+        hazard = dispatcher_synopsis(log.snapshot("2026-10-10T09:15:00Z"))["hazards"][0]
+        self.assertEqual(hazard["source_zone_prefixes"], ["AZ", "CA"])
 
     def test_unverified_transport_and_mismatched_bytes_fail(self):
         doc = document("usgs", [usgs()], USGS)
