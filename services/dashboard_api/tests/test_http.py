@@ -27,6 +27,22 @@ class HTTPTests(unittest.TestCase):
         c=http.client.HTTPConnection('127.0.0.1',self.server.server_port,timeout=3)
         c.request(method,path);r=c.getresponse();data=r.read();status=r.status;headers=dict(r.getheaders());c.close()
         return status,headers,data
+    def test_situation_unavailable_without_trusted_provider(self):
+        status,headers,body=self.request('/api/situation')
+        self.assertEqual(status,200)
+        self.assertEqual(headers['Cache-Control'],'no-store')
+        self.assertEqual(json.loads(body),{'status':'unavailable','reason':'No accepted incident snapshot connected'})
+
+    def test_situation_uses_trusted_provider_and_never_request_payload(self):
+        self.server.shutdown();self.server.server_close();self.thread.join()
+        accepted={'schema_version':'knight26-incident-v1','snapshot_hash':'accepted-hash','categories':{'stock':None}}
+        self.server=make_server(self.store,self.web,port=0,situation_provider=lambda:accepted)
+        self.thread=threading.Thread(target=self.server.serve_forever,daemon=True);self.thread.start()
+        status,_,body=self.request('/api/situation?source_url=https://example.invalid/forged')
+        self.assertEqual(status,200)
+        self.assertEqual(json.loads(body),{'status':'available','snapshot':accepted})
+        self.assertEqual(self.request('/api/situation',method='POST')[0],405)
+
     def test_snapshot_payload_exact_and_nocache(self):
         status,headers,body=self.request('/api/frame?index=0')
         self.assertEqual(status,200);self.assertEqual(headers['Cache-Control'],'no-store')

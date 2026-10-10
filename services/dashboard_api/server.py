@@ -5,10 +5,11 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlsplit
 from .replay import ReplayStore
+from .situation import PublicationReader
 
 ROOT = Path(__file__).resolve().parents[2]
 
-def make_server(store, web_root, host='127.0.0.1', port=8765):
+def make_server(store, web_root, host='127.0.0.1', port=8765, *, situation_provider=None):
     web_root = Path(web_root).resolve()
     class Handler(BaseHTTPRequestHandler):
         def json_response(self, status, data):
@@ -34,6 +35,20 @@ def make_server(store, web_root, host='127.0.0.1', port=8765):
                     if len(query.get('lat',[]))!=1 or len(query.get('lon',[]))!=1:
                         raise ValueError('Provide one latitude and longitude')
                     self.json_response(200,store.coverage(float(query['lat'][0]),float(query['lon'][0])));return
+                if path=='/api/situation':
+                    # Only a root-owned, server-side provider may publish accepted evidence.
+                    # Request parameters and browser payloads cannot create acceptance.
+                    if situation_provider is None:
+                        self.json_response(200,{'status':'unavailable','reason':'No accepted incident snapshot connected'});return
+                    try:
+                        snapshot=situation_provider()
+                    except Exception:
+                        self.json_response(503,{'status':'unavailable','reason':'Accepted incident snapshot provider failed'});return
+                    if snapshot is None:
+                        self.json_response(200,{'status':'unavailable','reason':'No accepted incident snapshot connected'});return
+                    if not isinstance(snapshot,dict) or snapshot.get('schema_version')!='knight26-incident-v1' or not isinstance(snapshot.get('snapshot_hash'),str) or not isinstance(snapshot.get('categories'),dict):
+                        self.json_response(503,{'status':'unavailable','reason':'Accepted incident snapshot has an invalid shape'});return
+                    self.json_response(200,{'status':'available','snapshot':snapshot});return
                 if path=='/api/health':
                     self.json_response(200,{'status':'ok','mode':store.bootstrap()['mode']});return
                 if path.startswith('/api/'):
@@ -63,9 +78,14 @@ def main():
     parser.add_argument('--area',type=Path,default=ROOT/'fixtures/geography/paradise/area.json')
     parser.add_argument('--replay',type=Path,default=ROOT/'fixtures/replay_ui/paradise_mock.json')
     parser.add_argument('--web',type=Path,default=ROOT/'web')
+    parser.add_argument('--incident-publication-dir',type=Path,default=None,
+                        help='Trusted root SnapshotPublisher directory; never supplied by HTTP')
     args=parser.parse_args()
     store=ReplayStore(args.area,args.replay)
-    server=make_server(store,args.web,args.host,args.port)
+    situation_provider=(PublicationReader(args.incident_publication_dir).read
+                        if args.incident_publication_dir is not None else None)
+    server=make_server(store,args.web,args.host,args.port,
+                       situation_provider=situation_provider)
     print(f'Knight26 replay {store.bootstrap()["mode"]}: http://{args.host}:{server.server_port}',flush=True)
     try:server.serve_forever()
     except KeyboardInterrupt:pass

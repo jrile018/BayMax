@@ -8,6 +8,7 @@
 <script src="./upstream-panel-rail.js" defer></script>
 <script src="./satellite.js" defer></script>
   <script src="./earth-globe.js" defer></script>
+  <script src="./situation.js" defer></script>
   <script src="./app.js" defer></script>
 </head>
 <body>
@@ -49,6 +50,7 @@
         <g id="layer-trails"></g>
         <g id="layer-closures"></g>
         <g id="layer-vehicles"></g>
+        <g id="layer-situation" hidden aria-label="Accepted source geometry"></g>
         <g id="layer-annotations"></g>
         <g id="layer-measure"></g>
       </svg>
@@ -76,7 +78,8 @@
         <button id="annotate-toggle" type="button" title="Add a local annotation pin" aria-pressed="false">⌖<span class="sr-only">Add annotation</span></button>
         <button id="fullscreen-toggle" type="button" title="Toggle fullscreen" aria-label="Enter fullscreen">⛶</button>
       </div>
-      <div class="map-legend" aria-label="Map legend"><span><i class="legend-road"></i>OSM road</span><span><i class="legend-route"></i>Recorded route</span><span><i class="legend-trail"></i>Completed</span><span><i class="legend-fire"></i>Mock fire</span><span><i class="legend-closure"></i>Closure</span></div>
+      <div id="replay-map-legend" class="map-legend" aria-label="Recorded replay map legend"><span><i class="legend-road"></i>OSM road</span><span><i class="legend-route"></i>Recorded route</span><span><i class="legend-trail"></i>Completed</span><span><i class="legend-fire"></i>Mock fire</span><span><i class="legend-closure"></i>Closure</span></div>
+      <div id="situation-map-legend" class="map-legend" aria-label="Accepted source map legend" hidden><span><i class="legend-accepted-point"></i>Accepted source point</span><span><i class="legend-accepted-area"></i>Accepted source area</span><span>Source positions only · no inferred locations</span></div>
       <div class="map-telemetry"><span id="cursor-coords">Move pointer over map for coordinates</span><span id="map-scale">Scale --</span></div>
       <div id="osm-attribution" class="map-attribution"><span id="esri-credit"><span id="imagery-status">Loading Esri satellite imagery…</span> · Imagery <a href="https://www.esri.com/" target="_blank" rel="noopener noreferrer">Powered by Esri</a> — Source: Esri, Maxar, Earthstar Geographics, GIS User Community</span> · OSM vectors © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a></div>
       <form id="annotation-editor" class="annotation-editor" hidden><label for="annotation-input">Name this local pin</label><input id="annotation-input" type="text" maxlength="40" placeholder="Observation note"><div><button id="annotation-save" type="button">Save pin</button><button id="annotation-cancel" type="button">Cancel</button></div></form>
@@ -86,7 +89,7 @@
     <aside id="left-panel" class="panel left-panel" aria-label="Layers and contacts">
       <div class="panel-heading"><div><small>Mission controls</small><h2>Layers &amp; contacts</h2></div><button id="left-close" class="panel-close" type="button" aria-label="Close layers panel">×</button></div>
       <div class="panel-scroll">
-        <div class="panel-section"><div class="section-heading"><h3>Map layers</h3><button id="layers-reset" type="button">Reset</button></div><div id="layer-toggles" class="layer-toggles"></div></div>
+        <div class="panel-section"><div class="section-heading"><h3>Map layers</h3><button id="layers-reset" type="button">Reset</button></div><p id="situation-layer-note" class="situation-note" hidden>Recorded overlay controls are paused in Situation view. Only accepted source geometry is shown.</p><div id="layer-toggles" class="layer-toggles"></div></div>
         <div class="panel-section"><div class="section-heading"><h3>Field units</h3><span id="fleet-count" class="count">0</span></div><div id="fleet-list" class="fleet-list"><p class="empty-state">Waiting for replay snapshot.</p></div></div>
         <div class="panel-section"><div class="section-heading"><h3>Local marks</h3><button id="annotations-clear" type="button">Clear all</button></div><div id="annotation-list" class="annotation-list"><p class="empty-state">Use the pin tool to mark a location. Marks stay in this browser view only.</p></div></div>
       </div>
@@ -100,6 +103,7 @@
         <button id="tab-fleet" role="tab" type="button" aria-controls="pane-fleet" aria-selected="true">Fleet</button>
         <button id="tab-events" role="tab" type="button" aria-controls="pane-events" aria-selected="false" tabindex="-1">Events</button>
         <button id="tab-data" role="tab" type="button" aria-controls="pane-data" aria-selected="false" tabindex="-1">Data</button>
+        <button id="tab-situation" role="tab" type="button" aria-controls="pane-situation" aria-selected="false" tabindex="-1">Situation</button>
       </div>
       <div class="panel-scroll inspector-scroll">
         <section id="pane-fleet" role="tabpanel" aria-labelledby="tab-fleet">
@@ -110,6 +114,10 @@
         <section id="pane-events" role="tabpanel" aria-labelledby="tab-events" hidden>
           <div class="section-heading events-heading"><h3>Event timeline</h3><span id="event-count">0 events</span></div>
           <ol id="event-list" class="event-list"><li class="empty-state">Events appear as replay advances.</li></ol>
+        </section>
+        <section id="pane-situation" role="tabpanel" aria-labelledby="tab-situation" hidden>
+          <div class="situation-intro"><strong>Accepted source situation</strong><p>Read-only evidence at the stated cutoff. Map marks in this tab use accepted source geometry; the replay remains a constructed training exercise.</p></div>
+          <div id="situation-content" role="status" aria-live="polite"><p class="empty-state">Open Situation to check for an accepted incident snapshot.</p></div>
         </section>
         <section id="pane-data" role="tabpanel" aria-labelledby="tab-data" hidden>
           <p id="scenario-description" class="data-intro">Loading scenario details.</p>
