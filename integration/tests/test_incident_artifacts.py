@@ -1,12 +1,15 @@
 import copy
 import json
+import multiprocessing
 import os
 from pathlib import Path
+import stat
 import tempfile
 import unittest
 from unittest.mock import patch
 
 from contracts.incident import EvidenceLog, OfficialPolicy, VerifiedSource, record_fingerprint
+from integration import incident_artifacts
 from integration.incident_artifacts import SnapshotPublisher, VerifiedSynopsis
 
 
@@ -54,6 +57,19 @@ def append(store, record):
 
 def envelope(as_of, value):
     return {"as_of_utc": as_of, "value": value}
+
+
+def publish_in_child(directory, connection):
+    store = make_log()
+    append(store, make_record())
+    try:
+        SnapshotPublisher(directory).publish(store, T0)
+    except BaseException as exc:
+        connection.send(type(exc).__name__)
+    else:
+        connection.send("returned")
+    finally:
+        connection.close()
 
 
 class PublicationTests(unittest.TestCase):
@@ -187,6 +203,91 @@ class PublicationTests(unittest.TestCase):
         files = list(self.directory.glob("publication-*.json"))
         self.assertEqual(len(files), 2)
         self.assertEqual(json.loads(pointer)["view_hash"], first["view_hash"])
+
+    def _assert_prompt_nonregular_refusal(self):
+        context = multiprocessing.get_context("fork")
+        parent, child = context.Pipe(duplex=False)
+        process = context.Process(
+            target=publish_in_child, args=(str(self.directory), child))
+        process.start()
+        child.close()
+        try:
+            process.join(2)
+            if process.is_alive():
+                process.terminate()
+                process.join(2)
+                self.fail("publication blocked on nonregular existing file")
+            self.assertEqual(process.exitcode, 0)
+            self.assertTrue(parent.poll())
+            self.assertEqual(parent.recv(), "ValueError")
+        finally:
+            parent.close()
+            if process.is_alive():
+                process.kill()
+                process.join(2)
+
+    def test_fifo_current_pointer_is_refused_promptly(self):
+        first = self.publisher.publish(self.store, T0)
+        historical = self.directory / ("publication-" + first["view_hash"] + ".json")
+        content = historical.read_bytes()
+        pointer_path = self.directory / "current.json"
+        pointer_path.unlink()
+        os.mkfifo(pointer_path)
+        self._assert_prompt_nonregular_refusal()
+        self.assertTrue(stat.S_ISFIFO(pointer_path.lstat().st_mode))
+        self.assertEqual(historical.read_bytes(), content)
+
+    def test_fifo_publication_name_is_refused_promptly(self):
+        first = self.publisher.publish(self.store, T0)
+        second = self.publisher.publish(
+            self.store, T0,
+            source_health={"nws": {"status": "alive", "source_time": T0}})
+        second_path = self.directory / ("publication-" + second["view_hash"] + ".json")
+        second_content = second_path.read_bytes()
+        pointer = (self.directory / "current.json").read_bytes()
+        first_path = self.directory / ("publication-" + first["view_hash"] + ".json")
+        first_path.unlink()
+        os.mkfifo(first_path)
+        self._assert_prompt_nonregular_refusal()
+        self.assertEqual((self.directory / "current.json").read_bytes(), pointer)
+        self.assertEqual(second_path.read_bytes(), second_content)
+        self.assertTrue(stat.S_ISFIFO(first_path.lstat().st_mode))
+
+    def test_post_replace_fsync_failure_reports_committed_identity(self):
+        first = self.publisher.publish(self.store, T0)
+        old_pointer = (self.directory / "current.json").read_bytes()
+        real_fsync = os.fsync
+        directory_syncs = 0
+
+        def fail_after_replace(fd):
+            nonlocal directory_syncs
+            if stat.S_ISDIR(os.fstat(fd).st_mode):
+                directory_syncs += 1
+                if directory_syncs == 2:
+                    raise OSError("injected post-replace fsync failure")
+            return real_fsync(fd)
+
+        with patch("integration.incident_artifacts.os.fsync", side_effect=fail_after_replace):
+            with self.assertRaises(incident_artifacts.PointerDurabilityError) as raised:
+                self.publisher.publish(
+                    self.store, T0,
+                    source_health={"nws": {"status": "alive", "source_time": T0}})
+        current = (self.directory / "current.json").read_bytes()
+        pointer = json.loads(current)
+        error = raised.exception
+        self.assertNotEqual(current, old_pointer)
+        self.assertNotEqual(pointer["view_hash"], first["view_hash"])
+        self.assertTrue(error.pointer_committed)
+        self.assertFalse(error.durability_confirmed)
+        self.assertEqual(error.view_hash, pointer["view_hash"])
+        self.assertEqual(error.publication_file, pointer["publication_file"])
+        self.assertEqual(error.publication_sha256, pointer["publication_sha256"])
+        self.assertTrue((self.directory / error.publication_file).is_file())
+        retried = self.publisher.publish(
+            self.store, T0,
+            source_health={"nws": {"status": "alive", "source_time": T0}})
+        self.assertEqual(retried["view_hash"], error.view_hash)
+        self.assertEqual((self.directory / "current.json").read_bytes(), current)
 
     def test_invalid_or_symlink_output_refused(self):
         self.assertRaises(ValueError, SnapshotPublisher, self.directory / ".." / "other")

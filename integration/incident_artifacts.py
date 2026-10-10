@@ -105,6 +105,19 @@ def _geography(value, cutoff):
     return binding
 
 
+class PointerDurabilityError(OSError):
+    """The new current pointer is visible; directory durability is unconfirmed."""
+
+    def __init__(self, pointer):
+        super().__init__(
+            "current pointer was replaced, but directory fsync did not confirm durability")
+        self.pointer_committed = True
+        self.durability_confirmed = False
+        self.view_hash = pointer["view_hash"]
+        self.publication_file = pointer["publication_file"]
+        self.publication_sha256 = pointer["publication_sha256"]
+
+
 @dataclass(frozen=True)
 class VerifiedSynopsis:
     """Trusted caller's reviewed display text for exactly one snapshot hash."""
@@ -274,7 +287,8 @@ class SnapshotPublisher:
     @staticmethod
     def _read_regular(fd, name, limit):
         try:
-            file_fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW, dir_fd=fd)
+            file_fd = os.open(name, os.O_RDONLY | os.O_NONBLOCK | os.O_NOFOLLOW,
+                              dir_fd=fd)
         except FileNotFoundError:
             return None
         except OSError as exc:
@@ -356,17 +370,27 @@ class SnapshotPublisher:
                                      "publication_file", "publication_sha256"}):
                     raise ValueError("existing current pointer is malformed")
                 if old_pointer == pointer_bytes:
+                    try:
+                        os.fsync(fd)
+                    except OSError as exc:
+                        raise PointerDurabilityError(pointer) from exc
                     return
             temporary_name = f".current-{secrets.token_hex(16)}.tmp"
             try:
                 self._write_new(fd, temporary_name, pointer_bytes)
                 self._replace_pointer(fd, temporary_name)
-                os.fsync(fd)
             except BaseException:
                 try:
                     os.unlink(temporary_name, dir_fd=fd)
                 except FileNotFoundError:
                     pass
                 raise
+            # After os.replace succeeds, rolling current.json back could
+            # clobber a concurrent publisher. Report the committed identity
+            # separately when the durability sync fails.
+            try:
+                os.fsync(fd)
+            except OSError as exc:
+                raise PointerDurabilityError(pointer) from exc
         finally:
             os.close(fd)
