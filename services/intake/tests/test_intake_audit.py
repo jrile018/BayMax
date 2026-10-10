@@ -192,3 +192,79 @@ def test_unambiguous_following_road_restriction_blocks_open(text):
     assert 'qualified_access' in rec.proposal.claims[0].flags
     assert store.review(rec.proposal_id, 'accepted', 'scripted-reviewer',
                         expected_revision=1).effects == ()
+
+
+@pytest.mark.parametrize('text', [
+    "Water is needed at Pine School following yesterday's delivery of 10 bottles.",
+    "Water is needed at Pine School despite yesterday's distribution of 10 bottles.",
+    'Water is needed at Pine School following the arrival of 10 bottles.',
+])
+def test_prior_event_noun_count_does_not_size_current_request(text):
+    report = Report('audit:past-noun:' + text, 'fictional', 10, text)
+    raw = proposal(claim(text, kind='need', label='water', evidence=text,
+                         location='Pine School', quantity=10, unit='bottles'))
+    store = ReviewStore({'Pine School': {'entity_id': 'pine',
+                                         'entity_type': 'node', 'source': 'fictional graph'}})
+    with pytest.raises(ValidationError):
+        store.submit(report, raw, 'scripted')
+
+
+@pytest.mark.parametrize('text', [
+    'Highway A is open. Only bicycles arriving from Highway B may cross it.',
+    'Highway A is open. Trucks coming from Highway B may not use it.',
+    'Highway A is open. Bicycles only.',
+    'Highway A is open. Access is limited to bicycles.',
+])
+def test_adjacent_restriction_on_first_road_blocks_unscoped_open(text):
+    report = Report('audit:restricted-a:' + text, 'fictional', 10, text)
+    raw = proposal(claim(text, kind='access', label='open',
+                         evidence='Highway A is open', location='Highway A'))
+    store = ReviewStore({'Highway A': {'entity_id': 'highway-a',
+                                      'entity_type': 'edge', 'source': 'fictional graph'}})
+    rec = store.submit(report, raw, 'scripted')
+    assert 'qualified_access' in rec.proposal.claims[0].flags
+    assert store.review(rec.proposal_id, 'accepted', 'scripted-reviewer',
+                        expected_revision=1).effects == ()
+
+
+def test_semicolon_independent_vehicle_need_does_not_scope_open_road():
+    text = 'Highway A is open; trucks need fuel.'
+    report = Report('audit:independent-semicolon-need', 'fictional', 10, text)
+    raw = proposal(claim(text, kind='access', label='open',
+                         evidence='Highway A is open', location='Highway A'))
+    store = ReviewStore({'Highway A': {'entity_id': 'highway-a',
+                                      'entity_type': 'edge', 'source': 'fictional graph'}})
+    rec = store.submit(report, raw, 'scripted')
+    assert 'qualified_access' not in rec.proposal.claims[0].flags
+    effects = store.review(rec.proposal_id, 'accepted', 'scripted-reviewer',
+                           expected_revision=1).effects
+    assert len(effects) == 1
+    assert effects[0]['status'] == 'open'
+
+
+def test_count_after_request_without_prior_event_remains_actionable():
+    text = 'We need 10 bottles of water at Pine School.'
+    report = Report('audit:need-count-after-verb', 'fictional', 10, text)
+    raw = proposal(claim(text, kind='need', label='water', evidence=text,
+                         location='Pine School', quantity=10, unit='bottles'))
+    store = ReviewStore({'Pine School': {'entity_id': 'pine',
+                                         'entity_type': 'node', 'source': 'fictional graph'}})
+    rec = store.submit(report, raw, 'scripted')
+    effects = store.review(rec.proposal_id, 'accepted', 'scripted-reviewer',
+                           expected_revision=1).effects
+    assert len(effects) == 1 and effects[0]['quantity'] == 10
+
+
+@pytest.mark.parametrize('separator', ['.', ';'])
+def test_only_in_unrelated_fuel_need_does_not_restrict_road(separator):
+    text = f'Highway A is open{separator} Only trucks need fuel for it.'
+    report = Report('audit:only-fuel:' + separator, 'fictional', 10, text)
+    raw = proposal(claim(text, kind='access', label='open',
+                         evidence='Highway A is open', location='Highway A'))
+    store = ReviewStore({'Highway A': {'entity_id': 'highway-a',
+                                      'entity_type': 'edge', 'source': 'fictional graph'}})
+    rec = store.submit(report, raw, 'scripted')
+    assert 'qualified_access' not in rec.proposal.claims[0].flags
+    effects = store.review(rec.proposal_id, 'accepted', 'scripted-reviewer',
+                           expected_revision=1).effects
+    assert len(effects) == 1 and effects[0]['status'] == 'open'

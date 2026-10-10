@@ -72,8 +72,14 @@ COUNT_UNCERTAINTY = APPROX + r'|\b(between|at least|at most|more than|less than|
 CLAUSE_NEGATION = r"\b(not|no|never|without|don't|doesn't|didn't|cannot|can't|sin|nadie)\b"
 SOON = r'\b(soon|today|tomorrow|tonight|before|within|by|pronto|hoy|ma[ñn]ana)\b'
 COMPLETED_EVENT = r'\b(?:delivered|distributed|supplied|provided|served|received|evacuated|completed|picked up|dropped off)\b'
+PAST_EVENT_CONTEXT = r'\b(?:delivery|distribution|arrival|shipment|receipt|dropoff|delivered|distributed|arrived|supplied|provided|received|previously|earlier|prior|yesterday|already)\b'
+REQUEST_SEGMENT_BOUNDARY = r'[,;.!?\n]|\b(?:and|but|however|yet|while|whereas|then|after|before|following|despite|since|because|although|though|once)\b'
 REQUEST_CONJUNCTION = r'\b(?:but|and|however|yet|while|whereas|then)\b'
 ACCESS_COREFERENCE = r'\b(?:it|there|this road|that road|the road|this route|that route|the route|this highway|that highway|the highway)\b'
+ACCESS_RESTRICTION = r'\b(?:only|except|excluding|unless|until|before|after|between|during|limited|restricted|prohibited|cannot|not allowed)\b|\bmay\s+not\b'
+ACCESS_ACTION = r'\b(?:cross|use|pass|travel|enter|drive|walk|access|open|closed|blocked|limited|restricted|prohibited)\b'
+ACCESS_ELLIPSIS = r'^\s*(?:(?:only\s+)?(?:bicycles?|bikes?|cyclists?|pedestrians?|vehicles?|cars?|trucks?|buses?|motorcycles?|ambulances?)\s+(?:only\b|(?:may|can|must)\s+(?:cross|use|pass|travel)\b)|access\s+is\s+(?:limited|restricted)\s+to\b)'
+OTHER_ROAD_SUBJECT = r'^\s*(?:the\s+)?(?:[Hh]ighway|[Rr]oad|[Rr]oute|[Ss]treet|[Bb]ridge|[Aa]venue)\s+(?:[A-Z][A-Za-z0-9-]*|\d+)\b'
 ACCESS_QUALIFIER = (
     r'\b(?:only|except|excluding|unless|until|before|after|between|during|'
     r'bicycles?|bikes?|cyclists?|pedestrians?|peatones?|on foot|'
@@ -162,18 +168,29 @@ def _source_clause(report, ev, kind):
     return lo,hi,report.text[lo:hi]
 
 def _count_in_request_segment(report, context_start, context_end, quantity, unit):
-    # Counts in completed-event segments cannot become a new request count.
+    # Only an atomic request phrase can size a new need. Mixed past-event
+    # phrases or distant modifiers abstain instead of lending their count.
     context=report.text[context_start:context_end]
     cuts=[context_start]
-    for boundary in re.finditer(r'[,;.!?\n]|\b(?:and|but|however|yet|while|whereas|then|after|before)\b',context,re.I):
+    for boundary in re.finditer(REQUEST_SEGMENT_BOUNDARY,context,re.I):
         cuts.extend((context_start+boundary.start(),context_start+boundary.end()))
     cuts.append(context_end)
     for lo,hi in zip(cuts[::2],cuts[1::2]):
-        if (lo<=quantity.evidence.start<quantity.evidence.end<=hi
-                and lo<=unit.evidence.start<unit.evidence.end<=hi):
-            segment=report.text[lo:hi]
-            return bool(re.search(NEED_REQUEST,segment,re.I)
-                        and not re.search(COMPLETED_EVENT,segment,re.I))
+        q,u=quantity.evidence,unit.evidence
+        if not (lo<=q.start<q.end<=hi and lo<=u.start<u.end<=hi):
+            continue
+        segment=report.text[lo:hi]
+        if re.search(COMPLETED_EVENT,segment,re.I) or re.search(PAST_EVENT_CONTEXT,segment,re.I):
+            return False
+        count_start,count_end=min(q.start,u.start),max(q.end,u.end)
+        for request in re.finditer(NEED_REQUEST,segment,re.I):
+            request_start,request_end=lo+request.start(),lo+request.end()
+            bridge=(report.text[request_end:count_start] if request_end<=count_start
+                    else report.text[count_end:request_start] if count_end<=request_start else '')
+            if (len(re.findall(r'\b\w+\b',bridge))<=8
+                    and not re.search(PAST_EVENT_CONTEXT,bridge,re.I)):
+                return True
+        return False
     return False
 
 
@@ -184,15 +201,17 @@ def _following_access_restriction(report, context_end, location):
         return False
     end=re.search(r'[.;!?\n]',tail)
     following=tail[:end.start()] if end else tail
-    if not re.search(ACCESS_QUALIFIER,following,re.I):
+    if not re.search(ACCESS_RESTRICTION,following,re.I):
         return False
-    named_road=re.search(r'\b(?:[Hh]ighway|[Rr]oad|[Rr]oute|[Ss]treet|[Bb]ridge|[Aa]venue)\s+(?:[A-Z][A-Za-z0-9-]*|\d+)\b',following)
-    if named_road and named_road.group().casefold()!=location.casefold():
+    ellipsis=bool(re.search(ACCESS_ELLIPSIS,following,re.I))
+    if not ellipsis and not re.search(ACCESS_ACTION,following,re.I):
+        return False
+    subject=re.match(OTHER_ROAD_SUBJECT,following)
+    if subject and subject.group().strip().casefold()!=location.casefold():
         return False
     return bool(re.search(ACCESS_COREFERENCE,following,re.I)
                 or re.search(re.escape(location),following,re.I)
-                or report.text[context_end:context_end+1]==';'
-                or re.match(r'\s*only\s+(?:bicycles?|bikes?|cyclists?|pedestrians?|vehicles?|cars?|trucks?|buses?|motorcycles?|ambulances?)\s+(?:may|can|must)\s+(?:cross|use|pass|travel)\b',following,re.I))
+                or ellipsis)
 
 
 def parse_proposal(report, payload, provider):
