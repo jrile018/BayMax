@@ -1,0 +1,72 @@
+{
+  "schema_version": "casualty-cpu-runtime-smoke-v1",
+  "run_status": "success",
+  "recorded_at": "2026-10-10T08:05:57.414242+00:00",
+  "input_kind": "generated_zero_raster",
+  "input_dimensions": [
+    128,
+    128
+  ],
+  "input_raw_sha256": "2aae7dc846aaf25f1cadf55f1666862046c6db9d65d84bdc07fa039dac405606",
+  "input_channel_order": "BGR",
+  "photo_processed": false,
+  "case_pipeline_exercised": false,
+  "device": "cpu",
+  "model_revision": "3cc26e7f1014a5ee5d74a42acee58bafc9d0a310",
+  "model_sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4",
+  "model_source": "https://huggingface.co/opencv/face_detection_yunet/resolve/3cc26e7f1014a5ee5d74a42acee58bafc9d0a310/face_detection_yunet_2023mar.onnx",
+  "ingress_reference": "artifacts/casualty/INGRESS_MANIFEST.json",
+  "runtime_version": "4.14.0",
+  "numpy_version": "2.5.2",
+  "python_version": "3.14.4",
+  "settings": {
+    "score_threshold": 0.9,
+    "nms_threshold": 0.3,
+    "top_k": 50,
+    "cpu_threads": 2
+  },
+  "effective_score_threshold": 0.8999999761581421,
+  "effective_nms_threshold": 0.30000001192092896,
+  "runtime_module_origin": "/workspace/knight26/worktrees/faces/artifacts/casualty/runtime-deps/cv2/__init__.py",
+  "torch_imported": false,
+  "forward_calls_attempted": 2,
+  "successful_forward_returns": 2,
+  "face_box_counts": [
+    0,
+    0
+  ],
+  "normalized_boxes": [
+    [],
+    []
+  ],
+  "output_diagnostics": [
+    {
+      "kind": "NoneType",
+      "shape": null,
+      "dtype": "",
+      "first_row_columns": null,
+      "row_count": null
+    },
+    {
+      "kind": "NoneType",
+      "shape": null,
+      "dtype": "",
+      "first_row_columns": null,
+      "row_count": null
+    }
+  ],
+  "cold_create_and_forward_s": 0.017255110666155815,
+  "warm_forward_s": 0.001999974250793457,
+  "timing_scope": "cold:create/input-size/forward/validation; warm:forward/validation; excludes imports/hash/copy",
+  "clinical_or_face_accuracy_claim": "none",
+  "limitation": "one generated blank control; no real-photo or case/review integration proof",
+  "actual_model_forward_performed": true,
+  "no_face_negative_passed": true,
+  "source_commit": "2d5f51fdb7e5ffe6d61fdd25ea409d82d3b87028",
+  "relevant_source_clean": true,
+  "source_sha256": {
+    "services/casualty/runtime_probe.py": "0ae309dda44cb95d04e0d85ebc63702a4dcb9492f37c6263b0605f849f536e46",
+    "services/casualty/detector.py": "ac5b1bafc96519283e7b87322a3de9005f61aabd8c4f887daeda5f03840c5532",
+    "services/casualty/contracts.py": "5cd980e2d91fddaf677c7df8b246953b1bf3271de237dddbcec70530a7342334"
+  }
+}

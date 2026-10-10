@@ -1,0 +1,32 @@
+{
+  "captured_at": "2026-10-10T08:05:57.252069+00:00",
+  "opencv_version": "4.14.0",
+  "opencv_distribution_version": "4.14.0.94",
+  "opencv_origin": "/workspace/knight26/worktrees/faces/artifacts/casualty/runtime-deps/cv2/__init__.py",
+  "numpy_version": "2.5.2",
+  "numpy_origin": "/opt/venv/lib/python3.14/site-packages/numpy/__init__.py",
+  "cpu_threads": 2,
+  "cpu_backend": 3,
+  "cpu_target": 0,
+  "FaceDetectorYN_create_present": true,
+  "torch_imported": false,
+  "gpu_context_requested": false,
+  "license_notices": {
+    "artifacts/casualty/runtime-deps/cv2/LICENSE-3RD-PARTY.txt": {
+      "sha256": "36bae33968d5e67f66906bc595949cb78d65978604e7392f552a79006c93cf2c",
+      "bytes": 179306
+    },
+    "artifacts/casualty/runtime-deps/cv2/LICENSE.txt": {
+      "sha256": "09d719058e782ac7bc71ba21c944e1136cde2bb957c0e888121f0218d6b5f02c",
+      "bytes": 1070
+    },
+    "artifacts/casualty/runtime-deps/opencv_python_headless-4.14.0.94.dist-info/LICENSE-3RD-PARTY.txt": {
+      "sha256": "36bae33968d5e67f66906bc595949cb78d65978604e7392f552a79006c93cf2c",
+      "bytes": 179306
+    },
+    "artifacts/casualty/runtime-deps/opencv_python_headless-4.14.0.94.dist-info/LICENSE.txt": {
+      "sha256": "09d719058e782ac7bc71ba21c944e1136cde2bb957c0e888121f0218d6b5f02c",
+      "bytes": 1070
+    }
+  }
+}
