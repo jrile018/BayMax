@@ -1,0 +1,97 @@
+.F..........FFFFFF                                                       [100%]
+=================================== FAILURES ===================================
+___________ test_demo_cannot_evaluate_without_evaluation_permission ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-18/test_demo_cannot_evaluate_with0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x777accb7e060>
+
+    def test_demo_cannot_evaluate_without_evaluation_permission(tmp_path,monkeypatch):
+        from dataclasses import replace
+        import pytest
+        from services.casualty import demo
+        case,face=demo.load_fixture()
+        limited=replace(case,rights=replace(case.rights,permitted_uses=('display','face_detection')))
+        monkeypatch.setattr(demo,'load_fixture',lambda:(limited,face))
+        output=tmp_path/'must-not-exist.json'
+>       with pytest.raises(ValueError,match='permission'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+services/casualty/tests/test_demo.py:30: Failed
+______ test_impossible_counts_cannot_publish_misleading_metrics[values0] _______
+
+values = (1, -1, 0, 1)
+
+    @pytest.mark.parametrize('values',[(1,-1,0,1),(True,0,0,0),(1,0,0,2),(1,0,0,float('nan')),(0,0,0,.1)])
+    def test_impossible_counts_cannot_publish_misleading_metrics(values):
+        from evals.casualty.localization import LocalizationCounts
+>       with pytest.raises(ValueError):LocalizationCounts(*values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+evals/casualty/tests/test_localization.py:58: Failed
+______ test_impossible_counts_cannot_publish_misleading_metrics[values1] _______
+
+values = (True, 0, 0, 0)
+
+    @pytest.mark.parametrize('values',[(1,-1,0,1),(True,0,0,0),(1,0,0,2),(1,0,0,float('nan')),(0,0,0,.1)])
+    def test_impossible_counts_cannot_publish_misleading_metrics(values):
+        from evals.casualty.localization import LocalizationCounts
+>       with pytest.raises(ValueError):LocalizationCounts(*values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+evals/casualty/tests/test_localization.py:58: Failed
+______ test_impossible_counts_cannot_publish_misleading_metrics[values2] _______
+
+values = (1, 0, 0, 2)
+
+    @pytest.mark.parametrize('values',[(1,-1,0,1),(True,0,0,0),(1,0,0,2),(1,0,0,float('nan')),(0,0,0,.1)])
+    def test_impossible_counts_cannot_publish_misleading_metrics(values):
+        from evals.casualty.localization import LocalizationCounts
+>       with pytest.raises(ValueError):LocalizationCounts(*values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+evals/casualty/tests/test_localization.py:58: Failed
+______ test_impossible_counts_cannot_publish_misleading_metrics[values3] _______
+
+values = (1, 0, 0, nan)
+
+    @pytest.mark.parametrize('values',[(1,-1,0,1),(True,0,0,0),(1,0,0,2),(1,0,0,float('nan')),(0,0,0,.1)])
+    def test_impossible_counts_cannot_publish_misleading_metrics(values):
+        from evals.casualty.localization import LocalizationCounts
+>       with pytest.raises(ValueError):LocalizationCounts(*values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+evals/casualty/tests/test_localization.py:58: Failed
+______ test_impossible_counts_cannot_publish_misleading_metrics[values4] _______
+
+values = (0, 0, 0, 0.1)
+
+    @pytest.mark.parametrize('values',[(1,-1,0,1),(True,0,0,0),(1,0,0,2),(1,0,0,float('nan')),(0,0,0,.1)])
+    def test_impossible_counts_cannot_publish_misleading_metrics(values):
+        from evals.casualty.localization import LocalizationCounts
+>       with pytest.raises(ValueError):LocalizationCounts(*values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+evals/casualty/tests/test_localization.py:58: Failed
+___________ test_underflowing_box_area_is_rejected_before_evaluation ___________
+
+    def test_underflowing_box_area_is_rejected_before_evaluation():
+>       with pytest.raises(ValueError,match='area'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+evals/casualty/tests/test_localization.py:62: Failed
+=========================== short test summary info ============================
+FAILED services/casualty/tests/test_demo.py::test_demo_cannot_evaluate_without_evaluation_permission
+FAILED evals/casualty/tests/test_localization.py::test_impossible_counts_cannot_publish_misleading_metrics[values0]
+FAILED evals/casualty/tests/test_localization.py::test_impossible_counts_cannot_publish_misleading_metrics[values1]
+FAILED evals/casualty/tests/test_localization.py::test_impossible_counts_cannot_publish_misleading_metrics[values2]
+FAILED evals/casualty/tests/test_localization.py::test_impossible_counts_cannot_publish_misleading_metrics[values3]
+FAILED evals/casualty/tests/test_localization.py::test_impossible_counts_cannot_publish_misleading_metrics[values4]
+FAILED evals/casualty/tests/test_localization.py::test_underflowing_box_area_is_rejected_before_evaluation
+7 failed, 11 passed in 0.07s

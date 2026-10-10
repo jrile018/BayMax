@@ -1,0 +1,33 @@
+{
+  "nonburnable_codes": [
+    91,
+    92,
+    93,
+    98,
+    99
+  ],
+  "note": "Numeric fuel-code compatibility is deliberately limited. Multipliers are authored training assumptions, not measured or Rothermel-derived rates. No LANDFIRE raster was ingested.",
+  "physical_calibration": false,
+  "profiles": [
+    {
+      "code": 101,
+      "relative_training_rate": 1.0
+    },
+    {
+      "code": 102,
+      "relative_training_rate": 1.15
+    }
+  ],
+  "source_ledger": [
+    {
+      "description": "Authored 230m square training grid. Fuel codes, water strip/gap, terrain, wind, moisture and roads are synthetic; no real incident/geography.",
+      "kind": "synthetic",
+      "license": "CC0-1.0",
+      "observed_at_utc": null,
+      "retrieved_at_utc": "2026-10-10T06:45:00Z",
+      "source_id": "synthetic-wildfire-c1-20261010",
+      "uri": null
+    }
+  ],
+  "status": "assumed_training_profiles"
+}

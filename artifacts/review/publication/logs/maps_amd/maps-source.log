@@ -1,0 +1,13 @@
+raw_sha_match True
+graph_source_sha_match True
+source_endpoint https://api.openstreetmap.org/api/0.6/map?bbox=-121.621,39.742,-121.591,39.765
+observed {'min': '2007-10-25T04:57:29Z', 'max': '2026-09-09T03:34:43Z'}
+coverage_bbox [-121.621, 39.742, -121.591, 39.765]
+geometry_bbox [-121.6316959, 39.7241925, -121.572416, 39.7935035]
+viewport_bbox [-121.6316959, 39.7241925, -121.572416, 39.7935035]
+counts {'roads': 444, 'buildings': 199, 'landuse': 40}
+graph_counts {'nodes': 3046, 'edges': 5959}
+road_coverage {'layer': 'roads', 'status': 'available', 'detail': '444 OSM highway ways'}
+all_positive_edge_time True
+destination_tag_raw_count 2
+EXIT_CODE:0n

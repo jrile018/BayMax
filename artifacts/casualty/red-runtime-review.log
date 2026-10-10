@@ -1,0 +1,90 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+_______ test_failed_second_call_retains_first_fp_and_failure_diagnostics _______
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-69/test_failed_second_call_retain0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7a53c069b490>
+
+    def test_failed_second_call_retains_first_fp_and_failure_diagnostics(tmp_path, monkeypatch):
+        from services.casualty.runtime_probe import run_cpu_probe
+        from services.casualty.detector import DetectorFailure
+        fake = install_fake(monkeypatch, [row()])
+        calls = 0
+        def second_failure(image):
+            nonlocal calls
+            calls += 1
+            return (1,[row()]) if calls == 1 else (1,[[0]*14])
+        fake.detect = second_failure
+        with pytest.raises(DetectorFailure) as captured:
+            run_cpu_probe(control_artifact(tmp_path,monkeypatch))
+>       report = captured.value.report
+                 ^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'DetectorFailure' object has no attribute 'report'
+
+services/casualty/tests/test_runtime_probe.py:88: AttributeError
+_______ test_source_provenance_resolves_module_repository_from_other_cwd _______
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-69/test_source_provenance_resolve0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7a53c069a9e0>
+
+    def test_source_provenance_resolves_module_repository_from_other_cwd(tmp_path,monkeypatch):
+        from services.casualty import runtime_probe
+        root,expected=fixture_repository(tmp_path)
+        other=tmp_path/'different-working-directory'
+        other.mkdir()
+        monkeypatch.chdir(other)
+        monkeypatch.setattr(runtime_probe,'__file__',str(root/'services/casualty/runtime_probe.py'))
+>       result=runtime_probe.source_provenance()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'services.casualty.runtime_probe' has no attribute 'source_provenance'
+
+/workspace/knight26/worktrees/faces/services/casualty/tests/test_runtime_probe.py:124: AttributeError
+----------------------------- Captured stderr call -----------------------------
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+_____________ test_dirty_relevant_source_cannot_claim_clean_commit _____________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-69/test_dirty_relevant_source_can0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7a53c00c1010>
+
+    def test_dirty_relevant_source_cannot_claim_clean_commit(tmp_path,monkeypatch):
+        from services.casualty import runtime_probe
+        root,_=fixture_repository(tmp_path)
+        monkeypatch.setattr(runtime_probe,'__file__',str(root/'services/casualty/runtime_probe.py'))
+        (root/'services/casualty/detector.py').write_text('modified source\n')
+        with pytest.raises(ValueError,match='source'):
+>           runtime_probe.source_provenance()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'services.casualty.runtime_probe' has no attribute 'source_provenance'
+
+services/casualty/tests/test_runtime_probe.py:136: AttributeError
+----------------------------- Captured stderr call -----------------------------
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+=========================== short test summary info ============================
+FAILED services/casualty/tests/test_runtime_probe.py::test_failed_second_call_retains_first_fp_and_failure_diagnostics
+FAILED services/casualty/tests/test_runtime_probe.py::test_source_provenance_resolves_module_repository_from_other_cwd
+FAILED services/casualty/tests/test_runtime_probe.py::test_dirty_relevant_source_cannot_claim_clean_commit
+3 failed, 6 deselected in 0.14s

@@ -1,0 +1,18 @@
+# Design references
+
+- [God's Eye View, Bilawal Sidhu and contributors, commit 591f299d11f38a612629a274463196d57ae3862e](https://github.com/bilawalsidhu/gods-eye-view/tree/591f299d11f38a612629a274463196d57ae3862e), MIT. Reused interaction ideas: map as the main workspace, compact contact roster, click-to-track camera, layer switches, local search, annotation and source-aware inspection. The current shell uses original HTML, CSS and SVG code; `upstream-panel-rail.js` adapts the upstream pure `src/ui/panelRailGeometry.js` rail solver to position the map tool column around visible HUD obstacles. It does not copy promotional media, imagery, 3D tiles or Google data. Knight26 displays saved training snapshots; it never labels them live contacts.
+- [Anthropic frontend-design skill, revision dbd4588f9e1033efb41dad4bef2f7947c8993d44](https://github.com/anthropics/skills/tree/dbd4588f9e1033efb41dad4bef2f7947c8993d44/skills/frontend-design). Applied its subject-specific design, restrained hierarchy, clear copy, and responsive focus/reduced-motion guidance.
+- [UI/UX Pro Max, revision 50d8a7de0900119855614541f15a1a616691eb33](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill/tree/50d8a7de0900119855614541f15a1a616691eb33). Applied operational-map guidance: scannable dark neutral panels, readable telemetry, visible source freshness, touch targets and drag alternatives. Local focused notes: c1/ui-ux-guidance-focused.txt.
+
+The interface uses native Segoe UI and system monospace fonts. The Earth view loads pinned Three.js from a CDN, and the local imagery view requests transient Esri tiles. Both views need network access; no font CDN is used.
+
+
+The final visual direction follows the user-provided WORLDVIEW screenshot only as a composition reference: nearly black command chrome, cyan telemetry, collapsible edge panels, wide map center and a full-width playback dock. The center opens as a NASA Earth globe and switches to a local Paradise satellite map with OSM vectors. Neither imagery view is a live incident feed or 3D terrain. The page layout, icons, linework and labels were created for this project. The MIT rail layout helper is adapted from the pinned upstream source. Optional light mode uses a familiar high-contrast street-map palette.
+
+The adapted helper retains Bilawal Sidhu’s copyright and the full MIT permission/warranty notice in its JavaScript header, which remains present when the saved preview inlines the script. `UPSTREAM_LICENSE.txt` contains the license text. Changes to the upstream helper: removed the ES module export, exposed a classic-script `KnightHudRail` global, and omitted the unrelated collapsed-sibling helper. The project maps its real local HUD obstacles into the helper’s pure rectangle inputs; no upstream data, model, map service or visual asset is copied.
+
+## Real Earth and imagery
+
+The Earth overview uses the NASA/GSFC Scientific Visualization Studio [equirectangular Blue Marble Earth composite](https://svs.gsfc.nasa.gov/3615), credited in the UI. This is a historic visualization, not current incident imagery. The interactive globe is rendered with Three.js 0.180.0; the saved cloud preview embeds the NASA JPEG so its sandbox can display the WebGL texture.
+
+The local Paradise map displays transient Esri World Imagery tiles from the ArcGIS World_Imagery MapServer, following the keyless imagery fallback described in the pinned God’s Eye View source. Esri and source partners are credited on the map. Tile acquisition dates are unspecified. Roads and buildings overlaid on the imagery are sourced separately from OpenStreetMap, and replay routes, vehicles and fire are constructed training content. The saved preview needs network access for imagery and the globe runtime.

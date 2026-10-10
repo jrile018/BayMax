@@ -1,0 +1,230 @@
+FFFFFFFFFFFFFFF                                                          [100%]
+=================================== FAILURES ===================================
+________________ test_synthetic_case_is_explicit_and_hash_bound ________________
+
+    def test_synthetic_case_is_explicit_and_hash_bound():
+>       from services.casualty.contracts import verify_image
+E       ModuleNotFoundError: No module named 'services.casualty.contracts'
+
+services/casualty/tests/test_contracts.py:41: ModuleNotFoundError
+________ test_real_photo_requires_independent_license_and_adult_consent ________
+
+    def test_real_photo_requires_independent_license_and_adult_consent():
+        for field, value in [("verification_status","pending"), ("license_evidence", ""),
+                             ("consent_evidence",None), ("adult_only",False), ("verified_by","")]:
+>           r=rights("consented_photo", consent_evidence="consent:adult-approved-001", **{field:value}) if field != "consent_evidence" else rights("consented_photo",consent_evidence=None)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+services/casualty/tests/test_contracts.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+kind = 'consented_photo'
+changes = {'consent_evidence': 'consent:adult-approved-001', 'verification_status': 'pending'}
+
+    def rights(kind="synthetic", **changes):
+>       from services.casualty.contracts import RightsManifest
+E       ModuleNotFoundError: No module named 'services.casualty.contracts'
+
+services/casualty/tests/test_contracts.py:8: ModuleNotFoundError
+_______________ test_each_operation_requires_its_own_permission ________________
+
+    def test_each_operation_requires_its_own_permission():
+>       r=rights(permitted_uses=("display",))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+services/casualty/tests/test_contracts.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+kind = 'synthetic', changes = {'permitted_uses': ('display',)}
+
+    def rights(kind="synthetic", **changes):
+>       from services.casualty.contracts import RightsManifest
+E       ModuleNotFoundError: No module named 'services.casualty.contracts'
+
+services/casualty/tests/test_contracts.py:8: ModuleNotFoundError
+___________ test_malformed_box_cannot_become_face_evidence[coords0] ____________
+
+coords = (-0.1, 0.2, 0.6, 0.8, 0.9)
+
+    @pytest.mark.parametrize("coords", [(-0.1,.2,.6,.8,.9),(.5,.2,.5,.8,.9),(.6,.2,.1,.8,.9),
+                                          (.1,.2,1.1,.8,.9),(.1,.2,.6,float("nan"),.9),
+                                          (.1,.2,.6,.8,float("inf")),(True,.2,.6,.8,.9)])
+    def test_malformed_box_cannot_become_face_evidence(coords):
+>       from services.casualty.contracts import FaceBox
+E       ModuleNotFoundError: No module named 'services.casualty.contracts'
+
+services/casualty/tests/test_contracts.py:69: ModuleNotFoundError
+___________ test_malformed_box_cannot_become_face_evidence[coords1] ____________
+
+coords = (0.5, 0.2, 0.5, 0.8, 0.9)
+
+    @pytest.mark.parametrize("coords", [(-0.1,.2,.6,.8,.9),(.5,.2,.5,.8,.9),(.6,.2,.1,.8,.9),
+                                          (.1,.2,1.1,.8,.9),(.1,.2,.6,float("nan"),.9),
+                                          (.1,.2,.6,.8,float("inf")),(True,.2,.6,.8,.9)])
+    def test_malformed_box_cannot_become_face_evidence(coords):
+>       from services.casualty.contracts import FaceBox
+E       ModuleNotFoundError: No module named 'services.casualty.contracts'
+
+services/casualty/tests/test_contracts.py:69: ModuleNotFoundError
+___________ test_malformed_box_cannot_become_face_evidence[coords2] ____________
+
+coords = (0.6, 0.2, 0.1, 0.8, 0.9)
+
+    @pytest.mark.parametrize("coords", [(-0.1,.2,.6,.8,.9),(.5,.2,.5,.8,.9),(.6,.2,.1,.8,.9),
+                                          (.1,.2,1.1,.8,.9),(.1,.2,.6,float("nan"),.9),
+                                          (.1,.2,.6,.8,float("inf")),(True,.2,.6,.8,.9)])
+    def test_malformed_box_cannot_become_face_evidence(coords):
+>       from services.casualty.contracts import FaceBox
+E       ModuleNotFoundError: No module named 'services.casualty.contracts'
+
+services/casualty/tests/test_contracts.py:69: ModuleNotFoundError
+___________ test_malformed_box_cannot_become_face_evidence[coords3] ____________
+
+coords = (0.1, 0.2, 1.1, 0.8, 0.9)
+
+    @pytest.mark.parametrize("coords", [(-0.1,.2,.6,.8,.9),(.5,.2,.5,.8,.9),(.6,.2,.1,.8,.9),
+                                          (.1,.2,1.1,.8,.9),(.1,.2,.6,float("nan"),.9),
+                                          (.1,.2,.6,.8,float("inf")),(True,.2,.6,.8,.9)])
+    def test_malformed_box_cannot_become_face_evidence(coords):
+>       from services.casualty.contracts import FaceBox
+E       ModuleNotFoundError: No module named 'services.casualty.contracts'
+
+services/casualty/tests/test_contracts.py:69: ModuleNotFoundError
+___________ test_malformed_box_cannot_become_face_evidence[coords4] ____________
+
+coords = (0.1, 0.2, 0.6, nan, 0.9)
+
+    @pytest.mark.parametrize("coords", [(-0.1,.2,.6,.8,.9),(.5,.2,.5,.8,.9),(.6,.2,.1,.8,.9),
+                                          (.1,.2,1.1,.8,.9),(.1,.2,.6,float("nan"),.9),
+                                          (.1,.2,.6,.8,float("inf")),(True,.2,.6,.8,.9)])
+    def test_malformed_box_cannot_become_face_evidence(coords):
+>       from services.casualty.contracts import FaceBox
+E       ModuleNotFoundError: No module named 'services.casualty.contracts'
+
+services/casualty/tests/test_contracts.py:69: ModuleNotFoundError
+___________ test_malformed_box_cannot_become_face_evidence[coords5] ____________
+
+coords = (0.1, 0.2, 0.6, 0.8, inf)
+
+    @pytest.mark.parametrize("coords", [(-0.1,.2,.6,.8,.9),(.5,.2,.5,.8,.9),(.6,.2,.1,.8,.9),
+                                          (.1,.2,1.1,.8,.9),(.1,.2,.6,float("nan"),.9),
+                                          (.1,.2,.6,.8,float("inf")),(True,.2,.6,.8,.9)])
+    def test_malformed_box_cannot_become_face_evidence(coords):
+>       from services.casualty.contracts import FaceBox
+E       ModuleNotFoundError: No module named 'services.casualty.contracts'
+
+services/casualty/tests/test_contracts.py:69: ModuleNotFoundError
+___________ test_malformed_box_cannot_become_face_evidence[coords6] ____________
+
+coords = (True, 0.2, 0.6, 0.8, 0.9)
+
+    @pytest.mark.parametrize("coords", [(-0.1,.2,.6,.8,.9),(.5,.2,.5,.8,.9),(.6,.2,.1,.8,.9),
+                                          (.1,.2,1.1,.8,.9),(.1,.2,.6,float("nan"),.9),
+                                          (.1,.2,.6,.8,float("inf")),(True,.2,.6,.8,.9)])
+    def test_malformed_box_cannot_become_face_evidence(coords):
+>       from services.casualty.contracts import FaceBox
+E       ModuleNotFoundError: No module named 'services.casualty.contracts'
+
+services/casualty/tests/test_contracts.py:69: ModuleNotFoundError
+___________________ test_no_face_status_cannot_smuggle_boxes ___________________
+
+    def test_no_face_status_cannot_smuggle_boxes():
+        with pytest.raises(ValueError,match="boxes"):
+>           replace(detection(),status="no_face")
+                    ^^^^^^^^^^^
+
+services/casualty/tests/test_contracts.py:76: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+status = 'localized', changes = {}
+
+    def detection(status="localized", **changes):
+>       from services.casualty.contracts import DetectionResult, FaceBox
+E       ModuleNotFoundError: No module named 'services.casualty.contracts'
+
+services/casualty/tests/test_contracts.py:31: ModuleNotFoundError
+_________ test_actual_detector_requires_pinned_revision_and_real_photo _________
+
+    def test_actual_detector_requires_pinned_revision_and_real_photo():
+        with pytest.raises(ValueError, match="revision"):
+>           replace(detection(),provenance="actual_detector", model_revision="")
+                    ^^^^^^^^^^^
+
+services/casualty/tests/test_contracts.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+status = 'localized', changes = {}
+
+    def detection(status="localized", **changes):
+>       from services.casualty.contracts import DetectionResult, FaceBox
+E       ModuleNotFoundError: No module named 'services.casualty.contracts'
+
+services/casualty/tests/test_contracts.py:31: ModuleNotFoundError
+________ test_case_rejects_real_identity_like_ids_and_boolean_quantity _________
+
+    def test_case_rejects_real_identity_like_ids_and_boolean_quantity():
+        with pytest.raises(ValueError, match="case_id"):
+>           replace(case(),case_id="alice@example.com")
+                    ^^^^^^
+
+services/casualty/tests/test_contracts.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+changes = {}
+
+    def case(**changes):
+>       from services.casualty.contracts import CaseRecord, ImageRecord, ExerciseNeed
+E       ModuleNotFoundError: No module named 'services.casualty.contracts'
+
+services/casualty/tests/test_contracts.py:19: ModuleNotFoundError
+___________________ test_time_dimensions_and_hash_are_strict ___________________
+
+    def test_time_dimensions_and_hash_are_strict():
+>       with pytest.raises(ValueError): replace(detection(),observed_time_s=float("nan"))
+                                                ^^^^^^^^^^^
+
+services/casualty/tests/test_contracts.py:95: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+status = 'localized', changes = {}
+
+    def detection(status="localized", **changes):
+>       from services.casualty.contracts import DetectionResult, FaceBox
+E       ModuleNotFoundError: No module named 'services.casualty.contracts'
+
+services/casualty/tests/test_contracts.py:31: ModuleNotFoundError
+_______________________ test_case_records_are_immutable ________________________
+
+    def test_case_records_are_immutable():
+        from dataclasses import FrozenInstanceError
+        with pytest.raises(FrozenInstanceError):
+>           case().case_id="npc-case-002"
+            ^^^^^^
+
+services/casualty/tests/test_contracts.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+changes = {}
+
+    def case(**changes):
+>       from services.casualty.contracts import CaseRecord, ImageRecord, ExerciseNeed
+E       ModuleNotFoundError: No module named 'services.casualty.contracts'
+
+services/casualty/tests/test_contracts.py:19: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED services/casualty/tests/test_contracts.py::test_synthetic_case_is_explicit_and_hash_bound
+FAILED services/casualty/tests/test_contracts.py::test_real_photo_requires_independent_license_and_adult_consent
+FAILED services/casualty/tests/test_contracts.py::test_each_operation_requires_its_own_permission
+FAILED services/casualty/tests/test_contracts.py::test_malformed_box_cannot_become_face_evidence[coords0]
+FAILED services/casualty/tests/test_contracts.py::test_malformed_box_cannot_become_face_evidence[coords1]
+FAILED services/casualty/tests/test_contracts.py::test_malformed_box_cannot_become_face_evidence[coords2]
+FAILED services/casualty/tests/test_contracts.py::test_malformed_box_cannot_become_face_evidence[coords3]
+FAILED services/casualty/tests/test_contracts.py::test_malformed_box_cannot_become_face_evidence[coords4]
+FAILED services/casualty/tests/test_contracts.py::test_malformed_box_cannot_become_face_evidence[coords5]
+FAILED services/casualty/tests/test_contracts.py::test_malformed_box_cannot_become_face_evidence[coords6]
+FAILED services/casualty/tests/test_contracts.py::test_no_face_status_cannot_smuggle_boxes
+FAILED services/casualty/tests/test_contracts.py::test_actual_detector_requires_pinned_revision_and_real_photo
+FAILED services/casualty/tests/test_contracts.py::test_case_rejects_real_identity_like_ids_and_boolean_quantity
+FAILED services/casualty/tests/test_contracts.py::test_time_dimensions_and_hash_are_strict
+FAILED services/casualty/tests/test_contracts.py::test_case_records_are_immutable
+15 failed in 0.07s

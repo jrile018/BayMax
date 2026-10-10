@@ -1,0 +1,35 @@
+{
+  "schema_version": "casualty-public-ingress-v1",
+  "verified_at": "2026-10-10T07:45:52.141224+00:00",
+  "purpose": "public model/runtime bytes only; no photo or patient permission inferred",
+  "acquisition": "controller byte relay only; product compute remains cloud-only",
+  "yunet": {
+    "revision": "3cc26e7f1014a5ee5d74a42acee58bafc9d0a310",
+    "filename": "face_detection_yunet_2023mar.onnx",
+    "bytes": 232589,
+    "sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4",
+    "license": "MIT",
+    "license_path": "artifacts/casualty/YUNET_LICENSE",
+    "metadata_source": "https://huggingface.co/api/models/opencv/face_detection_yunet/revision/3cc26e7f1014a5ee5d74a42acee58bafc9d0a310?blobs=true",
+    "license_sha256": "c83b8120c50ccbd4c4f96edf53141bdd566ebb8f8e9227e415326aa1b1aba958",
+    "license_source": "https://huggingface.co/opencv/face_detection_yunet/resolve/3cc26e7f1014a5ee5d74a42acee58bafc9d0a310/LICENSE",
+    "artifact_source": "https://huggingface.co/opencv/face_detection_yunet/resolve/3cc26e7f1014a5ee5d74a42acee58bafc9d0a310/face_detection_yunet_2023mar.onnx",
+    "cloud_sha256_verified": true,
+    "cloud_verified_at": "2026-10-10T08:06:59.918352+00:00"
+  },
+  "opencv": {
+    "version": "4.14.0.94",
+    "filename": "opencv_python_headless-4.14.0.94-cp37-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+    "bytes": 57534165,
+    "sha256": "5e02669eac0ba67b2a22d7245af1e8ee1a2ef1185ee526a063d8f0555224bd52",
+    "metadata_source": "https://pypi.org/pypi/opencv-python-headless/4.14.0.94/json",
+    "requires_python": ">=3.6",
+    "requires_numpy_for_py314": ">=2",
+    "install_policy": "offline --no-deps --target owned ignored runtime-deps; preserve shared environment",
+    "status": "verified_cloud_bytes_installed_isolated_cpu_smoke_success",
+    "artifact_source": "https://files.pythonhosted.org/packages/de/06/14c8c5d331bc72738683a9b227966aceaa4c6d08752f33d64578aebcb6f8/opencv_python_headless-4.14.0.94-cp37-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+    "license_scope": "Package and bundled third-party notices retained in wheel and isolated installation; YuNet MIT license applies only to YuNet.",
+    "cloud_sha256_verified": true,
+    "cloud_verified_at": "2026-10-10T08:06:59.918352+00:00"
+  }
+}

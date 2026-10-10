@@ -1,0 +1,114 @@
+{
+  "python": "3.14.4 (main, Jun 18 2026, 14:25:02) [GCC 15.2.0]",
+  "versions": {
+    "transformers": "4.57.6",
+    "huggingface-hub": "0.36.2",
+    "regex": "2026.9.29",
+    "tokenizers": "0.22.2",
+    "safetensors": "0.8.0",
+    "hf-xet": "1.7.0"
+  },
+  "torch": "2.13.0+rocm10.0.0",
+  "hip": "7.15.26333",
+  "torch_path": "/opt/venv/lib/python3.14/site-packages/torch/__init__.py",
+  "transformers_path": "/workspace/knight26/deps/hf/transformers/__init__.py",
+  "dependency_checks": [
+    {
+      "package": "transformers",
+      "requirement": "filelock",
+      "installed": "3.32.3"
+    },
+    {
+      "package": "transformers",
+      "requirement": "huggingface-hub<1.0,>=0.34.0",
+      "installed": "0.36.2"
+    },
+    {
+      "package": "transformers",
+      "requirement": "numpy>=1.17",
+      "installed": "2.5.2"
+    },
+    {
+      "package": "transformers",
+      "requirement": "packaging>=20.0",
+      "installed": "26.3"
+    },
+    {
+      "package": "transformers",
+      "requirement": "pyyaml>=5.1",
+      "installed": "6.0.3"
+    },
+    {
+      "package": "transformers",
+      "requirement": "regex!=2019.12.17",
+      "installed": "2026.9.29"
+    },
+    {
+      "package": "transformers",
+      "requirement": "requests",
+      "installed": "2.34.2"
+    },
+    {
+      "package": "transformers",
+      "requirement": "tokenizers<=0.23.0,>=0.22.0",
+      "installed": "0.22.2"
+    },
+    {
+      "package": "transformers",
+      "requirement": "safetensors>=0.4.3",
+      "installed": "0.8.0"
+    },
+    {
+      "package": "transformers",
+      "requirement": "tqdm>=4.27",
+      "installed": "4.70.0"
+    },
+    {
+      "package": "huggingface-hub",
+      "requirement": "filelock",
+      "installed": "3.32.3"
+    },
+    {
+      "package": "huggingface-hub",
+      "requirement": "fsspec>=2023.5.0",
+      "installed": "2026.7.0"
+    },
+    {
+      "package": "huggingface-hub",
+      "requirement": "hf-xet<2.0.0,>=1.1.3; platform_machine == \"x86_64\" or platform_machine == \"amd64\" or platform_machine == \"arm64\" or platform_machine == \"aarch64\"",
+      "installed": "1.7.0"
+    },
+    {
+      "package": "huggingface-hub",
+      "requirement": "packaging>=20.9",
+      "installed": "26.3"
+    },
+    {
+      "package": "huggingface-hub",
+      "requirement": "pyyaml>=5.1",
+      "installed": "6.0.3"
+    },
+    {
+      "package": "huggingface-hub",
+      "requirement": "requests",
+      "installed": "2.34.2"
+    },
+    {
+      "package": "huggingface-hub",
+      "requirement": "tqdm>=4.42.1",
+      "installed": "4.70.0"
+    },
+    {
+      "package": "huggingface-hub",
+      "requirement": "typing-extensions>=3.7.4.3",
+      "installed": "4.16.0"
+    },
+    {
+      "package": "tokenizers",
+      "requirement": "huggingface-hub<2.0,>=0.16.4",
+      "installed": "0.36.2"
+    }
+  ],
+  "model_loaded": false,
+  "gpu_allocated": false
+}

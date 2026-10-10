@@ -1,0 +1,105 @@
+{
+  "python": "3.14.4",
+  "imports": {
+    "huggingface_hub": {
+      "path": "/workspace/knight26/deps/hf-buckets/huggingface_hub/__init__.py",
+      "version": "2.2.0"
+    },
+    "click": {
+      "path": "/workspace/knight26/deps/hf-buckets/click/__init__.py",
+      "version": "8.5.0"
+    },
+    "httpx2": {
+      "path": "/workspace/knight26/deps/hf-buckets/httpx2/__init__.py",
+      "version": "2.13.1"
+    },
+    "httpcore2": {
+      "path": "/workspace/knight26/deps/hf-buckets/httpcore2/__init__.py",
+      "version": "2.13.1"
+    },
+    "truststore": {
+      "path": "/workspace/knight26/deps/hf-buckets/truststore/__init__.py",
+      "version": "0.10.4"
+    },
+    "hf_xet": {
+      "path": "/workspace/knight26/deps/hf-buckets/hf_xet/__init__.py",
+      "version": "1.7.0"
+    }
+  },
+  "api": {
+    "bucket_info": {
+      "available": true,
+      "module": "huggingface_hub.hf_api",
+      "signature": "(bucket_id: 'str', *, token: 'bool | str | None' = None) -> 'BucketInfo'",
+      "doc_first_line": "Get information about a specific bucket on the Hub."
+    },
+    "list_bucket_tree": {
+      "available": true,
+      "module": "huggingface_hub.hf_api",
+      "signature": "(bucket_id: 'str', prefix: 'str | None' = None, *, recursive: 'bool | None' = None, token: 'str | bool | None' = None) -> 'Iterable[BucketFile | BucketFolder]'",
+      "doc_first_line": "List files in a bucket."
+    },
+    "batch_bucket_files": {
+      "available": true,
+      "module": "huggingface_hub.hf_api",
+      "signature": "(bucket_id: 'str', *, add: 'list[tuple[str | Path | bytes, str]] | None' = None, copy: 'list[tuple[str, str, str, str]] | None' = None, delete: 'list[str] | None' = None, token: 'str | bool | None' = None)",
+      "doc_first_line": "Add, copy, and/or delete files in a bucket."
+    },
+    "download_bucket_files": {
+      "available": true,
+      "module": "huggingface_hub.hf_api",
+      "signature": "(bucket_id: 'str', files: 'list[tuple[str | BucketFile, str | Path]]', *, raise_on_missing_files: 'bool' = False, token: 'str | bool | None' = None) -> 'None'",
+      "doc_first_line": "Download files from a bucket."
+    },
+    "upload_bucket_files": {
+      "available": false,
+      "error": "AttributeError: No huggingface_hub attribute upload_bucket_files"
+    },
+    "get_token": {
+      "available": true,
+      "module": "huggingface_hub.utils._auth",
+      "signature": "() -> str | None",
+      "doc_first_line": "Get token if user is logged in."
+    },
+    "BucketInfo": {
+      "available": true,
+      "module": "huggingface_hub._buckets",
+      "signature": "(**kwargs)",
+      "annotations": {
+        "id": "<class 'str'>",
+        "private": "<class 'bool'>",
+        "created_at": "<class 'datetime.datetime'>",
+        "size": "<class 'int'>",
+        "total_files": "<class 'int'>"
+      }
+    },
+    "BucketItem": {
+      "available": false,
+      "error": "AttributeError: No huggingface_hub attribute BucketItem"
+    },
+    "BucketFile": {
+      "available": true,
+      "module": "huggingface_hub._buckets",
+      "signature": "(**kwargs)",
+      "annotations": {
+        "type": "typing.Literal['file']",
+        "path": "<class 'str'>",
+        "size": "<class 'int'>",
+        "xet_hash": "<class 'str'>",
+        "mtime": "datetime.datetime | None",
+        "uploaded_at": "datetime.datetime | None"
+      }
+    },
+    "BucketFolder": {
+      "available": true,
+      "module": "huggingface_hub._buckets",
+      "signature": "(**kwargs)",
+      "annotations": {
+        "type": "typing.Literal['directory']",
+        "path": "<class 'str'>",
+        "uploaded_at": "datetime.datetime | None"
+      }
+    }
+  },
+  "torch_loaded": false
+}

@@ -1,0 +1,3 @@
+# Per-claim review evidence
+
+Source commit: `aa14b616124d8f3f27babd7d0bf2644dc5b4e64f`. The whole-proposal acceptance route now records review with zero commands. Individual revision-bound scripted confirmations produce pending commands only; no real reviewer, root adapter, simulator mutation, Qwen inference, or live Bucket transfer is proved. `exact-head-suite.log` records 151 tests plus 20 subtests. `exact-head-evaluation.json` retains all 15 frozen authored baseline failures; mocked fixture control 20/20 is harness coverage only. `exact-head-review-trace.json` records one pending command with `simulator_mutation=false`. Historical C1/C2 evidence is unchanged. Publication remains withheld pending independent GPT-6.1-Sol/high review.

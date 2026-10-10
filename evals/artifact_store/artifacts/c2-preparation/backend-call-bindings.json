@@ -1,0 +1,53 @@
+{
+  "backend_call_shapes": [
+    {
+      "api": "bucket_info",
+      "signature": "(bucket_id: 'str', *, token: 'bool | str | None' = None) -> 'BucketInfo'",
+      "bound_arguments": {
+        "bucket_id": "'owner/example'"
+      },
+      "bind_only_no_call": true
+    },
+    {
+      "api": "list_bucket_tree",
+      "signature": "(bucket_id: 'str', prefix: 'str | None' = None, *, recursive: 'bool | None' = None, token: 'str | bool | None' = None) -> 'Iterable[BucketFile | BucketFolder]'",
+      "bound_arguments": {
+        "bucket_id": "'owner/example'",
+        "prefix": "'prefix/'",
+        "recursive": "True"
+      },
+      "bind_only_no_call": true
+    },
+    {
+      "api": "batch_bucket_files",
+      "signature": "(bucket_id: 'str', *, add: 'list[tuple[str | Path | bytes, str]] | None' = None, copy: 'list[tuple[str, str, str, str]] | None' = None, delete: 'list[str] | None' = None, token: 'str | bool | None' = None)",
+      "bound_arguments": {
+        "bucket_id": "'owner/example'",
+        "add": "[('/tmp/offline-placeholder', 'prefix/file.txt')]"
+      },
+      "bind_only_no_call": true
+    },
+    {
+      "api": "download_bucket_files",
+      "signature": "(bucket_id: 'str', files: 'list[tuple[str | BucketFile, str | Path]]', *, raise_on_missing_files: 'bool' = False, token: 'str | bool | None' = None) -> 'None'",
+      "bound_arguments": {
+        "bucket_id": "'owner/example'",
+        "files": "[('prefix/file.txt', '/tmp/offline-placeholder')]"
+      },
+      "bind_only_no_call": true
+    },
+    {
+      "api": "get_token",
+      "signature": "() -> str | None",
+      "bound_arguments": {},
+      "bind_only_no_call": true
+    }
+  ],
+  "bucket_info_private": {
+    "annotation": "<class 'bool'>",
+    "instance_private": true,
+    "instance_has_private": true
+  },
+  "network_calls": 0,
+  "get_token_calls": 0
+}

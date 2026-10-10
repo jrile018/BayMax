@@ -1,0 +1,74 @@
+FFFFFF                                                                   [100%]
+=================================== FAILURES ===================================
+_________ test_probe_rejects_unpublished_artifact_hash_before_runtime __________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-64/test_probe_rejects_unpublished0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x78b06037f360>
+
+    def test_probe_rejects_unpublished_artifact_hash_before_runtime(tmp_path, monkeypatch):
+>       from services.casualty.runtime_probe import run_cpu_probe
+E       ModuleNotFoundError: No module named 'services.casualty.runtime_probe'
+
+services/casualty/tests/test_runtime_probe.py:17: ModuleNotFoundError
+_______________ test_probe_rejects_changed_bytes_before_runtime ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-64/test_probe_rejects_changed_byt0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x78b06037f490>
+
+    def test_probe_rejects_changed_bytes_before_runtime(tmp_path, monkeypatch):
+>       from services.casualty.runtime_probe import run_cpu_probe
+E       ModuleNotFoundError: No module named 'services.casualty.runtime_probe'
+
+services/casualty/tests/test_runtime_probe.py:25: ModuleNotFoundError
+______________ test_probe_records_blank_control_and_two_cpu_calls ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-64/test_probe_records_blank_contr0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x78b05fb38830>
+
+    def test_probe_records_blank_control_and_two_cpu_calls(tmp_path, monkeypatch):
+>       from services.casualty.runtime_probe import run_cpu_probe
+E       ModuleNotFoundError: No module named 'services.casualty.runtime_probe'
+
+services/casualty/tests/test_runtime_probe.py:35: ModuleNotFoundError
+__________ test_failed_probe_does_not_emit_success_evidence[rows0-1] ___________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-64/test_failed_probe_does_not_emi0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x78b05fb9c490>
+rows = [[10, 20, 50, 60, 0, 0, ...]], retval = 1
+
+    @pytest.mark.parametrize('rows,retval', [([row(score=float('nan'))],1),(None,0)])
+    def test_failed_probe_does_not_emit_success_evidence(tmp_path, monkeypatch, rows, retval):
+>       from services.casualty.runtime_probe import run_cpu_probe
+E       ModuleNotFoundError: No module named 'services.casualty.runtime_probe'
+
+services/casualty/tests/test_runtime_probe.py:58: ModuleNotFoundError
+___________ test_failed_probe_does_not_emit_success_evidence[None-0] ___________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-64/test_failed_probe_does_not_emi1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x78b05fb9c9e0>
+rows = None, retval = 0
+
+    @pytest.mark.parametrize('rows,retval', [([row(score=float('nan'))],1),(None,0)])
+    def test_failed_probe_does_not_emit_success_evidence(tmp_path, monkeypatch, rows, retval):
+>       from services.casualty.runtime_probe import run_cpu_probe
+E       ModuleNotFoundError: No module named 'services.casualty.runtime_probe'
+
+services/casualty/tests/test_runtime_probe.py:58: ModuleNotFoundError
+___________________ test_false_positive_on_blank_is_retained ___________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-64/test_false_positive_on_blank_i0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x78b05fb66150>
+
+    def test_false_positive_on_blank_is_retained(tmp_path, monkeypatch):
+>       from services.casualty.runtime_probe import run_cpu_probe
+E       ModuleNotFoundError: No module named 'services.casualty.runtime_probe'
+
+services/casualty/tests/test_runtime_probe.py:68: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED services/casualty/tests/test_runtime_probe.py::test_probe_rejects_unpublished_artifact_hash_before_runtime
+FAILED services/casualty/tests/test_runtime_probe.py::test_probe_rejects_changed_bytes_before_runtime
+FAILED services/casualty/tests/test_runtime_probe.py::test_probe_records_blank_control_and_two_cpu_calls
+FAILED services/casualty/tests/test_runtime_probe.py::test_failed_probe_does_not_emit_success_evidence[rows0-1]
+FAILED services/casualty/tests/test_runtime_probe.py::test_failed_probe_does_not_emit_success_evidence[None-0]
+FAILED services/casualty/tests/test_runtime_probe.py::test_false_positive_on_blank_is_retained
+6 failed in 0.10s

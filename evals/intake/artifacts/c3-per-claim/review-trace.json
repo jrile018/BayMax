@@ -1,0 +1,479 @@
+{
+  "mode": "deterministic CPU development demonstration",
+  "provider": "rule_baseline",
+  "human_actions": "scripted confirmations, not recorded human acceptance",
+  "simulator_mutation": false,
+  "pending": {
+    "proposal_id": "intake:974036dd048cd081ffbac48f",
+    "proposal": {
+      "report": {
+        "report_id": "demo:accepted",
+        "source": "fictional development exercise",
+        "received_time_s": 10,
+        "text": "At Pine School, 12 people need evacuation now. East Road is blocked."
+      },
+      "language": "en",
+      "claims": [
+        {
+          "claim_id": "claim1",
+          "kind": "need",
+          "label": "evacuation",
+          "evidence": {
+            "start": 0,
+            "end": 46,
+            "quote": "At Pine School, 12 people need evacuation now."
+          },
+          "quantity": {
+            "value": 12,
+            "evidence": {
+              "start": 16,
+              "end": 25,
+              "quote": "12 people"
+            }
+          },
+          "unit": {
+            "value": "people",
+            "evidence": {
+              "start": 19,
+              "end": 25,
+              "quote": "people"
+            }
+          },
+          "urgency": {
+            "value": "immediate",
+            "evidence": {
+              "start": 42,
+              "end": 45,
+              "quote": "now"
+            }
+          },
+          "location": {
+            "value": "Pine School",
+            "evidence": {
+              "start": 3,
+              "end": 14,
+              "quote": "Pine School"
+            }
+          },
+          "flags": []
+        },
+        {
+          "claim_id": "claim2",
+          "kind": "access",
+          "label": "blocked",
+          "evidence": {
+            "start": 47,
+            "end": 67,
+            "quote": "East Road is blocked"
+          },
+          "quantity": null,
+          "unit": null,
+          "urgency": null,
+          "location": {
+            "value": "East Road",
+            "evidence": {
+              "start": 47,
+              "end": 56,
+              "quote": "East Road"
+            }
+          },
+          "flags": []
+        }
+      ],
+      "flags": [],
+      "provider": "rule_baseline"
+    },
+    "review_status": "pending",
+    "reviewer_id": null,
+    "duplicate_of": null,
+    "effects": [],
+    "confirmations": [],
+    "revision": 1,
+    "editors": []
+  },
+  "corrected": {
+    "proposal_id": "intake:974036dd048cd081ffbac48f",
+    "proposal": {
+      "report": {
+        "report_id": "demo:accepted",
+        "source": "fictional development exercise",
+        "received_time_s": 10,
+        "text": "At Pine School, 12 people need evacuation now. East Road is blocked."
+      },
+      "language": "en",
+      "claims": [
+        {
+          "claim_id": "claim1",
+          "kind": "need",
+          "label": "evacuation",
+          "evidence": {
+            "start": 0,
+            "end": 46,
+            "quote": "At Pine School, 12 people need evacuation now."
+          },
+          "quantity": {
+            "value": 12,
+            "evidence": {
+              "start": 16,
+              "end": 25,
+              "quote": "12 people"
+            }
+          },
+          "unit": {
+            "value": "people",
+            "evidence": {
+              "start": 19,
+              "end": 25,
+              "quote": "people"
+            }
+          },
+          "urgency": {
+            "value": "immediate",
+            "evidence": {
+              "start": 42,
+              "end": 45,
+              "quote": "now"
+            }
+          },
+          "location": {
+            "value": "Pine School",
+            "evidence": {
+              "start": 3,
+              "end": 14,
+              "quote": "Pine School"
+            }
+          },
+          "flags": []
+        }
+      ],
+      "flags": [],
+      "provider": "rule_baseline"
+    },
+    "review_status": "pending",
+    "reviewer_id": null,
+    "duplicate_of": null,
+    "effects": [],
+    "confirmations": [],
+    "revision": 2,
+    "editors": [
+      "human:demonstration-editor"
+    ]
+  },
+  "accepted": {
+    "proposal_id": "intake:974036dd048cd081ffbac48f",
+    "proposal": {
+      "report": {
+        "report_id": "demo:accepted",
+        "source": "fictional development exercise",
+        "received_time_s": 10,
+        "text": "At Pine School, 12 people need evacuation now. East Road is blocked."
+      },
+      "language": "en",
+      "claims": [
+        {
+          "claim_id": "claim1",
+          "kind": "need",
+          "label": "evacuation",
+          "evidence": {
+            "start": 0,
+            "end": 46,
+            "quote": "At Pine School, 12 people need evacuation now."
+          },
+          "quantity": {
+            "value": 12,
+            "evidence": {
+              "start": 16,
+              "end": 25,
+              "quote": "12 people"
+            }
+          },
+          "unit": {
+            "value": "people",
+            "evidence": {
+              "start": 19,
+              "end": 25,
+              "quote": "people"
+            }
+          },
+          "urgency": {
+            "value": "immediate",
+            "evidence": {
+              "start": 42,
+              "end": 45,
+              "quote": "now"
+            }
+          },
+          "location": {
+            "value": "Pine School",
+            "evidence": {
+              "start": 3,
+              "end": 14,
+              "quote": "Pine School"
+            }
+          },
+          "flags": []
+        }
+      ],
+      "flags": [],
+      "provider": "rule_baseline"
+    },
+    "review_status": "accepted",
+    "reviewer_id": "scripted:demonstration-reviewer",
+    "duplicate_of": null,
+    "effects": [
+      {
+        "type": "propose_need",
+        "idempotency_key": "intake:974036dd048cd081ffbac48f:claim1",
+        "report_id": "demo:accepted",
+        "source": "fictional development exercise",
+        "received_time_s": 10,
+        "reviewer_id": "scripted:demonstration-reviewer",
+        "review_status": "accepted",
+        "provider": "rule_baseline",
+        "revision": 2,
+        "editors": [
+          "human:demonstration-editor"
+        ],
+        "mapped_entity": {
+          "entity_id": "pine",
+          "entity_type": "node",
+          "source": "fictional tiny graph v1"
+        },
+        "claim": {
+          "claim_id": "claim1",
+          "kind": "need",
+          "label": "evacuation",
+          "evidence": {
+            "start": 0,
+            "end": 46,
+            "quote": "At Pine School, 12 people need evacuation now."
+          },
+          "quantity": {
+            "value": 12,
+            "evidence": {
+              "start": 16,
+              "end": 25,
+              "quote": "12 people"
+            }
+          },
+          "unit": {
+            "value": "people",
+            "evidence": {
+              "start": 19,
+              "end": 25,
+              "quote": "people"
+            }
+          },
+          "urgency": {
+            "value": "immediate",
+            "evidence": {
+              "start": 42,
+              "end": 45,
+              "quote": "now"
+            }
+          },
+          "location": {
+            "value": "Pine School",
+            "evidence": {
+              "start": 3,
+              "end": 14,
+              "quote": "Pine School"
+            }
+          },
+          "flags": []
+        },
+        "confirmation": {
+          "claim_id": "claim1",
+          "kind": "need",
+          "mapped_entity_id": "pine",
+          "confirmed_values": {
+            "category": "evacuation",
+            "quantity": 12,
+            "unit": "people",
+            "location": "Pine School",
+            "urgency": "immediate"
+          },
+          "semantic_override_reason": null
+        },
+        "category": "evacuation",
+        "quantity": 12,
+        "unit": "people",
+        "urgency": "immediate"
+      }
+    ],
+    "confirmations": [
+      {
+        "claim_id": "claim1",
+        "kind": "need",
+        "mapped_entity_id": "pine",
+        "confirmed_values": {
+          "category": "evacuation",
+          "quantity": 12,
+          "unit": "people",
+          "location": "Pine School",
+          "urgency": "immediate"
+        },
+        "semantic_override_reason": null
+      }
+    ],
+    "revision": 2,
+    "editors": [
+      "human:demonstration-editor"
+    ]
+  },
+  "rejected": {
+    "proposal_id": "intake:fc61b4bd850260bb230e0c65",
+    "proposal": {
+      "report": {
+        "report_id": "demo:rejected",
+        "source": "fictional development exercise",
+        "received_time_s": 11,
+        "text": "At Pine School, 4 people need evacuation now."
+      },
+      "language": "en",
+      "claims": [
+        {
+          "claim_id": "claim1",
+          "kind": "need",
+          "label": "evacuation",
+          "evidence": {
+            "start": 0,
+            "end": 45,
+            "quote": "At Pine School, 4 people need evacuation now."
+          },
+          "quantity": {
+            "value": 4,
+            "evidence": {
+              "start": 16,
+              "end": 24,
+              "quote": "4 people"
+            }
+          },
+          "unit": {
+            "value": "people",
+            "evidence": {
+              "start": 18,
+              "end": 24,
+              "quote": "people"
+            }
+          },
+          "urgency": {
+            "value": "immediate",
+            "evidence": {
+              "start": 41,
+              "end": 44,
+              "quote": "now"
+            }
+          },
+          "location": {
+            "value": "Pine School",
+            "evidence": {
+              "start": 3,
+              "end": 14,
+              "quote": "Pine School"
+            }
+          },
+          "flags": []
+        }
+      ],
+      "flags": [],
+      "provider": "rule_baseline"
+    },
+    "review_status": "rejected",
+    "reviewer_id": "human:demonstration-reviewer",
+    "duplicate_of": null,
+    "effects": [],
+    "confirmations": [],
+    "revision": 1,
+    "editors": []
+  },
+  "repost": {
+    "proposal_id": "intake:c57c17f5cd79b45e30c9b1e3",
+    "proposal": {
+      "report": {
+        "report_id": "demo:repost",
+        "source": "fictional development exercise",
+        "received_time_s": 10,
+        "text": "Repost: At Pine School, 12 people need evacuation now. East Road is blocked."
+      },
+      "language": "en",
+      "claims": [
+        {
+          "claim_id": "claim1",
+          "kind": "need",
+          "label": "evacuation",
+          "evidence": {
+            "start": 0,
+            "end": 54,
+            "quote": "Repost: At Pine School, 12 people need evacuation now."
+          },
+          "quantity": {
+            "value": 12,
+            "evidence": {
+              "start": 24,
+              "end": 33,
+              "quote": "12 people"
+            }
+          },
+          "unit": {
+            "value": "people",
+            "evidence": {
+              "start": 27,
+              "end": 33,
+              "quote": "people"
+            }
+          },
+          "urgency": {
+            "value": "immediate",
+            "evidence": {
+              "start": 50,
+              "end": 53,
+              "quote": "now"
+            }
+          },
+          "location": {
+            "value": "Pine School",
+            "evidence": {
+              "start": 11,
+              "end": 22,
+              "quote": "Pine School"
+            }
+          },
+          "flags": []
+        },
+        {
+          "claim_id": "claim2",
+          "kind": "access",
+          "label": "blocked",
+          "evidence": {
+            "start": 55,
+            "end": 75,
+            "quote": "East Road is blocked"
+          },
+          "quantity": null,
+          "unit": null,
+          "urgency": null,
+          "location": {
+            "value": "East Road",
+            "evidence": {
+              "start": 55,
+              "end": 64,
+              "quote": "East Road"
+            }
+          },
+          "flags": []
+        }
+      ],
+      "flags": [],
+      "provider": "rule_baseline"
+    },
+    "review_status": "duplicate",
+    "reviewer_id": null,
+    "duplicate_of": "intake:974036dd048cd081ffbac48f",
+    "effects": [],
+    "confirmations": [],
+    "revision": 1,
+    "editors": []
+  },
+  "integration_requirement": "authenticate actual human, show full source and final command, require inspected revision and deliberate per-command action, then atomically consume effect idempotency keys"
+}

@@ -1,0 +1,11 @@
+test_duplicate_downloaded_artifact_and_manifest_rejected (evals.artifact_store.test_duplicate_json.DuplicateJSONTests.test_duplicate_downloaded_artifact_and_manifest_rejected) ... ok
+test_escaped_equivalent_key_rejected (evals.artifact_store.test_duplicate_json.DuplicateJSONTests.test_escaped_equivalent_key_rejected) ... ok
+test_hidden_duplicate_bytes_rejected_before_upload (evals.artifact_store.test_duplicate_json.DuplicateJSONTests.test_hidden_duplicate_bytes_rejected_before_upload) ... ok
+test_jsonl_row_duplicate_rejected (evals.artifact_store.test_duplicate_json.DuplicateJSONTests.test_jsonl_row_duplicate_rejected) ... ok
+test_privacy_attestation_requires_json_booleans (evals.artifact_store.test_duplicate_json.DuplicateJSONTests.test_privacy_attestation_requires_json_booleans) ... ok
+test_top_level_and_nested_duplicate_artifact_keys_rejected_before_copy (evals.artifact_store.test_duplicate_json.DuplicateJSONTests.test_top_level_and_nested_duplicate_artifact_keys_rejected_before_copy) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.007s
+
+OK
