@@ -139,5 +139,33 @@ class TrainingFixtureTests(unittest.TestCase):
                     self.valid(payload)
 
 
+    def test_oversized_integer_is_public_validation_error(self):
+        huge = 10 ** 400
+        graph_cases = (
+            ("node_geometry_m", lambda g: g["nodes"][0]["geometry_m"].__setitem__(0, huge)),
+            ("node_lonlat", lambda g: g["nodes"][0]["lonlat"].__setitem__(0, huge)),
+            ("edge_geometry_m", lambda g: g["edges"][0]["geometry_m"][1].__setitem__(0, huge)),
+        )
+        for field, change in graph_cases:
+            graph = copy.deepcopy(self.graph)
+            change(graph)
+            gb = json.dumps(graph).encode()
+            with self.subTest(field=field):
+                with self.assertRaises(ValueError):
+                    build(gb, self.mb)
+        original = build(self.gb, self.mb)
+        for field, value in (
+            ("offset_m", huge),
+            ("route_distance_m", huge),
+            ("position_m", [huge, 5.0]),
+            ("position_lonlat", [huge, 0.0025]),
+        ):
+            payload = copy.deepcopy(original)
+            payload["buses"][0]["positions"][6][field] = value
+            with self.subTest(field=field):
+                with self.assertRaises(ValueError):
+                    self.valid(payload)
+
+
 if __name__ == "__main__":
     unittest.main()

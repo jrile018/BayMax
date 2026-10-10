@@ -40,9 +40,15 @@ def _require(condition, message):
 
 
 def _number(value):
-    _require(type(value) in (float, int) and math.isfinite(value),
+    _require(type(value) in (float, int),
              "coordinate or distance must be a finite number")
-    return float(value)
+    try:
+        converted = float(value)
+    except (OverflowError, ValueError) as exc:
+        raise ValueError("coordinate or distance must be a finite number") from exc
+    _require(math.isfinite(converted),
+             "coordinate or distance must be a finite number")
+    return converted
 
 
 def _point(value):
