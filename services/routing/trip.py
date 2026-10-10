@@ -335,9 +335,12 @@ class TripExecutor:
     def snapshot(self):
         with self._lock:
             state=dict(scenario_id=self.scenario_id,run_id=self.run_id,snapshot_version=self.snapshot_version,
-                       time_s=self.now_s,graph_version=self.graph.version,metric_crs="declared local metric x/y metres",
+                       time_s=self.now_s,graph_version=self.graph.version,metric_crs=getattr(self.graph,"metric_crs","declared local metric x/y metres"),
                        trips=[self._trip_dict(t) for _,t in sorted(self.trips.items())],
                        ledger=self.ledger.export_state(),events=deepcopy(self.events))
+            if hasattr(self.graph,"source_metadata"):
+                state["origin_lonlat"]=list(self.graph.origin_lonlat)
+                state["source_metadata"]=deepcopy(self.graph.source_metadata)
             state=loads(dumps(state,sort_keys=True))
             state["snapshot_hash"]=sha256(dumps(state,sort_keys=True,separators=(",",":")).encode()).hexdigest()
             return state
