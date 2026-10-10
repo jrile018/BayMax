@@ -92,10 +92,10 @@ class TripExecutor:
                 raise ValueError("dispatch requires interval-validated feasible route")
             if route.graph_version!=self.graph.version or route.known_version!=safety.version:
                 raise ValueError("route information/graph version is stale")
-            if not isclose(route.departure_s,self.now_s+loading,abs_tol=1e-8):
+            if not isclose(route.departure_s,self.now_s+loading,rel_tol=0,abs_tol=1e-8):
                 raise ValueError("route departure must follow actual loading")
             self.graph.validate_nodes(route.source_node,route.destination_node,route.vehicle_kind)
-            clock=route.departure_s
+            clock=self.now_s+loading
             node=route.source_node
             if len(route.edge_ids)!=len(route.legs):
                 raise ValueError("route legs must match edge IDs")
@@ -103,14 +103,14 @@ class TripExecutor:
                 edge=self.graph.edges.get(eid)
                 if edge is None or edge.source!=node or route.vehicle_kind not in edge.access:
                     raise ValueError("route is not a contiguous compatible directed path")
-                if leg.edge_id!=eid or not isclose(leg.entry_s,clock,abs_tol=1e-8) or not isclose(leg.exit_s,clock+edge.travel_s,abs_tol=1e-8):
+                if leg.edge_id!=eid or not isclose(leg.entry_s,clock,rel_tol=0,abs_tol=1e-8) or not isclose(leg.exit_s,clock+edge.travel_s,rel_tol=0,abs_tol=1e-8):
                     raise ValueError("route timing must derive from declared edge weights")
                 safe,reason,_=safety.traversal(eid,clock,clock+edge.travel_s)
                 if not safe:
                     raise ValueError(f"route is unsafe: {reason}")
                 clock+=edge.travel_s
                 node=edge.target
-            if node!=route.destination_node or route.arrival_s is None or not isclose(clock,route.arrival_s,abs_tol=1e-8):
+            if node!=route.destination_node or route.arrival_s is None or not isclose(clock,route.arrival_s,rel_tol=0,abs_tol=1e-8):
                 raise ValueError("route destination/arrival inconsistent")
             assignment=self.ledger.commit_dispatch(dispatch_id,vehicle_id,request_id,route.to_dict(),self.now_s,
                                                    person_ids=person_ids,cargo=cargo,loading_s=loading,service_s=service)
@@ -162,6 +162,11 @@ class TripExecutor:
                 self._event(t,"departure",t.time_s,passengers=list(t.assignment.person_ids),cargo=dict(t.assignment.cargo))
             if t.phase=="servicing":
                 finish=t.arrival_actual_s+t.assignment.service_s
+                # Certify every observed service segment before consuming its time.
+                # Later restoration cannot erase an unsafe or uncovered segment.
+                if not safety.destination_safe(t.current_node,t.time_s) or not safety.destination_safe(t.current_node,min(target,finish)):
+                    self._strand(t,t.time_s,"destination_unsafe_or_unknown_during_service")
+                    continue
                 if target<finish:
                     t.time_s=target
                     return
