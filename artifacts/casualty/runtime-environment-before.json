@@ -1,0 +1,33 @@
+{
+  "captured_at": "2026-10-10T08:02:25.595772+00:00",
+  "source_commit": "2d5f51fdb7e5ffe6d61fdd25ea409d82d3b87028",
+  "python": "3.14.4",
+  "architecture": "x86_64",
+  "global_cv2_spec_present": false,
+  "shared_distributions": {
+    "numpy": {
+      "version": "2.5.2",
+      "metadata_file_sha256": {
+        "/opt/venv/lib/python3.14/site-packages/numpy-2.5.2.dist-info/METADATA": "9a895d801184d2176f926af84eb47f2db1af2756afac99d64a2bf482d5d5e024",
+        "/opt/venv/lib/python3.14/site-packages/numpy-2.5.2.dist-info/RECORD": "25d622d9e754f28c1bcdec5cf0eae4a2b0597db63e038fa5f9c88cb5370e7331"
+      }
+    },
+    "torch": {
+      "version": "2.13.0+rocm10.0.0",
+      "metadata_file_sha256": {
+        "/opt/venv/lib/python3.14/site-packages/torch-2.13.0+rocm10.0.0.dist-info/METADATA": "e13ff5ee93dee358d80758cb085be36bc2fffd313829a3975566c4a226d4c938",
+        "/opt/venv/lib/python3.14/site-packages/torch-2.13.0+rocm10.0.0.dist-info/RECORD": "998195156ea3bdee6634cb0d95d16f0d278504ce886f87fcee3072529a360e35"
+      }
+    },
+    "Pillow": {
+      "version": "12.3.0",
+      "metadata_file_sha256": {
+        "/opt/venv/lib/python3.14/site-packages/pillow-12.3.0.dist-info/METADATA": "8fc07146cab33ef7582361dab6eac596d340b03ec648f18217da7894f73838c8",
+        "/opt/venv/lib/python3.14/site-packages/pillow-12.3.0.dist-info/RECORD": "68376a303a07ca71e5eb0cd97cd48b202ed68d9e7a04cda8380266d24404a235"
+      }
+    }
+  },
+  "torch_imported": false,
+  "gpu_context_requested": false,
+  "scope": "shared distribution metadata fingerprints only; no Torch/GPU import"
+}

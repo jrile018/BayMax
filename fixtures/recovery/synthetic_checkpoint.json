@@ -1,0 +1,235 @@
+{
+  "fixture_version": "synthetic-recovery-mc-c1-v1",
+  "label": "Synthetic damaged-road civilian recovery; humanitarian-only training. MOCK routing and ledger.",
+  "ledger": {
+    "delivered": {},
+    "destination_capacity": {
+      "H": 1,
+      "S": 12,
+      "W": 100
+    },
+    "occupancy": {
+      "H": 0,
+      "S": 0,
+      "W": 0
+    },
+    "person_locations": {
+      "evac-group": "vehicle:committed-bus"
+    },
+    "reservations": {
+      "ongoing-evac": 6
+    },
+    "stock": 10
+  },
+  "observations": [
+    {
+      "closes_at_s": 45,
+      "edge_id": "direct",
+      "event_id": "forecast-direct",
+      "issued_at_s": 10,
+      "kind": "forecast",
+      "received_at_s": 15
+    },
+    {
+      "closes_at_s": 80,
+      "edge_id": "clinic",
+      "event_id": "forecast-clinic",
+      "issued_at_s": 10,
+      "kind": "forecast",
+      "received_at_s": 15
+    },
+    {
+      "closes_at_s": 150,
+      "edge_id": "alt1",
+      "event_id": "forecast-alt1",
+      "issued_at_s": 10,
+      "kind": "forecast",
+      "received_at_s": 15
+    },
+    {
+      "closes_at_s": 150,
+      "edge_id": "alt2",
+      "event_id": "forecast-alt2",
+      "issued_at_s": 10,
+      "kind": "forecast",
+      "received_at_s": 15
+    }
+  ],
+  "requests": [
+    {
+      "deadline_s": 80,
+      "destination": "S",
+      "kind": "evacuation",
+      "origin": "O",
+      "quantity": 6,
+      "remaining": 6,
+      "request_id": "ongoing-evac",
+      "service_s": 0
+    },
+    {
+      "deadline_s": 78,
+      "destination": "H",
+      "kind": "medical",
+      "origin": "A",
+      "quantity": 1,
+      "remaining": 1,
+      "request_id": "urgent-medical",
+      "service_s": 2
+    },
+    {
+      "deadline_s": null,
+      "destination": "W",
+      "kind": "supply",
+      "origin": "D",
+      "quantity": 8,
+      "remaining": 8,
+      "request_id": "water",
+      "service_s": 1
+    }
+  ],
+  "roads": [
+    {
+      "edge_id": "active",
+      "length_m": 100,
+      "source": "O",
+      "target": "S",
+      "travel_time_s": 20,
+      "uncertain_closure": false,
+      "zone": "stable"
+    },
+    {
+      "edge_id": "direct",
+      "length_m": 100,
+      "source": "A",
+      "target": "B",
+      "travel_time_s": 8,
+      "zone": "damage"
+    },
+    {
+      "closure_offset_s": 2,
+      "edge_id": "clinic",
+      "length_m": 100,
+      "source": "B",
+      "target": "H",
+      "travel_time_s": 20,
+      "zone": "damage"
+    },
+    {
+      "edge_id": "alt1",
+      "length_m": 100,
+      "source": "A",
+      "target": "C",
+      "travel_time_s": 18,
+      "uncertain_closure": false,
+      "zone": "stable"
+    },
+    {
+      "edge_id": "alt2",
+      "length_m": 100,
+      "source": "C",
+      "target": "H",
+      "travel_time_s": 18,
+      "uncertain_closure": false,
+      "zone": "stable"
+    },
+    {
+      "edge_id": "supply",
+      "length_m": 100,
+      "source": "D",
+      "target": "W",
+      "travel_time_s": 10,
+      "uncertain_closure": false,
+      "zone": "stable"
+    }
+  ],
+  "route_catalog": [
+    {
+      "destination": "H",
+      "edge_ids": [
+        "direct",
+        "clinic"
+      ],
+      "route_id": "direct-medical",
+      "start_node": "A"
+    },
+    {
+      "destination": "H",
+      "edge_ids": [
+        "alt1",
+        "alt2"
+      ],
+      "route_id": "detour-medical",
+      "start_node": "A"
+    },
+    {
+      "destination": "W",
+      "edge_ids": [
+        "supply"
+      ],
+      "route_id": "supply-run",
+      "start_node": "D"
+    }
+  ],
+  "run_id": "checkpoint",
+  "scenario_id": "synthetic-civilian-recovery",
+  "snapshot_version": "mc-owned-v1",
+  "source_manifest": [
+    {
+      "assumptions": "declared route catalog; two uncertain damage-zone roads; other roads explicitly stable; no physical hazard model",
+      "current_event": false,
+      "license": "project fixture",
+      "source": "hand-authored synthetic exercise"
+    }
+  ],
+  "time_s": 20,
+  "vehicles": [
+    {
+      "capacity": 6,
+      "current_edge_id": "active",
+      "load": {
+        "patients": 0,
+        "people": 6,
+        "supplies": 0
+      },
+      "node_id": null,
+      "phase": "traveling",
+      "progress_m": 40,
+      "remaining_path": [],
+      "request_id": "ongoing-evac",
+      "type": "bus",
+      "vehicle_id": "committed-bus"
+    },
+    {
+      "capacity": 1,
+      "current_edge_id": null,
+      "load": {
+        "patients": 0,
+        "people": 0,
+        "supplies": 0
+      },
+      "node_id": "A",
+      "phase": "idle",
+      "progress_m": 0,
+      "remaining_path": [],
+      "request_id": null,
+      "type": "ambulance",
+      "vehicle_id": "ambulance"
+    },
+    {
+      "capacity": 10,
+      "current_edge_id": null,
+      "load": {
+        "patients": 0,
+        "people": 0,
+        "supplies": 0
+      },
+      "node_id": "D",
+      "phase": "idle",
+      "progress_m": 0,
+      "remaining_path": [],
+      "request_id": null,
+      "type": "truck",
+      "vehicle_id": "truck"
+    }
+  ]
+}

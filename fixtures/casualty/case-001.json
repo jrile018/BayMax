@@ -1,0 +1,44 @@
+{
+  "case_id": "npc-case-001",
+  "rights": {
+    "source_kind": "synthetic",
+    "source_reference": "project:geometric-control-v1",
+    "license_id": "project-authored-control",
+    "permitted_uses": [
+      "display",
+      "face_detection",
+      "evaluation"
+    ],
+    "verification_status": "verified",
+    "license_evidence": "fixtures/casualty/README.md",
+    "consent_evidence": null,
+    "verified_by": "project-fixture-author",
+    "verified_at": "2026-10-10",
+    "acquired_at": "2026-10-10",
+    "adult_only": true
+  },
+  "image": {
+    "image_reference": "fixtures/casualty/geometric.svg",
+    "sha256": "7adc1e0591823568a4eefd1cf29b60d14086ee905cf4a5f36eb795713e9bfcdd",
+    "width": 100,
+    "height": 100,
+    "annotation_reference": "fixtures/casualty/case-001.json#face_box",
+    "annotation_author": "project-fixture-author",
+    "annotation_date": "2026-10-10"
+  },
+  "exercise_need": {
+    "request_id": "exercise-med-001",
+    "origin_node": "school",
+    "destination_node": "clinic",
+    "persons": 1,
+    "urgency": "urgent",
+    "source_reference": "exercise:fictional-case-001"
+  },
+  "face_box": {
+    "x1": 0.1,
+    "y1": 0.2,
+    "x2": 0.6,
+    "y2": 0.8,
+    "score": 1.0
+  }
+}

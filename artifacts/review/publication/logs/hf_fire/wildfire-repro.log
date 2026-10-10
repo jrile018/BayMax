@@ -1,0 +1,3 @@
+{"case": "future_source", "epoch_utc": "2026-10-10T00:00:00Z", "status": "ok", "source_ledger": [{"source_id": "future-observation", "kind": "observed", "license": "example", "uri": "https://example.org/future", "observed_at_utc": "2026-10-10T01:00:00Z", "retrieved_at_utc": "2026-10-10T01:01:00Z"}], "first_edge_issue_s": 0.0, "first_edge_source_ids": ["future-observation"]}
+
+EXIT_CODE:0

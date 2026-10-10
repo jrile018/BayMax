@@ -1,0 +1,62 @@
+{
+  "actual_image_numpy": "2.5.2",
+  "actual_image_python": "3.14.4",
+  "checked_at_utc": "2026-10-10T08:23:07.378893+00:00",
+  "download_verified_on_cloud": true,
+  "evidence_logs": [
+    "/workspace/knight26/artifacts/wildfire/physical-gate/offline-install.log",
+    "/workspace/knight26/artifacts/wildfire/physical-gate/offline-install-attempt1-clang.log",
+    "/workspace/knight26/artifacts/wildfire/physical-gate/verified-ingress.json",
+    "/workspace/knight26/artifacts/wildfire/physical-gate/runtime.json",
+    "/workspace/knight26/artifacts/wildfire/physical-gate/image-packages-before.json",
+    "/workspace/knight26/artifacts/wildfire/physical-gate/image-packages-after.json",
+    "/workspace/knight26/artifacts/wildfire/physical-tests/full/run.log"
+  ],
+  "expected_sdist_sha256": "37aa56941e5d4d6bb2f4119ecbee92e1b32508354cc6c1535898f3b2c665ba66",
+  "gate_failure": null,
+  "import_verified_on_cloud": true,
+  "isolated_python": "3.11.13",
+  "isolated_runtime": "/workspace/knight26/artifacts/wildfire/runtime/venv/bin/python",
+  "license_at_pinned_release_researched": "EPL-2.0",
+  "license_at_pinned_release_verified": "EPL-2.0",
+  "license_sha256": "8c349f80764d0648e645f41ef23772a70c995a0924b5235f735f4a3d09df127c",
+  "physical_engine_implemented": true,
+  "references": [
+    {
+      "kind": "pinned-package-research",
+      "uri": "https://pypi.org/project/pyretechnics/2026.8.10/"
+    },
+    {
+      "kind": "pinned-license-research",
+      "uri": "https://github.com/pyregence/pyretechnics/blob/2026.8.10/LICENSE"
+    },
+    {
+      "kind": "physical-spread-foundation; not implemented by fallback",
+      "uri": "https://research.fs.usda.gov/treesearch/32533"
+    },
+    {
+      "kind": "regional-fuel-data foundation; no raster ingested",
+      "uri": "https://landfire.gov/fuel"
+    }
+  ],
+  "remaining_limitations": [
+    "Physical results use synthetic inputs and have no real-incident calibration or accuracy validation.",
+    "No external terrain, fuel, weather, or ignition data has been adopted."
+  ],
+  "requested_package": "pyretechnics",
+  "researched_tag_commit": "9fe195737bca8a5f9ade7123105965fd5ef1e98c",
+  "solver_run_verified_on_cloud": true,
+  "status": "synthetic-solver-verified",
+  "test_evidence": {
+    "actual_solver_tests_run": 8,
+    "log": "/workspace/knight26/artifacts/wildfire/physical-tests/full/run.log",
+    "passed": 76,
+    "physical_fixture": "fixtures/fire/synthetic_surface_reference_v1.json",
+    "physical_fixture_edge_access_sha256": "e833b2bfd1c1364f289cac3e840e010f16cbb757450cd3ea36b8da8a1b579d1d",
+    "physical_fixture_hazard_sha256": "d01e90994e87104e290ebd6b50c9f6f9e334e8050f09fb53d0d6acbecaffc087",
+    "repeat_runs_byte_identical": true,
+    "skipped": 1,
+    "tests_run": 77
+  },
+  "version": "2026.8.10"
+}

@@ -1,0 +1,8 @@
+# Optional isolated runtime tested with CPython 3.11; preserve the image Torch/HIP environment.
+# Pyretechnics source archive SHA256: 37aa56941e5d4d6bb2f4119ecbee92e1b32508354cc6c1535898f3b2c665ba66
+pyretechnics==2026.8.10
+numpy==1.26.4
+scipy==1.12.0
+rasterio==1.4.3
+sortedcontainers==2.4.0
+Cython==3.0.11
