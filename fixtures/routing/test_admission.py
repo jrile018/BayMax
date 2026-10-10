@@ -97,6 +97,51 @@ class AdmissionTests(unittest.TestCase):
         restored.replan('dispatch1', safety, 'report1', 'new observation')
         self.assertEqual(restored.checkpoint(), before)
 
+
+    def test_invalid_safety_versions_reject_without_state_mutation(self):
+        for version in (1, True, ''):
+            with self.subTest(version=version):
+                graph, safety, ledger, engine = build()
+                route = candidate_routes(graph, 'A', 'D', 'bus', 0, safety).routes[0]
+                engine.dispatch('dispatch1', 'bus1', 'evac1', route, safety)
+                engine.advance(5, safety)
+                before = engine.checkpoint()
+                before_ledger = ledger.export_state()
+                before_ledger_checkpoint = ledger.checkpoint()
+                invalid = replace(safety, version=version)
+                with self.assertRaises(ValueError):
+                    engine.replan('dispatch1', invalid, 'report1', 'new observation')
+                self.assert_unchanged_and_restorable(
+                    graph, ledger, engine, before, before_ledger)
+                self.assertEqual(ledger.checkpoint(), before_ledger_checkpoint)
+                restored = TripExecutor.from_checkpoint(graph, engine.checkpoint())
+                self.assertEqual(restored.ledger.checkpoint(), before_ledger_checkpoint)
+
+    def test_valid_safety_version_reroute_remains_idempotent_and_restorable(self):
+        graph, safety, ledger, engine = build()
+        route = candidate_routes(graph, 'A', 'D', 'bus', 0, safety).routes[0]
+        engine.dispatch('dispatch1', 'bus1', 'evac1', route, safety)
+        engine.advance(5, safety)
+        before_ledger = ledger.export_state()
+        before_ledger_checkpoint = ledger.checkpoint()
+        initial = engine.checkpoint()
+        current = replace(safety, version='k-valid')
+        result = engine.replan('dispatch1', current, 'report1', 'new observation')
+        self.assertEqual(result.status, 'feasible')
+        self.assertEqual(result.routes[0].known_version, 'k-valid')
+        self.assertEqual(result.routes[0].route_version, 2)
+        before = engine.checkpoint()
+        self.assertNotEqual(before, initial)
+        repeated = engine.replan('dispatch1', current, 'report1', 'new observation')
+        self.assertEqual(repeated.to_dict(), result.to_dict())
+        self.assert_unchanged_and_restorable(
+            graph, ledger, engine, before, before_ledger)
+        self.assertEqual(ledger.checkpoint(), before_ledger_checkpoint)
+        restored = TripExecutor.from_checkpoint(graph, engine.checkpoint())
+        self.assertEqual(restored.ledger.checkpoint(), before_ledger_checkpoint)
+        restored.replan('dispatch1', current, 'report1', 'new observation')
+        self.assertEqual(restored.checkpoint(), before)
+
     def test_zero_edge_dispatch_rejects_departure_after_actual_forecast_horizon(self):
         graph, safety, ledger, engine = build(same_node=True, start_s=11, horizon_s=10)
         route = candidate_routes(graph, 'A', 'A', 'bus', 10, safety).routes[0]

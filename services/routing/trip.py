@@ -254,8 +254,8 @@ class TripExecutor:
     def replan(self,dispatch_id,safety,trigger_event_id,reason,*,max_expansions=1000):
         with self._atomic():
             self._accept_safety(safety)
-            if not all(isinstance(value,str) and value for value in (trigger_event_id,reason)):
-                raise ValueError("reroute requires nonempty string trigger and reason")
+            if not all(isinstance(value,str) and value for value in (safety.version,trigger_event_id,reason)):
+                raise ValueError("reroute requires nonempty string safety version, trigger and reason")
             key=(dispatch_id,trigger_event_id)
             if key in self._triggers:
                 version,old_reason,result=self._triggers[key]
