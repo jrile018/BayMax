@@ -1,5 +1,6 @@
 "use strict";
 const $=id=>document.getElementById(id), NS="http://www.w3.org/2000/svg";
+const API_ROOT=new URL(".",document.currentScript?.src||document.baseURI);
 const LAYERS=[["roads","Roads","layer-roads"],["buildings","Buildings","layer-buildings"],["landuse","Landuse & water","layer-land"],["fire","Fire overlay","layer-hazards"],["closures","Closures","layer-closures"],["routes","Committed route","layer-route"],["oldRoutes","Previous route","layer-old-route"],["trails","Completed trail","layer-trails"],["units","Field units","layer-vehicles"]];
 const S={boot:null,frame:null,index:0,selected:null,serial:0,playing:false,timer:null,epoch:0,speed:1,projection:null,view:{x:0,y:0,w:1000,h:700},pointer:null,follow:false,tool:null,basemap:"satellite",layers:Object.fromEntries(LAYERS.map(([k])=>[k,true])),pins:[],pinPoint:null,measure:[],events:[],feature:null,panels:{left:true,right:true},tab:"fleet",roads:[],situation:null,situationSerial:0,situationBbox:null,situationTimer:null,situationPollEpoch:0,replayView:null};
 const node=(tag,cls="",value)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(value!==undefined)n.textContent=value;return n};
@@ -138,7 +139,7 @@ async function beginSituation(){
  await loadSituation();
  if(epoch===S.situationPollEpoch)scheduleSituationPoll(epoch);
 }
-async function getJSON(url){const r=await fetch(url,{headers:{Accept:"application/json"}});if(!r.ok){let detail="";try{const b=await r.json();detail=b.message||b.error||""}catch(_){}throw Error("API "+r.status+" "+r.statusText+(detail?": "+detail:""))}return r.json()}
+async function getJSON(url){if(!url.startsWith("/api/"))throw Error("Unsupported API path");const r=await fetch(new URL(url.slice(1),API_ROOT),{headers:{Accept:"application/json"}});if(!r.ok){let detail="";try{const b=await r.json();detail=b.message||b.error||""}catch(_){}throw Error("API "+r.status+" "+r.statusText+(detail?": "+detail:""))}return r.json()}
 async function loadFrame(i){if(!S.boot)return false;const n=Math.max(0,Math.min(S.boot.replay.frame_count-1,Number(i))),serial=++S.serial;try{const f=await getJSON("/api/frame?index="+encodeURIComponent(n));if(serial!==S.serial)return false;if(f.run_id!==S.boot.replay.run_id||Number(f.index)!==n)throw Error("Frame identity mismatch");$("global-error").hidden=true;renderFrame(f);return true}catch(e){if(serial!==S.serial)return false;stop();$("global-error").textContent="Could not load frame: "+e.message;$("global-error").hidden=false;return false}}
 function stop(){S.epoch++;S.serial++;S.playing=false;clearTimeout(S.timer);S.timer=null;txt("play-glyph","▶");txt("play-text","Play");$("play-button").setAttribute("aria-label","Play replay")}
 async function tick(epoch){if(!S.playing||epoch!==S.epoch)return;if(S.index>=S.boot.replay.frame_count-1){stop();return}const ok=await loadFrame(S.index+1);if(ok&&S.playing&&epoch===S.epoch)S.timer=setTimeout(()=>tick(epoch),900/S.speed)}

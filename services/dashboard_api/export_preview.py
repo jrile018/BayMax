@@ -20,14 +20,15 @@ const savedReplay = SAVED;
 window.fetch = async function(input) {
   const url = new URL(String(input), window.location.href);
   let data, status = 200;
-  if (url.pathname === '/api/bootstrap') data = savedReplay.bootstrap;
-  else if (url.pathname === '/api/frame') {
+  if (url.origin !== window.location.origin) {status=404;data={error:'Saved replay has no live service endpoint'};}
+  else if (url.pathname.endsWith('/api/bootstrap')) data = savedReplay.bootstrap;
+  else if (url.pathname.endsWith('/api/frame')) {
     const indices = url.searchParams.getAll('index');
     const raw = indices.length === 1 ? indices[0] : '';
     const index = /^-?[0-9]+$/.test(raw) ? Number(raw) : NaN;
     if (!Number.isInteger(index) || index < 0 || index >= savedReplay.frames.length) {status=400;data={error:'Saved frame index out of range'};}
     else data = savedReplay.frames[index];
-  } else if (url.pathname === '/api/coverage') {
+  } else if (url.pathname.endsWith('/api/coverage')) {
     data={available:false,area_id:null,label:'Saved replay',coverage:[],message:'Live coverage query unavailable in this saved replay. The recorded area/source panel remains authoritative.'};
   } else {status=404;data={error:'Saved replay has no live service endpoint'};}
   return new Response(JSON.stringify(data), {status,headers:{'Content-Type':'application/json'}});
