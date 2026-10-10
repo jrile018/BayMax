@@ -1,0 +1,78 @@
+{
+  "status": "controller_bytes_verified_server_resolution",
+  "resolution_host": "Radeon Cloud /opt/venv/bin/python 3.14.4",
+  "preserve_runtime_torch": "2.13.0+rocm10.0.0",
+  "created_utc": "2026-10-10T07:21:46.6451455Z",
+  "artifacts": [
+    {
+      "package": "transformers",
+      "version": "4.57.6",
+      "filename": "transformers-4.57.6-py3-none-any.whl",
+      "size": 11993498,
+      "sha256": "4c9e9de11333ddfe5114bc872c9f370509198acf0b87a832a0ab9458e2bd0550",
+      "url": "https://files.pythonhosted.org/packages/03/b8/e484ef633af3887baeeb4b6ad12743363af7cce68ae51e938e00aaa0529d/transformers-4.57.6-py3-none-any.whl",
+      "license": "Apache 2.0 License",
+      "requires_python": ">=3.9.0"
+    },
+    {
+      "package": "huggingface-hub",
+      "version": "0.36.2",
+      "filename": "huggingface_hub-0.36.2-py3-none-any.whl",
+      "size": 566395,
+      "sha256": "48f0c8eac16145dfce371e9d2d7772854a4f591bcb56c9cf548accf531d54270",
+      "url": "https://files.pythonhosted.org/packages/a8/af/48ac8483240de756d2438c380746e7130d1c6f75802ef22f3c6d49982787/huggingface_hub-0.36.2-py3-none-any.whl",
+      "license": "Apache",
+      "license_source": "official_registry_metadata",
+      "license_sha256": null,
+      "requires_python": ">=3.8.0"
+    },
+    {
+      "package": "regex",
+      "version": "2026.9.29",
+      "filename": "regex-2026.9.29-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
+      "size": 807176,
+      "sha256": "2f7f7aa47b229f2b39a2ae2596d2ad5625d77b5eb9856fac2dab3eb506cdd0a0",
+      "url": "https://files.pythonhosted.org/packages/a9/4d/041d9458a645fee4fce4d642a89d27271a3cfcd91095104f6dde44da70bf/regex-2026.9.29-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
+      "license": "Apache-2.0 AND CNRI-Python",
+      "license_source": "official_registry_metadata",
+      "license_sha256": null,
+      "requires_python": ">=3.10"
+    },
+    {
+      "package": "tokenizers",
+      "version": "0.22.2",
+      "filename": "tokenizers-0.22.2-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+      "size": 3274982,
+      "sha256": "369cc9fc8cc10cb24143873a0d95438bb8ee257bb80c71989e3ee290e8d72c67",
+      "url": "https://files.pythonhosted.org/packages/2e/76/932be4b50ef6ccedf9d3c6639b056a967a86258c6d9200643f01269211ca/tokenizers-0.22.2-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+      "license": "Apache-2.0",
+      "license_source": "https://raw.githubusercontent.com/huggingface/tokenizers/v0.22.2/LICENSE",
+      "license_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "requires_python": ">=3.9"
+    },
+    {
+      "package": "safetensors",
+      "version": "0.8.0",
+      "filename": "safetensors-0.8.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+      "size": 516040,
+      "sha256": "fd6f3f93c9a0a7cc2788ee63fb763353d4bd2e89b0751bc78fcf7dda00bea774",
+      "url": "https://files.pythonhosted.org/packages/28/50/f203ff3a3ddfe19308efc83c5a3a29ed02bf786732ec35e68bf9162f3365/safetensors-0.8.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+      "license": "Apache-2.0",
+      "license_source": "https://raw.githubusercontent.com/huggingface/safetensors/v0.8.0/LICENSE",
+      "license_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "requires_python": ">=3.10"
+    },
+    {
+      "package": "hf-xet",
+      "version": "1.7.0",
+      "filename": "hf_xet-1.7.0-cp38-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "size": 4212180,
+      "sha256": "2814a6e999d13464c4d679b788cc5d784eb5a4edfc638a31f10e9a11ab531ef8",
+      "url": "https://files.pythonhosted.org/packages/a3/4c/2bf3b66c215d409655f28de1622393dde04c9461280d48c7924bb3b2decd/hf_xet-1.7.0-cp38-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "license": "Apache-2.0",
+      "license_source": "official_registry_metadata",
+      "license_sha256": null,
+      "requires_python": ">=3.8"
+    }
+  ]
+}

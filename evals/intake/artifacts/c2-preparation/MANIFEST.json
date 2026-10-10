@@ -1,0 +1,53 @@
+{
+  "checkpoint": "c2_preparation",
+  "source": {
+    "source_sha": "a28b890a904035c408206de06db2a29f43e6d76c",
+    "source_dirty": false,
+    "source_fingerprint_sha256": "c99cb7e81f69da8cc9a9d14175d26ec7a16cebdf5dbc32c0a5a750ad2e2ab8c5"
+  },
+  "tests": {
+    "command": "OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONDONTWRITEBYTECODE=1 /opt/venv/bin/python -m pytest services/intake/tests evals/intake/tests -q",
+    "passed": 71,
+    "exit_code": 0,
+    "host": "Radeon Cloud"
+  },
+  "model_id": "Qwen/Qwen3-4B",
+  "model_revision": "1cfa9a7208912126459214e8b04321603b3df60c",
+  "model_bytes_verified_on_controller": true,
+  "cloud_model_cache_bytes": 0,
+  "real_model_load": false,
+  "real_model_inference": false,
+  "gpu_lease_used": false,
+  "bucket_real_transfer": false,
+  "blocking_ingress": "Chrome extension file-URL upload permission pending; cloud HTTPS egress unavailable; existing SSH ~44KB/s; relay has no existing cloud key auth",
+  "files": {
+    "server-checks.log": {
+      "bytes": 99,
+      "sha256": "6cf3019f20b3c26bcd6dda4f7f25097f57d73de5169588d5cf3c6716ab318055"
+    },
+    "source.json": {
+      "bytes": 187,
+      "sha256": "0a1903e863073a6ec47b46bf32fddf082c877894ce7a6e74a6a26891a94a56ee"
+    },
+    "MODEL_VERIFIED.json": {
+      "bytes": 5901,
+      "sha256": "3d340b59d74b581ef4155a20aba52d6c9fcb5741608ae79d5920f16984f52097"
+    },
+    "WHEEL_MANIFEST.json": {
+      "bytes": 4012,
+      "sha256": "58ab13f05c37bda0acab94a64a4671db6cd8811a06e810989de185c0cb24bfef"
+    },
+    "DEPENDENCIES_VERIFIED.json": {
+      "bytes": 2875,
+      "sha256": "4fcffa85fab5962c46e2fb66320383903997f1c35f9577e2450920bda4b4b49f"
+    },
+    "SERVER_WHEEL_VERIFIED.json": {
+      "bytes": 2943,
+      "sha256": "eec0607de1c7a376397cde25b40673850c7575644f68ef319c7f9a97c56289ff"
+    },
+    "C2_REVIEW.md": {
+      "bytes": 4505,
+      "sha256": "433b7200b52caea6ad5ab9c46577076afc98bb749e0008c0eb5c923dd155fee5"
+    }
+  }
+}
