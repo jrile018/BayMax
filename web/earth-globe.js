@@ -6,7 +6,7 @@ window.KnightEarth=(()=>{
  const TEXTURE_URL="./assets/nasa-blue-marble-2009.jpg";
  const API_ROOT=new URL(".",document.currentScript?.src||document.baseURI);
  let initialized=false,setupPromise=null,visible=false,dragging=false,renderer,scene,camera,globe,Three,frame=0,oldBanner="",setPanel=null,restoreMapLabels=null,openLocal=null,panelState=null;
- let places=[],selected=null,picked=null,markers=[],regionMeshes=[],activeFilter="all",sourceTimer=null,sourceEpoch=0,sourcePending=null,situation=null;
+ let places=[],selected=null,picked=null,markers=[],regionMeshes=[],activeFilter="all",sourceTimer=null,ageTimer=null,sourceEpoch=0,sourcePending=null,situation=null;
  const $=id=>document.getElementById(id);
  const data=()=>window.KnightEarthPlaces;
  const safeUrl=value=>data()?.safeUrl(value)||null;
@@ -64,7 +64,8 @@ window.KnightEarth=(()=>{
    " · accepted cutoff "+(situation?.snapshot?.cutoff_utc||"Unknown")+" · snapshot "+(situation?.snapshot?.snapshot_hash||"Unknown")+
    " · operational needs, closures, vehicles, stock and capacity remain Unknown unless separately accepted":
    "Curated historical context or selected coordinate · no current local incident claim";
-  $("earth-detail-map").textContent=place.id==="paradise"?"Open Paradise training 3D map ↗":"Open local 3D coverage view ↗";
+  const localButton=$("earth-detail-map");localButton.hidden=!Number.isFinite(place.lon)||!Number.isFinite(place.lat);
+  localButton.textContent=place.id==="paradise"?"Open Paradise training 3D map ↗":"Open local 3D coverage view ↗";
   hover(null);
   if(recenter&&globe&&Three&&Number.isFinite(place.lon)&&Number.isFinite(place.lat)){const p=localPoint(place,1.54);globe.rotation.y=Math.atan2(-p.x,p.z);globe.rotation.x=Math.max(-1.25,Math.min(1.25,place.lat*Math.PI/180));positionMarkers()}
  }
@@ -158,8 +159,10 @@ window.KnightEarth=(()=>{
   }catch(error){if(visible&&epoch===sourceEpoch){setSituation({status:"unavailable"});$("earth-source-state").textContent="Accepted feed unavailable · historical places only"}}
   finally{clearTimeout(deadline);if(sourcePending===controller)sourcePending=null}
  }
- function beginSituation(){const epoch=++sourceEpoch;pollSituation(epoch);clearInterval(sourceTimer);sourceTimer=document.querySelector(".saved-preview-banner")?null:setInterval(()=>pollSituation(epoch),30000)}
- function endSituation(){sourceEpoch++;clearInterval(sourceTimer);sourceTimer=null;sourcePending?.abort();sourcePending=null}
+ function beginSituation(){const epoch=++sourceEpoch;pollSituation(epoch);clearInterval(sourceTimer);clearInterval(ageTimer);
+  sourceTimer=document.querySelector(".saved-preview-banner")?null:setInterval(()=>pollSituation(epoch),30000);
+  ageTimer=setInterval(()=>{if(visible)$("earth-source-state").textContent=sourceLabel()},30000)}
+ function endSituation(){sourceEpoch++;clearInterval(sourceTimer);sourceTimer=null;clearInterval(ageTimer);ageTimer=null;sourcePending?.abort();sourcePending=null}
  function size(){if(!renderer)return;const host=$("earth-panel"),w=host.clientWidth,h=host.clientHeight;if(w&&h){renderer.setSize(w,h,false);const aspect=w/h;camera.aspect=aspect;camera.position.z=aspect<.9?Math.max(5.7,1.65/(Math.tan(16*Math.PI/180)*aspect)):5.7;if(globe)globe.position.x=aspect<.9?0:.95;camera.updateProjectionMatrix();positionMarkers()}}
  async function setup(){if(initialized)return;if(setupPromise)return setupPromise;setupPromise=build();try{await setupPromise}catch(error){setupPromise=null;if(renderer){renderer.dispose();renderer.domElement.remove();renderer=null}throw error}}
  async function build(){

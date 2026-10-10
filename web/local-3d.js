@@ -85,21 +85,27 @@ window.KnightLocal3D=(()=>{
   const candidates=paradise?vehicles.filter(v=>point(v.position_lonlat)):[];
   if(selected&&!candidates.some(v=>v.vehicle_id===selected)){selected=undefined;cockpit=false}
   if(selected===undefined&&candidates.length)selected=candidates.find(v=>v.kind==="bus")?.vehicle_id||candidates[0].vehicle_id;
-  const list=$("local3d-fleet-list");list.replaceChildren();
-  const all=document.createElement("button");all.type="button";all.textContent="Whole fleet · "+candidates.length;all.setAttribute("aria-pressed",String(!selected));all.onclick=()=>{selected=null;cockpit=false;renderFleet(currentFrame());cameraPose()};list.append(all);
+  const list=$("local3d-fleet-list"),ids=["__all__",...candidates.map(v=>v.vehicle_id)];
+  if(list.children.length!==ids.length||ids.some((id,index)=>list.children[index]?.dataset.vehicleId!==id)){
+   const buttons=ids.map(id=>{const button=document.createElement("button");button.type="button";button.dataset.vehicleId=id;
+    button.onclick=()=>{selected=id==="__all__"?null:id;if(selected)training()?.select(selected);else cockpit=false;renderFleet(currentFrame());cameraPose()};return button});
+   list.replaceChildren(...buttons);
+  }
+  const all=list.children[0];all.textContent="Whole fleet · "+candidates.length;all.setAttribute("aria-pressed",String(!selected));
   for(const [index,v] of candidates.entries()){
    const color=colorFor(index),colorText=colorHex(index),position=xyz(v.position_lonlat,16);
    const marker=new Three.Mesh(new Three.CylinderGeometry(Math.min(15,span*.009),Math.min(18,span*.011),Math.min(40,span*.025),8),new Three.MeshStandardMaterial({color,emissive:color,emissiveIntensity:.25}));
    marker.position.copy(position);marker.userData.vehicleId=v.vehicle_id;marker.visible=!cockpit;fleetGroup.add(marker);vehicleMeshes.push(marker);
    const track=line(v.route_geometry_lonlat,color,.34,5);if(track)fleetGroup.add(track);
    const trail=line(v.completed_trail_lonlat,color,.95,8);if(trail)fleetGroup.add(trail);
-   const button=document.createElement("button");button.type="button";button.style.setProperty("--vehicle-color",colorText);button.setAttribute("aria-pressed",String(v.vehicle_id===selected));
-   button.textContent=(v.label||v.vehicle_id)+" · "+(v.phase||"Unknown")+" · "+formatTime(frameData.time_s);button.onclick=()=>{selected=v.vehicle_id;training()?.select(v.vehicle_id);renderFleet(currentFrame());cameraPose()};list.append(button);
+   const button=list.children[index+1];button.style.setProperty("--vehicle-color",colorText);button.setAttribute("aria-pressed",String(v.vehicle_id===selected));
+   button.textContent=(v.label||v.vehicle_id)+" · "+(v.phase||"Unknown")+" · "+formatTime(frameData.time_s);
   }
   const current=selectedVehicle(candidates),speed=current?(finite(current.simulated_speed_kmh)?current.simulated_speed_kmh:speedFor(current,frameData?.time_s)):null;
   $("local3d-frame").textContent="TRAINING FRAME "+(Number(frameData?.index)+1||1)+" · "+formatTime(frameData?.time_s);
   $("local3d-hud").textContent=current?
    (current.label||current.vehicle_id)+" · "+(current.phase||"Unknown")+" · simulated speed "+(speed===null?"Unknown":speed.toFixed(1)+" km/h along training route")+
+   " · simulated heading "+(finite(current.heading_deg)?current.heading_deg.toFixed(0)+"°":"Unknown")+" · route "+(current.route_id||"Unknown")+
    " · source: separate graph-bound training fixture "+(training()?.sourceHash?.slice(0,12)||"Unknown"):
    "Whole training fleet · select a unit for details and follow camera";
   $("local3d-cockpit").disabled=!current||current.kind!=="bus";
