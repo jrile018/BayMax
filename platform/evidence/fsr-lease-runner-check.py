@@ -19,7 +19,8 @@ spec.loader.exec_module(runner)
 
 def lease(end="2026-10-10T08:10:00Z"):
     return {"id":"Observer02-test","scope":"FSR","gpu":"W7900D","gpu_count":1,"cpu_cores":[0,1],
-        "vram_cap_gib":12,"start_utc":"2026-10-10T07:59:00Z","end_utc":end}
+        "vram_cap_gib":12,"pci_vendor_id":4098,"pci_device_id":0x744b,
+        "start_utc":"2026-10-10T07:59:00Z","end_utc":end}
 
 class FrozenClock:
     now_value=datetime(2026,10,10,8,0,tzinfo=timezone.utc)
@@ -35,7 +36,8 @@ class FsrRunnerTests(unittest.TestCase):
     def test_lease_scope_resource_and_freshness(self):
         now=datetime(2026,10,10,8,0,tzinfo=timezone.utc)
         self.assertEqual(runner.validate_lease(lease(),now=now)["id"],"Observer02-test")
-        for key,value in (("scope","native"),("gpu","other"),("gpu_count",2),("cpu_cores",[0,1,2]),("vram_cap_gib",13)):
+        for key,value in (("scope","native"),("gpu","other"),("gpu_count",2),("cpu_cores",[0,1,2]),
+            ("vram_cap_gib",13),("pci_vendor_id",4318),("pci_device_id",0x73bf)):
             bad=lease(); bad[key]=value
             with self.subTest(key=key),self.assertRaises(ValueError):
                 runner.validate_lease(bad,now=now)
@@ -111,7 +113,7 @@ class FsrRunnerTests(unittest.TestCase):
             run,lease_path,wine=self.run_fixture(Path(tempdir))
             FrozenClock.now_value=datetime(2026,10,10,8,8,tzinfo=timezone.utc)
             report={"phases":{}}
-            with mock.patch.object(runner,"datetime",FrozenClock),mock.patch.object(runner,"verify_prelaunch",return_value=wine),mock.patch.object(runner.subprocess,"run") as wine_call:
+            with mock.patch.object(runner,"datetime",FrozenClock),mock.patch.object(runner,"verify_prelaunch",return_value=wine),mock.patch.object(runner,"verify_host_device",return_value={}),mock.patch.object(runner,"run_probe") as wine_call:
                 with self.assertRaises(ValueError):
                     runner.run_phase("query-only",run,lease_path,"a"*64,report)
                 wine_call.assert_not_called()
@@ -121,7 +123,7 @@ class FsrRunnerTests(unittest.TestCase):
             run,lease_path,wine=self.run_fixture(Path(tempdir))
             report={"phases":{}}
             result=SimpleNamespace(stdout="mock query",stderr="mock diagnostic",returncode=0)
-            with mock.patch.object(runner,"datetime",FrozenClock),mock.patch.object(runner,"verify_prelaunch",return_value=wine),mock.patch.object(runner,"query_proof",return_value={"provider_id":"mock"}),mock.patch.object(runner.subprocess,"run",return_value=result) as wine_call:
+            with mock.patch.object(runner,"datetime",FrozenClock),mock.patch.object(runner,"verify_prelaunch",return_value=wine),mock.patch.object(runner,"verify_host_device",return_value={}),mock.patch.object(runner,"query_proof",return_value={"provider_id":"mock"}),mock.patch.object(runner,"run_probe",return_value=result) as wine_call:
                 runner.run_phase("query-only",run,lease_path,"a"*64,report)
                 FrozenClock.now_value=datetime(2026,10,10,8,8,tzinfo=timezone.utc)
                 with self.assertRaises(ValueError):
@@ -138,7 +140,7 @@ class FsrRunnerTests(unittest.TestCase):
                 if calls["count"]==2:
                     FrozenClock.now_value=datetime(2026,10,10,8,8,tzinfo=timezone.utc)
                 return wine
-            with mock.patch.object(runner,"datetime",FrozenClock),mock.patch.object(runner,"verify_prelaunch",side_effect=hash_check),mock.patch.object(runner,"query_proof",return_value={"provider_id":"mock"}),mock.patch.object(runner.subprocess,"run",return_value=SimpleNamespace(stdout="mock",stderr="",returncode=0)) as wine_call:
+            with mock.patch.object(runner,"datetime",FrozenClock),mock.patch.object(runner,"verify_prelaunch",side_effect=hash_check),mock.patch.object(runner,"verify_host_device",return_value={}),mock.patch.object(runner,"query_proof",return_value={"provider_id":"mock"}),mock.patch.object(runner,"run_probe",return_value=SimpleNamespace(stdout="mock",stderr="",returncode=0)) as wine_call:
                 with self.assertRaises(ValueError):
                     runner.run_phase("query-only",run,lease_path,"a"*64,report)
                 wine_call.assert_not_called()
@@ -148,8 +150,8 @@ class FsrRunnerTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix="fsr-lease-test-") as tempdir:
             path=Path(tempdir)/"query.jsonl"
             events=[
-                {"event":"adapter","luid":"0x1","vendor_id":4098,"software":False},
-                {"event":"selected_adapter","luid":"0x1"},
+                {"event":"adapter","luid":"0x1","vendor_id":4098,"device_id":0x744b,"name_utf8_bytes":"AMD Radeon PRO W7900D","software":False},
+                {"event":"selected_adapter","luid":"0x1","name_utf8_bytes":"AMD Radeon PRO W7900D"},
                 {"event":"module_path_verification","name_utf8_bytes":"amd_fidelityfx_loader_dx12.dll","matches_expected":True},
                 {"event":"module_path_verification","name_utf8_bytes":"amd_fidelityfx_upscaler_dx12.dll","matches_expected":True},
                 {"event":"provider","id":"0x7","name_bytes":"AMD FSR 4.1.1"},
@@ -159,14 +161,14 @@ class FsrRunnerTests(unittest.TestCase):
             ]
             path.write_text("\n".join(json.dumps(row) for row in events)+"\n")
             with self.assertRaises(ValueError):
-                runner.query_proof(path)
+                runner.query_proof(path,lease())
 
     def test_query_timeout_receipt_records_attempt_without_completion(self):
         with tempfile.TemporaryDirectory(prefix="fsr-lease-test-") as tempdir:
             run,lease_path,wine=self.run_fixture(Path(tempdir))
             report={"phases":{}}
             error=subprocess.TimeoutExpired(cmd=["mock wine"],timeout=120,output=b"partial",stderr=b"timeout")
-            with mock.patch.object(runner,"datetime",FrozenClock),mock.patch.object(runner,"verify_prelaunch",return_value=wine),mock.patch.object(runner.subprocess,"run",side_effect=error) as wine_call:
+            with mock.patch.object(runner,"datetime",FrozenClock),mock.patch.object(runner,"verify_prelaunch",return_value=wine),mock.patch.object(runner,"verify_host_device",return_value={}),mock.patch.object(runner,"run_probe",side_effect=error) as wine_call:
                 with self.assertRaises(subprocess.TimeoutExpired):
                     runner.run_phase("query-only",run,lease_path,"a"*64,report)
                 wine_call.assert_called_once()
@@ -220,8 +222,8 @@ class FsrRunnerTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix="fsr-lease-test-") as tempdir:
             path=Path(tempdir)/"query.jsonl"
             events=[
-                {"event":"adapter","luid":"0x1","vendor_id":4098,"software":False},
-                {"event":"selected_adapter","luid":"0x1"},
+                {"event":"adapter","luid":"0x1","vendor_id":4098,"device_id":0x744b,"name_utf8_bytes":"AMD Radeon PRO W7900D","software":False},
+                {"event":"selected_adapter","luid":"0x1","name_utf8_bytes":"AMD Radeon PRO W7900D"},
                 {"event":"module_path_verification","name_utf8_bytes":"amd_fidelityfx_loader_dx12.dll","matches_expected":True},
                 {"event":"module_path_verification","name_utf8_bytes":"amd_fidelityfx_upscaler_dx12.dll","matches_expected":True},
                 {"event":"provider","id":"0x7","name_bytes":"AMD FSR 4.1.1"},
@@ -229,12 +231,12 @@ class FsrRunnerTests(unittest.TestCase):
                 {"event":"result","context_provider_verified":True,"dispatch_readback_completed":False,"ml_dispatch_verified":False}
             ]
             path.write_text("\n".join(json.dumps(row) for row in events)+"\n")
-            proof=runner.query_proof(path)
+            proof=runner.query_proof(path,lease())
             self.assertEqual(proof["provider_id"],"0x7")
             events[0]["software"]=True
             path.write_text("\n".join(json.dumps(row) for row in events)+"\n")
             with self.assertRaises(ValueError):
-                runner.query_proof(path)
+                runner.query_proof(path,lease())
 
     def test_shader_audit_hashes_owned_dumps_without_claiming_ml(self):
         with tempfile.TemporaryDirectory(prefix="fsr-lease-test-") as tempdir:
@@ -249,8 +251,8 @@ class FsrRunnerTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix="fsr-lease-test-") as tempdir:
             path=Path(tempdir)/"dispatch.jsonl"
             base=[
-                {"event":"adapter","luid":"0x1","vendor_id":4098,"software":False},
-                {"event":"selected_adapter","luid":"0x1"},
+                {"event":"adapter","luid":"0x1","vendor_id":4098,"device_id":0x744b,"name_utf8_bytes":"AMD Radeon PRO W7900D","software":False},
+                {"event":"selected_adapter","luid":"0x1","name_utf8_bytes":"AMD Radeon PRO W7900D"},
                 {"event":"module_path_verification","name_utf8_bytes":"amd_fidelityfx_loader_dx12.dll","matches_expected":True},
                 {"event":"module_path_verification","name_utf8_bytes":"amd_fidelityfx_upscaler_dx12.dll","matches_expected":True},
                 {"event":"provider","id":"0x7","name_bytes":"AMD FSR 4.1.1"},
@@ -260,10 +262,10 @@ class FsrRunnerTests(unittest.TestCase):
                 base.append({"event":"api","api":"ffxDispatch synthetic upscale","ffx_code":0})
                 base.append({"event":"dispatch_readback","frame":frame,"changed_components":96*96*4,"finite_components":96*96*4})
             base.append({"event":"result","context_provider_verified":True,"dispatch_readback_completed":True,"ml_dispatch_verified":False})
-            query={"amd_adapter_luid":"0x1","provider_id":"0x7"}
+            query={"amd_adapter_luid":"0x1","pci_device_id":0x744b,"provider_id":"0x7"}
             def check(events):
                 path.write_text("\n".join(json.dumps(row) for row in events)+"\n")
-                return runner.dispatch_proof(path,query)
+                return runner.dispatch_proof(path,query,lease())
             self.assertEqual(check(base)["dispatch_frames"],3)
             cases=(
                 (0,{"vendor_id":4318}),
@@ -369,7 +371,61 @@ class FsrRunnerTests(unittest.TestCase):
             output=Path(tempdir)/"query.jsonl"
             output.write_text('{"event":"result","context_provider_verified":true,"dispatch_readback_completed":false,"ml_dispatch_verified":false}\n')
             with self.assertRaises(ValueError):
-                runner.query_proof(output)
+                runner.query_proof(output,lease())
+
+    def test_wrong_amd_pci_device_and_model_cannot_prove_query(self):
+        with tempfile.TemporaryDirectory(prefix="fsr-lease-test-") as tempdir:
+            path=Path(tempdir)/"query.jsonl"
+            events=[
+                {"event":"adapter","luid":"0000000000000001","vendor_id":4098,
+                    "device_id":0x73bf,"name_utf8_bytes":"AMD Radeon RX 6800","software":False},
+                {"event":"selected_adapter","luid":"0000000000000001",
+                    "name_utf8_bytes":"AMD Radeon RX 6800"},
+                {"event":"module_path_verification","name_utf8_bytes":"amd_fidelityfx_loader_dx12.dll","matches_expected":True},
+                {"event":"module_path_verification","name_utf8_bytes":"amd_fidelityfx_upscaler_dx12.dll","matches_expected":True},
+                {"event":"provider","id":"0x7","name_bytes":"AMD FSR 4.1.1"},
+                {"event":"context_provider","id":"0x7","selected_id_matches":True},
+                {"event":"result","context_provider_verified":True,"dispatch_readback_completed":False,"ml_dispatch_verified":False}]
+            path.write_text("\n".join(json.dumps(row) for row in events)+"\n")
+            with self.assertRaisesRegex(ValueError,"leased W7900D"):
+                runner.query_proof(path,lease())
+
+    def test_direct_execute_rejects_unsupervised_identity_and_affinity(self):
+        with mock.patch.object(runner.os,"geteuid",return_value=0), \
+            mock.patch.object(runner.os,"getegid",return_value=0):
+            with self.assertRaisesRegex(ValueError,"isolated UID"):
+                runner.require_execution_envelope()
+        with mock.patch.object(runner.os,"geteuid",return_value=65534), \
+            mock.patch.object(runner.os,"getegid",return_value=993), \
+            mock.patch.object(runner.os,"getgroups",return_value=[]), \
+            mock.patch.object(runner.os,"sched_getaffinity",return_value={0,1,2}):
+            with self.assertRaisesRegex(ValueError,"affinity"):
+                runner.require_execution_envelope()
+
+    def test_host_render_node_must_match_external_pci_lease(self):
+        with tempfile.TemporaryDirectory(prefix="fsr-lease-test-") as tempdir:
+            node=Path(tempdir)
+            (node/"vendor").write_text("0x1002\n")
+            (node/"device").write_text("0x73bf\n")
+            with mock.patch.object(runner,"RENDER_DEVICE",node):
+                with self.assertRaisesRegex(ValueError,"differs"):
+                    runner.verify_host_device(lease())
+                (node/"device").write_text("0x744b\n")
+                self.assertEqual(runner.verify_host_device(lease())["pci_device_id"],0x744b)
+
+    def test_probe_command_pins_lease_device_before_wine(self):
+        with tempfile.TemporaryDirectory(prefix="fsr-lease-test-") as tempdir:
+            run,lease_path,wine=self.run_fixture(Path(tempdir))
+            report={"phases":{}}
+            result=SimpleNamespace(stdout="mock query",stderr="",returncode=0)
+            with mock.patch.object(runner,"datetime",FrozenClock), \
+                mock.patch.object(runner,"verify_prelaunch",return_value=wine), \
+                mock.patch.object(runner,"verify_host_device",return_value={}), \
+                mock.patch.object(runner,"query_proof",return_value={"provider_id":"mock"}), \
+                mock.patch.object(runner,"run_probe",return_value=result) as call:
+                runner.run_phase("query-only",run,lease_path,"a"*64,report)
+            command=call.call_args.args[0]
+            self.assertEqual(command[command.index("--adapter-device-id")+1],"744b")
 
 if __name__=="__main__":
     unittest.main()
