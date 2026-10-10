@@ -5,7 +5,7 @@ import argparse
 import json
 from pathlib import Path
 
-from . import build_pack, verify_pack
+from . import build_pack, strict_json_loads, verify_pack
 
 
 def main():
@@ -23,7 +23,7 @@ def main():
     args = parser.parse_args()
     if args.command == "pack":
         manifest = build_pack(args.source, args.output,
-                              json.loads(Path(args.metadata).read_text(encoding="utf-8")), args.file)
+                              strict_json_loads(Path(args.metadata).read_text(encoding="utf-8")), args.file)
         result = {"status": "packed", "prefix": manifest["remote_prefix"], "files": manifest["files"]}
     else:
         manifest = verify_pack(args.pack)

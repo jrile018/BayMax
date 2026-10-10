@@ -36,6 +36,28 @@ class ArtifactError(ValueError):
     """A pack is unsafe, incomplete, collided, or failed verification."""
 
 
+def _unique_object(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ArtifactError(f"duplicate JSON key: {key!r}")
+        result[key] = value
+    return result
+
+
+def _invalid_constant(value):
+    raise ArtifactError(f"nonstandard JSON constant: {value}")
+
+
+def strict_json_loads(data):
+    """Decode JSON without silently discarding duplicate keys at any depth."""
+    try:
+        return json.loads(data, object_pairs_hook=_unique_object,
+                          parse_constant=_invalid_constant)
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ArtifactError("invalid UTF-8 JSON") from exc
+
+
 def _digest(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
@@ -108,9 +130,9 @@ def _structured(path: Path) -> tuple[int, str]:
             if not lines:
                 raise ArtifactError("empty replay stream")
             for line in lines:
-                _typed_json(path.name, json.loads(line))
+                _typed_json(path.name, strict_json_loads(line))
         else:
-            _typed_json(path.name, json.loads(text))
+            _typed_json(path.name, strict_json_loads(text))
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise ArtifactError("artifact must contain typed UTF-8 JSON/JSONL") from exc
     return len(data), _digest(data)
@@ -169,9 +191,10 @@ def _metadata(metadata: dict) -> dict:
     if metadata["status"] != "completed":
         raise ArtifactError("only finalized completed runs can be packed")
     privacy = metadata["privacy"]
-    if not isinstance(privacy, dict) or privacy != {
-        "sanitized": True, "contains_personal_data": False
-    }:
+    if (not isinstance(privacy, dict)
+            or set(privacy) != {"sanitized", "contains_personal_data"}
+            or privacy["sanitized"] is not True
+            or privacy["contains_personal_data"] is not False):
         raise ArtifactError("explicit sanitized and no-personal-data attestation required")
     expected = make_run_id(metadata["completed_at"], metadata["provenance"], metadata["run_nonce"])
     if metadata["run_id"] != expected:
@@ -250,7 +273,7 @@ def _read_manifest(path: Path):
     if len(data) > MAX_MANIFEST_BYTES:
         raise ArtifactError("oversized manifest")
     try:
-        return _manifest(json.loads(data.decode("utf-8")))
+        return _manifest(strict_json_loads(data.decode("utf-8")))
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise ArtifactError("invalid manifest JSON") from exc
 
@@ -268,7 +291,7 @@ def verify_pack(pack_dir):
         size, digest = _structured(_safe_file(root, entry["path"]))
         if size != entry["size"] or digest != entry["sha256"]:
             raise ArtifactError(f"checksum/length mismatch: {entry['path']}")
-    config = json.loads((root / "config.json").read_text(encoding="utf-8"))
+    config = strict_json_loads((root / "config.json").read_text(encoding="utf-8"))
     if config["seed"] != manifest["provenance"]["seed"]:
         raise ArtifactError("config seed does not match provenance")
     return manifest
