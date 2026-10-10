@@ -21,15 +21,15 @@ def reviewed_request(status="localized"):
         proposal.proposal_id, reviewer_id="scripted-trainee-001",
         decision="accepted", confirm_exercise_need=True, reviewed_time_s=8,
     )
-    return case, broker.export_request(receipt)
+    return case, proposal, broker.export_request(receipt)
 
 
 def test_illustrated_case_stays_pending_with_explicit_source_and_reviewer_limits():
     from services.casualty.incident_gate import make_pending_incident_evidence
 
-    case, request = reviewed_request()
+    case, proposal, request = reviewed_request()
     evidence = make_pending_incident_evidence(
-        case, request, review_actor_kind="scripted_demo"
+        proposal, request, review_actor_kind="scripted_demo"
     )
     assert evidence.case_hash == case.content_hash
     assert evidence.image_sha256 == case.image.sha256
@@ -49,20 +49,20 @@ def test_illustrated_case_stays_pending_with_explicit_source_and_reviewer_limits
 def test_owner_cannot_self_assert_authenticated_review():
     from services.casualty.incident_gate import make_pending_incident_evidence
 
-    case, request = reviewed_request()
+    case, proposal, request = reviewed_request()
     with pytest.raises(ValueError, match="review_actor_kind"):
         make_pending_incident_evidence(
-            case, request, review_actor_kind="authenticated_operator"
+            proposal, request, review_actor_kind="authenticated_operator"
         )
 
 
 def test_case_or_receipt_mismatch_cannot_enter_pending_handoff():
     from services.casualty.incident_gate import make_pending_incident_evidence
 
-    case, request = reviewed_request()
-    with pytest.raises(ValueError, match="case"):
+    case, proposal, request = reviewed_request()
+    with pytest.raises(ValueError, match="proposal|case"):
         make_pending_incident_evidence(
-            replace(case, case_id="npc-case-other"), request,
+            replace(proposal, case=replace(case, case_id="npc-case-other")), request,
             review_actor_kind="scripted_demo",
         )
     forged = replace(
@@ -71,16 +71,16 @@ def test_case_or_receipt_mismatch_cannot_enter_pending_handoff():
     )
     with pytest.raises(ValueError, match="receipt"):
         make_pending_incident_evidence(
-            case, forged, review_actor_kind="scripted_demo",
+            proposal, forged, review_actor_kind="scripted_demo",
         )
 
 
 def test_no_face_keeps_authored_exercise_need_but_stays_pending():
     from services.casualty.incident_gate import make_pending_incident_evidence
 
-    case, request = reviewed_request("no_face")
+    case, proposal, request = reviewed_request("no_face")
     evidence = make_pending_incident_evidence(
-        case, request, review_actor_kind="scripted_demo"
+        proposal, request, review_actor_kind="scripted_demo"
     )
     assert evidence.request_id == case.exercise_need.request_id
     assert evidence.evidence_status == "abstained"
@@ -90,17 +90,48 @@ def test_no_face_keeps_authored_exercise_need_but_stays_pending():
 def test_proposal_hash_and_request_key_are_bound_to_exercise_source():
     from services.casualty.incident_gate import make_pending_incident_evidence
 
-    case, request = reviewed_request()
+    case, proposal, request = reviewed_request()
     altered_receipt = replace(
         request,
         review_receipt=replace(request.review_receipt, proposal_hash="0" * 64),
     )
     with pytest.raises(ValueError, match="receipt"):
         make_pending_incident_evidence(
-            case, altered_receipt, review_actor_kind="scripted_demo"
+            proposal, altered_receipt, review_actor_kind="scripted_demo"
         )
     altered_key = replace(request, idempotency_key="casualty-exercise-need-forged")
     with pytest.raises(ValueError, match="request"):
         make_pending_incident_evidence(
-            case, altered_key, review_actor_kind="scripted_demo"
+            proposal, altered_key, review_actor_kind="scripted_demo"
+        )
+
+
+@pytest.mark.parametrize("forged_status", ["human_confirmed", "authenticated_operational"])
+def test_no_face_status_cannot_be_relabelled(forged_status):
+    from services.casualty.incident_gate import make_pending_incident_evidence
+
+    case, proposal, request = reviewed_request("no_face")
+    with pytest.raises(ValueError, match="evidence_status"):
+        make_pending_incident_evidence(
+            proposal, replace(request, evidence_status=forged_status),
+            review_actor_kind="scripted_demo",
+        )
+
+
+def test_paired_proposal_id_and_hash_substitution_is_rejected():
+    from services.casualty.incident_gate import make_pending_incident_evidence
+
+    case, proposal, request = reviewed_request()
+    fake_hash = "0" * 64
+    forged = replace(
+        request,
+        review_receipt=replace(
+            request.review_receipt,
+            proposal_hash=fake_hash,
+            proposal_id="casualty-proposal-" + fake_hash,
+        ),
+    )
+    with pytest.raises(ValueError, match="receipt"):
+        make_pending_incident_evidence(
+            proposal, forged, review_actor_kind="scripted_demo"
         )

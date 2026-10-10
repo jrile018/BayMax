@@ -29,7 +29,7 @@ def run_demo(output: Path) -> None:
     r=broker.review(p.proposal_id,reviewer_id='scripted-trainee-001',decision='accepted',
         confirmed_evidence=('cue-001',),confirm_exercise_need=True,reviewed_time_s=8)
     request=broker.export_request(r)
-    incident_gate=make_pending_incident_evidence(case,request,review_actor_kind='scripted_demo')
+    incident_gate=make_pending_incident_evidence(p,request,review_actor_kind='scripted_demo')
     absent=replace(result,status='no_face',boxes=(),observed_time_s=9)
     p2=broker.submit(case,absent,(),created_time_s=10)
     r2=broker.review(p2.proposal_id,reviewer_id='scripted-trainee-001',decision='accepted',

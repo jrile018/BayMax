@@ -38,7 +38,7 @@ A face miss does not downgrade or suppress a medical need. A human can confirm e
 
 ## Pending incident provenance handoff
 
-make_pending_incident_evidence(case, request, review_actor_kind=...) in
+make_pending_incident_evidence(proposal, request, review_actor_kind=...) in
 incident_gate.py produces a frozen PendingIncidentEvidence for the root
 owner to inspect. It checks case, image, authored request and local receipt
 bindings. The accepted actor kinds are scripted_demo and
