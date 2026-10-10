@@ -1,0 +1,83 @@
+{
+  "scenario_id": "fictional-tiny",
+  "graph_version": "tiny-v1",
+  "source": "Hand-authored fictional metric exercise; no real road, fire, speed or probability calibration.",
+  "nodes": {
+    "A": [
+      0,
+      0
+    ],
+    "B": [
+      100,
+      0
+    ],
+    "C": [
+      100,
+      100
+    ],
+    "D": [
+      200,
+      0
+    ]
+  },
+  "edges": [
+    {
+      "edge_id": "ab",
+      "source": "A",
+      "target": "B",
+      "length_m": 100,
+      "travel_s": 10,
+      "access": [
+        "bus",
+        "ambulance"
+      ]
+    },
+    {
+      "edge_id": "bd",
+      "source": "B",
+      "target": "D",
+      "length_m": 100,
+      "travel_s": 10,
+      "access": [
+        "bus",
+        "ambulance"
+      ]
+    },
+    {
+      "edge_id": "ac",
+      "source": "A",
+      "target": "C",
+      "length_m": 141.421356,
+      "travel_s": 15,
+      "access": [
+        "bus",
+        "ambulance",
+        "truck"
+      ]
+    },
+    {
+      "edge_id": "bc",
+      "source": "B",
+      "target": "C",
+      "length_m": 100,
+      "travel_s": 10,
+      "access": [
+        "bus",
+        "ambulance",
+        "truck"
+      ]
+    },
+    {
+      "edge_id": "cd",
+      "source": "C",
+      "target": "D",
+      "length_m": 141.421356,
+      "travel_s": 15,
+      "access": [
+        "bus",
+        "ambulance",
+        "truck"
+      ]
+    }
+  ]
+}
