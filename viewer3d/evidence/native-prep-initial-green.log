@@ -1,0 +1,40 @@
+COMMAND: taskset -c 0,1 /opt/venv/bin/python -m pytest viewer3d/tests -q -p no:cacheprovider
+CPU_ONLY: fake graphics contexts only
+STARTED_AT:2026-10-10T06:58:13Z
+...................F.................................................... [ 94%]
+....                                                                     [100%]
+=================================== FAILURES ===================================
+_____ test_fake_native_lifecycle_records_provider_flips_image_and_releases _____
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1/test_fake_native_lifecycle_rec0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f19ed90f100>
+
+    def test_fake_native_lifecycle_records_provider_flips_image_and_releases(tmp_path, monkeypatch):
+        import json
+        from PIL import Image
+        r, ctx = api(), Context()
+        calls = fake_module(monkeypatch, ctx)
+        path = tmp_path / "fake.png"
+        metadata = r.render_native(prepared(), path, width=2, height=2,
+                                   gl_library="/fixture/libGL.so", egl_library="/fixture/libEGL.so")
+        assert calls == [{"require": 330, "backend": "egl", "libgl": "/fixture/libGL.so", "libegl": "/fixture/libEGL.so"}]
+        assert metadata["provider"] == ctx.info
+        assert metadata["frame"]["snapshot_hash"] == "exact-hash"
+        assert metadata["status"] == "rendered"
+        assert metadata["fsr"] == "not implemented"
+>       assert json.loads(path.with_suffix(".json").read_text()) == metadata
+E       AssertionError: assert {'status': 'r...3 fake'}, ...} == {'status': 'r...3 fake'}, ...}
+E         
+E         Omitting 16 identical items, use -vv to show
+E         Differing items:
+E         {'camera': {'eye': {'x_m': 167.11758428621306, 'y_m': -67.11758428621306, 'z_m': 155.54110114345565}, 'target': {'x_m': 50.0, 'y_m': 50.0, 'z_m': 15.0}, 'aspect': 1.0, 'near': 108.79451694587326, ...}} != {'camera': {'eye': {'x_m': 167.11758428621306, 'y_m': -67.11758428621306, 'z_m': 155.54110114345565}, 'target': {'x_m': 50.0, 'y_m': 50.0, 'z_m': 15.0}, 'aspect': 1.0, 'near': 108.79451694587326, ...}}
+E         {'sources': [{'source_id': 'fixture', 'provider': 'independent fixture', 'license_id': 'CC0-1.0', 'reference':...
+E         
+E         ...Full output truncated (2 lines hidden), use '-vv' to show
+
+viewer3d/tests/test_render.py:196: AssertionError
+=========================== short test summary info ============================
+FAILED viewer3d/tests/test_render.py::test_fake_native_lifecycle_records_provider_flips_image_and_releases
+1 failed, 75 passed in 0.15s
+
+EXIT_CODE:1

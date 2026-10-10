@@ -1,0 +1,26 @@
+COMMAND: taskset -c 0,1 /opt/venv/bin/python -m pytest viewer3d/tests/test_render.py::test_sidecar_keeps_original_authoritative_geometry_and_snapshot_hash -q -p no:cacheprovider
+CPU_ONLY: fake graphics contexts only
+STARTED_AT:2026-10-10T07:02:07Z
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_____ test_sidecar_keeps_original_authoritative_geometry_and_snapshot_hash _____
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-8/test_sidecar_keeps_original_au0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x78d82e092b10>
+
+    def test_sidecar_keeps_original_authoritative_geometry_and_snapshot_hash(tmp_path, monkeypatch):
+        scene = prepared()
+        fake_module(monkeypatch, Context())
+        metadata = api().render_native(scene, tmp_path / "geometry.png", width=2, height=2)
+        assert metadata["frame"]["snapshot_hash"] == scene.frame.snapshot_hash
+        for record, primitive in zip(metadata["primitives"], scene.primitives):
+>           assert record["points"] == [dict(x_m=p.x_m, y_m=p.y_m, z_m=p.z_m) for p in primitive.points]
+                   ^^^^^^^^^^^^^^^^
+E           KeyError: 'points'
+
+viewer3d/tests/test_render.py:399: KeyError
+=========================== short test summary info ============================
+FAILED viewer3d/tests/test_render.py::test_sidecar_keeps_original_authoritative_geometry_and_snapshot_hash
+1 failed in 0.09s
+
+EXIT_CODE:1

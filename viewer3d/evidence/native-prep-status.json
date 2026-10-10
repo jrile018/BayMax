@@ -1,0 +1,30 @@
+{
+  "scope": "CPU-only native EGL renderer preparation",
+  "cloud_worktree": "/workspace/knight26/worktrees/amd",
+  "python": "/opt/venv/bin/python",
+  "cpu_affinity": [0, 1],
+  "thread_limit": 2,
+  "test_command": "taskset -c 0,1 /opt/venv/bin/python -m pytest viewer3d/tests -q -p no:cacheprovider",
+  "final_passed": 89,
+  "final_duration_s": 0.16,
+  "final_exit_code": 0,
+  "final_evidence": "viewer3d/evidence/native-prep-final-green.log",
+  "red_evidence": [
+    "viewer3d/evidence/native-prep-red.log",
+    "viewer3d/evidence/native-prep-line-red.log",
+    "viewer3d/evidence/native-prep-review-red.log",
+    "viewer3d/evidence/native-prep-authority-red.log"
+  ],
+  "actual_native_context_created": false,
+  "actual_gpu_render_executed": false,
+  "graphics_runtime_tested": false,
+  "test_context": "fake ModernGL context only",
+  "image_test": "Pillow synthetic 2x2 framebuffer row flip",
+  "future_dependency_pins": {
+    "moderngl": "5.13.0",
+    "glcontext": "3.1.0"
+  },
+  "runtime_blocker": "native graphics libraries and Python package wheels unavailable; no downloads or installs performed by renderer workstream",
+  "fsr": "not implemented",
+  "hash_semantics": "authoritative snapshot_hash retained without claiming cryptographic input validation"
+}

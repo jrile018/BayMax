@@ -1,0 +1,22 @@
+{
+  "schema": "knight26-amd-graphics-lease-result-v1",
+  "checked_at_utc": "2026-10-10T07:00:19.342051+00:00",
+  "coordinator_lease_start_utc": "2026-10-10T07:00:00Z",
+  "coordinator_lease_end_utc": "2026-10-10T07:20:00Z",
+  "lease_status": "released_unused_prerequisites_blocked",
+  "gpu_context_created": false,
+  "gpu_work_executed": false,
+  "gpu_vram_allocated_by_job_bytes": 0,
+  "native_render_status": "not_executed",
+  "fsr4_provider_status": "not_executed",
+  "fsr4_ml_dispatch_verified": false,
+  "missing_prerequisites": [
+    "Vulkan loader is not loadable",
+    "No system Vulkan ICD manifest found",
+    "Wine/DX12 translation runtime is not installed"
+  ],
+  "runtime_status": "download_failed",
+  "downloaded_package_count": 0,
+  "probe_sha256": "450c018252079e9589fb1527f62afdcb9fb2793952aba9d3da4cd6223bcdbce8",
+  "unblocking_boundary": "Graphics libraries/runtime packages must become available on the supplied cloud before a fresh lease can run a graphics context. Network/auth/provider changes remain coordinator-owned."
+}

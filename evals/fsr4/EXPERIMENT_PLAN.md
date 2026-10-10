@@ -41,3 +41,11 @@ Device/API/driver/runtime hashes; allocated node; SDK/DLL hashes/license; enumer
 - [SDK2.3.0 release](https://github.com/GPUOpen-LibrariesAndSDKs/FidelityFX-SDK/releases/tag/v2.3.0)
 - [vkd3d-proton v3.0](https://github.com/HansKristian-Work/vkd3d-proton/releases/tag/v3.0)
 - [RDNA3 emulation report, not W7900 validation](https://github.com/HansKristian-Work/vkd3d-proton/issues/2489)
+
+## Actual leased prerequisite result — 2026-10-10T07:00:19Z
+
+Coordinator granted07:00–07:20Z with12GiB maximum. The shortest prerequisite inventory completed and the lease was released unused at07:00:19Z. Vulkan loader/ICD and Wine/DX12 runtime remain absent. A prior detached two-CPU download of33 exact native graphics packages (32,818,418bytes) failed exit123 with repository network-unreachable/timeouts and downloaded zero packages. No graphics context, GPU work, provider query/context, FSR4 ML dispatch, project frame or native/FSR comparison ran. This is a prerequisite block, not a failed on-device FSR4 provider result.
+
+Evidence: `platform/evidence/graphics-lease-result-20261010.json`, `graphics-lease-prerequisites-20261010.json`, `graphics-lease-diagnostic.log`, `native-runtime-packages.json`, and `native-runtime-prep.log`. No system/driver/Torch/network/auth/provider configuration was changed. Graphics dependencies must become available on the supplied cloud before another graphics lease. The private native EGL renderer preparation does not supply DX12 or satisfy FSR4.
+
+For native renderer preparation only, primary PyPI metadata confirms Python3.14 Linuxx86_64 wheels for ModernGL5.13.0/glcontext3.1.0; future installation pins exact hashes in `platform/native-runtime-requirements.txt`. They are not downloaded or installed. Their availability is not a graphics-device or FSR provider test. Sources: https://pypi.org/project/moderngl/5.13.0/#files and https://pypi.org/project/glcontext/3.1.0/#files .

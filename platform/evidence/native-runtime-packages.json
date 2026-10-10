@@ -1,0 +1,259 @@
+{
+  "status": "download_failed",
+  "gpu_context_created": false,
+  "package_count": 33,
+  "download_bytes": 32818418,
+  "installed_kib": 164738,
+  "packages": [
+    {
+      "Package": "libpng16-16t64",
+      "Version": "1.6.57-1ubuntu0.1",
+      "Size": "194520",
+      "Installed-Size": "347",
+      "SHA256": "f24a7f7c0428d74e33ea934696987b7336ec0962f212535185f0493792e7536e"
+    },
+    {
+      "Package": "libsensors-config",
+      "Version": "1:3.6.2-2build1",
+      "Size": "6862",
+      "Installed-Size": "28",
+      "SHA256": "57193f731de79bbad343a1369e6e95b13096c08ba166c7e193bfc24d78f960fb"
+    },
+    {
+      "Package": "libsensors5",
+      "Version": "1:3.6.2-2build1",
+      "Size": "28936",
+      "Installed-Size": "88",
+      "SHA256": "9249cd2be68acd7b589030df72a457b89fadea6c426002b00648ad2d153d9748"
+    },
+    {
+      "Package": "libxau6",
+      "Version": "1:1.0.11-1build2",
+      "Size": "7502",
+      "Installed-Size": "33",
+      "SHA256": "6c0b2dd4654db30449754e6e1adf84a34d8a8d7dddeb75f8c9c463ad86645274"
+    },
+    {
+      "Package": "libxdmcp6",
+      "Version": "1:1.1.5-2",
+      "Size": "10800",
+      "Installed-Size": "41",
+      "SHA256": "d5d51e67063ff11e81698d8ee90bab5af763dc0a793929f33712bb74e7633768"
+    },
+    {
+      "Package": "libxcb1",
+      "Version": "1.17.0-2ubuntu1",
+      "Size": "49022",
+      "Installed-Size": "205",
+      "SHA256": "069e64705e4a5721a223b4d22643bbaeaa63a6efbb56ebd3d7c4a31c4a26fa1c"
+    },
+    {
+      "Package": "libx11-data",
+      "Version": "2:1.8.13-1",
+      "Size": "114288",
+      "Installed-Size": "1343",
+      "SHA256": "8188c233d59dc419205c314ef8f230fc83ca7a3e7e9b9671f18b469fd3e428ae"
+    },
+    {
+      "Package": "libx11-6",
+      "Version": "2:1.8.13-1",
+      "Size": "657070",
+      "Installed-Size": "1381",
+      "SHA256": "7e643e76063b94df9159c8b8fd4b8bf53d2fbf119c9889a5cc6842b6be272e4f"
+    },
+    {
+      "Package": "libxext6",
+      "Version": "2:1.3.4-1build3",
+      "Size": "30840",
+      "Installed-Size": "103",
+      "SHA256": "b867ba9daa9437ba3f18cba9646d9e3db55e5197bd4feb53184b1414c05210ca"
+    },
+    {
+      "Package": "libdisplay-info3",
+      "Version": "0.3.0-1",
+      "Size": "87808",
+      "Installed-Size": "260",
+      "SHA256": "91ab4717cc8cf4c6c591970e1ad165aace9c91f6283c8b5a2652ceebf571ccea"
+    },
+    {
+      "Package": "libx11-xcb1",
+      "Version": "2:1.8.13-1",
+      "Size": "7960",
+      "Installed-Size": "73",
+      "SHA256": "e20ab288f2f756800ae25e7a827ae70aee64272f692dd3cb8f706764b6767de9"
+    },
+    {
+      "Package": "libxcb-dri3-0",
+      "Version": "1.17.0-2ubuntu1",
+      "Size": "7540",
+      "Installed-Size": "41",
+      "SHA256": "2e0e3916c647a74e081621f385aa296dab3052b2582b0781d9fbea2f15696ef4"
+    },
+    {
+      "Package": "libxcb-present0",
+      "Version": "1.17.0-2ubuntu1",
+      "Size": "6112",
+      "Installed-Size": "32",
+      "SHA256": "64f23e7166461758d158220305e93a98fe75c570b68f96303a1c2395a58d5d7d"
+    },
+    {
+      "Package": "libxcb-randr0",
+      "Version": "1.17.0-2ubuntu1",
+      "Size": "17930",
+      "Installed-Size": "97",
+      "SHA256": "78977a067ec1d59bb4ded1b35835d0ba70e6538aac1ea7edefe413795aaa0d4f"
+    },
+    {
+      "Package": "libxcb-sync1",
+      "Version": "1.17.0-2ubuntu1",
+      "Size": "9348",
+      "Installed-Size": "54",
+      "SHA256": "8883f5e6badab24cb7487390bf1a888bb714e406f6c799345c33e4b69a8f3112"
+    },
+    {
+      "Package": "libxcb-xfixes0",
+      "Version": "1.17.0-2ubuntu1",
+      "Size": "10192",
+      "Installed-Size": "56",
+      "SHA256": "00c1381b61e2e5b8a78e89b15818a214a8f44f1fae6a9ddd95e7c61de8ea33d2"
+    },
+    {
+      "Package": "libxshmfence1",
+      "Version": "1.3.3-1build1",
+      "Size": "5284",
+      "Installed-Size": "30",
+      "SHA256": "85d6b6883a35e1a3b78af3dda6bb6b843c06cbead030a00d9de7d31a8077d562"
+    },
+    {
+      "Package": "mesa-libgallium",
+      "Version": "26.0.8-1ubuntu0.3",
+      "Size": "11241306",
+      "Installed-Size": "44601",
+      "SHA256": "7f123a545774034793ba3516c5fad0be88de68ad91319a4b220d98b32a289451"
+    },
+    {
+      "Package": "libgbm1",
+      "Version": "26.0.8-1ubuntu0.3",
+      "Size": "49194",
+      "Installed-Size": "206",
+      "SHA256": "5d2d1eaf0f72c5a2c4aef692e5660c6fa61e46542c4d9cb5593ba8bd020b2eea"
+    },
+    {
+      "Package": "libwayland-client0",
+      "Version": "1.24.0-2",
+      "Size": "28530",
+      "Installed-Size": "90",
+      "SHA256": "094db0e190b53872e4d5310cd5fa09ca28ee3936386cd09e5f7d13e645aa12ab"
+    },
+    {
+      "Package": "libxcb-shm0",
+      "Version": "1.17.0-2ubuntu1",
+      "Size": "5808",
+      "Installed-Size": "31",
+      "SHA256": "e70d52936aabd7a90e9cd8af0f54ca050cde244f8382ffc5524ba65117c199c4"
+    },
+    {
+      "Package": "libegl-mesa0",
+      "Version": "26.0.8-1ubuntu0.3",
+      "Size": "133774",
+      "Installed-Size": "466",
+      "SHA256": "938813d9d6bb7ccf8315af1f8bb2770ad4b9d240ad177f0da420db3e94600d6b"
+    },
+    {
+      "Package": "libvulkan1",
+      "Version": "1.4.341.0-1",
+      "Size": "157194",
+      "Installed-Size": "607",
+      "SHA256": "b4aca7a519d6318347f15a0e485c636603005e2553dae1a986272ac8c96176b0"
+    },
+    {
+      "Package": "libgl1-mesa-dri",
+      "Version": "26.0.8-1ubuntu0.3",
+      "Size": "38166",
+      "Installed-Size": "287",
+      "SHA256": "585dfac64d7ca95a9813faad9f14c361d788069b7578859fb426c657dd528f08"
+    },
+    {
+      "Package": "libxcb-glx0",
+      "Version": "1.17.0-2ubuntu1",
+      "Size": "24654",
+      "Installed-Size": "149",
+      "SHA256": "857c34618ae56b2577d8d439cf86f80375582626193efaa3229c6767106a1a20"
+    },
+    {
+      "Package": "libxxf86vm1",
+      "Version": "1:1.1.4-2",
+      "Size": "10610",
+      "Installed-Size": "38",
+      "SHA256": "ff01ae50526c23c6c747e1efd98ee3785a1d28458e865277fc367c565bb94703"
+    },
+    {
+      "Package": "libglx-mesa0",
+      "Version": "26.0.8-1ubuntu0.3",
+      "Size": "125602",
+      "Installed-Size": "423",
+      "SHA256": "17ff6239daaf75337d3697c1e5f1ef3e190c4c2dd73a9f0edfc36868ef41905c"
+    },
+    {
+      "Package": "mesa-vulkan-drivers",
+      "Version": "26.0.8-1ubuntu0.3",
+      "Size": "19109714",
+      "Installed-Size": "110216",
+      "SHA256": "27db5fa34d50d208b58cc94317b573065329740bb98d0e12b7947b06a9d02a4e"
+    },
+    {
+      "Package": "vulkan-tools",
+      "Version": "1.4.341.0+dfsg1-1",
+      "Size": "410902",
+      "Installed-Size": "1775",
+      "SHA256": "e01690b8dda42b177cd6cb979160e7478f78809637362384101182190c185eec"
+    },
+    {
+      "Package": "libglvnd0",
+      "Version": "1.7.0-3",
+      "Size": "64072",
+      "Installed-Size": "728",
+      "SHA256": "db2cd8cff67e3e210f5223dfe41f000efd4d3d887ab05bda2e88c4a622f12b36"
+    },
+    {
+      "Package": "libegl1",
+      "Version": "1.7.0-3",
+      "Size": "29654",
+      "Installed-Size": "99",
+      "SHA256": "cf2a6549bbc4339671901bde97c0ca41c380c5783179ef68977bf86151f03766"
+    },
+    {
+      "Package": "libglx0",
+      "Version": "1.7.0-3",
+      "Size": "38932",
+      "Installed-Size": "162",
+      "SHA256": "e0b75c32f773201ebca2184d94dfc34f6e09470c7cf6e425d48b270e516fd909"
+    },
+    {
+      "Package": "libgl1",
+      "Version": "1.7.0-3",
+      "Size": "98292",
+      "Installed-Size": "648",
+      "SHA256": "83ec3a454b28e947a6886e9ae8167e129e25d7a2fd741aaffcdca76eddff5955"
+    }
+  ],
+  "checked_at_utc": "2026-10-10T06:58:13.564975+00:00",
+  "downloaded_package_count": 0,
+  "reason": "Cloud package repository connections failed: network unreachable or connection timeout. No runtime installed or extracted.",
+  "prep_exit_code": 123,
+  "prep_log_sha256": "72e0b3f26c0c76db5a25515d0deca79a55b00c91b7e38dc1b5d5f533e17871e4",
+  "failed_attempt_runner": "platform/evidence/prepare-native-runtime-attempt1.sh",
+  "failed_attempt_runner_sha256": "60d2b30f61bafcd39217024494ebf9c34cb2763da58139c6954dba2c20a90092",
+  "python_wheels": {
+    "status": "not_downloaded_or_installed",
+    "runtime_python": "CPython3.14Linuxx86_64",
+    "requirements": "platform/native-runtime-requirements.txt",
+    "moderngl_version": "5.13.0",
+    "glcontext_version": "3.1.0",
+    "wheel_metadata_sources": [
+      "https://pypi.org/project/moderngl/5.13.0/#files",
+      "https://pypi.org/project/glcontext/3.1.0/#files"
+    ],
+    "note": "Future runner pins wheels with Python3.14 tags and SHA256. Older5.12.0/3.0.0 pins lack these wheel tags; failed attempt never reached Python dependency step."
+  }
+}

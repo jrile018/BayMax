@@ -60,3 +60,34 @@ Reproduce the owned suite with:
       taskset -c "$CPUS" /opt/venv/bin/python -m pytest viewer3d/tests -q -p no:cacheprovider
 
 This checkpoint prepares data only. No raster image, graphics context, FSR provider, GPU lease, renderer/shared-envelope integration, pathfinding, interpolation, physics or simulated outcome is established by these tests.
+
+## Native EGL renderer preparation
+
+Import CPU functions directly from viewer3d.render:
+
+    from viewer3d.render import build_render_buffers, camera_for_bounds, render_native
+    buffers = build_render_buffers(prepared)
+    camera = camera_for_bounds(prepared.bounds, 1280, 720)
+
+DrawBatch retains its original Primitive reference, frame identity, source, roles, statuses and authoritative point tuple. Terrain indices remain exact; roads, routes and trails join supplied vertices. Concave fire rings are tessellated without moving vertices. Supplied or explicitly assumed positive building heights produce roof/wall vertices by adding only height_m to z. Absent heights produce only the original footprint outline. Unit and aid glyph centers remain the exact supplied positions. This is display preparation: no route computation, interpolation, physics, inferred height or terrain is performed.
+
+Camera projection uses x/y ground metres and z-up elevation, fits all bounds corners with an elevated perspective, rejects invalid image dimensions and nonfinite derived camera arithmetic, and recenters GPU float uploads around the bounds center while keeping original CPU coordinates unchanged. Matrix upload is column-major. Route/trail dash styles use cumulative projected display distance, independent of line angle; line glyphs and point sizes are visual symbols, not inferred metric dimensions. Polygon depth offset adjusts raster depth only.
+
+Only an explicit render_native call imports ModernGL and Pillow and creates a standalone EGL context requesting OpenGL 3.3. The caller must acquire the allocated GPU lease before calling it. Supply the isolated ModernGL/glcontext package directory on PYTHONPATH; do not install or import Torch for this renderer. Optional gl_library and egl_library arguments map to glcontext libgl/libegl hints; glcontext also honors GLCONTEXT_LINUX_LIBGL, GLCONTEXT_LINUX_LIBEGL and device-selection environment variables. Driver prerequisites must be staged externally. Future isolated runtime pins are ModernGL 5.13.0 and glcontext 3.1.0 (see platform/native-runtime-requirements.txt); neither pinned runtime has been downloaded, installed or exercised here. CPU tests supply a fake ModernGL module and establish no compatibility proof for those native package versions.
+
+After prerequisites and a GPU lease are available:
+
+    # This operation creates an actual native context; it was not run at this checkpoint.
+    metadata = render_native(
+        prepared, "/path/to/native.png", width=1280, height=720,
+        require_hardware=True,
+        gl_library="/path/to/libGL.so", egl_library="/path/to/libEGL.so",
+    )
+
+Rendering draws depth-tested colored terrain/buildings/fire surfaces, exact road/route/trail outlines and unit/aid glyphs. PNG readback flips bottom-up OpenGL rows. The adjacent .json sidecar retains the original snapshot_hash, metric reference/bounds, exact authoritative primitive geometry and source IDs, source manifest, camera, dimensions, actual GL_VENDOR/GL_RENDERER/GL_VERSION, and success/failure state. No hash is substituted for the authoritative snapshot hash or asserted to validate it. Software provider names (including llvmpipe, softpipe and SwiftShader) are rejected by default; provider strings do not certify physical GPU allocation. FSR is explicitly marked not implemented. PNG publication occurs only after all native resources are released; failure sidecars do not claim rendering success. A preexisting PNG is not replaced on a failed call.
+
+All tests and source authoring for this renderer ran on the cloud worktree using /opt/venv/bin/python, detached tmux, taskset CPU0/1 and thread limits of two. Native-preparation tests use a fake ModernGL context and Pillow for synthetic 2x2 row-flip verification. They do not create EGL/OpenGL/Vulkan contexts, enumerate GPUs, import Torch or exercise native graphics drivers. Real native rendering remains unexecuted because graphics runtime prerequisites are unavailable; no allocated-GPU image or FSR proof exists.
+
+Evidence files are native-prep-red.log (missing module), native-prep-initial-green.log (serialization regression), native-prep-line-red.log (line distance upload), native-prep-review-red.log (camera overflow/source association), native-prep-authority-red.log (authority geometry), and native-prep-final-green.log (final CPU suite). Reproduce with bash viewer3d/evidence/native-prep-final-green.sh.
+
+Native API references: [ModernGL context creation](https://moderngl.readthedocs.io/en/latest/topics/context.html), [glcontext EGL backend and library hints](https://github.com/moderngl/glcontext), [ModernGL framebuffer readback](https://moderngl.readthedocs.io/en/latest/reference/framebuffer.html).

@@ -1,0 +1,31 @@
+COMMAND: taskset -c 0,1 /opt/venv/bin/python -m pytest viewer3d/tests/test_render.py::test_native_line_upload_retains_exact_centers_and_has_progressive_screen_distance -q -p no:cacheprovider
+CPU_ONLY: fake graphics contexts only
+STARTED_AT:2026-10-10T07:00:33Z
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_native_line_upload_retains_exact_centers_and_has_progressive_screen_distance _
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-3/test_native_line_upload_retain0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x75b54dfd6c40>
+
+    def test_native_line_upload_retains_exact_centers_and_has_progressive_screen_distance(tmp_path, monkeypatch):
+        """A diagonal must have positive dash progression rather than x+y phase."""
+        import struct
+        scene = prepared()
+        route = next(p for p in scene.primitives if p.kind == "route")
+        scene = replace(scene, primitives=(route,))
+        r, ctx = api(), Context()
+        fake_module(monkeypatch, ctx)
+        r.render_native(scene, tmp_path / "line.png", width=2, height=2)
+>       assert ctx.vertex_formats == ["3f 1f"]
+E       AssertionError: assert ['3f'] == ['3f 1f']
+E         
+E         At index 0 diff: '3f' != '3f 1f'
+E         Use -v to get more diff
+
+viewer3d/tests/test_render.py:352: AssertionError
+=========================== short test summary info ============================
+FAILED viewer3d/tests/test_render.py::test_native_line_upload_retains_exact_centers_and_has_progressive_screen_distance
+1 failed in 0.08s
+
+EXIT_CODE:1
