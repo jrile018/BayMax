@@ -13,13 +13,13 @@ All implementation and tests are on Radeon Cloud in `/workspace/knight26/worktre
 
 `OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 /opt/venv/bin/python -m unittest discover -s services/dashboard_api/tests -v` -> 15/15 OK, exit0; `/workspace/knight26/logs/maps-fixture-regression-green.log`. Replay tests include mutation isolation, corrupted hashes, identity/time and bounds; HTTP tests cover exact payload, no-cache, invalid inputs, missing source coverage, static traversal, read-only dispatch boundary.
 
-Geography importer/ingestion now8/8 with explicit unit, access, missing-node and provenance regression checks. Final numeric exit status/pinned-head rerun is recorded in artifacts. Client static DOM/asset checks pass; **JS runtime/actual browser checks pending**.
+Geography importer/ingestion now8/8 with explicit unit, access, missing-node and provenance regression checks. Final numeric exit status/pinned-head rerun is recorded in artifacts. Client static DOM/asset checks pass; **Actual Chrome saved-preview first/closure/final frames verified through authenticated Jupyter files**; live API route remains unverified. A later reload returned nginx403; provider login refresh is pending..
 
 ## Running service
 
 `tmux maps-dashboard`: `OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 /opt/venv/bin/python -m services.dashboard_api.server --port 8765`, server loopback127.0.0.1:8765. Log `/workspace/knight26/logs/maps-service.log`.
 
-SSH -L display access rejected `channel open failed: administratively prohibited`; failed tunnel closed. Server has no existing Jupyter proxy/Playwright package. Coordinator handles service access; no sshd/firewall/DNS/credential changes by worker.
+SSH -L display access rejected `channel open failed: administratively prohibited`; failed tunnel closed. Server has no existing Jupyter proxy/Playwright package. Server-generated self-contained `export_preview` is served by existing authenticated Jupyter file handler; saved mock frames/hashes are identical. Coordinator handles live service access; no sshd/firewall/DNS/credential changes by worker.
 
 ## Adapter shape
 
@@ -31,4 +31,8 @@ This is a maps-owned view adapter, **not a replacement for root's shared contrac
 
 ## Human checkpoint
 
-C1 incomplete until small real open-data AOI and Chrome interaction inspection. C2 authoritative shared mission and C3 measured browser walkthrough remain pending. Focused advice for coordinator bundle: Can the learner distinguish a constructed replay illustration from a calculated route and explain the vehicle's waiting/reroute state?
+C1 incomplete until small real open-data AOI. Chrome saved mock preview verified first/closure/final snapshots; this does not prove a live API route. C2 authoritative shared mission and C3 measured browser walkthrough remain pending. Focused advice for coordinator bundle: Can the learner distinguish a constructed replay illustration from a calculated route and explain the vehicle's waiting/reroute state?
+
+## Saved preview proof
+
+`python -m services.dashboard_api.export_preview --output /workspace/knight26/artifacts/maps/c1/preview.html` runs on the server. The file embeds exact recorded snapshots plus owned CSS/JS and visibly labels saved mock mode, unavailable live actions/coverage. Export/escaping tests included in 17-test API suite, log maps-preview-green.log exit0. Chrome first/closure/final frames checked at approximately06:54Z; later reloading after a small warning-placement fix returned403 from notebook ingress. Local coordination screenshots first/closure are recorded by owner, not fabricated rendering.

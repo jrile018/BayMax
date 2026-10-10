@@ -20,3 +20,5 @@ The browser client is served from `web/index.html`, `web/style.css`, and `web/ap
 Review follow-up: the initial footer says “CONSTRUCTED TRAINING REPLAY”; runtime mode also updates it. Mock route audit explicitly says “Constructed training path · route calculation unavailable,” even if map source data later becomes available. Static check passed again on 67 IDs / 20 JavaScript references. The live bootstrap still reported six frames at this check; fixture update is owned by another worker.
 
 No code was committed.
+
+Preview follow-up: after a server-generated browser preview showed the missing-road notice covering the ambulance marker and route, CSS moved the desktop notice to the top-right map corner. At mobile widths it sits bottom-left above the pan hint, leaving the central route visible. Served CSS matched the file at loopback 8765; static validation still passed (67 IDs, 20 JS references). Parent will regenerate the browser preview.
