@@ -49,14 +49,16 @@
             <div class="map-wrap">
               <svg id="map" role="img" aria-label="Map of the exercise area with roads, buildings, fire perimeter and vehicle routes" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid meet">
                 <defs>
+                  <clipPath id="area-clip"><rect id="area-clip-rect" x="0" y="0" width="1000" height="700"></rect></clipPath>
                   <pattern id="closure-hatch" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="9" height="9" fill="#ae4932"></rect><path d="M0 0V9" stroke="#f6decf" stroke-width="4"></path></pattern>
                   <filter id="marker-shadow" x="-100%" y="-100%" width="300%" height="300%"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#39433d" flood-opacity=".28"></feDropShadow></filter>
                 </defs>
                 <rect id="map-bg" x="0" y="0" width="1000" height="700"></rect>
-                <g id="map-scene"><g id="layer-land"></g><g id="layer-buildings"></g><g id="layer-roads"></g><g id="layer-hazards"></g><g id="layer-old-route"></g><g id="layer-route"></g><g id="layer-closures"></g><g id="layer-vehicles"></g><g id="layer-boundary"></g></g>
+                <g id="map-scene"><g id="layer-land" clip-path="url(#area-clip)"></g><g id="layer-buildings" clip-path="url(#area-clip)"></g><g id="layer-roads" clip-path="url(#area-clip)"></g><g id="layer-hazards"></g><g id="layer-old-route"></g><g id="layer-route"></g><g id="layer-closures"></g><g id="layer-vehicles"></g><g id="layer-boundary"></g></g>
               </svg>
               <div id="map-notice" class="map-notice" hidden>No road data loaded. Routes and hazard overlays are constructed exercise illustrations.</div>
               <div class="map-top-left"><span class="map-overline">EXERCISE AREA</span><strong id="map-area-label">Loading...</strong><span id="map-frame-label">FRAME -- / --</span></div>
+              <div id="osm-attribution" class="map-attribution" hidden>Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a> · ODbL 1.0</div>
               <div class="map-bottom-left"><span class="map-scale-icon">↗</span> PAN TO EXPLORE <span class="map-spacer">·</span> SCROLL TO ZOOM</div>
               <div class="map-zoom" aria-label="Map zoom controls"><button id="zoom-in" type="button" aria-label="Zoom in">+</button><button id="zoom-out" type="button" aria-label="Zoom out">−</button></div>
             </div>

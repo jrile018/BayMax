@@ -1,24 +1,11 @@
-# Web dashboard checkpoint
+# Map dashboard checkpoint
 
-The browser client is served from `web/index.html`, `web/style.css`, and `web/app.js`. It has no package manager, CDN, tile, font, or JavaScript framework dependency. It uses the same-origin read-only endpoints `/api/bootstrap`, `/api/frame?index=N`, and `/api/coverage?lat=X&lon=Y`.
+Dependency-free `web/index.html`, `style.css`, `app.js`; no CDN/tile/font/runtime install. Read-only same-origin bootstrap/frame/coverage API. Client draws exact recorded positions, trails, remaining paths/ETA, closures/fire, metrics and events without independent movement or physics.
 
-## Source and replay behavior
+Real Paradise OSM map: 444 roads, 199 buildings, 40 landuse/water features. Attribution is visible. Acquisition bounds are a distinct dashed boundary; full way context extends beyond it. Viewport fits loaded geometry. The source panel distinguishes the two extents and marks terrain/fuels/current fire unavailable.
 
-- The current source manifest reports OSM acquisition failure. With zero roads, the client displays “NO ROAD DATA LOADED · OVERLAYS ARE CONSTRUCTED ILLUSTRATIONS”, a map notice, and an unavailable road chip. It draws no substitute roads or buildings.
-- Routes, old routes, completed trails, vehicle positions, fire overlays, closures, events, metrics, needs, stocks, and the snapshot hash come only from API frames. The old route uses `old_route_geometry_lonlat` when supplied; the client does not infer a route from previous frames.
-- Playback and the slider request exact saved frame indices. The browser does not interpolate coordinates or advance vehicle physics. Coordinate lookup calls the coverage API and displays its returned unavailable message.
-- Null remaining distance and ETA render as “Unknown”.
+Seven-frame mock route/fire replay remains labeled constructed even with real map geometry. Route audit states calculated routing is unavailable; mock metrics are labeled. Null ETA/distance remains unknown. Pan/zoom, play/step/scrub and fleet selection are supported.
 
-## Validation on the supplied server
+Server static validation passed: 70 unique IDs, all22JSreferencespresent; no external assets. Actual service refresh serves the real geometry and seven exact snapshots. Current real-map preview browser inspection is pending authenticated notebook access. Earlier saved mock preview first/closure/final frames were verified in Chrome with matching hashes; latest reload returned nginx403. This does not prove live API browser access. No network/security changes or public exposure.
 
-- Static validation: 67 unique HTML IDs; all JavaScript-referenced IDs exist; balanced CSS/JS delimiters; no external asset links.
-- Live HTTP: `/`, `/style.css`, and `/app.js` returned 200 from loopback port 8765.
-- API contract: bootstrap and all six frame indices returned 200, with matching run/index, 64-character snapshot hashes, and vehicle position/route fields. Route versions were 1,1,1,2,2,2; event types included dispatch, closure, reroute, and arrival.
-- Coverage: both a coordinate inside the loaded bbox with failed source acquisition and a coordinate outside the bbox returned `available: false`; an invalid frame returned a client error.
-- Browser rendering remains unverified. The server has no installed browser or JavaScript runtime, and the SSH server blocks TCP forwarding.
-
-Review follow-up: the initial footer says “CONSTRUCTED TRAINING REPLAY”; runtime mode also updates it. Mock route audit explicitly says “Constructed training path · route calculation unavailable,” even if map source data later becomes available. Static check passed again on 67 IDs / 20 JavaScript references. The live bootstrap still reported six frames at this check; fixture update is owned by another worker.
-
-No code was committed.
-
-Preview follow-up: after a server-generated browser preview showed the missing-road notice covering the ambulance marker and route, CSS moved the desktop notice to the top-right map corner. At mobile widths it sits bottom-left above the pan hint, leaving the central route visible. Served CSS matched the file at loopback 8765; static validation still passed (67 IDs, 20 JS references). Parent will regenerate the browser preview.
+Server saved artifact `/workspace/knight26/artifacts/maps/c1/preview.html`, API trace and publication manifest in same directory. Detailed test/commit record in services/dashboard_api/CHECKPOINT.md and publication manifest. Own draft PR10 and Discussion1 remain the review destination.

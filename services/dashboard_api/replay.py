@@ -71,13 +71,28 @@ class ReplayStore:
 
     def coverage(self, lat, lon):
         valid_lonlat([lon,lat])
-        west,south,east,north = self._area['bbox_lonlat']
-        in_area = west <= lon <= east and south <= lat <= north
-        available = in_area and any(c.get('status') == 'available' for c in self._area.get('coverage', []))
-        return copy.deepcopy({'available':available, 'in_loaded_area':in_area, 'area_id':self._area['area_id'] if in_area else None,
-            'label':self._area['label'] if in_area else 'Unloaded area',
-            'coverage':self._area.get('coverage',[]) if in_area else [
-                {'layer':layer,'status':'unavailable','detail':'No data ingested for this location'}
-                for layer in ('roads','buildings','terrain','fuels','current incident')],
-            'message':'Selected area dataset available; inspect individual layer coverage.' if available else
-                ('The selected area exists, but source acquisition failed. No geographic layers are available.' if in_area else 'Worldwide coordinate selection is supported. This location has no loaded simulation data.')})
+        def contains(bounds):
+            west,south,east,north=bounds
+            return west <= lon <= east and south <= lat <= north
+        in_extent=contains(self._area['bbox_lonlat'])
+        in_area=contains(self._area.get('coverage_bbox_lonlat',self._area['bbox_lonlat']))
+        layers=copy.deepcopy(self._area.get('coverage',[]))
+        available=in_area and any(c.get('status')=='available' for c in layers)
+        if in_area:
+            label=self._area['label']
+            message=('Selected acquisition area dataset available; inspect individual layer coverage.' if available else
+                     'The selected area exists, but no geographic layers are available.')
+        elif in_extent:
+            label=self._area['label']+' (source geometry extent)'
+            for layer in layers:
+                if layer.get('status')=='available':
+                    layer['status']='unknown'
+                    layer['detail']='Within the source geometry bounding box, outside acquisition bounds; local data coverage unverified.'
+            message='Within the source geometry bounding box, which includes partial OSM way context. This location is outside acquisition bounds; local data coverage is unverified.'
+        else:
+            label='Unloaded area'
+            layers=[{'layer':layer,'status':'unavailable','detail':'No data ingested for this location'}
+                    for layer in ('roads','buildings','landuse','terrain','fuels','current_fire')]
+            message='Worldwide coordinate selection is supported. This location has no loaded simulation data.'
+        return copy.deepcopy({'available':available,'in_loaded_area':in_area,'in_loaded_extent':in_extent,
+            'area_id':self._area['area_id'] if in_extent else None,'label':label,'coverage':layers,'message':message})

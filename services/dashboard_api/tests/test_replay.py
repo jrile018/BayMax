@@ -49,4 +49,19 @@ class ReplayStoreTests(unittest.TestCase):
         for lat,lon in [(91,0),(0,181),(float('nan'),0)]:
             with self.assertRaises(ValueError):s.coverage(lat,lon)
 
+    def test_partial_way_context_is_not_complete_coverage(self):
+        self.area['coverage_bbox_lonlat']=[-121.8,39.2,-121.2,39.8]
+        (self.root/'area.json').write_text(json.dumps(self.area))
+        store=self.store()
+        self.assertTrue(store.coverage(39.5,-121.5)['available'])
+        context=store.coverage(39.9,-121.5)
+        self.assertFalse(context['available'])
+        self.assertFalse(context['in_loaded_area'])
+        self.assertTrue(context['in_loaded_extent'])
+        self.assertEqual(context['area_id'],'test')
+        self.assertEqual(context['coverage'][0]['status'],'unknown')
+        self.assertIn('local data coverage is unverified',context['message'].lower())
+        self.assertFalse(store.coverage(41,-121.5)['in_loaded_extent'])
+        self.assertEqual(store.bootstrap()['area']['coverage'][0]['status'],'available')
+
 if __name__=='__main__': unittest.main()

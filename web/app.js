@@ -75,8 +75,12 @@ function projectionFromBbox(bbox) {
 }
 function drawBase(area) {
   state.projection = projectionFromBbox(area.bbox_lonlat);
+  const bounds = area.bbox_lonlat.map(Number);
+  const [clipLeft,clipTop] = project([bounds[0],bounds[3]]);
+  const [clipRight,clipBottom] = project([bounds[2],bounds[1]]);
+  for (const [name,value] of Object.entries({x:clipLeft,y:clipTop,width:clipRight-clipLeft,height:clipBottom-clipTop})) $("area-clip-rect").setAttribute(name,String(value));
   clear("layer-land"); clear("layer-buildings"); clear("layer-roads"); clear("layer-boundary");
-  const colors = {forest:"#b7c8ad",wood:"#b7c8ad",grass:"#cbd7b7",meadow:"#d3dec1",residential:"#e4e9dc",industrial:"#d7dcca",park:"#c6d3b6"};
+  const colors = {forest:"#b7c8ad",wood:"#b7c8ad",grass:"#cbd7b7",meadow:"#d3dec1",residential:"#e4e9dc",industrial:"#d7dcca",park:"#c6d3b6",water:"#b8d1cf",reservoir:"#b8d1cf",farmland:"#dce4bd",retail:"#e5e5d9",brownfield:"#ddd8c8",cemetery:"#c7d4bd"};
   for (const land of area.landuse || []) {
     const kind = String(land.kind || "").toLowerCase();
     addPath("layer-land",land.geometry_lonlat,"landuse",true,{fill:colors[kind] || (kind.includes("forest") ? colors.forest : "#d2ddc5")});
@@ -89,11 +93,12 @@ function drawBase(area) {
     const item = addPath("layer-roads",road.geometry_lonlat,"road",false,{"stroke-width":width});
     if (item) item.appendChild(svg("title")).textContent = road.name || road.highway || "Road";
   }
-  const [lon0,lat0,lon1,lat1] = area.bbox_lonlat.map(Number);
+  const [lon0,lat0,lon1,lat1] = (area.coverage_bbox_lonlat || area.bbox_lonlat).map(Number);
   addPath("layer-boundary",[[lon0,lat0],[lon1,lat0],[lon1,lat1],[lon0,lat1],[lon0,lat0]],"area-boundary");
   const hasRoads = (area.roads || []).length > 0;
   setText("source-chip",hasRoads ? "OSM road geometry" : "Road data unavailable");
   $("map-notice").hidden = hasRoads;
+  $("osm-attribution").hidden = !hasRoads;
   setText("map-area-label",area.label || "Loaded area");
   setText("map-title",area.label || "Area map");
   setText("map-subtitle",(area.roads || []).length.toLocaleString() + " road geometries · " + (area.buildings || []).length.toLocaleString() + " buildings");
@@ -152,7 +157,8 @@ function markMode(mode) {
   setText("mode-label",mock ? "Open map · training replay" : "Open map · recorded replay");
   setText("footer-mode",mock ? "CONSTRUCTED TRAINING REPLAY" : "RECORDED SIMULATION");
   const roadsLoaded = !!(state.bootstrap && state.bootstrap.area && (state.bootstrap.area.roads || []).length);
-  setText("source-banner",roadsLoaded ? (mock ? "MOCK SCENARIO · OSM MAP GEOMETRY" : "RECORDED SIMULATION · CHECK SOURCE STATUS") : "NO ROAD DATA LOADED · OVERLAYS ARE CONSTRUCTED ILLUSTRATIONS");
+  setText("source-banner",roadsLoaded ? (mock ? "REAL OSM BASE MAP · CONSTRUCTED ROUTE & FIRE REPLAY" : "RECORDED SIMULATION · OSM BASE MAP") : "NO ROAD DATA LOADED · OVERLAYS ARE CONSTRUCTED ILLUSTRATIONS");
+  if (mock && roadsLoaded) { $("map-notice").hidden = false; $("map-notice").textContent = "Real OSM base map. Vehicle paths and fire overlays are constructed training illustrations."; }
   document.querySelectorAll(".metric-foot").forEach(node => {
     if (!node.dataset.original) node.dataset.original = node.textContent;
     node.textContent = mock ? node.dataset.original + " · mock scenario" : node.dataset.original;
@@ -170,6 +176,13 @@ function renderCoverage(entries) {
     if (entry.detail) label.append(el("small","coverage-detail",entry.detail));
     row.append(label,el("span",String(entry.status || "unknown").toLowerCase(),entry.status || "unknown"));
     $("coverage-list").append(row);
+  }
+  const area = state.bootstrap && state.bootstrap.area;
+  if (area && area.coverage_bbox_lonlat && area.source_geometry_bbox_lonlat) {
+    const acquired = area.coverage_bbox_lonlat.map(Number).map(x => x.toFixed(3)).join(", ");
+    const context = area.source_geometry_bbox_lonlat.map(Number).map(x => x.toFixed(3)).join(", ");
+    const note = el("p","coverage-note","Dashed boundary: acquisition bounds [" + acquired + "] (lon/lat). Full OSM way context [" + context + "]. Geometry beyond the dashed boundary is context; source coverage there is not verified.");
+    $("coverage-list").append(note);
   }
 }
 function vehicleIcon(kind) {
