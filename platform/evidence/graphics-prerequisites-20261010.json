@@ -1,0 +1,167 @@
+{
+  "allocation": {
+    "accessible_drm_nodes": [
+      {
+        "device_metadata": {
+          "device": {
+            "error": null,
+            "value": "0x744b"
+          },
+          "uevent": {
+            "error": null,
+            "value": "DRIVER=amdgpu\nPCI_CLASS=30000\nPCI_ID=1002:744B\nPCI_SUBSYS_ID=1002:0E0C\nPCI_SLOT_NAME=0000:03:00.0\nMODALIAS=pci:v00001002d0000744Bsv00001002sd00000E0Cbc03sc00i00"
+          },
+          "vendor": {
+            "error": null,
+            "value": "0x1002"
+          }
+        },
+        "major": 226,
+        "minor": 1,
+        "node": "/dev/dri/card1"
+      },
+      {
+        "device_metadata": {
+          "device": {
+            "error": null,
+            "value": "0x744b"
+          },
+          "uevent": {
+            "error": null,
+            "value": "DRIVER=amdgpu\nPCI_CLASS=30000\nPCI_ID=1002:744B\nPCI_SUBSYS_ID=1002:0E0C\nPCI_SLOT_NAME=0000:03:00.0\nMODALIAS=pci:v00001002d0000744Bsv00001002sd00000E0Cbc03sc00i00"
+          },
+          "vendor": {
+            "error": null,
+            "value": "0x1002"
+          }
+        },
+        "major": 226,
+        "minor": 128,
+        "node": "/dev/dri/renderD128"
+      }
+    ],
+    "cpu_quota_cores": 16.0,
+    "gpu_count": null,
+    "gpu_count_note": "Device nodes and host sysfs do not establish allocated GPU count.",
+    "memory_limit_bytes": "59055800320"
+  },
+  "checked_at_utc": "2026-10-10T06:45:30.241370+00:00",
+  "cpu_package_candidates": {
+    "command": [
+      "apt-cache",
+      "policy",
+      "libvulkan1",
+      "mesa-vulkan-drivers",
+      "wine64",
+      "xvfb"
+    ],
+    "exit_code": 0,
+    "stderr": "",
+    "stdout": "libvulkan1:\n  Installed: (none)\n  Candidate: 1.4.341.0-1\n  Version table:\n     1.4.341.0-1 500\n        500 http://archive.ubuntu.com/ubuntu resolute/main amd64 Packages\nmesa-vulkan-drivers:\n  Installed: (none)\n  Candidate: 26.0.8-1ubuntu0.3\n  Version table:\n     26.0.8-1ubuntu0.3 500\n        500 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 Packages\n     26.0.3-1ubuntu1 500\n        500 http://archive.ubuntu.com/ubuntu resolute/main amd64 Packages\nwine64:\n  Installed: (none)\n  Candidate: 10.0~repack-12ubuntu1\n  Version table:\n     10.0~repack-12ubuntu1 500\n        500 http://archive.ubuntu.com/ubuntu resolute/universe amd64 Packages\nxvfb:\n  Installed: (none)\n  Candidate: 2:21.1.22-1ubuntu1.2\n  Version table:\n     2:21.1.22-1ubuntu1.2 500\n        500 http://archive.ubuntu.com/ubuntu resolute-updates/universe amd64 Packages\n     2:21.1.22-1ubuntu1 500\n        500 http://archive.ubuntu.com/ubuntu resolute/universe amd64 Packages\n"
+  },
+  "display_environment": {
+    "DISPLAY": null,
+    "WAYLAND_DISPLAY": null,
+    "XDG_RUNTIME_DIR": null
+  },
+  "fsr4": {
+    "ml_dispatch_verified": false,
+    "provider_selected": null,
+    "reason": "Inventory only; no GPU lease/context/provider/dispatch in this probe.",
+    "status": "not_executed"
+  },
+  "graphics_prerequisite_gate": {
+    "device_context_created": false,
+    "missing_prerequisites": [
+      "Vulkan loader is not loadable",
+      "No system Vulkan ICD manifest found",
+      "Wine/DX12 translation runtime is not installed"
+    ],
+    "status": "blocked"
+  },
+  "host": {
+    "kernel": "6.8.0-79-generic",
+    "os": "Linux",
+    "python": "3.14.4 (main, Jun 18 2026, 14:25:02) [GCC 15.2.0]",
+    "python_executable": "/opt/venv/bin/python"
+  },
+  "module_versions_without_import": {
+    "numpy": "2.5.2",
+    "pillow": "12.3.0",
+    "pytest": "9.1.1",
+    "torch": "2.13.0+rocm10.0.0"
+  },
+  "report_schema": "knight26-graphics-prerequisites-v1",
+  "rocm": {
+    "reason": "Torch package metadata is not ROCm execution evidence.",
+    "status": "not_executed_this_probe"
+  },
+  "shared_libraries": {
+    "libEGL.so.1": {
+      "error": "libEGL.so.1: cannot open shared object file: No such file or directory",
+      "loadable": false
+    },
+    "libGL.so.1": {
+      "error": "libGL.so.1: cannot open shared object file: No such file or directory",
+      "loadable": false
+    },
+    "libOSMesa.so.8": {
+      "error": "libOSMesa.so.8: cannot open shared object file: No such file or directory",
+      "loadable": false
+    },
+    "libvulkan.so.1": {
+      "error": "libvulkan.so.1: cannot open shared object file: No such file or directory",
+      "loadable": false
+    }
+  },
+  "storage": {
+    "available_bytes": 26839351296,
+    "path": "/workspace",
+    "total_bytes": 26843545600
+  },
+  "system_files": {
+    "/etc/os-release": {
+      "error": null,
+      "value": "PRETTY_NAME=\"Ubuntu 26.04 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"26.04\"\nVERSION=\"26.04 LTS (Resolute Raccoon)\"\nVERSION_CODENAME=resolute\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=resolute\nLOGO=ubuntu-logo"
+    },
+    "/sys/fs/cgroup/cpu.max": {
+      "error": null,
+      "value": "1600000 100000"
+    },
+    "/sys/fs/cgroup/memory.max": {
+      "error": null,
+      "value": "59055800320"
+    },
+    "/sys/module/amdgpu/srcversion": {
+      "error": null,
+      "value": "A6F143BEC60C0AFC3263226"
+    },
+    "/sys/module/amdgpu/version": {
+      "error": null,
+      "value": "6.16.13"
+    }
+  },
+  "tools": {
+    "Xvfb": null,
+    "blender": null,
+    "cmake": "/usr/bin/cmake",
+    "curl": "/usr/bin/curl",
+    "eglinfo": null,
+    "ffmpeg": null,
+    "g++": "/usr/bin/g++",
+    "gcc": "/usr/bin/gcc",
+    "git": "/usr/bin/git",
+    "glxinfo": null,
+    "godot": null,
+    "ninja": "/usr/bin/ninja",
+    "node": null,
+    "npm": null,
+    "pkg-config": "/usr/bin/pkg-config",
+    "tmux": "/usr/bin/tmux",
+    "vulkaninfo": null,
+    "wget": "/usr/bin/wget",
+    "wine": null,
+    "wine64": null
+  },
+  "vulkan_icd_manifests": {}
+}

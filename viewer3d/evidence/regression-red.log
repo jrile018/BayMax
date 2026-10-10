@@ -1,0 +1,163 @@
+......................................FFF...                             [100%]
+=================================== FAILURES ===================================
+___ test_unknown_license_is_not_permission_to_project[license_id-unlicensed] ___
+
+field = 'license_id', value = 'unlicensed'
+
+    @pytest.mark.parametrize("field,value", [
+        ("license_id", "unlicensed"), ("license_id", "unknown"),
+    ])
+    def test_unknown_license_is_not_permission_to_project(field, value):
+        s, data = fixture()
+        road = replace(data.roads[0], source=replace(data.roads[0].source, **{field: value}))
+>       with pytest.raises(ValueError, match="license"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'license'
+E         Actual message: 'conflicting source provenance for source ID'
+
+viewer3d/tests/test_scene.py:196: AssertionError
+____ test_unknown_license_is_not_permission_to_project[license_id-unknown] _____
+
+field = 'license_id', value = 'unknown'
+
+    @pytest.mark.parametrize("field,value", [
+        ("license_id", "unlicensed"), ("license_id", "unknown"),
+    ])
+    def test_unknown_license_is_not_permission_to_project(field, value):
+        s, data = fixture()
+        road = replace(data.roads[0], source=replace(data.roads[0].source, **{field: value}))
+>       with pytest.raises(ValueError, match="license"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'license'
+E         Actual message: 'conflicting source provenance for source ID'
+
+viewer3d/tests/test_scene.py:196: AssertionError
+______ test_unhashable_route_and_unit_kinds_rejected_as_malformed_records ______
+
+    def test_unhashable_route_and_unit_kinds_rejected_as_malformed_records():
+        s, data = fixture()
+        for bad in (
+            replace(data, routes=(replace(data.routes[0], role=[]),)),
+            replace(data, units=(replace(data.units[0], kind=[]),)),
+        ):
+            with pytest.raises(ValueError):
+>               s.build_scene(bad)
+
+viewer3d/tests/test_scene.py:207: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+data = SceneInput(frame=FrameIdentity(run_id='run-a', scenario_id='scenario-a', time_s=12.5, snapshot_hash='snapshot-a'), met...ns=('constructed training geometry',)), kind='medical', position=MetricPoint(x_m=70, y_m=70, z_m=0), status='unmet'),))
+limits = SceneLimits(max_primitives=10000, max_points=100000, max_triangles=100000, max_extent_m=10000, max_polygon_points=256)
+
+    def build_scene(data: SceneInput, *, limits: SceneLimits = SceneLimits()) -> PreparedScene:
+        """Validate and project an exact frame; reject rather than clip or fill gaps.
+    
+        Output order follows fixed category order and input record order. Primitive
+        points are the supplied immutable tuples. Building height is a descriptor,
+        never an invented roof mesh. Source declarations are retained, not audited.
+        """
+        if not isinstance(data, SceneInput) or not isinstance(limits, SceneLimits):
+            raise ValueError("typed scene input and limits required")
+        for name in ("max_primitives", "max_points", "max_triangles", "max_polygon_points"):
+            value = getattr(limits, name)
+            if type(value) is not int or value < 0:
+                raise ValueError("scene count limit must be a nonnegative integer")
+        _number(limits.max_extent_m, "extent limit")
+        if limits.max_extent_m <= 0:
+            raise ValueError("extent limit must be positive")
+        _frame(data.frame)
+        _text(data.metric_crs, "metric CRS")
+        _text(data.metric_origin, "metric origin")
+        if ("4326" in data.metric_crs or any(token in data.metric_crs.casefold()
+            for token in ("wgs84", "wgs 84", "longlat", "lonlat", "degrees"))):
+            raise ValueError("metric CRS required, not longitude/latitude")
+        if not isinstance(data.bounds, SceneBounds):
+            raise ValueError("scene bounds required")
+        _point(data.bounds.minimum)
+        _point(data.bounds.maximum)
+        spans = tuple(high - low for low, high in zip(
+            (data.bounds.minimum.x_m, data.bounds.minimum.y_m, data.bounds.minimum.z_m),
+            (data.bounds.maximum.x_m, data.bounds.maximum.y_m, data.bounds.maximum.z_m),
+        ))
+        if any(span < 0 for span in spans):
+            raise ValueError("scene bounds reversed")
+        if any(span > limits.max_extent_m for span in spans):
+            raise ValueError("scene bounds extent limit exceeded")
+    
+        # Budget geometry before polygon checks or descriptor construction.
+        rows = []
+        point_count = triangle_count = 0
+        for group, record_type in _GROUPS:
+            records = getattr(data, group)
+            if not isinstance(records, tuple):
+                raise ValueError("record collections must be immutable tuples")
+            if len(rows) + len(records) > limits.max_primitives:
+                raise ValueError("primitive limit exceeded")
+            for record in records:
+                if not isinstance(record, record_type):
+                    raise ValueError(f"malformed {group} record")
+                if group in ("units", "aid"):
+                    points = (record.position,)
+                elif group == "buildings":
+                    points = record.footprint
+                else:
+                    points = record.points
+                if not isinstance(points, tuple):
+                    raise ValueError("geometry must be an immutable tuple")
+                point_count += len(points)
+                if point_count > limits.max_points:
+                    raise ValueError("point limit exceeded")
+                if group == "terrain":
+                    if not isinstance(record.triangles, tuple):
+                        raise ValueError("triangle indices must be an immutable tuple")
+                    triangle_count += len(record.triangles)
+                    if triangle_count > limits.max_triangles:
+                        raise ValueError("triangle limit exceeded")
+                rows.append((group, record, points))
+    
+        result, sources, seen = [], {}, set()
+        for group, record, points in rows:
+            _text(record.record_id, "record ID")
+            _frame(record.frame)
+            if record.frame != data.frame:
+                raise ValueError("mixed frame identity")
+            kind = _KINDS.get(group, group)
+            key = kind, record.record_id
+            if key in seen:
+                raise ValueError("duplicate record ID within primitive kind")
+            seen.add(key)
+            _source(record.source)
+            existing = sources.get(record.source.source_id)
+            if existing is not None and existing != record.source:
+                raise ValueError("conflicting source provenance for source ID")
+            sources[record.source.source_id] = record.source
+            for point in points:
+                _inside(point, data.bounds)
+            extra = {}
+            if group == "terrain":
+                _terrain(record)
+                extra["triangles"] = record.triangles
+            elif group in ("roads", "routes", "trails"):
+                if len(points) < 2 or any(a == b for a, b in zip(points, points[1:])):
+                    raise ValueError("polyline requires distinct consecutive vertices")
+                extra["line_style"] = "solid" if group == "roads" else "dotted"
+                if group == "routes":
+                    if type(record.route_version) is not int or record.route_version < 0:
+                        raise ValueError("route version must be a nonnegative integer")
+>                   if record.role not in _ROUTE_STYLES:
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E                   TypeError: cannot use 'list' as a dict key (unhashable type: 'list')
+
+viewer3d/scene.py:363: TypeError
+=========================== short test summary info ============================
+FAILED viewer3d/tests/test_scene.py::test_unknown_license_is_not_permission_to_project[license_id-unlicensed]
+FAILED viewer3d/tests/test_scene.py::test_unknown_license_is_not_permission_to_project[license_id-unknown]
+FAILED viewer3d/tests/test_scene.py::test_unhashable_route_and_unit_kinds_rejected_as_malformed_records
+3 failed, 41 passed in 0.09s
+
+EXIT_CODE:1
+
+COMMAND: taskset -c 0,1 /opt/venv/bin/python -m pytest viewer3d/tests -q
+ENV: OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2

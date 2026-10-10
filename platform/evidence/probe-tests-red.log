@@ -1,0 +1,43 @@
+COMMAND: taskset -c 0,1 /opt/venv/bin/python -m pytest -q platform/tests
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_ test_timeout_retains_partial_diagnostic_evidence[partial device report\n-partial warning\n0] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7e93c6c010f0>
+stdout = b'partial device report\n', stderr = b'partial warning\n'
+
+    @pytest.mark.parametrize('stdout,stderr', [(b'partial device report\n', b'partial warning\n'), ('partial device report\n', 'partial warning\n')])
+    def test_timeout_retains_partial_diagnostic_evidence(monkeypatch, stdout, stderr):
+        def timed_out(*args, **kwargs):
+            raise subprocess.TimeoutExpired(args[0], 15, output=stdout, stderr=stderr)
+        monkeypatch.setattr(subprocess, 'run', timed_out)
+        result = probe_api['command'](['diagnostic-tool'])
+>       assert result.get('stdout') == 'partial device report\n'
+E       assert None == 'partial device report\n'
+E        +  where None = <built-in method get of dict object at 0x7e93c6992ac0>('stdout')
+E        +    where <built-in method get of dict object at 0x7e93c6992ac0> = {'command': ['diagnostic-tool'], 'exit_code': None, 'error': "Command '['diagnostic-tool']' timed out after 15 seconds"}.get
+
+platform/tests/test_probe_command.py:15: AssertionError
+_ test_timeout_retains_partial_diagnostic_evidence[partial device report\n-partial warning\n1] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7e93c6c01220>
+stdout = 'partial device report\n', stderr = 'partial warning\n'
+
+    @pytest.mark.parametrize('stdout,stderr', [(b'partial device report\n', b'partial warning\n'), ('partial device report\n', 'partial warning\n')])
+    def test_timeout_retains_partial_diagnostic_evidence(monkeypatch, stdout, stderr):
+        def timed_out(*args, **kwargs):
+            raise subprocess.TimeoutExpired(args[0], 15, output=stdout, stderr=stderr)
+        monkeypatch.setattr(subprocess, 'run', timed_out)
+        result = probe_api['command'](['diagnostic-tool'])
+>       assert result.get('stdout') == 'partial device report\n'
+E       assert None == 'partial device report\n'
+E        +  where None = <built-in method get of dict object at 0x7e93c6987440>('stdout')
+E        +    where <built-in method get of dict object at 0x7e93c6987440> = {'command': ['diagnostic-tool'], 'exit_code': None, 'error': "Command '['diagnostic-tool']' timed out after 15 seconds"}.get
+
+platform/tests/test_probe_command.py:15: AssertionError
+=========================== short test summary info ============================
+FAILED platform/tests/test_probe_command.py::test_timeout_retains_partial_diagnostic_evidence[partial device report\n-partial warning\n0]
+FAILED platform/tests/test_probe_command.py::test_timeout_retains_partial_diagnostic_evidence[partial device report\n-partial warning\n1]
+2 failed in 0.03s
+
+EXIT_CODE:1
