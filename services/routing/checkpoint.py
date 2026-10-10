@@ -152,14 +152,16 @@ def _history_valid(engine):
                     require(phase in ("loading","traveling"),"failed suffix phase")
                     pending=[]; failure=details["status"]
             elif kind=="stranded":
-                require(phase in ("loading","traveling","servicing"),"stranding phase")
+                require(phase in ("loading","traveling","servicing")
+                    and when==engine.ledger.assignments[aid].last_event_s,"stranding phase/time")
                 phase="stranded"
             elif kind=="arrival":
                 require(phase=="traveling" and current is None and not pending
                     and event["time_s"]==t.arrival_actual_s,"arrival audit")
                 phase="servicing"
             elif kind=="service_completed":
-                require(phase=="servicing","service audit phase"); phase="completed"
+                require(phase=="servicing" and when==engine.ledger.outcomes[aid]["completed_s"],
+                    "service audit phase/time"); phase="completed"
             else:
                 require(False,"unknown executor event")
         require(completed==t.completed_edge_ids and current==t.current_edge_id
@@ -202,7 +204,7 @@ def restore_checkpoint(engine_type,graph,payload):
             require(t.dispatch_id==aid and t.vehicle_id==a.vehicle_id and t.request_id==a.request_id
                     and t.phase==a.phase,"trip resource/phase")
             for name in ("dispatch_id","vehicle_id","request_id","person_ids","cargo","loading_complete_s","service_s","created_s"):
-                require(getattr(t.assignment,name)==getattr(a,name),"trip original load/timing")
+                require(_same(getattr(t.assignment,name),getattr(a,name)),"trip original load/timing")
             finite_nonnegative(t.started_s,"started"); finite_nonnegative(t.time_s,"trip time")
             require(t.started_s==a.created_s and t.time_s==now and t.started_s<=now,"trip clock")
             require(t.departed_s==a.actual_departure_s and t.arrival_actual_s==a.arrival_actual_s,"actual phase times")
@@ -241,8 +243,8 @@ def restore_checkpoint(engine_type,graph,payload):
                 "pending failure state")
             require(isclose(t.exposure_s,now-a.last_event_s,rel_tol=0,abs_tol=1e-8) if t.phase=="stranded" else t.exposure_s==0,"exposure")
             signature=loads(t.signature); fp=ledger._fingerprints[aid]
-            require(isinstance(signature,list) and len(signature)==7 and signature[:3]==fp[:3]
-                    and signature[3:]==fp[4:],"dispatch signature")
+            require(isinstance(signature,list) and len(signature)==7 and _same(signature[:3],fp[:3])
+                    and _same(signature[3:],fp[4:]),"dispatch signature")
             _route_valid(graph,route_from_dict(signature[2]),a.loading_complete_s)
             for point in t.trail:
                 require(isinstance(point,list) and len(point)==2

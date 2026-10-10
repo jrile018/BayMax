@@ -144,6 +144,26 @@ class CheckpointTests(unittest.TestCase):
             with self.subTest(mutation=mutation),self.assertRaises(ValueError):
                 TripExecutor.from_checkpoint(g,seal(payload))
 
+    def test_resealed_early_service_audit_and_boolean_duration_reject(self):
+        from services.planner.ledger.checkpoint import seal
+        g,s,l,e=setup(service=2); e.advance(22,s)
+        payload=e.checkpoint(); payload.pop("checksum")
+        event=next(x for x in payload["events"] if x["type"]=="service_completed")
+        event["time_s"]=21
+        with self.assertRaises(ValueError):
+            TripExecutor.from_checkpoint(g,seal(payload))
+        g,s,l,e=setup()
+        payload=e.checkpoint(); payload.pop("checksum")
+        payload["trips"]["dispatch1"]["assignment"]["service_s"]=False
+        with self.assertRaises(ValueError):
+            TripExecutor.from_checkpoint(g,seal(payload))
+        payload=e.checkpoint(); payload.pop("checksum")
+        original=json.loads(payload["trips"]["dispatch1"]["signature"])
+        original[4]=False
+        payload["trips"]["dispatch1"]["signature"]=json.dumps(original,sort_keys=True)
+        with self.assertRaises(ValueError):
+            TripExecutor.from_checkpoint(g,seal(payload))
+
     def test_graph_identity_schema_and_corruption_reject(self):
         g,s,l,e=setup(); e.advance(5,s)
         changed=Graph(g.nodes,[replace(edge,travel_s=edge.travel_s+1) for edge in g.edges.values()],version=g.version)

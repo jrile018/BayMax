@@ -33,7 +33,7 @@ Validation rejects unknown schemas, checksum corruption, changed graph content e
 /opt/venv/bin/python -m services.routing.checkpoint_demo --output-dir /workspace/knight26/artifacts/routing/checkpoint-v1
 ```
 
-Current reviewed suites:20 ledger +53 routing tests,73 total. All new checkpoint tests and checkpoint_demo use the actual Ledger. The four historical test_trip_faults tests retain their labeled StubLedger.
+Current reviewed suites:20 ledger +54 routing tests,74 total. All new checkpoint tests and checkpoint_demo use the actual Ledger. The four historical test_trip_faults tests retain their labeled StubLedger.
 
 Mixed actual replay saves at21.5s: bus and ambulance are servicing, truck is traveling, all three people remain in transit and five water units are carried. Independent safe continuation evacuates2, serves1 medical person on time and delivers5 water; remaining need3. Unknown destination safety instead strands all three vehicles, serves nobody and retains3 people and5 carried water. Every branch conserves initial water10 and original state remains unchanged. Duplicate completion/replan/dispatch checks add no outcomes or events.
 
