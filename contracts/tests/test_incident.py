@@ -52,8 +52,12 @@ def record(source_id="nws", item_id="alert-1", revision=1, **overrides):
     return value
 
 
-def verification(source_id="nws", url="https://api.weather.gov/alerts/1", raw_hash=HASH):
-    return VerifiedSource(source_id, url, raw_hash, True)
+def verification(source_id="nws", url="https://api.weather.gov/alerts/1",
+                 raw_hash=HASH, extracted_record=None):
+    if extracted_record is None and source_id == "nws":
+        extracted_record = record()
+    digest = record_fingerprint(extracted_record) if extracted_record is not None else None
+    return VerifiedSource(source_id, url, raw_hash, True, digest)
 
 
 def log():
@@ -103,11 +107,33 @@ class IncidentContractTests(unittest.TestCase):
                        source_reference={"api_fields": [
                            "properties.event", "properties.onset",
                            "properties.ends", "properties.expires"]})
-        store.append(alert, verification=verification())
+        store.append(alert, verification=verification(extracted_record=alert))
         fact = store.snapshot(CUT)["categories"]["hazard"][0]
         self.assertEqual(fact["valid_from"], "2026-10-10T12:00:00Z")
         self.assertEqual(fact["message_expires_at"], "2026-10-10T11:00:00Z")
         self.assertIsNone(fact["valid_through"])
+
+    def test_official_extraction_context_binds_values_geometry_and_times(self):
+        signed = record()
+        context = VerifiedSource("nws", signed["source_url"], signed["raw_sha256"],
+                                 True, record_fingerprint(signed))
+        with self.assertRaises(ValueError):
+            log().append(signed, verification=VerifiedSource(
+                "nws", signed["source_url"], signed["raw_sha256"], True))
+        for change in (
+            {"payload": {"event": "No Flood"}},
+            {"geometry": {"type": "Point", "coordinates": [-120.4, 39.5]}},
+            {"valid_from": "2026-10-10T10:00:00Z"},
+            {"source_reference": {"api_fields": ["properties.onset"]}},
+        ):
+            store = log()
+            altered = copy.deepcopy(signed)
+            altered.update(change)
+            with self.subTest(change=change), self.assertRaises(ValueError):
+                store.append(altered, verification=context)
+            store.append(signed, verification=context)
+            self.assertEqual(store.snapshot(CUT)["categories"]["hazard"][0]["payload"]["event"],
+                             "Flood Warning")
 
     def test_untrusted_self_review_and_official_operational_claim_rejected(self):
         store = log()
@@ -117,7 +143,7 @@ class IncidentContractTests(unittest.TestCase):
             store.append(proposal, verification=verification())
         proposal.pop("acceptance")
         with self.assertRaises(ValueError):
-            store.append(proposal, verification=verification())
+            store.append(proposal, verification=verification(extracted_record=proposal))
         self.assertIsNone(store.snapshot(CUT)["categories"]["closures"])
 
     def test_human_review_of_independent_operational_record(self):
@@ -257,7 +283,7 @@ class IncidentContractTests(unittest.TestCase):
                             correction_available_at=LATER,
                             supersedes=("nws", "alert-1", 1),
                             payload={"event": "Flash Flood Warning"})
-        store.append(correction, verification=verification())
+        store.append(correction, verification=verification(extracted_record=correction))
         self.assertEqual(store.snapshot(CUT, ledger_watermark={"seq": 7},
                                         in_flight_commitments=[{"trip_id": "trip-1", "vehicle": "v-1"}]),
                          old)
@@ -272,7 +298,7 @@ class IncidentContractTests(unittest.TestCase):
                             correction_available_at="2026-10-10T11:00:00Z",
                             supersedes=("nws", "alert-1", 2), retracted=True,
                             payload={"event": "retracted"})
-        store.append(retraction, verification=verification())
+        store.append(retraction, verification=verification(extracted_record=retraction))
         self.assertEqual(store.snapshot(LATER), current)
         retracted_snapshot = store.snapshot("2026-10-10T11:00:00Z")
         self.assertIsNone(retracted_snapshot["categories"]["hazard"])
@@ -283,8 +309,9 @@ class IncidentContractTests(unittest.TestCase):
         r = record()
         store.append(r, verification=verification())
         self.assertEqual(store.append(copy.deepcopy(r), verification=verification())["revision"], 1)
+        altered = record(payload={"event": "other"})
         with self.assertRaises(ValueError):
-            store.append(record(payload={"event": "other"}), verification=verification())
+            store.append(altered, verification=verification(extracted_record=altered))
         bad = record(revision=2, accepted_at=LATER, correction_available_at=LATER,
                      supersedes=("nws", "wrong", 1))
         with self.assertRaises(ValueError):
@@ -348,8 +375,9 @@ class IncidentContractTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             store.snapshot(CUT, source_health={"news": {"status": "stale"}})
         other = log()
+        authored = record(source_kind="authored")
         with self.assertRaises(ValueError):
-            other.append(record(source_kind="authored"), verification=verification())
+            other.append(authored, verification=verification(extracted_record=authored))
 
     def test_hash_copy_and_projection_provenance(self):
         store = log()

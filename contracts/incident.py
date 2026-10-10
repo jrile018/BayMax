@@ -178,6 +178,7 @@ class VerifiedSource:
     source_url: str
     raw_sha256: str
     transport_verified: bool
+    extracted_record_sha256: str | None = None
 
 
 @dataclass(frozen=True)
@@ -239,6 +240,11 @@ class EvidenceLog:
                 verification.raw_sha256 != r["raw_sha256"]):
             raise ValueError("source host/url/raw hash binding mismatch")
         r["source_url"] = canonical_url
+        if (verification.extracted_record_sha256 is not None and
+                verification.extracted_record_sha256 != record_fingerprint(r)):
+            raise ValueError("verified extraction does not match submitted record")
+        if review is None and verification.extracted_record_sha256 is None:
+            raise ValueError("deterministic acceptance requires trusted extraction digest")
         acceptance = self._acceptance(r, host, review)
         r["acceptance"] = acceptance
         encoded = _canonical(r)
