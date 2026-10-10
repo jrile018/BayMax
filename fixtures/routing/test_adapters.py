@@ -192,3 +192,22 @@ class AdapterTests(unittest.TestCase):
         restored.advance(5,known)
         self.assertEqual(restored.ledger.export_state()["outcome_totals"]["safe_evacuated_people"],1)
         self.assertEqual(engine.ledger.export_state()["outcome_totals"]["safe_evacuated_people"],0)
+
+    def test_report_corrections_are_visible_only_after_receipt(self):
+        payload, manifest = fixture()
+        graph = graph_from_geography(payload, manifest)
+        rows = [record('ab/0/fwd'),
+                record('ab/0/fwd', issued=2, received=3, status='unknown'),
+                record('ab/0/fwd', issued=4, received=5, status='forecast')]
+        expected = [(1, True), (2.5, True), (3, False), (4.5, False), (5, True)]
+        for cutoff, covered in expected:
+            with self.subTest(cutoff=cutoff):
+                snapshot = safety_from_access(
+                    rows, graph, alignment=alignment(graph), known_at_s=cutoff,
+                    horizon_s=10, version=f'correction-{cutoff}', safe_nodes=['D'])
+                self.assertEqual('ab/0/fwd' in snapshot.covered_edges, covered)
+        same_issue_unknown = rows + [record('ab/0/fwd', issued=4, received=5, status='unknown')]
+        conflicting = safety_from_access(
+            same_issue_unknown, graph, alignment=alignment(graph), known_at_s=5,
+            horizon_s=10, version='same-issue-conflict', safe_nodes=['D'])
+        self.assertNotIn('ab/0/fwd', conflicting.covered_edges)
