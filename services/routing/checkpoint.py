@@ -11,10 +11,14 @@ SCHEMA="knight26.trip-executor"
 VERSION=1
 
 def graph_fingerprint(graph):
-    return sha256(canonical_json(dict(version=graph.version,nodes=graph.nodes,
+    record=dict(version=graph.version,nodes=graph.nodes,
         edges={k:asdict(v) for k,v in sorted(graph.edges.items())},
         metric_crs=getattr(graph,"metric_crs","declared local metric x/y metres"),
-        origin_lonlat=getattr(graph,"origin_lonlat",None))).encode()).hexdigest()
+        origin_lonlat=getattr(graph,"origin_lonlat",None))
+    # Keep the version-1 identity of pre-adapter fictional graphs unchanged.
+    if hasattr(graph,"source_metadata"):
+        record["source_metadata"]=graph.source_metadata
+    return sha256(canonical_json(record).encode()).hexdigest()
 
 def route_from_dict(value):
     data=json_copy(value); keys(data,(f.name for f in fields(Route)),"route")

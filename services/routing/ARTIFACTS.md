@@ -32,3 +32,6 @@ Historical red/green logs are retained in the same artifact directory. Earlier p
 
 ## Actual continuation boundary
 Versioned Ledger and TripExecutor checkpoint/restore are implemented; see CHECKPOINTS.md. Updated reviewed source suite:20 ledger +54 routing,74 total. New actual mixed-resource continuation evidence is separate from the preserved C1 bundle in artifacts/routing/checkpoint-v1; checkpoint-verified-head.json/.log pin its committed source. This does not complete sourced C2 integration or C3 acceptance.
+
+## Sourced Paradise road exercise
+SOURCED_ROADS.md documents the strict source/access adapter, authored closure exercise, source register and rejected synthetic-fire join. Actual replay and compact summary are generated under /workspace/knight26/artifacts/routing/c2-sourced. Source map fixture belongs to the maps workstream; no aligned physical wildfire or current-incident safety is claimed.
