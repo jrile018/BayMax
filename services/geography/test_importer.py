@@ -154,9 +154,14 @@ class ImportTests(unittest.TestCase):
    source=Path(td)/"raw.json"; source.write_text(json.dumps(raw))
    result=ingest(source,td,area_id="oakland",label="Oakland",auto_bounds=True)
    self.assertEqual(result["roads"],1)
+   self.assertEqual(result["coverage_bbox_lonlat"],raw["bounds"])
+   self.assertLess(result["bbox_lonlat"][0],raw["bounds"][0])
    xml=b"""<osm version='0.6'><bounds minlon='-122.3' minlat='37.8' maxlon='-122.2' maxlat='37.9'/><node id='1' lon='-122.3' lat='37.8'/><node id='2' lon='-122.2' lat='37.9'/><way id='3'><nd ref='1'/><nd ref='2'/><tag k='highway' v='residential'/></way></osm>"""
    xml_source=Path(td)/"raw.osm"; xml_source.write_bytes(xml)
-   self.assertEqual(ingest(xml_source,td,area_id="oakland",label="Oakland",auto_bounds=True)["roads"],1)
+   xml_result=ingest(xml_source,td,area_id="oakland",label="Oakland",auto_bounds=True)
+   self.assertEqual(xml_result["roads"],1)
+   self.assertEqual(xml_result["coverage_bbox_lonlat"],raw["bounds"])
+   self.assertLess(xml_result["bbox_lonlat"][0],raw["bounds"][0])
 
  def test_layer_coverage_does_not_count_unrelated_roads(self):
   raw={"elements":[

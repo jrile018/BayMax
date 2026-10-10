@@ -135,10 +135,11 @@ def _read_data(input_path):
 def ingest(input_path,output_dir,downloaded_at_utc=None,endpoint=ENDPOINT,area_id="paradise-ca",label="Paradise, California",auto_bounds=False,query_file=None,upstream_url=None,upstream_commit=None,upstream_date=None,pad_degrees=0.001):
     raw_path=Path(input_path); out=Path(output_dir); out.mkdir(parents=True,exist_ok=True)
     data,raw_bytes,payload=_read_data(raw_path)
-    if auto_bounds: bbox,origin=_auto_bounds(data,pad_degrees)
+    if auto_bounds: padded_bbox,origin=_auto_bounds(data,pad_degrees)
     elif area_id=="paradise-ca": bbox,origin=PARADISE_BBOX,PARADISE_ORIGIN
     else: raise ValueError("non-Paradise inputs require --auto-bounds")
     declared_bbox=_declared_bbox(data)
+    if auto_bounds: bbox=declared_bbox if declared_bbox is not None else padded_bbox
     if declared_bbox is not None and not auto_bounds and not _bbox_contains(declared_bbox,bbox):
         raise ValueError("declared source bbox does not contain acquisition bbox")
     query_hash=sha256(query_file) if query_file else None
@@ -164,7 +165,12 @@ def ingest(input_path,output_dir,downloaded_at_utc=None,endpoint=ENDPOINT,area_i
       {"layer":"terrain","status":"unavailable","detail":"Not included in this OSM extract"},{"layer":"fuels","status":"unavailable","detail":"Not included in this OSM extract"},{"layer":"current_fire","status":"unavailable","detail":"No current fire source acquired"}]
     geometry_bbox=_feature_extent(roads,buildings,landuse)
     viewport_bbox=_union_bounds(bbox,geometry_bbox)
-    context_note="OSM API bbox is the requested coverage; ways intersecting that bbox may include full node geometry outside it, which is partial way context rather than complete outside coverage."
+    if auto_bounds: viewport_bbox=_union_bounds(viewport_bbox,padded_bbox)
+    context_note=("Declared source bounds are acquisition coverage; the padded viewport and full way geometry may extend beyond those bounds as display context."
+                  if auto_bounds and declared_bbox is not None else
+                  "No acquisition bounds were declared; coverage bounds are inferred from padded source nodes and do not certify completeness beyond observed geometry."
+                  if auto_bounds else
+                  "OSM API bbox is the requested coverage; ways intersecting that bbox may include full node geometry outside it, which is partial way context rather than complete outside coverage.")
     raw_hash=sha256_bytes(raw_bytes); decompressed_hash=sha256_bytes(payload)
     manifest={"source":"OpenStreetMap","endpoint":endpoint,"upstream_fixture_url":upstream_url,"upstream_commit":upstream_commit,"upstream_file_date":upstream_date,"historical_fixture":bool(upstream_date),"downloaded_at_utc":downloaded_at_utc,"source_observed_at":source_time,"raw_file":str(raw_path),"raw_sha256":raw_hash,"decompressed_sha256":decompressed_hash,"query_file":str(query_file) if query_file else None,"query_sha256":query_hash,"coverage_bbox_lonlat":bbox,"source_geometry_bbox_lonlat":geometry_bbox,"geometry_coverage_note":context_note,"license":"ODbL 1.0","license_url":ODBL_URL,"attribution":ATTRIBUTION,"attribution_url":ODBL_URL,"note":"Fixture-derived OSM data is historical and does not represent current mapping." if upstream_url else None}
     if not upstream_url:
