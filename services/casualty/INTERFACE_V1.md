@@ -31,3 +31,7 @@ A face miss does not downgrade or suppress a medical need. A human can confirm e
 `localization_counts(predictions, truth, iou_threshold=.5)` performs score-ordered one-to-one box matching and retains raw TP/FP/FN/matched-IoU sums. Undefined denominators are null. `aggregate` pools counts. C1 controls are hand-authored synthetic boxes, so their metrics are geometry/harness evidence only. No real detector precision/recall, injury accuracy, clinical efficacy, learner benefit or safe-service outcome is claimed.
 
 `python -m services.casualty.demo --output artifacts/casualty/c1-trace.json` uses scripted review calls and a geometric SVG. Shared ambulance route/tracking/learning measurement is pending root adapter + actual data/model gates. Candidate pinned CPU model from root research: OpenCV YuNet `3cc26e7f1014a5ee5d74a42acee58bafc9d0a310`; weights and OpenCV are not present. No model load or real photo display was performed.
+
+## Owned detector boundary
+
+`DETECTOR_V1.md` documents the lazy CPU YuNet adapter. Its mocked controls establish behavior only; actual photo/model/runtime evidence remains pending. Shared integration still requires root approval of this interface.
