@@ -3,6 +3,8 @@ from dataclasses import asdict, dataclass, replace
 from copy import deepcopy
 from hashlib import sha256
 import re
+from functools import wraps
+from threading import RLock
 from .schema import Proposal, ValidationError, parse_proposal
 
 @dataclass(frozen=True)
@@ -21,15 +23,29 @@ def _content_key(text):
     text=re.sub(r'^\s*repost:\s*','',text,flags=re.I)
     return sha256(' '.join(text.split()).casefold().encode()).hexdigest()
 
+def _serialized(method):
+    @wraps(method)
+    def guarded(self,*args,**kwargs):
+        with self._lock:
+            return method(self,*args,**kwargs)
+    return guarded
+
+def _check_revision(record,expected_revision):
+    if expected_revision is not None:
+        if type(expected_revision) is not int or expected_revision<1 or expected_revision!=record.revision:
+            raise ValidationError('review revision precondition failed; inspect the current proposal')
+
 class ReviewStore:
     """In-memory exercise store. Service adapter must authenticate the human reviewer."""
     def __init__(self, aliases):
+        self._lock=RLock()
         self._aliases=deepcopy(aliases)
         self._records={}; self._by_report={}; self._by_content={}
         for alias,record in self._aliases.items():
             if not isinstance(alias,str) or not alias or not isinstance(record,dict) or set(record)!={'entity_id','entity_type','source'} or record['entity_type'] not in ('node','edge') or not all(isinstance(v,str) and v.strip() for v in record.values()):
                 raise ValidationError('aliases require literal mention, entity_id/type and independent source')
 
+    @_serialized
     def submit(self, report, payload, provider):
         p=parse_proposal(report,payload,provider)
         if report.report_id in self._by_report:
@@ -45,24 +61,29 @@ class ReviewStore:
         if not duplicate: self._by_content[key]=pid
         return deepcopy(rec)
 
+    @_serialized
     def get(self, proposal_id):
         if proposal_id not in self._records: raise ValidationError('unknown proposal')
         return deepcopy(self._records[proposal_id])
 
-    def edit(self, proposal_id, payload, editor_id):
+    @_serialized
+    def edit(self, proposal_id, payload, editor_id, *, expected_revision=None):
         if not isinstance(editor_id,str) or not editor_id.strip():
             raise ValidationError('edit requires authenticated human editor ID')
         old=self.get(proposal_id)
+        _check_revision(old,expected_revision)
         if old.review_status!='pending': raise ValidationError('only pending proposals can be corrected')
         proposal=parse_proposal(old.proposal.report,payload,old.proposal.provider)
         rec=replace(old,proposal=proposal,revision=old.revision+1,editors=old.editors+(editor_id,))
         self._records[proposal_id]=rec
         return deepcopy(rec)
 
-    def review(self, proposal_id, decision, reviewer_id):
+    @_serialized
+    def review(self, proposal_id, decision, reviewer_id, *, expected_revision=None):
         if decision not in ('accepted','rejected') or not isinstance(reviewer_id,str) or not reviewer_id.strip():
             raise ValidationError('review requires accepted/rejected and authenticated human reviewer ID')
         old=self.get(proposal_id)
+        _check_revision(old,expected_revision)
         if old.review_status=='duplicate': raise ValidationError('duplicate report cannot emit repeated effects')
         if old.review_status!='pending':
             if old.review_status==decision and old.reviewer_id==reviewer_id: return old
