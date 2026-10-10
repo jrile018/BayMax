@@ -318,12 +318,14 @@ def private_env(run,wine,phase):
     icd=MESA/"usr/share/vulkan/icd.d/radeon_icd.json"
     allowed={"PATH","LANG","HOME","USER","LOGNAME"}
     env={key:value for key,value in os.environ.items() if key in allowed or key.startswith("LC_")}
+    # CPU controls aborted before PE startup with per-run TMPDIR on NFS or tmpfs;
+    # omitting it passed while prefix and XDG paths stayed private.
     env.update(OMP_NUM_THREADS="2",OPENBLAS_NUM_THREADS="2",MKL_NUM_THREADS="2",
         WINEARCH="win64",WINEPREFIX=str(run/"prefix"),WINELOADER=wine["wine64"],WINESERVER=wine["wineserver"],
         WINEDLLPATH=":".join((wine["x86_64-unix"],wine["x86_64-windows"])),
         WINEDLLOVERRIDES="d3d12,d3d12core,dxgi=n;mscoree,mshtml,winemenubuilder=d",
         WINEDEBUG="+loaddll",XDG_CACHE_HOME=str(run/"cache"),
-        XDG_CONFIG_HOME=str(run/"config"),XDG_DATA_HOME=str(run/"data"),TMPDIR=str(run/"tmp"),
+        XDG_CONFIG_HOME=str(run/"config"),XDG_DATA_HOME=str(run/"data"),
         LD_LIBRARY_PATH=":".join(map(str,(wine["x86_64-unix"],*wine_libs,mesa_lib))),
         VK_DRIVER_FILES=str(icd),VK_ICD_FILENAMES=str(icd),
         LIBGL_DRIVERS_PATH=str(mesa_lib/"dri"),MESA_SHADER_CACHE_DISABLE="true",
@@ -478,7 +480,7 @@ def run_phase(mode,run,lease_path,reviewed_runner_sha,report):
     command+=["--dll-dir","Z:"+str((run/"app").resolve()).replace("/","\\")]
     visible_keys=("WINEARCH","WINEPREFIX","WINELOADER","WINESERVER","WINEDLLPATH","WINEDLLOVERRIDES",
         "WINEDEBUG","OMP_NUM_THREADS","OPENBLAS_NUM_THREADS","MKL_NUM_THREADS",
-        "XDG_CACHE_HOME","XDG_CONFIG_HOME","XDG_DATA_HOME","TMPDIR",
+        "XDG_CACHE_HOME","XDG_CONFIG_HOME","XDG_DATA_HOME",
         "LD_LIBRARY_PATH","VK_DRIVER_FILES","VK_ICD_FILENAMES","LIBGL_DRIVERS_PATH",
         "MESA_SHADER_CACHE_DISABLE","VKD3D_SHADER_CACHE_PATH","VKD3D_DEBUG","VKD3D_SHADER_DEBUG",
         "VKD3D_LOG_FILE","VKD3D_SHADER_DUMP_PATH")

@@ -296,7 +296,7 @@ class FsrRunnerTests(unittest.TestCase):
             self.assertEqual(env["HOME"],"/inherited/home")
 
     def test_hostile_inherited_overrides_are_absent_from_wine_environment(self):
-        hostile={"VKD3D_SHADER_OVERRIDE":"/tmp/replacement.spv","VKD3D_FEATURE_LEVEL":"12_2",
+        hostile={"TMPDIR":"/tmp/hostile", "VKD3D_SHADER_OVERRIDE":"/tmp/replacement.spv","VKD3D_FEATURE_LEVEL":"12_2",
             "VKD3D_CONFIG":"force_static_cbv","LD_PRELOAD":"/tmp/inject.so","LD_AUDIT":"/tmp/audit.so",
             "VK_INSTANCE_LAYERS":"VK_LAYER_FAKE","VK_LAYER_PATH":"/tmp/layers",
             "VK_ADD_LAYER_PATH":"/tmp/add-layers","VK_LOADER_LAYERS_ENABLE":"*",
@@ -308,10 +308,20 @@ class FsrRunnerTests(unittest.TestCase):
             for key in hostile:
                 with self.subTest(key=key):
                     self.assertNotIn(key,env)
+            self.assertEqual(env["XDG_CACHE_HOME"],str(run/"cache"))
             self.assertEqual(env["MESA_SHADER_CACHE_DISABLE"],"true")
             self.assertEqual(env["VKD3D_SHADER_CACHE_PATH"],"0")
             for key in ("OMP_NUM_THREADS","OPENBLAS_NUM_THREADS","MKL_NUM_THREADS"):
                 self.assertEqual(env[key],"2")
+
+    def test_wineserver_cleanup_also_omits_inherited_tmpdir(self):
+        with tempfile.TemporaryDirectory(prefix="fsr-lease-test-") as tempdir:
+            run=Path(tempdir)
+            wine={"wineserver":"/private/wineserver","x86_64-unix":"/private/unix"}
+            with mock.patch.dict(os.environ,{"TMPDIR":"/tmp/hostile"}), \
+                mock.patch.object(runner.subprocess,"run",return_value=SimpleNamespace(returncode=0)) as call:
+                runner.cleanup_wineserver(run,wine,True)
+            self.assertNotIn("TMPDIR",call.call_args.kwargs["env"])
 
     def test_shell_prelaunch_failure_never_spawns_wineserver_cleanup(self):
         with tempfile.TemporaryDirectory(prefix="fsr-lease-test-") as tempdir:
