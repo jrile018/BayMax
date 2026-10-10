@@ -81,9 +81,16 @@ def build_ensemble(
     seeds: Sequence[int],
     horizon_s: float = 300,
     assumptions: Mapping[str, Any] | None = None,
+    require_declared_uncertainty: bool = False,
 ) -> list[dict[str, Any]]:
     """Build equal-weight synthetic tested scenarios; these are not calibrated probabilities."""
     start, initial_observations, roads = _validate_snapshot(snapshot)
+    if type(require_declared_uncertainty) is not bool:
+        raise TypeError("require_declared_uncertainty must be boolean")
+    if require_declared_uncertainty:
+        for index, road in enumerate(roads):
+            if type(road.get("uncertain_closure")) is not bool:
+                raise ValueError(f"roads[{index}].uncertain_closure must be explicitly boolean")
     horizon = _finite(horizon_s, "horizon_s")
     if horizon < 0:
         raise ValueError("horizon_s must be nonnegative")

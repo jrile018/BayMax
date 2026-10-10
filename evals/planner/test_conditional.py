@@ -261,3 +261,22 @@ def test_observation_conditioning_does_not_mutate_inputs():
     if conditioned:
         conditioned[0]["assumptions"]["interpretation"] = "changed"
         assert futures[0]["assumptions"] == original[0]["assumptions"]
+
+
+def test_explicit_road_uncertainty_gate_for_incident_futures():
+    snapshot = {"time_s": 0, "observations": [], "roads": [{"edge_id": "route-1"}]}
+    with pytest.raises(ValueError, match="uncertain_closure"):
+        build_ensemble(snapshot, [1], require_declared_uncertainty=True)
+
+    snapshot["roads"][0]["uncertain_closure"] = "false"
+    with pytest.raises(ValueError, match="uncertain_closure"):
+        build_ensemble(snapshot, [1], require_declared_uncertainty=True)
+
+    snapshot["roads"][0]["uncertain_closure"] = False
+    stable = build_ensemble(snapshot, [1], require_declared_uncertainty=True)
+    assert stable[0]["truth_events"] == []
+    assert stable[0]["initial_snapshot"]["roads"][0]["uncertain_closure"] is False
+
+    snapshot["roads"][0]["uncertain_closure"] = True
+    uncertain = build_ensemble(snapshot, [1], require_declared_uncertainty=True)
+    assert [event["edge_id"] for event in uncertain[0]["truth_events"]] == ["route-1"]
