@@ -110,18 +110,62 @@
   const isRecord = value => value !== null && typeof value === "object" && !Array.isArray(value);
   const hasKeys = (value, keys) => isRecord(value) &&
     Object.keys(value).sort().join("\0") === [...keys].sort().join("\0");
-  // SnapshotPublisher uses sorted, compact UTF-8 JSON. Fail closed if its
-  // canonical form cannot be reproduced; two real publications were checked.
+  // Python's canonical JSON keeps the lexical distinction between 2 and 2.0,
+  // and writes -0.0 and small exponents differently from JSON.stringify.
+  // Preserve number tokens from the signed publication before rehashing it.
+  const numberToken = Symbol("canonical JSON number token");
+  function pythonNumberToken(source, value) {
+    if (!Number.isFinite(value)) throw Error("Non-finite JSON number");
+    if (!/[.eE]/.test(source)) {
+      if (source === "-0") throw Error("Noncanonical JSON integer");
+      return source;
+    }
+    const negative = source.startsWith("-") ? "-" : "";
+    const [mantissa, exponentText] = Math.abs(value).toExponential().split("e");
+    const digits = mantissa.replace(".", "");
+    const exponent = Number(exponentText);
+    let normalized;
+    if (exponent >= -4 && exponent < 16) {
+      const point = exponent + 1;
+      normalized = point <= 0 ? "0." + "0".repeat(-point) + digits :
+        point >= digits.length ? digits + "0".repeat(point - digits.length) + ".0" :
+          digits.slice(0, point) + "." + digits.slice(point);
+    } else {
+      normalized = digits[0] + (digits.length > 1 ? "." + digits.slice(1) : "") +
+        "e" + (exponent >= 0 ? "+" : "-") + String(Math.abs(exponent)).padStart(2, "0");
+    }
+    if (source !== negative + normalized) throw Error("Noncanonical JSON float");
+    return source;
+  }
+  function parseLossless(raw) {
+    return JSON.parse(raw, (key, value, context) => {
+      if (typeof value !== "number") return value;
+      if (typeof context?.source !== "string") throw Error("Lossless JSON parsing unavailable");
+      return { [numberToken]: pythonNumberToken(context.source, value) };
+    });
+  }
+  function compareCodepoints(a, b) {
+    const left = Array.from(a, char => char.codePointAt(0));
+    const right = Array.from(b, char => char.codePointAt(0));
+    for (let i = 0; i < Math.min(left.length, right.length); i++) {
+      if (left[i] !== right[i]) return left[i] - right[i];
+    }
+    return left.length - right.length;
+  }
+  // SnapshotPublisher uses sorted, compact UTF-8 JSON. Keep its exact numeric
+  // tokens and compare the whole canonical document before trusting hashes.
   function canonical(value) {
+    if (isRecord(value) && Object.hasOwn(value, numberToken)) return value[numberToken];
     if (Array.isArray(value)) return "[" + value.map(canonical).join(",") + "]";
-    if (isRecord(value)) return "{" + Object.keys(value).sort().map(
+    if (isRecord(value)) return "{" + Object.keys(value).sort(compareCodepoints).map(
       key => JSON.stringify(key) + ":" + canonical(value[key])).join(",") + "}";
     return JSON.stringify(value);
   }
   const digestObject = value => sha256(canonical(value));
   async function validatePublication(publication, pointer, raw) {
     const version = "knight26-snapshot-publication-v1";
-    if (!isRecord(publication) || raw !== canonical(publication) + "\n" ||
+    const literal = parseLossless(raw);
+    if (!isRecord(publication) || raw !== canonical(literal) + "\n" ||
         publication.publication_version !== version ||
         publication.view_hash !== pointer.view_hash ||
         !hasKeys(publication.capabilities,
@@ -135,7 +179,7 @@
         typeof snapshot.snapshot_hash !== "string" || !hex64.test(snapshot.snapshot_hash)) {
       throw Error("Invalid incident snapshot");
     }
-    const plain = { ...snapshot };
+    const plain = { ...literal.snapshot };
     delete plain.snapshot_hash;
     if (await digestObject(plain) !== snapshot.snapshot_hash) throw Error("Snapshot hash mismatch");
     if (publication.incident_id !== snapshot.incident_id ||
@@ -160,29 +204,29 @@
       throw Error("Invalid projection");
     }
     if (projection !== null) {
-      const plainProjection = { ...projection };
+      const plainProjection = { ...literal.projection_input };
       delete plainProjection.projection_input_hash;
       if (await digestObject(plainProjection) !== projection.projection_input_hash) {
         throw Error("Projection hash mismatch");
       }
     }
     const mission = {
-      publication_version: version, incident_id: snapshot.incident_id,
-      bbox_lonlat: snapshot.bbox_lonlat, cutoff_utc: snapshot.cutoff_utc,
-      categories, revision_history: snapshot.revision_history,
-      unconfirmed_leads: snapshot.unconfirmed_leads,
-      accepted_source_refs: snapshot.accepted_source_refs,
-      ledger_watermark: snapshot.ledger_watermark,
-      in_flight_commitments: snapshot.in_flight_commitments,
-      metadata_attestations: publication.metadata_attestations ?? null,
-      geography_binding: publication.geography_binding ?? null
+      publication_version: version, incident_id: literal.snapshot.incident_id,
+      bbox_lonlat: literal.snapshot.bbox_lonlat, cutoff_utc: literal.snapshot.cutoff_utc,
+      categories: literal.snapshot.categories, revision_history: literal.snapshot.revision_history,
+      unconfirmed_leads: literal.snapshot.unconfirmed_leads,
+      accepted_source_refs: literal.snapshot.accepted_source_refs,
+      ledger_watermark: literal.snapshot.ledger_watermark,
+      in_flight_commitments: literal.snapshot.in_flight_commitments,
+      metadata_attestations: literal.metadata_attestations ?? null,
+      geography_binding: literal.geography_binding ?? null
     };
     const missionHash = await digestObject(mission);
     if (publication.mission_hash !== missionHash) throw Error("Mission publication hash mismatch");
     const view = {
       publication_version: version, mission_hash: missionHash,
-      snapshot_hash: snapshot.snapshot_hash, source_health: snapshot.source_health,
-      synopsis: publication.synopsis ?? null,
+      snapshot_hash: snapshot.snapshot_hash, source_health: literal.snapshot.source_health,
+      synopsis: literal.synopsis ?? null,
       projection_input_hash: projection?.projection_input_hash ?? null
     };
     if (await digestObject(view) !== pointer.view_hash) throw Error("View publication hash mismatch");
