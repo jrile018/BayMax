@@ -15,6 +15,8 @@ NONBURNABLE = frozenset({91, 92, 93, 98, 99})
 FUEL_FACTOR = {101: 1.0, 102: 1.15}
 MAX_CELLS = 65536
 MAX_FRAMES = 1001
+MAX_FRAME_CELL_PRODUCT = 1_000_000
+MAX_HORIZON_S = 7 * 86400
 
 
 def _number(value, name, lower=None, strict=False):
@@ -48,6 +50,8 @@ def wind_to_pyre(east_m_s, north_m_s):
     east = _number(east_m_s, 'east_m_s')
     north = _number(north_m_s, 'north_m_s')
     speed = math.hypot(east, north) * 3.6
+    if not math.isfinite(speed):
+        raise ValueError('converted wind speed must remain finite')
     direction = math.degrees(math.atan2(-east, -north)) % 360 if speed else 0.0
     return speed, direction
 
@@ -99,8 +103,14 @@ def validate_config(config):
             _number(weather[name], name, 0)
         horizon = _number(config['horizon_s'], 'horizon_s', 0, True)
         step = _number(config['output_step_s'], 'output_step_s', 0, True)
-        if math.ceil(horizon/step) + 1 > MAX_FRAMES:
+        if horizon > MAX_HORIZON_S:
+            raise ValueError(f'training horizon limit is {MAX_HORIZON_S} seconds')
+        ratio = horizon / step
+        if not math.isfinite(ratio) or ratio > MAX_FRAMES - 1:
             raise ValueError(f'output is bounded to {MAX_FRAMES} frames')
+        frame_bound = math.ceil(ratio) + 1
+        if frame_bound * height * width > MAX_FRAME_CELL_PRODUCT:
+            raise ValueError(f'frame-cell output budget is {MAX_FRAME_CELL_PRODUCT}')
         if not isinstance(config['ignitions'],list) or not config['ignitions']:
             raise ValueError('at least one explicit ignition required')
         for ignition in config['ignitions']:
@@ -182,6 +192,10 @@ def _training_arrivals(config,height,width):
                 continue  # No diagonal corner jump over water/urban/bare barriers.
             norm=math.hypot(dx,dy); ux,uy=dx/norm,dy/norm
             r1=rate(y,x,ux,uy); r2=rate(ny,nx,ux,uy)
+            if r1<=0 or r2<=0:
+                continue
+            if not math.isfinite(r1) or not math.isfinite(r2):
+                raise ValueError('computed training rate must remain finite')
             candidate=t+cell*norm*.5*(1/r1+1/r2)
             if candidate<=horizon and candidate<arrivals[ny][nx]:
                 arrivals[ny][nx]=candidate; heapq.heappush(queue,(candidate,ny,nx))
@@ -199,7 +213,7 @@ def simulate(config):
                 'source_ledger':copy.deepcopy(config['source_ledger'])}
     arrivals=_training_arrivals(config,height,width)
     horizon=float(config['horizon_s']); step=float(config['output_step_s'])
-    times=[i*step for i in range(math.ceil(horizon/step))]+[horizon]
+    times=[i*step for i in range(math.ceil(horizon/step)) if i*step<horizon]+[horizon]
     cells=[(y,x,t) for y,row in enumerate(arrivals) for x,t in enumerate(row) if t is not None]
     residence=config['training_assumptions']['residence_time_s']
     frames=[{'time_s':t,'burned_cells':[[y,x] for y,x,a in cells if a<=t],
