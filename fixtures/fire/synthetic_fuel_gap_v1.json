@@ -1,7 +1,7 @@
 {
   "config": {
     "engine": "training-grid",
-    "epoch_utc": "2026-10-10T00:00:00Z",
+    "epoch_utc": "2026-10-10T07:00:00Z",
     "grid": {
       "aspect_deg": [
         [

@@ -69,7 +69,10 @@ class SimulationTests(unittest.TestCase):
         c = config()
         del c["engine"]
         del c["training_assumptions"]
-        result = api().simulate(c)
+        from unittest.mock import patch
+        from services.hazards.wildfire.physical import BackendUnavailable
+        with patch('services.hazards.wildfire.physical.physical_arrivals', side_effect=BackendUnavailable('test runtime absent')):
+            result = api().simulate(c)
         self.assertEqual("unavailable", result["status"])
         self.assertTrue(result.get("reason"))
 
@@ -168,10 +171,13 @@ class WindTests(unittest.TestCase):
 
 class EdgeAccessTests(unittest.TestCase):
     def hazard(self):
-        return {"grid": {"crs": "LOCAL_METRIC", "origin_m": [0, 0],
+        return {"epoch_utc": "2026-10-10T00:00:00Z",
+                "grid": {"crs": "LOCAL_METRIC", "origin_m": [0, 0],
                          "cell_size_m": 10, "width": 2, "height": 2},
                 "arrivals_s": [[None, 10], [None, None]], "horizon_s": 100,
-                "provenance": {"source_ledger": [{"source_id": "synthetic"}]}}
+                "provenance": {"source_ledger": [{"source_id": "synthetic",
+                    "kind": "synthetic", "license": "CC0-1.0", "uri": None,
+                    "retrieved_at_utc": "2026-10-10T00:00:00Z"}]}}
 
     def edge(self, points):
         return [{"edge_id": "e", "geometry_m": points}]
@@ -187,6 +193,21 @@ class EdgeAccessTests(unittest.TestCase):
                          row["closed_intervals"])
         self.assertEqual(3, row["issued_time_s"])
         self.assertIn("synthetic", row["source_ids"])
+
+    def test_forecast_rejects_sources_retrieved_after_issue(self):
+        hazard = self.hazard()
+        hazard["provenance"]["source_ledger"][0]["retrieved_at_utc"] = "2026-10-10T00:00:10Z"
+        with self.assertRaises(ValueError):
+            api().edge_access(hazard, self.edge([[0, 5], [20, 5]]), 9)
+        row = api().edge_access(hazard, self.edge([[0, 5], [20, 5]]), 10)[0]
+        self.assertEqual(10, row["source_availability"]["available_from_s"])
+        self.assertEqual(10, row["source_availability"]["checked_at_s"])
+
+    def test_forecast_rejects_unknown_source_dates(self):
+        hazard = self.hazard()
+        del hazard["provenance"]["source_ledger"][0]["retrieved_at_utc"]
+        with self.assertRaises(ValueError):
+            api().edge_access(hazard, self.edge([[0, 5], [20, 5]]), 0)
 
     def test_safety_buffer_moves_closure_earlier(self):
         row = api().edge_access(self.hazard(),

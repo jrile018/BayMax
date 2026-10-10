@@ -1,41 +1,53 @@
-# Wildfire C1: explicit training adapter and blocked physical reference
+# Wildfire: pinned surface reference and explicit training fields
 
-This checkpoint produces deterministic synthetic hazard fields for routing integration. **Physical wildfire simulation is unimplemented.** Default Pyretechnics requests return unavailable. The explicit `engine="training-grid"` path is an uncalibrated hypothetical exercise. No current incident, real fuel raster, measured weather or mapped terrain is ingested. See `REFERENCE_GATE.json` for the failed cloud dependency gate and researched pin. The pinned source archive and EPL notice were researched previously, but not downloaded/verified on this server; no Pyretechnics code is copied or distributed here.
+The module implements an optional Pyretechnics 2026.8.10 surface-fire backend and a separately selected deterministic training graph. All scenarios are hypothetical. No current incident, measured weather, mapped terrain or real fuel raster is ingested. The pinned compiled extension has imported on the supplied cloud; actual solver verification is still pending the detached test-runner approval. `REFERENCE_GATE.json` records exact evidence. Missing or wrong physical runtimes return unavailable and never silently choose training.
 
-## Run on the authorized Radeon Cloud
+## Cloud execution and runtime boundary
 
-From `/workspace/knight26/worktrees/wildfire`, with two-thread environment caps:
+Keep product authoring, install, build, tests, simulation and rendering on the supplied Radeon Cloud. Ordinary CPU jobs cap OMP/OPENBLAS/MKL/NUMEXPR threads at two and run detached when nontrivial. The isolated reference interpreter is `/workspace/knight26/artifacts/wildfire/runtime/venv/bin/python` (CPython 3.11.13), with NumPy 1.26.4, SciPy 1.12.0, rasterio 1.4.3, sortedcontainers 2.4.0 and Cython 3.0.11. The image Python 3.14/Torch/ROCm environment stays separate; API integration should invoke the isolated CLI or worker rather than switching the whole API interpreter. No GPU is needed by this module.
+
+From `/workspace/knight26/worktrees/wildfire`:
 
 ```sh
-/opt/venv/bin/python -m unittest discover -s services/hazards/wildfire/tests -v
-/opt/venv/bin/python -m services.hazards.wildfire --fixture fixtures/fire/synthetic_fuel_gap_v1.json --output-dir /workspace/knight26/artifacts/wildfire/checkpoint-c1/run-a
+/workspace/knight26/artifacts/wildfire/runtime/venv/bin/python -m unittest discover -s services/hazards/wildfire/tests -v
+/workspace/knight26/artifacts/wildfire/runtime/venv/bin/python -m services.hazards.wildfire --fixture fixtures/fire/synthetic_surface_reference_v1.json --output-dir /workspace/knight26/artifacts/wildfire/checkpoint-c2/reference-a
+/opt/venv/bin/python -m services.hazards.wildfire --fixture fixtures/fire/synthetic_fuel_gap_v1.json --output-dir /workspace/knight26/artifacts/wildfire/checkpoint-c2/training-a
 ```
 
-Long jobs run in detached tmux; the coordinator owns shared contracts/integration. Pure standard-library implementation, no image/Torch edits or GPU allocation. Keep all product runs on cloud. Output JSON includes `hazard.json`, `edge-access.json`, and SHA256 `manifest.json`; identical fixture bytes produce identical output bytes.
+The CLI exports `hazard.json`, `edge-access.json` and a SHA256 `manifest.json`. Determinism must be checked in a fixed pinned runtime; manifests bind fixture/output bytes. Do not claim physical results from skipped optional-runtime tests. The training path uses only the standard library.
 
-## API proposal for coordinator review
+## API and source availability
 
-`simulate(config: dict) -> dict`: hypothetical-only configuration with explicit metric grid/CRS, fuel codes, slope/aspect, fixed wind/moisture, ignition cells/times, horizon, output spacing, seed and dated source ledger. Output `status`, `scenario_id`, `epoch_utc`, `grid`, `arrivals_s`, `frames`, `burn_intervals`, `active_flame_intervals`, `horizon_s`, `units`, `provenance`. This is an owned module payload; root must wrap it in the shared snapshot with run/version/forecast issue time. Hidden sampled future truth must never be published to controllers as an observation.
+`simulate(config)` requires a hypothetical metric grid/CRS, supported fuel codes, slope/aspect, fixed wind/moisture, explicit ignitions, horizon/output spacing, seed and a dated source ledger. It produces arrivals, frames, cumulative burn intervals, separate assumed active-flame intervals and provenance. Public times are seconds from `epoch_utc`; x/east and y/north are metres, origin is lower-left and rows increase north. Slope is rise/run, aspect is downslope clockwise from north, moisture is kg water/kg dry fuel, and public wind is toward east/north in m/s. Physical conversion supplies 10 m wind km/h and meteorological FROM degrees.
 
-`edge_access(hazard, edges, issued_time_s, safety_buffer_s=0) -> list`: edges use stable `edge_id` and `geometry_m` east/north polylines in the same CRS. Any segment touching a closed grid-cell rectangle uses the earliest arrival minus buffer. Intervals are `[start_s,end_s)`, capped to the model horizon; closures persist conservatively. Partial/outside grid coverage returns `status="unknown"` while preserving any computed inside closure. Null cell arrivals mean not reached within this modeled horizon, not safe beyond it. Empty closures are a model forecast, never an observed road-safety certification. Every row carries source IDs, issue time, coverage horizon and spatial rule. The routing owner must test full-edge traversal against these intervals and reject/handle unknown coverage.
+`edge_access(hazard, edges, issued_time_s, safety_buffer_s=0)` consumes stable edge IDs and same-CRS metric polylines. Any segment touching a closed cell rectangle closes the whole edge at the earliest arrival minus buffer, clamped to issue, through the model horizon. Intervals are half-open `[start,end)`. Partial/outside coverage remains unknown while retaining any inside closure. Empty closures/null arrivals do not certify observed road safety or safety outside the horizon.
 
-`current_incident_eligibility(evidence, as_of_utc, location_lonlat, max_age_hours=24)` checks metadata on separately human-accepted incident records (ID, active wildfire status, HTTPS source, timestamp and matching bbox). The 24-hour freshness window is an explicit training gate assumption. Empty, stale, future, unreviewed or mismatched records abstain. Passing metadata is not independent verification and never relabels hypothetical fields as a current fire. No live feed is implemented.
+Every row carries issue/coverage times, source IDs, spatial rule/reason and `source_availability`: scenario epoch, full dated ledger, checked issue seconds and latest available seconds. Retrieval and any observation must precede issuance; an observed source requires an observation date. Missing/future dates, invalid rights labels or required source URI, duplicated IDs and unsupported kinds fail closed. This is metadata validation, not authentication or independent source fact checking. Synthetic fixture epochs follow their source retrieval dates.
 
-## Training equation and fidelity
+`safety_snapshot_from_access(rows, known_at_s, version, safe_nodes=(), expected_edge_ids=None)` in `routing_bridge.py` imports the routing package lazily. It rederives availability from each full ledger, rejects missing/forged fields, future issue/coverage, source-ID mismatch and mixed epochs, and takes the shortest coverage end. Only explicit forecast rows cover edges; unknown/missing edges abstain. Use `expected_edge_ids=graph.edges.keys()` or `tuple(graph.edges)`. Wildfire closures are already buffered, so no additional routing buffer is added. Full traversal/horizon checks remain routing responsibilities. Root wraps this owned payload in the shared run/version/mission contract and keeps sampled hidden future truth separate.
 
-Let `d` be unit neighbour direction, `u` wind toward east/north in m/s, and `g=-slope*(sin(aspect)*d_x+cos(aspect)*d_y)` positive uphill. The assumed local rate is:
+`current_incident_eligibility` checks separately human-reviewed active-wildfire metadata, HTTPS URI, place/date and explicit 24-hour freshness. Passing metadata never relabels a hypothetical field as a current fire. No live feed is implemented.
+
+## Physical reference limits
+
+`engine="pyretechnics"` is the default physical request. The exact compiled pinned extension is required. `physical_assumptions` must contain exactly `surface_only=True`, `wind_height_m=10`, nonnegative `foliar_moisture` and positive assumed `residence_time_s`. Supported surface fuels are 101/102 and categorical nonburnable 91/92/93/98/99. Ignitions must be explicit cells at time zero. Unknown fuels and NoData are rejected.
+
+Static cubes feed the surface Rothermel level-set solver; canopy values are zero, spotting is disabled, wind limit is enabled, maximum cells per step is 0.4 and buffer width is 3. Solver minutes are converted to seconds; float32 inputs are range checked and arrival times lowered by one ULP conservatively. Provenance distinguishes the expected source-archive SHA from the actual loaded extension SHA and records version/settings/stop condition/boundary contact. Seed is recorded only; this path has no stochastic spotting process.
+
+This is an uncalibrated surface-only reference with assumed fuels/weather/terrain and residence time. It excludes crown/structure fire, suppression and atmosphere feedback. Domain boundaries clip the field; spatial resolution, numerical errors and incomplete inputs limit road forecasts. No physical accuracy or real-incident fitness is established by compilation or synthetic behaviour tests. See [Pyretechnics 2026.8.10](https://pypi.org/project/pyretechnics/2026.8.10/), [Rothermel 1972](https://research.fs.usda.gov/treesearch/32533) and [LANDFIRE](https://landfire.gov/fuel).
+
+## Explicit training graph
+
+`engine="training-grid"` requires disclosed `training_assumptions`. An eight-neighbour first-arrival graph uses:
 
 ```
 R = R0 * f_fuel * max(0,1-M1/Mext)
     * exp(-0.5*(M10+M100)-0.1*(Mlive_h+Mlive_w))
     * exp(clamp(kw*(u dot d)+ks*g,-ln(10),ln(10)))
 travel_time = neighbour_distance/2 * (1/Rsource + 1/Rdestination)
+g = -slope*(sin(aspect)*d_x + cos(aspect)*d_y)
 ```
 
-An eight-neighbour first-arrival graph computes arrivals. Every coefficient is disclosed in the fixture/output. Fuel factors101=1 and102=1.15 are assumed; codes91/92/93/98/99 are categorical nonburnable masks. Unknown codes and NoData are rejected, never inferred. Diagonal corner jumps past barriers are blocked. Moisture at extinction stops propagation while retaining explicit ignition. There is no regeneration. `burn_intervals` describe cumulative burned/hazard state to horizon; separate assumed active-flame residence is120s. `seed` is a provenance identifier; this deterministic backend has no RNG. Output sampling changes frames but not arrivals. There is grid-direction/resolution bias, no spotting/crown/building fire, suppression, atmosphere feedback or validated rates. Rothermel's published physical equations are a foundation for a future engine, not the equations implemented here.
+Fuel factors 101=1 and 102=1.15 are assumptions. Diagonal barrier corner jumps are blocked, moisture extinction stops propagation while retaining ignition, burned state is monotonic, and output spacing changes sampling rather than arrivals. The assumed active-flame residence is separate from cumulative hazard. Grid direction/resolution bias and empirical rates preclude physical accuracy claims. This graph does not implement Rothermel.
 
-Coordinates: metres in caller-declared projected CRS or local metric system, origin lower-left, x/east and y/north, array row increases north. Times seconds from the declared epoch. Slope rise/run; aspect downslope clockwise north; fuel moisture kg water/kg dry fuel. `wind_to_pyre` converts east/north m/s toward vectors into10m wind km/h and meteorological FROM clockwise north, tested for all four cardinal directions. No geographic resampling/fuel calibration is implemented.
-
-References reviewed2026-10-10: [Rothermel1972](https://research.fs.usda.gov/treesearch/32533), [LANDFIRE fuel products](https://landfire.gov/fuel), [published Pyretechnics2026.8.10](https://pypi.org/project/pyretechnics/2026.8.10/). Fixtures are authored synthetic data (CC0-1.0); dependency/source and real-data rights remain separate.
-
-Output limits:65,536cells,1,001frames, at most1,000,000cell×frame samples, and a seven-day hypothetical horizon. Bounds are checked before propagation/allocation. Decimal sampling appends the exact horizon once; nonfinite intermediate values fail validation. These are compute/representation limits, not fidelity guarantees.
+Both paths bound 65,536 cells, 1,001 frames, 1,000,000 cell-frame samples and a seven-day horizon before allocation. These are compute/representation limits. Fixtures are authored CC0 synthetic data; dependencies and original data rights are separate. Official runtime/package bytes were registry-hash verified on cloud, exact source LICENSE confirmed EPL-2.0 and retained in the isolated runtime. No Pyretechnics source is vendored in this repository. [DATA_FIT.md](DATA_FIT.md) records the bounded Hugging Face card audit; no candidate was adopted because required fit gates were missing.

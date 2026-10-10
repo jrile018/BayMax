@@ -1,7 +1,7 @@
-"""Deterministic training fields with explicit physical-engine unavailability.
+"""Hypothetical wildfire fields from explicit training or pinned physical models.
 
 Coordinates: x east, y north, row index increases north; origin is lower-left.
-All public times are seconds from epoch. No GPU, network or optional imports.
+All public times are seconds from epoch. Optional physical imports occur on request.
 """
 from __future__ import annotations
 
@@ -202,31 +202,8 @@ def _training_arrivals(config,height,width):
     return [[None if math.isinf(t) else math.floor(t*1e6)/1e6 for t in row] for row in arrivals]
 
 
-def simulate(config):
-    """Generate an explicit hypothetical training run or an unavailable engine record."""
-    height,width=validate_config(config)
-    if config.get('engine','pyretechnics')=='pyretechnics':
-        return {'status':'unavailable','scenario_id':config['scenario_id'],
-                'reason':'Pinned Pyretechnics 2026.8.10 build/import and physical validation are blocked by cloud dependency egress; no physical backend integrated.',
-                'requested_engine':'pyretechnics','model_version':'2026.8.10',
-                'physical_engine_implemented':False,'current_incident':False,
-                'source_ledger':copy.deepcopy(config['source_ledger'])}
-    arrivals=_training_arrivals(config,height,width)
-    horizon=float(config['horizon_s']); step=float(config['output_step_s'])
-    times=[i*step for i in range(math.ceil(horizon/step)) if i*step<horizon]+[horizon]
-    cells=[(y,x,t) for y,row in enumerate(arrivals) for x,t in enumerate(row) if t is not None]
-    residence=config['training_assumptions']['residence_time_s']
-    frames=[{'time_s':t,'burned_cells':[[y,x] for y,x,a in cells if a<=t],
-             'active_flame_cells':[[y,x] for y,x,a in cells if a<=t<min(horizon,a+residence)]} for t in times]
-    return {'status':'ok','schema_version':'wildfire-output-v1','scenario_id':config['scenario_id'],
-            'epoch_utc':config['epoch_utc'],'horizon_s':horizon,
-            'units':{'time':'s from epoch','distance':'m','wind':'m/s toward east/north','slope':'rise/run','moisture':'kg/kg dry fuel'},
-            'grid':{'crs':config['grid']['crs'],'origin_m':copy.deepcopy(config['grid']['origin_m']),
-                    'cell_size_m':config['grid']['cell_size_m'],'height':height,'width':width,'row_axis':'north'},
-            'arrivals_s':arrivals,'frames':frames,
-            'burn_intervals':[{'row':y,'col':x,'start_s':a,'end_s':horizon} for y,x,a in cells],
-            'active_flame_intervals':[{'row':y,'col':x,'start_s':a,'end_s':min(horizon,a+residence)} for y,x,a in cells],
-            'provenance':{'model_name':'Simplified deterministic training grid','model_version':'1',
+def _training_provenance(config):
+    return {'model_name':'Simplified deterministic training grid','model_version':'1',
                 'physical_engine_implemented':False,'scenario_kind':'hypothetical','current_incident':False,
                 'seed':config['seed'],'seed_usage':'recorded; deterministic fields, no stochastic process',
                 'source_ledger':copy.deepcopy(config['source_ledger']),
@@ -237,7 +214,40 @@ def simulate(config):
                     '8-neighbour graph has grid-direction and resolution bias; no spotting, crown fire, structures, suppression or atmospheric feedback.',
                     'Constant weather and explicit static fuel/slope/moisture assumptions; no current-incident evidence.',
                     'Null arrival means not reached within this modeled horizon; never safe forever.',
-                    'Burn intervals persist to horizon conservatively; active flame residence is a separate assumed interval.']}}
+                    'Burn intervals persist to horizon conservatively; active flame residence is a separate assumed interval.']}
+
+
+def simulate(config):
+    """Generate hypothetical fields; missing physical dependencies never select a fallback."""
+    height,width=validate_config(config)
+    if config.get('engine','pyretechnics')=='pyretechnics':
+        from .physical import physical_arrivals, BackendUnavailable
+        try:
+            arrivals, provenance = physical_arrivals(config, height, width)
+        except BackendUnavailable as exc:
+            return {'status':'unavailable','scenario_id':config['scenario_id'],
+                    'reason':str(exc),'requested_engine':'pyretechnics',
+                    'model_version':'2026.8.10','physical_engine_implemented':False,
+                    'current_incident':False,'source_ledger':copy.deepcopy(config['source_ledger'])}
+        residence=config['physical_assumptions']['residence_time_s']
+    else:
+        arrivals=_training_arrivals(config,height,width)
+        provenance=_training_provenance(config)
+        residence=config['training_assumptions']['residence_time_s']
+    horizon=float(config['horizon_s']); step=float(config['output_step_s'])
+    times=[i*step for i in range(math.ceil(horizon/step)) if i*step<horizon]+[horizon]
+    cells=[(y,x,t) for y,row in enumerate(arrivals) for x,t in enumerate(row) if t is not None]
+    frames=[{'time_s':t,'burned_cells':[[y,x] for y,x,a in cells if a<=t],
+             'active_flame_cells':[[y,x] for y,x,a in cells if a<=t<min(horizon,a+residence)]} for t in times]
+    return {'status':'ok','schema_version':'wildfire-output-v1','scenario_id':config['scenario_id'],
+            'epoch_utc':config['epoch_utc'],'horizon_s':horizon,
+            'units':{'time':'s from epoch','distance':'m','wind':'m/s toward east/north','slope':'rise/run','moisture':'kg/kg dry fuel'},
+            'grid':{'crs':config['grid']['crs'],'origin_m':copy.deepcopy(config['grid']['origin_m']),
+                    'cell_size_m':config['grid']['cell_size_m'],'height':height,'width':width,'row_axis':'north'},
+            'arrivals_s':arrivals,'frames':frames,
+            'burn_intervals':[{'row':y,'col':x,'start_s':a,'end_s':horizon} for y,x,a in cells],
+            'active_flame_intervals':[{'row':y,'col':x,'start_s':a,'end_s':min(horizon,a+residence)} for y,x,a in cells],
+            'provenance':provenance}
 
 
 def _segment_hits_box(p0,p1,xmin,ymin,xmax,ymax):
@@ -275,7 +285,9 @@ no arrival generates no closure only within coverage, not an observed safety cla
                 if arrival is not None:
                     t=_number(arrival,'arrival',0)
                     if t>horizon:raise ValueError('arrival outside horizon')
-        source_ids=[s['source_id'] for s in hazard['provenance']['source_ledger']]
+        from .availability import source_availability
+        availability=source_availability(hazard['provenance']['source_ledger'],hazard['epoch_utc'],issued)
+        source_ids=availability['source_ids']
         result=[]; ids=set()
         for edge in edges:
             eid=edge['edge_id']
@@ -305,8 +317,9 @@ no arrival generates no closure only within coverage, not an observed safety cla
             result.append({'edge_id':eid,'status':'unknown' if outside else 'forecast',
                 'issued_time_s':issued,'coverage_start_s':issued,'coverage_end_s':horizon,
                 'closed_intervals':intervals,'source_ids':list(source_ids),
+                'source_availability':copy.deepcopy(availability),
                 'spatial_rule':'Any closed cell rectangle intersecting any polyline segment; touches included.',
-                'reason':'Outside or partially outside modeled grid' if outside else 'Modeled training forecast; no observed road safety certification'})
+                'reason':'Outside or partially outside modeled grid' if outside else 'Modeled hypothetical '+hazard['provenance'].get('model_name','wildfire')+' forecast; no observed road safety certification'})
         return result
     except (KeyError,TypeError,IndexError) as exc:
         raise ValueError(f'missing or malformed hazard/edge input: {exc}') from exc
