@@ -417,11 +417,21 @@ def run_probe(command,cwd,env):
     except BaseException:
         try:
             os.killpg(child.pid,signal.SIGTERM)
+        except ProcessLookupError:
+            pass
+        try:
             child.communicate(timeout=5)
-        except (ProcessLookupError,subprocess.TimeoutExpired):
+        except subprocess.TimeoutExpired:
             try: os.killpg(child.pid,signal.SIGKILL)
             except ProcessLookupError: pass
-            child.communicate()
+            try:
+                child.communicate(timeout=2)
+            except subprocess.TimeoutExpired:
+                for pipe in (child.stdout,child.stderr):
+                    if pipe is not None:
+                        pipe.close()
+                try: child.wait(timeout=2)
+                except subprocess.TimeoutExpired: pass
         raise
 
 def require_execution_envelope():
@@ -439,10 +449,16 @@ def cleanup_wineserver(run, wine, attempted):
         "LD_LIBRARY_PATH":":".join((wine["x86_64-unix"],
             str(WINROOT/"usr/lib/x86_64-linux-gnu"),str(WINROOT/"lib/x86_64-linux-gnu")))}
     try:
-        subprocess.run([wine["wineserver"],"-k"],env=env,cwd=run,
+        result=subprocess.run([wine["wineserver"],"-k"],env=env,cwd=run,
             capture_output=True,timeout=10,check=False)
+        if result.returncode:
+            print(f"dedicated wineserver cleanup exited {result.returncode}",file=sys.stderr)
     except (OSError,subprocess.TimeoutExpired) as error:
-        (run/"wineserver-python-cleanup-error.log").write_text(str(error)+"\n")
+        print(f"dedicated wineserver cleanup failed: {error}",file=sys.stderr)
+        try:
+            (run/"wineserver-python-cleanup-error.log").write_text(str(error)+"\n")
+        except OSError:
+            pass
 
 def run_phase(mode,run,lease_path,reviewed_runner_sha,report):
     phase="query" if mode=="query-only" else "dispatch"
@@ -526,6 +542,7 @@ def execute(run_id,lease_path,reviewed_runner_sha):
     prior_term=signal.signal(signal.SIGTERM,deadline)
     prior_int=signal.signal(signal.SIGINT,deadline)
     signal.alarm(280)
+    phase_error=None
     try:
         run_phase("query-only",run,lease_path,reviewed_runner_sha,report)
         report["wine_executed"]=True
@@ -533,6 +550,7 @@ def execute(run_id,lease_path,reviewed_runner_sha):
         report["status"]="query_and_dispatch_completed"
         return 0
     except Exception as error:
+        phase_error=error
         report.update(status="failed",error=f"{type(error).__name__}: {error}")
         raise
     finally:
@@ -542,8 +560,16 @@ def execute(run_id,lease_path,reviewed_runner_sha):
         signal.signal(signal.SIGINT,prior_int)
         report["finished_at_utc"]=datetime.now(timezone.utc).isoformat()
         report["wine_executed"]=any(p.get("attempted") for p in report["phases"].values())
-        write_json(run/"execute-runner.json",report)
-        cleanup_wineserver(run,wine,report["wine_executed"])
+        receipt_error=None
+        try:
+            write_json(run/"execute-runner.json",report)
+        except OSError as error:
+            receipt_error=error
+            print(f"FSR receipt write failed: {error}",file=sys.stderr)
+        finally:
+            cleanup_wineserver(run,wine,report["wine_executed"])
+        if receipt_error is not None and phase_error is None:
+            raise receipt_error
 
 def main(argv=None):
     parser=argparse.ArgumentParser(description=__doc__)

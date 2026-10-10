@@ -427,5 +427,44 @@ class FsrRunnerTests(unittest.TestCase):
             command=call.call_args.args[0]
             self.assertEqual(command[command.index("--adapter-device-id")+1],"744b")
 
+    def test_forced_process_group_cleanup_has_no_unbounded_pipe_read(self):
+        error=subprocess.TimeoutExpired(cmd=["wine"],timeout=120)
+        pipe=mock.Mock()
+        child=mock.Mock(pid=12345,stdout=pipe,stderr=pipe)
+        child.communicate.side_effect=[error,
+            subprocess.TimeoutExpired(cmd=["wine"],timeout=5),
+            subprocess.TimeoutExpired(cmd=["wine"],timeout=2)]
+        child.wait.side_effect=subprocess.TimeoutExpired(cmd=["wine"],timeout=2)
+        with mock.patch.object(runner.subprocess,"Popen",return_value=child), \
+            mock.patch.object(runner.os,"killpg") as kill:
+            with self.assertRaises(subprocess.TimeoutExpired):
+                runner.run_probe(["wine"],Path("/tmp"),{})
+        self.assertEqual([call.kwargs["timeout"] for call in child.communicate.call_args_list],
+            [120,5,2])
+        self.assertEqual([call.args[1] for call in kill.call_args_list],
+            [runner.signal.SIGTERM,runner.signal.SIGKILL])
+        self.assertTrue(pipe.close.called)
+
+    def test_receipt_write_failure_still_cleans_owned_wineserver(self):
+        with tempfile.TemporaryDirectory(prefix="fsr-lease-test-") as tempdir:
+            root=Path(tempdir); run=root/"run"; run.mkdir()
+            grant=root/"grant.json"; grant.write_text(json.dumps(lease()))
+            wine={"wineserver":"/private/wineserver"}
+            def attempted(_mode,_run,_lease,_sha,report):
+                report["phases"]["query"]={"attempted":True}
+                raise RuntimeError("mock probe failure")
+            with mock.patch.object(runner,"require_execution_envelope"), \
+                mock.patch.object(runner,"run_dir_for",return_value=run), \
+                mock.patch.object(runner,"inside",return_value=grant), \
+                mock.patch.object(runner,"validate_lease",return_value=lease()), \
+                mock.patch.object(runner,"verify_host_device",return_value={}), \
+                mock.patch.object(runner,"verify_prelaunch",return_value=wine), \
+                mock.patch.object(runner,"run_phase",side_effect=attempted), \
+                mock.patch.object(runner,"write_json",side_effect=OSError("receipt unwritable")), \
+                mock.patch.object(runner,"cleanup_wineserver") as cleanup:
+                with self.assertRaisesRegex(RuntimeError,"mock probe failure"):
+                    runner.execute("fresh001",grant,"a"*64)
+                cleanup.assert_called_once_with(run,wine,True)
+
 if __name__=="__main__":
     unittest.main()

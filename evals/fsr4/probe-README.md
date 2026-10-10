@@ -12,14 +12,16 @@ The helper regressions first failed for the absent helper header, then passed af
 
 ## Authorized GPU run interface
 
-Only run after the coordinator grants a GPU lease. Run query-only first in the allocated AMD adapter environment, with the isolated Wine/vkd3d-proton runtime configured by the parent:
+Only the reviewed `platform/evidence/fsr-lease-runner.sh` may launch this probe, after the coordinator grants a fresh exclusive FSR lease. Prepare a new private run with the exact reviewed runner SHA, then launch the whole shell wrapper under the lease's specified temporary UID/GID and CPU affinity. The shell and Python runner enforce the wall deadline, dedicated Wine prefix cleanup, pinned payload hashes, and allocated render-node identity. Do not invoke Wine or the probe directly for a leased diagnostic.
+
+The supervised runner supplies these probe arguments in both phases:
 
 ```text
-wine64 probe.exe --query-only --dll-dir Z:\\absolute\\cloud\\signed-dll-directory
-wine64 probe.exe --dispatch --frames 3 --dll-dir Z:\\absolute\\cloud\\signed-dll-directory
+probe.exe --query-only --adapter-device-id 744b --dll-dir Z:\\absolute\\cloud\\signed-dll-directory
+probe.exe --dispatch --frames 3 --adapter-device-id 744b --dll-dir Z:\\absolute\\cloud\\signed-dll-directory
 ```
 
-Use `--adapter-luid HEX64` if more than one AMD adapter is visible. The probe fails unless exactly one AMD hardware adapter matches; it never creates a WARP/software context. Modes are required and mutually exclusive. DLL directory must be an absolute drive path. Frames are bounded to 1..8. No provider ID is hard-coded.
+The `744b` PCI device ID must come from the external lease and match the host's allocated render node before launch. The probe filters the adapter by AMD vendor and the supplied PCI device ID before creating a D3D12 device; it fails if more than one matching hardware adapter is visible. A coordinator-pinned `--adapter-luid HEX64` may narrow that selection further. Modes are required and mutually exclusive. DLL directory must be an absolute drive path. Frames are bounded to 1..8. No provider ID is hard-coded.
 
 JSONL stdout reports stages before operations, every HRESULT/FFX return code, adapter name/vendor/device/LUID, requested feature level 12_0, feature support, all returned provider IDs/names, SDK memory estimate, selected ID, and the context provider query. Loaded loader/upscaler paths must match the normalized absolute paths under the requested DLL directory; missing or unexpected modules fail before dispatch. Parent still verifies the exact observed file hashes/signatures. Names are copied before further SDK queries because the API documents reusable provider-global name storage. To produce valid JSON for arbitrary SDK strings, non-ASCII bytes use `\\u00XX` escapes; fields named `*_bytes` preserve bytes rather than assuming UTF-8. Wide Windows strings are converted to UTF-8 then escaped the same way.
 
