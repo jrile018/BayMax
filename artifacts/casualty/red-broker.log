@@ -1,0 +1,238 @@
+FFFFFFFFFFFFF                                                            [100%]
+=================================== FAILURES ===================================
+____________ test_pending_proposal_never_exports_a_medical_request _____________
+
+    def test_pending_proposal_never_exports_a_medical_request():
+>       b,p=submitted()
+            ^^^^^^^^^^^
+
+services/casualty/tests/test_broker.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+result = None, candidates = None
+
+    def submitted(result=None,candidates=None):
+>       from services.casualty.broker import CaseBroker
+E       ModuleNotFoundError: No module named 'services.casualty.broker'
+
+services/casualty/tests/test_broker.py:14: ModuleNotFoundError
+_____ test_priority_is_the_authored_exercise_need_and_review_is_idempotent _____
+
+    def test_priority_is_the_authored_exercise_need_and_review_is_idempotent():
+>       b,p=submitted()
+            ^^^^^^^^^^^
+
+services/casualty/tests/test_broker.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+result = None, candidates = None
+
+    def submitted(result=None,candidates=None):
+>       from services.casualty.broker import CaseBroker
+E       ModuleNotFoundError: No module named 'services.casualty.broker'
+
+services/casualty/tests/test_broker.py:14: ModuleNotFoundError
+________ test_rejection_or_missing_exercise_confirmation_emits_nothing _________
+
+    def test_rejection_or_missing_exercise_confirmation_emits_nothing():
+        for decision in ("accepted","rejected"):
+>           b,p=submitted()
+                ^^^^^^^^^^^
+
+services/casualty/tests/test_broker.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+result = None, candidates = None
+
+    def submitted(result=None,candidates=None):
+>       from services.casualty.broker import CaseBroker
+E       ModuleNotFoundError: No module named 'services.casualty.broker'
+
+services/casualty/tests/test_broker.py:14: ModuleNotFoundError
+_________________ test_conflicting_terminal_review_is_rejected _________________
+
+    def test_conflicting_terminal_review_is_rejected():
+>       b,p=submitted()
+            ^^^^^^^^^^^
+
+services/casualty/tests/test_broker.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+result = None, candidates = None
+
+    def submitted(result=None,candidates=None):
+>       from services.casualty.broker import CaseBroker
+E       ModuleNotFoundError: No module named 'services.casualty.broker'
+
+services/casualty/tests/test_broker.py:14: ModuleNotFoundError
+______________________ test_forged_receipt_cannot_export _______________________
+
+    def test_forged_receipt_cannot_export():
+>       b,p=submitted()
+            ^^^^^^^^^^^
+
+services/casualty/tests/test_broker.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+result = None, candidates = None
+
+    def submitted(result=None,candidates=None):
+>       from services.casualty.broker import CaseBroker
+E       ModuleNotFoundError: No module named 'services.casualty.broker'
+
+services/casualty/tests/test_broker.py:14: ModuleNotFoundError
+_______ test_case_image_and_exercise_cannot_be_swapped_under_one_case_id _______
+
+    def test_case_image_and_exercise_cannot_be_swapped_under_one_case_id():
+>       b,p=submitted()
+            ^^^^^^^^^^^
+
+services/casualty/tests/test_broker.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+result = None, candidates = None
+
+    def submitted(result=None,candidates=None):
+>       from services.casualty.broker import CaseBroker
+E       ModuleNotFoundError: No module named 'services.casualty.broker'
+
+services/casualty/tests/test_broker.py:14: ModuleNotFoundError
+_ test_abstention_has_no_visual_claim_but_manual_exercise_request_survives[no_face] _
+
+status = 'no_face'
+
+    @pytest.mark.parametrize("status",["no_face","occluded","failed"])
+    def test_abstention_has_no_visual_claim_but_manual_exercise_request_survives(status):
+>       b,p=submitted(result=detection(status), candidates=())
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+services/casualty/tests/test_broker.py:74: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+result = DetectionResult(case_id='npc-case-001', image_sha256='f16d05ec6b29248d2c61adb1e9263f78e4f7bace1b955014a2d17872cfe4064d..._revision='fixture-v1', provenance='mock_fixture', observed_time_s=5.0, detail='Synthetic control; no image inference')
+candidates = ()
+
+    def submitted(result=None,candidates=None):
+>       from services.casualty.broker import CaseBroker
+E       ModuleNotFoundError: No module named 'services.casualty.broker'
+
+services/casualty/tests/test_broker.py:14: ModuleNotFoundError
+_ test_abstention_has_no_visual_claim_but_manual_exercise_request_survives[occluded] _
+
+status = 'occluded'
+
+    @pytest.mark.parametrize("status",["no_face","occluded","failed"])
+    def test_abstention_has_no_visual_claim_but_manual_exercise_request_survives(status):
+>       b,p=submitted(result=detection(status), candidates=())
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+services/casualty/tests/test_broker.py:74: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+result = DetectionResult(case_id='npc-case-001', image_sha256='f16d05ec6b29248d2c61adb1e9263f78e4f7bace1b955014a2d17872cfe4064d..._revision='fixture-v1', provenance='mock_fixture', observed_time_s=5.0, detail='Synthetic control; no image inference')
+candidates = ()
+
+    def submitted(result=None,candidates=None):
+>       from services.casualty.broker import CaseBroker
+E       ModuleNotFoundError: No module named 'services.casualty.broker'
+
+services/casualty/tests/test_broker.py:14: ModuleNotFoundError
+_ test_abstention_has_no_visual_claim_but_manual_exercise_request_survives[failed] _
+
+status = 'failed'
+
+    @pytest.mark.parametrize("status",["no_face","occluded","failed"])
+    def test_abstention_has_no_visual_claim_but_manual_exercise_request_survives(status):
+>       b,p=submitted(result=detection(status), candidates=())
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+services/casualty/tests/test_broker.py:74: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+result = DetectionResult(case_id='npc-case-001', image_sha256='f16d05ec6b29248d2c61adb1e9263f78e4f7bace1b955014a2d17872cfe4064d..._revision='fixture-v1', provenance='mock_fixture', observed_time_s=5.0, detail='Synthetic control; no image inference')
+candidates = ()
+
+    def submitted(result=None,candidates=None):
+>       from services.casualty.broker import CaseBroker
+E       ModuleNotFoundError: No module named 'services.casualty.broker'
+
+services/casualty/tests/test_broker.py:14: ModuleNotFoundError
+____________ test_unsupported_evidence_cannot_be_selected_by_review ____________
+
+    def test_unsupported_evidence_cannot_be_selected_by_review():
+>       b,p=submitted()
+            ^^^^^^^^^^^
+
+services/casualty/tests/test_broker.py:87: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+result = None, candidates = None
+
+    def submitted(result=None,candidates=None):
+>       from services.casualty.broker import CaseBroker
+E       ModuleNotFoundError: No module named 'services.casualty.broker'
+
+services/casualty/tests/test_broker.py:14: ModuleNotFoundError
+__________ test_another_detection_cannot_create_a_second_request_key ___________
+
+    def test_another_detection_cannot_create_a_second_request_key():
+>       b,p=submitted()
+            ^^^^^^^^^^^
+
+services/casualty/tests/test_broker.py:95: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+result = None, candidates = None
+
+    def submitted(result=None,candidates=None):
+>       from services.casualty.broker import CaseBroker
+E       ModuleNotFoundError: No module named 'services.casualty.broker'
+
+services/casualty/tests/test_broker.py:14: ModuleNotFoundError
+____________ test_review_requires_named_human_and_valid_chronology _____________
+
+    def test_review_requires_named_human_and_valid_chronology():
+>       b,p=submitted()
+            ^^^^^^^^^^^
+
+services/casualty/tests/test_broker.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+result = None, candidates = None
+
+    def submitted(result=None,candidates=None):
+>       from services.casualty.broker import CaseBroker
+E       ModuleNotFoundError: No module named 'services.casualty.broker'
+
+services/casualty/tests/test_broker.py:14: ModuleNotFoundError
+__ test_candidate_face_reference_must_exist_and_unvalidated_model_is_explicit __
+
+    def test_candidate_face_reference_must_exist_and_unvalidated_model_is_explicit():
+>       b,p=submitted()
+            ^^^^^^^^^^^
+
+services/casualty/tests/test_broker.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+result = None, candidates = None
+
+    def submitted(result=None,candidates=None):
+>       from services.casualty.broker import CaseBroker
+E       ModuleNotFoundError: No module named 'services.casualty.broker'
+
+services/casualty/tests/test_broker.py:14: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED services/casualty/tests/test_broker.py::test_pending_proposal_never_exports_a_medical_request
+FAILED services/casualty/tests/test_broker.py::test_priority_is_the_authored_exercise_need_and_review_is_idempotent
+FAILED services/casualty/tests/test_broker.py::test_rejection_or_missing_exercise_confirmation_emits_nothing
+FAILED services/casualty/tests/test_broker.py::test_conflicting_terminal_review_is_rejected
+FAILED services/casualty/tests/test_broker.py::test_forged_receipt_cannot_export
+FAILED services/casualty/tests/test_broker.py::test_case_image_and_exercise_cannot_be_swapped_under_one_case_id
+FAILED services/casualty/tests/test_broker.py::test_abstention_has_no_visual_claim_but_manual_exercise_request_survives[no_face]
+FAILED services/casualty/tests/test_broker.py::test_abstention_has_no_visual_claim_but_manual_exercise_request_survives[occluded]
+FAILED services/casualty/tests/test_broker.py::test_abstention_has_no_visual_claim_but_manual_exercise_request_survives[failed]
+FAILED services/casualty/tests/test_broker.py::test_unsupported_evidence_cannot_be_selected_by_review
+FAILED services/casualty/tests/test_broker.py::test_another_detection_cannot_create_a_second_request_key
+FAILED services/casualty/tests/test_broker.py::test_review_requires_named_human_and_valid_chronology
+FAILED services/casualty/tests/test_broker.py::test_candidate_face_reference_must_exist_and_unvalidated_model_is_explicit
+13 failed in 0.07s

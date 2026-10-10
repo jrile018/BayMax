@@ -1,0 +1,41 @@
+{
+  "schema_version": "casualty-cpu-detector-v1",
+  "source_commit": "9d9b1dad9e35b9707c40368b4685bd3cd69d7809",
+  "python_version": "3.14.4",
+  "device": "cpu",
+  "cpu_thread_cap": 2,
+  "test_command": "OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 /opt/venv/bin/python -m pytest -q",
+  "source_test_result": {
+    "passed": 98,
+    "exit_code": 0
+  },
+  "control_kind": "generated_raster_fabricated_policy_mocked_opencv",
+  "actual_inference_performed": false,
+  "review": {
+    "kind": "independent_source_review",
+    "important_fixed": 2,
+    "minor_fixed": 1,
+    "reproduced_failing_cases": 8,
+    "deferred_findings": 0,
+    "initial_diff_sha256": "5bde587b4edf09df9b168cb3900574474f0e8bae125cd1884b537d06348dabef",
+    "fixed_diff_sha256": "54407e73c6f82e79e6ffbe51a4f5407b96aa9849ab2cca5f6aa0bbe2f2dabd07"
+  },
+  "gates": {
+    "cpu_adapter": "implemented_control_tested_reviewed",
+    "permitted_photo_bytes": "pending_trusted_ingress",
+    "model_revision_sha256_binding": "pending_trusted_ingress",
+    "opencv_runtime": "absent",
+    "actual_model_compatibility_latency_accuracy": "unverified",
+    "shared_integration": "pending_root_approval",
+    "clinical_performance": "unavailable"
+  },
+  "artifact_sha256": {
+    "artifacts/casualty/red-detector.log": "19df0c74b34cfdecff429d8ac9acc7e5c1856ed71e8b3deecd9dd291c3ac70d2",
+    "artifacts/casualty/green-detector.log": "ad1ad56162d75a5e0eb7ddc19a4406f141f38d8254606ec4761c013c1e46b4bb",
+    "artifacts/casualty/red-detector-review.log": "4c77cfc6ef768fdd0776af0247388e7fbb7da8408a9e784cabffc0bc6abc1fc3",
+    "artifacts/casualty/green-detector-review.log": "c6aa4cc86ea4841620326e34565c30a46efff15de7575c03ef2a70a24c4a1f35",
+    "artifacts/casualty/detector-source-head.log": "61227c034ad97dd338306909d7fcc14a37924c75424ae2fb557c786f87c60fff",
+    "artifacts/casualty/detector-runtime-status.json": "56f7a2872a85d3f2ba399f8519d9439feac39fce2c4def8b155e4070b70b65d4",
+    "artifacts/casualty/DETECTOR_REVIEW.md": "fd42aa60f69dbf672fcbc68fd2ed767e4ac74eef7e96eeae8c7aecf1a93ee39f"
+  }
+}

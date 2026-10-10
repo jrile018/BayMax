@@ -1,0 +1,287 @@
+{
+  "schema_version": "casualty-c1-v1",
+  "data_kind": "synthetic_geometric_control",
+  "review_actor_kind": "scripted_demo_calls",
+  "case": {
+    "case_id": "npc-case-001",
+    "rights": {
+      "source_kind": "synthetic",
+      "source_reference": "project:geometric-control-v1",
+      "license_id": "project-authored-control",
+      "permitted_uses": [
+        "display",
+        "face_detection",
+        "evaluation"
+      ],
+      "verification_status": "verified",
+      "license_evidence": "fixtures/casualty/README.md",
+      "consent_evidence": null,
+      "verified_by": "project-fixture-author",
+      "verified_at": "2026-10-10",
+      "acquired_at": "2026-10-10",
+      "adult_only": true
+    },
+    "image": {
+      "image_reference": "fixtures/casualty/geometric.svg",
+      "sha256": "7adc1e0591823568a4eefd1cf29b60d14086ee905cf4a5f36eb795713e9bfcdd",
+      "width": 100,
+      "height": 100,
+      "annotation_reference": "fixtures/casualty/case-001.json#face_box",
+      "annotation_author": "project-fixture-author",
+      "annotation_date": "2026-10-10"
+    },
+    "exercise_need": {
+      "request_id": "exercise-med-001",
+      "origin_node": "school",
+      "destination_node": "clinic",
+      "persons": 1,
+      "urgency": "urgent",
+      "source_reference": "exercise:fictional-case-001"
+    }
+  },
+  "case_hash": "a6fdbb0a16fd98f44f29696a0b791e2f240c7772359c8e14f0fa1babeb7e65db",
+  "real_detector_status": "pending",
+  "actual_photo_status": "pending_rights_and_bytes",
+  "clinical_validation_status": "unavailable",
+  "integration_status": "pending_root_adapter",
+  "localized_review": {
+    "proposal": {
+      "proposal_id": "casualty-proposal-95babe0d75f670df0a2818c515486ead1ae2e3ab716ec53e917037e8c6209930",
+      "content_hash": "95babe0d75f670df0a2818c515486ead1ae2e3ab716ec53e917037e8c6209930",
+      "case": {
+        "case_id": "npc-case-001",
+        "rights": {
+          "source_kind": "synthetic",
+          "source_reference": "project:geometric-control-v1",
+          "license_id": "project-authored-control",
+          "permitted_uses": [
+            "display",
+            "face_detection",
+            "evaluation"
+          ],
+          "verification_status": "verified",
+          "license_evidence": "fixtures/casualty/README.md",
+          "consent_evidence": null,
+          "verified_by": "project-fixture-author",
+          "verified_at": "2026-10-10",
+          "acquired_at": "2026-10-10",
+          "adult_only": true
+        },
+        "image": {
+          "image_reference": "fixtures/casualty/geometric.svg",
+          "sha256": "7adc1e0591823568a4eefd1cf29b60d14086ee905cf4a5f36eb795713e9bfcdd",
+          "width": 100,
+          "height": 100,
+          "annotation_reference": "fixtures/casualty/case-001.json#face_box",
+          "annotation_author": "project-fixture-author",
+          "annotation_date": "2026-10-10"
+        },
+        "exercise_need": {
+          "request_id": "exercise-med-001",
+          "origin_node": "school",
+          "destination_node": "clinic",
+          "persons": 1,
+          "urgency": "urgent",
+          "source_reference": "exercise:fictional-case-001"
+        }
+      },
+      "detection": {
+        "case_id": "npc-case-001",
+        "image_sha256": "7adc1e0591823568a4eefd1cf29b60d14086ee905cf4a5f36eb795713e9bfcdd",
+        "status": "localized",
+        "boxes": [
+          {
+            "x1": 0.1,
+            "y1": 0.2,
+            "x2": 0.6,
+            "y2": 0.8,
+            "score": 1.0
+          }
+        ],
+        "provider": "synthetic-box-control",
+        "model_revision": "fixture-v1",
+        "provenance": "mock_fixture",
+        "observed_time_s": 5,
+        "detail": "Hand-authored geometric control; no inference"
+      },
+      "candidates": [
+        {
+          "evidence_id": "cue-001",
+          "label": "moulage_mark",
+          "face_box_index": 0,
+          "source_reference": "fixture:drawn-red-stroke",
+          "provenance": "fixture_annotation"
+        }
+      ],
+      "created_time_s": 7,
+      "abstention_reason": null
+    },
+    "receipt": {
+      "proposal_id": "casualty-proposal-95babe0d75f670df0a2818c515486ead1ae2e3ab716ec53e917037e8c6209930",
+      "proposal_hash": "95babe0d75f670df0a2818c515486ead1ae2e3ab716ec53e917037e8c6209930",
+      "case_hash": "a6fdbb0a16fd98f44f29696a0b791e2f240c7772359c8e14f0fa1babeb7e65db",
+      "image_sha256": "7adc1e0591823568a4eefd1cf29b60d14086ee905cf4a5f36eb795713e9bfcdd",
+      "reviewer_id": "scripted-trainee-001",
+      "decision": "accepted",
+      "confirmed_evidence": [
+        "cue-001"
+      ],
+      "confirm_exercise_need": true,
+      "reviewed_time_s": 8
+    },
+    "request": {
+      "command_kind": "casualty_exercise_need_proposal",
+      "idempotency_key": "casualty-exercise-need-b63540305157d819e8dbae82baa9009ba3adc7e8c44375c345b536093ca25ef0",
+      "request_id": "exercise-med-001",
+      "case_id": "npc-case-001",
+      "case_hash": "a6fdbb0a16fd98f44f29696a0b791e2f240c7772359c8e14f0fa1babeb7e65db",
+      "image_sha256": "7adc1e0591823568a4eefd1cf29b60d14086ee905cf4a5f36eb795713e9bfcdd",
+      "origin_node": "school",
+      "destination_node": "clinic",
+      "persons": 1,
+      "urgency": "urgent",
+      "need_source_reference": "exercise:fictional-case-001",
+      "need_provenance": "exercise_metadata_with_human_confirmation",
+      "review_receipt": {
+        "proposal_id": "casualty-proposal-95babe0d75f670df0a2818c515486ead1ae2e3ab716ec53e917037e8c6209930",
+        "proposal_hash": "95babe0d75f670df0a2818c515486ead1ae2e3ab716ec53e917037e8c6209930",
+        "case_hash": "a6fdbb0a16fd98f44f29696a0b791e2f240c7772359c8e14f0fa1babeb7e65db",
+        "image_sha256": "7adc1e0591823568a4eefd1cf29b60d14086ee905cf4a5f36eb795713e9bfcdd",
+        "reviewer_id": "scripted-trainee-001",
+        "decision": "accepted",
+        "confirmed_evidence": [
+          "cue-001"
+        ],
+        "confirm_exercise_need": true,
+        "reviewed_time_s": 8
+      },
+      "confirmed_evidence": [
+        {
+          "evidence_id": "cue-001",
+          "label": "moulage_mark",
+          "face_box_index": 0,
+          "source_reference": "fixture:drawn-red-stroke",
+          "provenance": "fixture_annotation"
+        }
+      ],
+      "detection_provenance": "mock_fixture",
+      "evidence_status": "human_confirmed"
+    }
+  },
+  "no_face_review": {
+    "proposal": {
+      "proposal_id": "casualty-proposal-8e945f089a5a608af1d37693b8e388d1e486bcc452cbf037686cf56a43a0e913",
+      "content_hash": "8e945f089a5a608af1d37693b8e388d1e486bcc452cbf037686cf56a43a0e913",
+      "case": {
+        "case_id": "npc-case-001",
+        "rights": {
+          "source_kind": "synthetic",
+          "source_reference": "project:geometric-control-v1",
+          "license_id": "project-authored-control",
+          "permitted_uses": [
+            "display",
+            "face_detection",
+            "evaluation"
+          ],
+          "verification_status": "verified",
+          "license_evidence": "fixtures/casualty/README.md",
+          "consent_evidence": null,
+          "verified_by": "project-fixture-author",
+          "verified_at": "2026-10-10",
+          "acquired_at": "2026-10-10",
+          "adult_only": true
+        },
+        "image": {
+          "image_reference": "fixtures/casualty/geometric.svg",
+          "sha256": "7adc1e0591823568a4eefd1cf29b60d14086ee905cf4a5f36eb795713e9bfcdd",
+          "width": 100,
+          "height": 100,
+          "annotation_reference": "fixtures/casualty/case-001.json#face_box",
+          "annotation_author": "project-fixture-author",
+          "annotation_date": "2026-10-10"
+        },
+        "exercise_need": {
+          "request_id": "exercise-med-001",
+          "origin_node": "school",
+          "destination_node": "clinic",
+          "persons": 1,
+          "urgency": "urgent",
+          "source_reference": "exercise:fictional-case-001"
+        }
+      },
+      "detection": {
+        "case_id": "npc-case-001",
+        "image_sha256": "7adc1e0591823568a4eefd1cf29b60d14086ee905cf4a5f36eb795713e9bfcdd",
+        "status": "no_face",
+        "boxes": [],
+        "provider": "synthetic-box-control",
+        "model_revision": "fixture-v1",
+        "provenance": "mock_fixture",
+        "observed_time_s": 9,
+        "detail": "Hand-authored geometric control; no inference"
+      },
+      "candidates": [],
+      "created_time_s": 10,
+      "abstention_reason": "no_face"
+    },
+    "receipt": {
+      "proposal_id": "casualty-proposal-8e945f089a5a608af1d37693b8e388d1e486bcc452cbf037686cf56a43a0e913",
+      "proposal_hash": "8e945f089a5a608af1d37693b8e388d1e486bcc452cbf037686cf56a43a0e913",
+      "case_hash": "a6fdbb0a16fd98f44f29696a0b791e2f240c7772359c8e14f0fa1babeb7e65db",
+      "image_sha256": "7adc1e0591823568a4eefd1cf29b60d14086ee905cf4a5f36eb795713e9bfcdd",
+      "reviewer_id": "scripted-trainee-001",
+      "decision": "accepted",
+      "confirmed_evidence": [],
+      "confirm_exercise_need": true,
+      "reviewed_time_s": 11
+    },
+    "request": {
+      "command_kind": "casualty_exercise_need_proposal",
+      "idempotency_key": "casualty-exercise-need-b63540305157d819e8dbae82baa9009ba3adc7e8c44375c345b536093ca25ef0",
+      "request_id": "exercise-med-001",
+      "case_id": "npc-case-001",
+      "case_hash": "a6fdbb0a16fd98f44f29696a0b791e2f240c7772359c8e14f0fa1babeb7e65db",
+      "image_sha256": "7adc1e0591823568a4eefd1cf29b60d14086ee905cf4a5f36eb795713e9bfcdd",
+      "origin_node": "school",
+      "destination_node": "clinic",
+      "persons": 1,
+      "urgency": "urgent",
+      "need_source_reference": "exercise:fictional-case-001",
+      "need_provenance": "exercise_metadata_with_human_confirmation",
+      "review_receipt": {
+        "proposal_id": "casualty-proposal-8e945f089a5a608af1d37693b8e388d1e486bcc452cbf037686cf56a43a0e913",
+        "proposal_hash": "8e945f089a5a608af1d37693b8e388d1e486bcc452cbf037686cf56a43a0e913",
+        "case_hash": "a6fdbb0a16fd98f44f29696a0b791e2f240c7772359c8e14f0fa1babeb7e65db",
+        "image_sha256": "7adc1e0591823568a4eefd1cf29b60d14086ee905cf4a5f36eb795713e9bfcdd",
+        "reviewer_id": "scripted-trainee-001",
+        "decision": "accepted",
+        "confirmed_evidence": [],
+        "confirm_exercise_need": true,
+        "reviewed_time_s": 11
+      },
+      "confirmed_evidence": [],
+      "detection_provenance": "mock_fixture",
+      "evidence_status": "abstained"
+    }
+  },
+  "unique_need_keys": 1,
+  "control_evaluation": {
+    "counts": {
+      "true_positive": 1,
+      "false_positive": 1,
+      "false_negative": 1,
+      "matched_iou_sum": 1.0
+    },
+    "precision": 0.5,
+    "recall": 0.5,
+    "mean_matched_iou": 1.0,
+    "iou_threshold": 0.5,
+    "performance_claim": "harness_geometry_only"
+  },
+  "learning_debrief": {
+    "urgency_source": "exercise_metadata_with_human_confirmation",
+    "detector_miss_effect": "visual_abstention_does_not_suppress_explicit_exercise_need",
+    "service_outcome": "pending_shared_routing_and_ledger",
+    "learning_measurement": "not_yet_measured"
+  }
+}

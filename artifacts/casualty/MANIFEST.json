@@ -1,0 +1,44 @@
+{
+  "schema_version": "casualty-c1-v1",
+  "source_commit": "a905193f3736303b52c0356f4a16216248d3cbb6",
+  "data_kind": "synthetic_geometric_control",
+  "python_version": "3.14.4",
+  "device": "cpu",
+  "cpu_thread_cap": 2,
+  "pytest_version": "9.1.1",
+  "test_command": "OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 /opt/venv/bin/python -m pytest -q",
+  "source_test_result": {
+    "passed": 47,
+    "exit_code": 0
+  },
+  "review": {
+    "kind": "independent_source_review",
+    "reviewed_source": "4befc43a655aeeaaaf19dfbad9d4dfc87fd4e024",
+    "findings": 3,
+    "reproduced_failing_cases": 7,
+    "fixed_in_source": "a905193f3736303b52c0356f4a16216248d3cbb6"
+  },
+  "gates": {
+    "typed_case_review": "cloud_tested_reviewed",
+    "actual_image_permissions": "pending",
+    "actual_photo_bytes": "pending",
+    "actual_detector": "pending_model_and_opencv",
+    "visible_injury_model": "not_implemented",
+    "clinical_labels": "unavailable",
+    "intake_ledger_route_integration": "pending_root_adapter",
+    "human_learning_measurement": "pending"
+  },
+  "artifact_sha256": {
+    "artifacts/casualty/red-contracts.log": "725236ed66a812ec96a58562f0f3efc88c56043e324d8b4e8ffb2e697d59f8b0",
+    "artifacts/casualty/green-contracts.log": "1112ff58c06500a279433c9cafd4e11cb1cadbee38c55d8e635b8eed5319bbaf",
+    "artifacts/casualty/red-broker.log": "7fbc0d729d268fd205c084ecb21ac5f6c8fe5506cffad5c4c753cb63576f5a60",
+    "artifacts/casualty/green-broker.log": "b32958fa1aa71d75acfe6fb2a23981093b1bbe33e8195966bde22ade9b81fd57",
+    "artifacts/casualty/red-localization.log": "05a737683ef0347857e68e380880118ecf0c737770f2d77ea4139e0ef3d49d82",
+    "artifacts/casualty/red-demo.log": "ab3052b18e4eaf1f4937cdaf687c1bff755cd3d7b6fd91a6a35d57ede81d92ee",
+    "artifacts/casualty/red-review-fixes.log": "694495b98aa1ec2e79c05a4eba6b76945fe0f3602bb206753777f50e352eba10",
+    "artifacts/casualty/green-review-fixes.log": "5026791f32670a7c801827dd666303d741fc525b857690cf8d8f6b57acb7bdf4",
+    "artifacts/casualty/source-head-check.log": "7fc00f4d7c0aa1f248cde63ada61d8d3499439828d7c94f451023a3557445dfb",
+    "artifacts/casualty/c1-trace.json": "838631c6d0d3a34835f0e8a966e688fc8e961ff80a858b5673898f057d849188",
+    "artifacts/casualty/REVIEW.md": "2c39b197c558182d8b43d2143b7b78dc916110694510ebd83d7c41ea12d06e5c"
+  }
+}
