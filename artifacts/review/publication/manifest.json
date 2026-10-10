@@ -1,0 +1,159 @@
+{
+  "created_at_utc": "2026-10-10T07:17:12.634173+00:00",
+  "scope": "Independent read-only product audit; detached short CPU checks on Radeon Cloud; no product fixes/merges, model or graphics execution",
+  "base_sha": "fe83b4bab024aa81fe06687ac1f502433f3c8ea7",
+  "reviewed_published_heads": {
+    "8": "d763eb61bed8276a24cce769684f58501e68b581",
+    "9": "986bb303044118dde7062ce01487ceeeb606edf4",
+    "10": "cf5251e6897152e30be8defbd129610b9db4e2bb",
+    "11": "e0df46b21f0805d9c9bbdb94b46a66ee06cdb494",
+    "12": "a62bbd61b776b666615d58a31dc0f1053066030f",
+    "13": "2e5da5e85f14357853bed4147ff4ad3f05c3a5ec"
+  },
+  "extra_cloud_face_head": "4befc43a655aeeaaaf19dfbad9d4dfc87fd4e024",
+  "passing_scoped_checks": {
+    "routing_fixture_tests": 18,
+    "routing_subtests": 5,
+    "planner_mock_tests": 74,
+    "intake_tests": 41,
+    "wildfire_tests": 33,
+    "casualty_tests": 40,
+    "maps_latest_api_tests": 19,
+    "maps_latest_geography_tests": 12,
+    "amd_latest_cpu_tests": 91
+  },
+  "important_limits": [
+    "Passing scoped tests coexist with reproduced defects",
+    "No actual human authentication or simulator mutation in scripted receipt probes",
+    "No whole-application/model/physical-fire/graphics/impact pass",
+    "Renderer line visibility is source-inferred, not raster-proven"
+  ],
+  "artifacts": [
+    {
+      "path": "docs/reviews/README.md",
+      "sha256": "8e4266525e0b366e6c005f7cc421b3408afc3500c60fdb07129980f5a20c3406",
+      "bytes": 12240
+    },
+    {
+      "path": "docs/reviews/STRUCTURE_AND_INTEGRATION.md",
+      "sha256": "53fa687c9994f146eb85d311cf8472d3a18573452928a655d9a08cb37da2cb6b",
+      "bytes": 10014
+    },
+    {
+      "path": "docs/reviews/REQUIREMENTS_AND_JUDGE_EVIDENCE.md",
+      "sha256": "7bc470fdea118d4bcf2ac23e94d4eda6223ed6fb309dddd654b296adf61ba0d6",
+      "bytes": 10450
+    },
+    {
+      "path": "docs/reviews/routing_mc.md",
+      "sha256": "3646e9195f4bc1fb6f19110df74ddd339c402a7a0194f92fc8061a44d3139b45",
+      "bytes": 6947
+    },
+    {
+      "path": "docs/reviews/hf_fire.md",
+      "sha256": "d005e186a722c8a5649570be2a54a32a5bdf9add58dbfaef59a23fb83ecdf2ae",
+      "bytes": 6808
+    },
+    {
+      "path": "docs/reviews/maps_amd.md",
+      "sha256": "0b3a249fb0defc0ce14ebda9f362d76072ec41d753852edef9f672d393ba63c1",
+      "bytes": 12206
+    },
+    {
+      "path": "docs/reviews/faces.md",
+      "sha256": "6d4f25cbbd978fddd83a63ca365167c38ba27427cee06c0d689ec43aade06357",
+      "bytes": 4116
+    },
+    {
+      "path": "docs/reviews/PEER_REVIEW.md",
+      "sha256": "84d840293739410e5633876d18b01f9e18d95aeb3b55e2b1d591951972385d92",
+      "bytes": 3718
+    },
+    {
+      "path": "artifacts/review/publication/logs/routing_mc/pr8/review.log",
+      "sha256": "f801b2f82dc09078169d11edf3d02e6223286178e3ee85a14d1d66fea8fe90b3",
+      "bytes": 182
+    },
+    {
+      "path": "artifacts/review/publication/logs/routing_mc/pr13/review.log",
+      "sha256": "600db6de5c8a024fb624c03306fe58ec5340bb6731f8fce9f1de66aabe040442",
+      "bytes": 368
+    },
+    {
+      "path": "artifacts/review/publication/logs/hf_fire/hf-tests.log",
+      "sha256": "cd7d43c6ddd04e1af1496ffa48d7e6717561991bdccefc5476bb6a46bccbc813",
+      "bytes": 112
+    },
+    {
+      "path": "artifacts/review/publication/logs/hf_fire/wildfire-tests.log",
+      "sha256": "24aee6bb000bef0848b9fc58728d56dce7ebc1721f000bca72b943bb56a9fdec",
+      "bytes": 3967
+    },
+    {
+      "path": "artifacts/review/publication/logs/hf_fire/hf-repro.log",
+      "sha256": "8dc5f9573426378af9700efc787978e8ad46f7c774ab467759a59ef4395712b9",
+      "bytes": 1888
+    },
+    {
+      "path": "artifacts/review/publication/logs/hf_fire/hf-metric-repro.log",
+      "sha256": "ed0c4d960bd17e88b782850e1c253aa9b7c8b35b22ce5e33a1d24a6839132398",
+      "bytes": 2049
+    },
+    {
+      "path": "artifacts/review/publication/logs/hf_fire/wildfire-repro.log",
+      "sha256": "d27cd20a096984722cf5f54e5d172d88a9474c148133f258c57fdcfbd2b96eca",
+      "bytes": 390
+    },
+    {
+      "path": "artifacts/review/publication/logs/faces/tests.log",
+      "sha256": "aafa5edd283864fdddffa49b4899efbc191a7dbe287ad24b8642bbbfe44633cd",
+      "bytes": 112
+    },
+    {
+      "path": "artifacts/review/publication/logs/faces/demo.log",
+      "sha256": "3ccfbe2bcb22fa31436f361e78bb0aeb1a058d6703ba7d3f057c83d0b6d7271a",
+      "bytes": 13
+    },
+    {
+      "path": "artifacts/review/publication/logs/faces/repro.log",
+      "sha256": "370a6e7828e1272d946cf25b9f61b289c6242f58e284573bd31ae5a917ebbfbe",
+      "bytes": 625
+    },
+    {
+      "path": "artifacts/review/publication/logs/maps_amd/maps-osm-api-tests.log",
+      "sha256": "b066a77682d83135a18be62ff394b0f334ac7964143d4f3d61122bc396d24078",
+      "bytes": 3315
+    },
+    {
+      "path": "artifacts/review/publication/logs/maps_amd/maps-osm-geo-tests.log",
+      "sha256": "0ee4b2461ec3008cdf80baec6253e5367819be61a43cb33fea071db77cf4c235",
+      "bytes": 1801
+    },
+    {
+      "path": "artifacts/review/publication/logs/maps_amd/maps-source.log",
+      "sha256": "ed3dee242025b945d5f920e3980ce742d069f6d980908317ad7b85457b94baeb",
+      "bytes": 654
+    },
+    {
+      "path": "artifacts/review/publication/logs/maps_amd/repro-maps-latest.log",
+      "sha256": "84988b0c5e956472caf5a0145b6969653bd7636bf3094ec7e8e829cb3bdba895",
+      "bytes": 167
+    },
+    {
+      "path": "artifacts/review/publication/logs/maps_amd/amd-latest-tests.log",
+      "sha256": "3256118da8b112832d4d985ef357fe3fe34de21bbbaeb7e17a64130417301684",
+      "bytes": 191
+    },
+    {
+      "path": "artifacts/review/publication/logs/maps_amd/repro-amd.log",
+      "sha256": "a1fce5e361110a59b12a4eda8e45f31b5860e330ffe74cf459ecc0b514be02b0",
+      "bytes": 105
+    },
+    {
+      "path": "artifacts/review/publication/logs/maps_amd/repro2.log",
+      "sha256": "fbcde3aa37214243cdbee3c208d8a6e9dfa362383421f82dfd85ee7bc9fd9c3b",
+      "bytes": 452
+    }
+  ],
+  "verification_issues": []
+}

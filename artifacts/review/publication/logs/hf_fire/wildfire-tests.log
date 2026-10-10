@@ -1,0 +1,40 @@
+test_boundary_touch_closes_conservatively (test_adapter.EdgeAccessTests.test_boundary_touch_closes_conservatively) ... ok
+test_crossing_edge_closure_and_provenance (test_adapter.EdgeAccessTests.test_crossing_edge_closure_and_provenance) ... ok
+test_null_arrival_has_no_closure (test_adapter.EdgeAccessTests.test_null_arrival_has_no_closure) ... ok
+test_outside_domain_is_unknown (test_adapter.EdgeAccessTests.test_outside_domain_is_unknown) ... ok
+test_safety_buffer_moves_closure_earlier (test_adapter.EdgeAccessTests.test_safety_buffer_moves_closure_earlier) ... ok
+test_calm_wind_cardinal_symmetry (test_adapter.SimulationTests.test_calm_wind_cardinal_symmetry) ... ok
+test_default_physical_engine_is_explicitly_unavailable (test_adapter.SimulationTests.test_default_physical_engine_is_explicitly_unavailable) ... ok
+test_deterministic (test_adapter.SimulationTests.test_deterministic) ... ok
+test_east_wind_favors_east (test_adapter.SimulationTests.test_east_wind_favors_east) ... ok
+test_frames_and_intervals (test_adapter.SimulationTests.test_frames_and_intervals) ... ok
+test_higher_moisture_slows_spread (test_adapter.SimulationTests.test_higher_moisture_slows_spread) ... ok
+test_invalid_inputs_raise_value_error (test_adapter.SimulationTests.test_invalid_inputs_raise_value_error) ... ok
+test_nonburnable_column_blocks_spread (test_adapter.SimulationTests.test_nonburnable_column_blocks_spread) ... ok
+test_nondivisible_horizon_has_final_frame (test_adapter.SimulationTests.test_nondivisible_horizon_has_final_frame) ... ok
+test_result_metadata_and_initial_ignition (test_adapter.SimulationTests.test_result_metadata_and_initial_ignition) ... ok
+test_calm_wind (test_adapter.WindTests.test_calm_wind) ... ok
+test_wind_speed_and_from_direction (test_adapter.WindTests.test_wind_speed_and_from_direction) ... ok
+test_current_claim_cannot_be_assigned_to_synthetic_grid (test_constraints.ConstraintTests.test_current_claim_cannot_be_assigned_to_synthetic_grid) ... ok
+test_diagonal_cannot_jump_blocked_corner (test_constraints.ConstraintTests.test_diagonal_cannot_jump_blocked_corner) ... ok
+test_future_and_stale_incident_evidence_abstains (test_constraints.ConstraintTests.test_future_and_stale_incident_evidence_abstains) ... ok
+test_input_not_mutated (test_constraints.ConstraintTests.test_input_not_mutated) ... ok
+test_moisture_at_extinction_stops_spread (test_constraints.ConstraintTests.test_moisture_at_extinction_stops_spread) ... ok
+test_negative_or_nonfinite_fields_rejected (test_constraints.ConstraintTests.test_negative_or_nonfinite_fields_rejected) ... ok
+test_no_incident_evidence_abstains (test_constraints.ConstraintTests.test_no_incident_evidence_abstains) ... ok
+test_output_step_only_changes_frames (test_constraints.ConstraintTests.test_output_step_only_changes_frames) ... ok
+test_unburnable_ignition_rejected (test_constraints.ConstraintTests.test_unburnable_ignition_rejected) ... ok
+test_unknown_source_date_rejected (test_constraints.ConstraintTests.test_unknown_source_date_rejected) ... ok
+test_uphill_north_is_faster_than_downhill (test_constraints.ConstraintTests.test_uphill_north_is_faster_than_downhill) ... ok
+test_decimal_steps_are_unique_and_inside_horizon (test_review_regressions.ReviewRegressions.test_decimal_steps_are_unique_and_inside_horizon) ... ok
+test_extreme_horizon_raises_value_error (test_review_regressions.ReviewRegressions.test_extreme_horizon_raises_value_error) ... ok
+test_extreme_time_ratio_raises_value_error (test_review_regressions.ReviewRegressions.test_extreme_time_ratio_raises_value_error) ... ok
+test_grid_times_frames_budget_is_bounded (test_review_regressions.ReviewRegressions.test_grid_times_frames_budget_is_bounded) ... ok
+test_wind_conversion_rejects_infinite_intermediate (test_review_regressions.ReviewRegressions.test_wind_conversion_rejects_infinite_intermediate) ... ok
+
+----------------------------------------------------------------------
+Ran 33 tests in 0.096s
+
+OK
+
+EXIT_CODE:0

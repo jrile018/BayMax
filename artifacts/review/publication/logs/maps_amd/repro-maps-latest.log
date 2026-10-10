@@ -1,0 +1,6 @@
+area_label Paradise, California
+coverage_bbox [-121.621, 39.742, -121.591, 39.765]
+geometry_bbox [0, 0, 0.001, 0]
+roads 1
+paradise_coverage_available True
+EXIT_CODE:0n

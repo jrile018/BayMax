@@ -1,0 +1,38 @@
+test_future_events_not_revealed (test_fixture.MockFixtureTests.test_future_events_not_revealed) ... ok
+test_remaining_path_follows_committed_route (test_fixture.MockFixtureTests.test_remaining_path_follows_committed_route) ... ok
+test_reroute_decision_preserves_position_and_load (test_fixture.MockFixtureTests.test_reroute_decision_preserves_position_and_load) ... ok
+test_coverage_rejects_nan_and_reports_missing_layers (test_http.HTTPTests.test_coverage_rejects_nan_and_reports_missing_layers) ... 127.0.0.1 - - [10/Oct/2026 07:13:34] "GET /api/coverage?lat=nan&lon=1 HTTP/1.1" 400 -
+127.0.0.1 - - [10/Oct/2026 07:13:34] "GET /api/coverage?lat=39.5&lon=-121.5 HTTP/1.1" 200 -
+ok
+test_invalid_indices_and_query_fail (test_http.HTTPTests.test_invalid_indices_and_query_fail) ... 127.0.0.1 - - [10/Oct/2026 07:13:34] "GET /api/frame HTTP/1.1" 400 -
+127.0.0.1 - - [10/Oct/2026 07:13:34] "GET /api/frame?index=-1 HTTP/1.1" 400 -
+127.0.0.1 - - [10/Oct/2026 07:13:34] "GET /api/frame?index=1 HTTP/1.1" 400 -
+127.0.0.1 - - [10/Oct/2026 07:13:34] "GET /api/frame?index=0&index=1 HTTP/1.1" 400 -
+127.0.0.1 - - [10/Oct/2026 07:13:34] "GET /api/frame?index=nan HTTP/1.1" 400 -
+ok
+test_path_traversal_and_unknown_path (test_http.HTTPTests.test_path_traversal_and_unknown_path) ... 127.0.0.1 - - [10/Oct/2026 07:13:35] "GET /%2e%2e/private.css HTTP/1.1" 404 -
+127.0.0.1 - - [10/Oct/2026 07:13:35] "GET /../private.css HTTP/1.1" 404 -
+127.0.0.1 - - [10/Oct/2026 07:13:35] "GET /missing.js HTTP/1.1" 404 -
+127.0.0.1 - - [10/Oct/2026 07:13:35] "GET /api/unknown HTTP/1.1" 404 -
+127.0.0.1 - - [10/Oct/2026 07:13:35] "GET / HTTP/1.1" 200 -
+ok
+test_read_only_action_boundary (test_http.HTTPTests.test_read_only_action_boundary) ... 127.0.0.1 - - [10/Oct/2026 07:13:35] "POST /api/dispatch HTTP/1.1" 405 -
+ok
+test_snapshot_payload_exact_and_nocache (test_http.HTTPTests.test_snapshot_payload_exact_and_nocache) ... 127.0.0.1 - - [10/Oct/2026 07:13:36] "GET /api/frame?index=0 HTTP/1.1" 200 -
+ok
+test_export_embeds_exact_recorded_snapshots_without_external_assets (test_preview.PreviewTests.test_export_embeds_exact_recorded_snapshots_without_external_assets) ... ok
+test_recorded_replay_banner_is_not_mislabeled_mock (test_preview.PreviewTests.test_recorded_replay_banner_is_not_mislabeled_mock) ... ok
+test_untrusted_record_json_cannot_end_script (test_preview.PreviewTests.test_untrusted_record_json_cannot_end_script) ... ok
+test_corrupt_hash_rejected (test_replay.ReplayStoreTests.test_corrupt_hash_rejected) ... ok
+test_cross_run_rejected (test_replay.ReplayStoreTests.test_cross_run_rejected) ... ok
+test_frame_is_recorded_without_mutation (test_replay.ReplayStoreTests.test_frame_is_recorded_without_mutation) ... ok
+test_global_coverage_honest (test_replay.ReplayStoreTests.test_global_coverage_honest) ... ok
+test_index_bounds (test_replay.ReplayStoreTests.test_index_bounds) ... ok
+test_invalid_position_rejected (test_replay.ReplayStoreTests.test_invalid_position_rejected) ... ok
+test_non_monotonic_time_rejected (test_replay.ReplayStoreTests.test_non_monotonic_time_rejected) ... ok
+test_partial_way_context_is_not_complete_coverage (test_replay.ReplayStoreTests.test_partial_way_context_is_not_complete_coverage) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 2.564s
+
+OK

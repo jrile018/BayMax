@@ -1,0 +1,9 @@
+destination-restricted edge_count 2 bus_access [True, True]
+bus-exception edge_count 0 bus_access []
+private-restricted edge_count 0 bus_access []
+out_of_aoi_label Paradise, California roads 1
+maps_metric_crs local equirectangular metres; origin_lonlat is WGS84 longitude,latitude
+cross_view_result ValueError metric CRS required, not longitude/latitude
+fixture_roads 0 fixture_mode mock-replay frames 7
+frame_hash_fields ['snapshot_hash']
+EXIT_CODE:0n
