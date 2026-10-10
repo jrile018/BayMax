@@ -1,0 +1,99 @@
+FFFFFFFFFF                                                               [100%]
+=================================== FAILURES ===================================
+_____________________ test_iou_is_hand_computed_area_ratio _____________________
+
+    def test_iou_is_hand_computed_area_ratio():
+>       from evals.casualty.localization import iou
+E       ModuleNotFoundError: No module named 'evals.casualty.localization'
+
+evals/casualty/tests/test_localization.py:11: ModuleNotFoundError
+______________ test_duplicate_predictions_count_as_false_positive ______________
+
+    def test_duplicate_predictions_count_as_false_positive():
+>       from evals.casualty.localization import localization_counts
+E       ModuleNotFoundError: No module named 'evals.casualty.localization'
+
+evals/casualty/tests/test_localization.py:17: ModuleNotFoundError
+________ test_empty_scene_false_positive_and_missing_face_are_retained _________
+
+    def test_empty_scene_false_positive_and_missing_face_are_retained():
+>       from evals.casualty.localization import localization_counts, aggregate
+E       ModuleNotFoundError: No module named 'evals.casualty.localization'
+
+evals/casualty/tests/test_localization.py:26: ModuleNotFoundError
+___________ test_score_ordered_one_to_one_matching_is_deterministic ____________
+
+    def test_score_ordered_one_to_one_matching_is_deterministic():
+>       from evals.casualty.localization import localization_counts
+E       ModuleNotFoundError: No module named 'evals.casualty.localization'
+
+evals/casualty/tests/test_localization.py:38: ModuleNotFoundError
+____________________ test_invalid_threshold_is_rejected[0] _____________________
+
+threshold = 0
+
+    @pytest.mark.parametrize("threshold",[0,-.1,1.1,float("nan"),True])
+    def test_invalid_threshold_is_rejected(threshold):
+>       from evals.casualty.localization import localization_counts
+E       ModuleNotFoundError: No module named 'evals.casualty.localization'
+
+evals/casualty/tests/test_localization.py:46: ModuleNotFoundError
+___________________ test_invalid_threshold_is_rejected[-0.1] ___________________
+
+threshold = -0.1
+
+    @pytest.mark.parametrize("threshold",[0,-.1,1.1,float("nan"),True])
+    def test_invalid_threshold_is_rejected(threshold):
+>       from evals.casualty.localization import localization_counts
+E       ModuleNotFoundError: No module named 'evals.casualty.localization'
+
+evals/casualty/tests/test_localization.py:46: ModuleNotFoundError
+___________________ test_invalid_threshold_is_rejected[1.1] ____________________
+
+threshold = 1.1
+
+    @pytest.mark.parametrize("threshold",[0,-.1,1.1,float("nan"),True])
+    def test_invalid_threshold_is_rejected(threshold):
+>       from evals.casualty.localization import localization_counts
+E       ModuleNotFoundError: No module named 'evals.casualty.localization'
+
+evals/casualty/tests/test_localization.py:46: ModuleNotFoundError
+___________________ test_invalid_threshold_is_rejected[nan] ____________________
+
+threshold = nan
+
+    @pytest.mark.parametrize("threshold",[0,-.1,1.1,float("nan"),True])
+    def test_invalid_threshold_is_rejected(threshold):
+>       from evals.casualty.localization import localization_counts
+E       ModuleNotFoundError: No module named 'evals.casualty.localization'
+
+evals/casualty/tests/test_localization.py:46: ModuleNotFoundError
+___________________ test_invalid_threshold_is_rejected[True] ___________________
+
+threshold = True
+
+    @pytest.mark.parametrize("threshold",[0,-.1,1.1,float("nan"),True])
+    def test_invalid_threshold_is_rejected(threshold):
+>       from evals.casualty.localization import localization_counts
+E       ModuleNotFoundError: No module named 'evals.casualty.localization'
+
+evals/casualty/tests/test_localization.py:46: ModuleNotFoundError
+________ test_malformed_predictions_are_not_silently_counted_as_success ________
+
+    def test_malformed_predictions_are_not_silently_counted_as_success():
+>       from evals.casualty.localization import localization_counts
+E       ModuleNotFoundError: No module named 'evals.casualty.localization'
+
+evals/casualty/tests/test_localization.py:51: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED evals/casualty/tests/test_localization.py::test_iou_is_hand_computed_area_ratio
+FAILED evals/casualty/tests/test_localization.py::test_duplicate_predictions_count_as_false_positive
+FAILED evals/casualty/tests/test_localization.py::test_empty_scene_false_positive_and_missing_face_are_retained
+FAILED evals/casualty/tests/test_localization.py::test_score_ordered_one_to_one_matching_is_deterministic
+FAILED evals/casualty/tests/test_localization.py::test_invalid_threshold_is_rejected[0]
+FAILED evals/casualty/tests/test_localization.py::test_invalid_threshold_is_rejected[-0.1]
+FAILED evals/casualty/tests/test_localization.py::test_invalid_threshold_is_rejected[1.1]
+FAILED evals/casualty/tests/test_localization.py::test_invalid_threshold_is_rejected[nan]
+FAILED evals/casualty/tests/test_localization.py::test_invalid_threshold_is_rejected[True]
+FAILED evals/casualty/tests/test_localization.py::test_malformed_predictions_are_not_silently_counted_as_success
+10 failed in 0.05s
