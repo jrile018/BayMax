@@ -240,10 +240,13 @@ def test_shell_wires_real_rail_modules_and_keeps_only_recorded_snapshots(live_se
     assert "request('/start'" in module
     assert "request('/step'" in module
     assert "request('/current'" in module
-    assert "decision_nonce: nonce" in module
+    assert "decision_nonce: choice.nonce" in module
     assert "if (readOnly || pending || review" in module
     assert "const choiceDuration = pauseDecisionClock()" in module
-    assert "recordChoice(actionId, choiceDuration)" in module
+    assert "choiceRecovery.submit({ session, nonce, actionId, choiceDuration })" in module
+    assert "choiceRecovery.reconcile()" in module
+    assert "choiceRecovery.hasUnresolved()" in module
+    assert "recordChoice(result.actionId, result.choiceDuration)" in module
     assert "setInterval(updateThinkingDisplay, 200)" in module
     assert "history.map((entry) => entry.time_s)" in module
     assert "truth_events" not in module

@@ -2,6 +2,59 @@ import { createRailTimeline } from './railTimeline.js';
 import { resolveHudRailLayout } from './panelRailGeometry.js';
 import { allocatePanelStackHeights } from './panelStackLayout.js';
 
+export function createChoiceRecovery(request) {
+  let submitted = null;
+  let inFlight = false;
+  const hasUnresolved = () => submitted !== null;
+  const recover = async (stepError) => {
+    try {
+      const response = await request('/current', { session: submitted.session });
+      if (!response?.node || typeof response.node.decision_nonce !== 'string' ||
+          !response.node.decision_nonce) throw new Error('Current decision has no nonce');
+      const choice = submitted;
+      submitted = null;
+      if (response.node.decision_nonce !== choice.nonce) {
+        return { kind: 'applied', node: response.node,
+          actionId: choice.actionId, choiceDuration: choice.choiceDuration };
+      }
+      return { kind: 'not_applied', error: stepError };
+    } catch (error) {
+      return { kind: 'unresolved', error };
+    }
+  };
+  return {
+    hasUnresolved,
+    async submit(choice) {
+      if (inFlight || submitted) return { kind: 'blocked' };
+      submitted = { ...choice };
+      inFlight = true;
+      try {
+        const response = await request('/step', {
+          session: choice.session, decision_nonce: choice.nonce, action_id: choice.actionId,
+        });
+        if (!response?.node || typeof response.node.decision_nonce !== 'string' ||
+            !response.node.decision_nonce) throw new Error('Step response has no decision nonce');
+        submitted = null;
+        return { kind: 'applied', node: response.node,
+          actionId: choice.actionId, choiceDuration: choice.choiceDuration };
+      } catch (error) {
+        return await recover(error);
+      } finally {
+        inFlight = false;
+      }
+    },
+    async reconcile() {
+      if (inFlight || !submitted) return { kind: 'blocked' };
+      inFlight = true;
+      try {
+        return await recover();
+      } finally {
+        inFlight = false;
+      }
+    },
+  };
+}
+
 const SVG = 'http://www.w3.org/2000/svg';
 const byId = (doc, id) => doc.getElementById(id);
 const label = (value) => String(value ?? '—');
@@ -180,6 +233,7 @@ export function mountPracticeShell({ document = globalThis.document, fetcher = g
   let history = [], historyIndex = 0, review = false, pending = false;
   let decisionStartedAt = null, decisionAccumMs = 0, thinkingTotal = 0, playing = null;
   let choiceTimes = [];
+  let choiceRecovery = null;
   const clock = () => globalThis.performance?.now?.() ?? Date.now();
   const decisionMs = () => decisionAccumMs +
     (decisionStartedAt === null ? 0 : Math.max(0, clock() - decisionStartedAt));
@@ -190,7 +244,7 @@ export function mountPracticeShell({ document = globalThis.document, fetcher = g
     return duration / 1000;
   };
   const resumeDecisionClock = () => {
-    if (!readOnly && decisionStartedAt === null && current && !current.debrief && !pending && !review) {
+    if (!readOnly && decisionStartedAt === null && current && !current.debrief && !pending && !review && !choiceRecovery?.hasUnresolved()) {
       decisionStartedAt = clock();
     }
   };
@@ -233,6 +287,7 @@ export function mountPracticeShell({ document = globalThis.document, fetcher = g
     }
     return value;
   };
+  choiceRecovery = createChoiceRecovery(request);
   const stopReplay = () => {
     if (playing !== null) globalThis.clearInterval(playing);
     playing = null;
@@ -336,12 +391,12 @@ export function mountPracticeShell({ document = globalThis.document, fetcher = g
       const button = element(document, 'button', episode.name, 'episode-btn');
       button.type = 'button';
       button.setAttribute('aria-current', String(index === episodeIndex));
-      button.disabled = pending || readOnly;
+      button.disabled = pending || readOnly || choiceRecovery.hasUnresolved();
       button.addEventListener('click', () => start(index));
       fields['display-content'].appendChild(button);
     });
     const restart = element(document, 'button', 'Restart episode', 'minor-btn');
-    restart.type = 'button'; restart.disabled = pending || readOnly;
+    restart.type = 'button'; restart.disabled = pending || readOnly || choiceRecovery.hasUnresolved();
     restart.addEventListener('click', () => start(episodeIndex));
     fields['display-content'].appendChild(restart);
     const details = element(document, 'details');
@@ -357,6 +412,14 @@ export function mountPracticeShell({ document = globalThis.document, fetcher = g
     clear(fields['controls-content']);
     if (review) {
       fields['controls-content'].appendChild(fact(document, 'Review', 'Only already received decision states are available. Select Practice to continue.'));
+    } else if (choiceRecovery.hasUnresolved()) {
+      fields['controls-content'].appendChild(fact(document, 'Choice unresolved',
+        'The submitted choice may have applied. Restore the server decision before choosing again.'));
+      const retry = element(document, 'button', 'Retry current decision', 'minor-btn');
+      retry.type = 'button';
+      retry.disabled = pending;
+      retry.addEventListener('click', retryCurrent);
+      fields['controls-content'].appendChild(retry);
     } else if (node.debrief) {
       fields['controls-content'].appendChild(fact(document, 'Mission complete', 'Open the debrief in the centre.'));
     } else {
@@ -366,7 +429,7 @@ export function mountPracticeShell({ document = globalThis.document, fetcher = g
         button.type = 'button';
         const heading = element(document, 'strong', action.kind || action.id);
         button.append(heading, element(document, 'span', actionText(action)));
-        button.disabled = readOnly || pending || action.feasible === false || action.supported === false;
+        button.disabled = readOnly || pending || choiceRecovery.hasUnresolved() || action.feasible === false || action.supported === false;
         button.addEventListener('click', () => step(action.id));
         fields['controls-content'].appendChild(button);
       }
@@ -391,7 +454,7 @@ export function mountPracticeShell({ document = globalThis.document, fetcher = g
     railLayout();
   }
   async function start(index) {
-    if (pending || !meta) return;
+    if (pending || !meta || choiceRecovery.hasUnresolved()) return;
     pending = true;
     decisionStartedAt = null;
     hideNotice();
@@ -416,36 +479,40 @@ export function mountPracticeShell({ document = globalThis.document, fetcher = g
       render();
     }
   }
+  function applyChoiceResult(result) {
+    if (result.kind === 'applied') {
+      current = result.node;
+      history.push(current);
+      historyIndex = history.length - 1;
+      recordChoice(result.actionId, result.choiceDuration);
+      hideNotice();
+    } else if (result.kind === 'not_applied') {
+      showNotice('Choice was not applied: ' + (result.error?.message || 'server decision unchanged'));
+    } else if (result.kind === 'unresolved') {
+      showNotice('Could not restore current decision: ' + result.error.message);
+    }
+  }
+  async function retryCurrent() {
+    if (pending || !choiceRecovery.hasUnresolved()) return;
+    pending = true;
+    render();
+    try {
+      applyChoiceResult(await choiceRecovery.reconcile());
+    } finally {
+      pending = false;
+      resumeDecisionClock();
+      render();
+    }
+  }
   async function step(actionId) {
-    if (readOnly || pending || review || !session || !current || current.debrief) return;
+    if (readOnly || pending || review || !session || !current || current.debrief ||
+        choiceRecovery.hasUnresolved()) return;
     const choiceDuration = pauseDecisionClock();
     pending = true;
     const nonce = current.decision_nonce;
     render();
     try {
-      const response = await request('/step', {
-        session, decision_nonce: nonce, action_id: actionId,
-      });
-      current = response.node;
-      history.push(current);
-      historyIndex = history.length - 1;
-      recordChoice(actionId, choiceDuration);
-      hideNotice();
-    } catch (error) {
-      try {
-        const recovered = await request('/current', { session });
-        if (recovered.node.decision_nonce !== nonce) {
-          current = recovered.node;
-          history.push(current);
-          historyIndex = history.length - 1;
-          recordChoice(actionId, choiceDuration);
-          hideNotice();
-        } else {
-          showNotice('Choice was not applied: ' + error.message);
-        }
-      } catch (recoveryError) {
-        showNotice('Could not restore current decision: ' + recoveryError.message);
-      }
+      applyChoiceResult(await choiceRecovery.submit({ session, nonce, actionId, choiceDuration }));
     } finally {
       pending = false;
       resumeDecisionClock();
