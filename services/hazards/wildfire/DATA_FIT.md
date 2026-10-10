@@ -1,0 +1,18 @@
+# Hugging Face wildfire dataset fit — 2026-10-10
+
+Decision: add data only when it improves physical inputs or meaningful validation for the current hypothetical surface-fire/routing exercise. This is a metadata/card audit, not an artifact ingestion or a calibration result. No listed dataset has been downloaded, adopted, or used to claim a current fire.
+
+Hard gates: known source/redistribution rights; preserved geographic coordinates and dates; documented units and semantic conversion to a needed field; matching area/resolution/time; a feasible small cloud subset. A dataset missing a gate cannot win by volume. We would prioritize input usefulness and geographic/time alignment over breadth. All four fail at least one adoption gate, so a numerical ranking would imply confidence we do not have.
+
+The backend needs supported surface fuel codes, slope as rise/run, downslope aspect, 10 m wind toward east/north in m/s, dead 1/10/100 h and live moisture in kg/kg, plus explicit ignition. Observed validation must retain dates/CRS and distinguish measured masks from model-derived labels. Historical labels cannot establish current-incident evidence.
+
+| Candidate | Verified from card | Adoption gap / unknown | Decision |
+|---|---|---|---|
+| [FireFusion Cascades 500m](https://huggingface.co/datasets/torq1/fire-fusion-cascades-500m) | Daily 500 m EPSG:32610 Washington fields for 2003–2020; terrain, wind, some dead moisture, ignition/perimeter-derived labels; card MIT | No required fuel-model/live-moisture fields or fine-scale arrival times; 10 m wind height unverified; original source rights need separate attribution review | Defer for coarse historical context; no solver-input ingestion |
+| [PanEU FARSITE layers](https://huggingface.co/datasets/links-ads/farsite-layers) | Card describes European fuel/topography/canopy GeoTIFF/STAC layers near 74.7 m EPSG:3035 | Original distribution terms not precisely established by card; no weather/moisture/fire chronology; current US exercise outside coverage; catalog contents need inspection | Defer until a European AOI and rights/artifact checks justify a small subset |
+| [TandemFire 40-sample subset](https://huggingface.co/datasets/ali97/fire-progression-dataset-sample-nips) | Card CC BY 4.0; 10 m imagery, derived fire masks, 8 auxiliary bands including terrain/wind | Target AOI/date/transform not verified; wind units/height, fuel mapping and moisture incomplete; derived masks are not observed arrival truth | Defer for possible spatial mask comparison after artifact/provenance checks |
+| [Next Day Wildfire Spread TACO](https://huggingface.co/datasets/isp-uv-es/next-day-wildfire-spread-taco) | Card CC BY 4.0; historical US 1 km chips and next-day masks | Repackaging reports arbitrary coordinates and no CRS/transform/dates, plus temperature nodata issues; lacks required fuel/moisture/arrival data | Exclude from this physical-input/road-closure pipeline |
+
+Facts above are card-level claims. Data arrays, licenses of original contributing products, checksums, exact schema values and geographic overlap remain unverified because no ingestion was justified. Broad ignition prediction labels and satellite classification images cannot replace fuel maps or timed fire-front observations.
+
+Next step, if an AOI requires real physical inputs: use authoritative fuel/topography/weather sources with documented rights and spatial/time alignment, then evaluate a bounded subset on the supplied cloud. The coordinator/source-data owner chooses and integrates any shared source. FireFusion's primary artifact may permit channel/time/spatial slicing; that is a research option, not a current adoption. The current fixture remains explicitly assumed synthetic data.
