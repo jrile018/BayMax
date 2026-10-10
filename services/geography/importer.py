@@ -49,7 +49,7 @@ def _no(value): return str(value).strip().lower() in ("no","private","0","false"
 ACCESS_ORDER={
     "motor_vehicle":("motor_vehicle","vehicle","access"),
     "motorcar":("motorcar","motor_vehicle","vehicle","access"),
-    "bus":("bus","motor_vehicle","vehicle","access"),
+    "bus":("bus","psv","motor_vehicle","vehicle","access"),
     "hgv":("hgv","motor_vehicle","vehicle","access"),
 }
 ACCESS_KEYS={key for order in ACCESS_ORDER.values() for key in order}
@@ -59,11 +59,17 @@ def _vehicle_access(tags,highway):
     default=highway not in {"footway","path","cycleway","steps","pedestrian"}
     result={}
     for mode,order in ACCESS_ORDER.items():
-        # A time- or purpose-qualified permission is not an unrestricted edge.
-        if any(key+":conditional" in tags for key in order):
-            result[mode]=False
-            continue
-        result[mode]=next((_yes(tags[key]) for key in order if key in tags),default)
+        # Resolve the most specific tagged class first. A conditional value
+        # at that class cannot establish unrestricted access; broader tags do
+        # not override an explicit mode-specific permission.
+        result[mode]=default
+        for key in order:
+            if key+":conditional" in tags:
+                result[mode]=False
+                break
+            if key in tags:
+                result[mode]=_yes(tags[key])
+                break
     return result
 
 def import_osm(data,origin=(-121.607,39.754)):

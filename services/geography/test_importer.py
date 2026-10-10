@@ -137,6 +137,48 @@ class ImportTests(unittest.TestCase):
   self.assertEqual(edges({"access":"no","bus":"destination"}),[])
   self.assertEqual(edges({"access":"no","bus:conditional":"yes @ (Mo-Fr)"}),[])
   self.assertTrue(edges({"motor_vehicle":"no","motorcar":"yes"})[0]["vehicle_access"]["motorcar"])
+  specific_bus=edges({"access:conditional":"no @ (Mo-Fr 08:00-18:00)","bus":"yes"})
+  self.assertTrue(specific_bus[0]["vehicle_access"]["bus"])
+  self.assertFalse(specific_bus[0]["vehicle_access"]["motorcar"])
+  psv_restricted=edges({"access":"no","motor_vehicle":"yes","psv":"no"})
+  self.assertFalse(psv_restricted[0]["vehicle_access"]["bus"])
+  self.assertTrue(psv_restricted[0]["vehicle_access"]["motorcar"])
+  self.assertEqual(edges({"access":"no","psv":"no"}),[])
+
+ def test_auto_bounds_accepts_declared_bounds_before_padding(self):
+  raw={"bounds":[-122.3,37.8,-122.2,37.9],"elements":[
+   {"type":"node","id":1,"lon":-122.3,"lat":37.8},
+   {"type":"node","id":2,"lon":-122.2,"lat":37.9},
+   {"type":"way","id":3,"nodes":[1,2],"tags":{"highway":"residential"}}]}
+  with tempfile.TemporaryDirectory() as td:
+   source=Path(td)/"raw.json"; source.write_text(json.dumps(raw))
+   result=ingest(source,td,area_id="oakland",label="Oakland",auto_bounds=True)
+   self.assertEqual(result["roads"],1)
+   xml=b"""<osm version='0.6'><bounds minlon='-122.3' minlat='37.8' maxlon='-122.2' maxlat='37.9'/><node id='1' lon='-122.3' lat='37.8'/><node id='2' lon='-122.2' lat='37.9'/><way id='3'><nd ref='1'/><nd ref='2'/><tag k='highway' v='residential'/></way></osm>"""
+   xml_source=Path(td)/"raw.osm"; xml_source.write_bytes(xml)
+   self.assertEqual(ingest(xml_source,td,area_id="oakland",label="Oakland",auto_bounds=True)["roads"],1)
+
+ def test_layer_coverage_does_not_count_unrelated_roads(self):
+  raw={"elements":[
+   {"type":"node","id":1,"lon":0,"lat":0},
+   {"type":"node","id":2,"lon":.001,"lat":0},
+   {"type":"way","id":3,"nodes":[1,2],"tags":{"highway":"residential"}},
+   {"type":"node","id":4,"lon":-121.608,"lat":39.754},
+   {"type":"node","id":5,"lon":-121.607,"lat":39.754},
+   {"type":"node","id":6,"lon":-121.607,"lat":39.755},
+   {"type":"way","id":7,"nodes":[4,5,6,4],"tags":{"building":"yes"}}]}
+  with tempfile.TemporaryDirectory() as td:
+   source=Path(td)/"raw.json"; source.write_text(json.dumps(raw))
+   ingest(source,td)
+   area=json.loads((Path(td)/"area.json").read_text())
+   coverage={entry["layer"]:entry["status"] for entry in area["coverage"]}
+   self.assertEqual(coverage["roads"],"unavailable")
+   self.assertEqual(coverage["buildings"],"available")
+   self.assertEqual(area["roads"],[])
+   self.assertLess(area["bbox_lonlat"][2],-121)
+   graph=json.loads((Path(td)/"graph.json").read_text())
+   self.assertEqual(graph["edges"],[])
+   self.assertEqual(graph["nodes"],[])
 
  def test_committed_paradise_graph_uses_current_access_policy(self):
   root=Path(__file__).resolve().parents[2]
@@ -148,5 +190,6 @@ class ImportTests(unittest.TestCase):
   self.assertEqual(actual["source_sha256"],expected["source_sha256"])
   self.assertEqual({e["id"] for e in actual["edges"]},{e["id"] for e in expected["edges"]})
   self.assertEqual({e["id"]:e["vehicle_access"] for e in actual["edges"]},{e["id"]:e["vehicle_access"] for e in expected["edges"]})
+  self.assertEqual(actual,expected)
 
 if __name__=="__main__": unittest.main()

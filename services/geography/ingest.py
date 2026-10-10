@@ -139,12 +139,21 @@ def ingest(input_path,output_dir,downloaded_at_utc=None,endpoint=ENDPOINT,area_i
     elif area_id=="paradise-ca": bbox,origin=PARADISE_BBOX,PARADISE_ORIGIN
     else: raise ValueError("non-Paradise inputs require --auto-bounds")
     declared_bbox=_declared_bbox(data)
-    if declared_bbox is not None and not _bbox_contains(declared_bbox,bbox):
+    if declared_bbox is not None and not auto_bounds and not _bbox_contains(declared_bbox,bbox):
         raise ValueError("declared source bbox does not contain acquisition bbox")
     query_hash=sha256(query_file) if query_file else None
     roads,buildings,landuse,graph=import_osm(data,tuple(origin))
-    if not auto_bounds and not any(_feature_intersects_bbox(feature,bbox) for feature in roads+buildings+landuse):
+    roads=[feature for feature in roads if _feature_intersects_bbox(feature,bbox)]
+    buildings=[feature for feature in buildings if _feature_intersects_bbox(feature,bbox)]
+    landuse=[feature for feature in landuse if _feature_intersects_bbox(feature,bbox)]
+    if not auto_bounds and not (roads or buildings or landuse):
         raise ValueError("source contains no supported geometry intersecting acquisition bbox")
+    road_ids={feature["id"] for feature in roads}
+    graph["edges"]=[edge for edge in graph["edges"] if edge["way_id"] in road_ids]
+    node_ids={str(node_id) for way in data.get("elements",[])
+              if way.get("type")=="way" and str(way.get("id")) in road_ids
+              for node_id in way.get("nodes",[])}
+    graph["nodes"]=[node for node in graph["nodes"] if node["id"] in node_ids]
     osm3s=data.get("osm3s",{}); source_time=osm3s.get("timestamp_osm_base") or osm3s.get("timestamp_areas_base")
     timestamps=data.get("source_timestamps",[])
     if timestamps: source_time={"min":min(timestamps),"max":max(timestamps)}
