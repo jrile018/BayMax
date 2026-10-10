@@ -94,4 +94,59 @@ class ImportTests(unittest.TestCase):
  def test_vehicle_restriction(self):
   d={"elements":[{"type":"node","id":1,"lon":0,"lat":0},{"type":"node","id":2,"lon":.001,"lat":0},{"type":"way","id":4,"nodes":[1,2],"tags":{"highway":"service","access":"no"}}]}
   self.assertEqual(import_osm(d)[3]["edges"],[])
+ def test_unrelated_source_cannot_claim_paradise_coverage(self):
+  raw={"elements":[{"type":"node","id":1,"lon":0,"lat":0},{"type":"node","id":2,"lon":.001,"lat":0},{"type":"way","id":3,"nodes":[1,2],"tags":{"highway":"residential"}}]}
+  with tempfile.TemporaryDirectory() as td:
+   source=Path(td)/"raw.json"; source.write_text(json.dumps(raw))
+   with self.assertRaisesRegex(ValueError,"acquisition bbox"):
+    ingest(source,td)
+
+ def test_crossing_way_retains_full_geometry(self):
+  raw={"elements":[{"type":"node","id":1,"lon":-121.63,"lat":39.75},{"type":"node","id":2,"lon":-121.58,"lat":39.75},{"type":"way","id":3,"nodes":[1,2],"tags":{"highway":"residential"}}]}
+  with tempfile.TemporaryDirectory() as td:
+   source=Path(td)/"raw.json"; source.write_text(json.dumps(raw))
+   ingest(source,td)
+   area=json.loads((Path(td)/"area.json").read_text())
+   self.assertEqual(area["roads"][0]["geometry_lonlat"],[[-121.63,39.75],[-121.58,39.75]])
+   self.assertEqual(area["coverage"][0]["status"],"available")
+
+ def test_declared_source_bbox_must_match_acquisition(self):
+  raw={"bounds":{"minlon":0,"minlat":0,"maxlon":1,"maxlat":1},"elements":[{"type":"node","id":1,"lon":-121.607,"lat":39.754},{"type":"node","id":2,"lon":-121.606,"lat":39.754},{"type":"way","id":3,"nodes":[1,2],"tags":{"highway":"residential"}}]}
+  with tempfile.TemporaryDirectory() as td:
+   source=Path(td)/"raw.json"; source.write_text(json.dumps(raw))
+   with self.assertRaisesRegex(ValueError,"declared source bbox"):
+    ingest(source,td)
+
+ def test_access_qualifications_and_mode_override(self):
+  def edges(extra):
+   raw={"elements":[{"type":"node","id":1,"lon":0,"lat":0},{"type":"node","id":2,"lon":.001,"lat":0},{"type":"way","id":3,"nodes":[1,2],"tags":{"highway":"service",**extra}}]}
+   return import_osm(raw)[3]["edges"]
+  self.assertEqual(edges({"access":"destination"}),[])
+  self.assertEqual(edges({"access":"yes","motor_vehicle:conditional":"no @ (Mo-Fr 08:00-18:00)"}),[])
+  bus=edges({"access":"no","bus":"yes"})
+  self.assertEqual(len(bus),2)
+  self.assertFalse(bus[0]["vehicle_access"]["motorcar"])
+  self.assertFalse(bus[0]["vehicle_access"]["motor_vehicle"])
+  self.assertTrue(bus[0]["vehicle_access"]["bus"])
+  self.assertEqual(bus[0]["access_tags"]["access"],"no")
+  self.assertEqual(bus[0]["access_tags"]["bus"],"yes")
+  self.assertEqual(bus[0]["bus_access_assumption"],"OSM public-service bus")
+  destination_bus=edges({"access":"destination","bus":"yes"})
+  self.assertTrue(destination_bus[0]["vehicle_access"]["bus"])
+  self.assertFalse(destination_bus[0]["vehicle_access"]["motorcar"])
+  self.assertEqual(edges({"access":"no","bus":"destination"}),[])
+  self.assertEqual(edges({"access":"no","bus:conditional":"yes @ (Mo-Fr)"}),[])
+  self.assertTrue(edges({"motor_vehicle":"no","motorcar":"yes"})[0]["vehicle_access"]["motorcar"])
+
+ def test_committed_paradise_graph_uses_current_access_policy(self):
+  root=Path(__file__).resolve().parents[2]
+  source=root/"fixtures/geography/paradise/raw.osm"
+  expected=json.loads((root/"fixtures/geography/paradise/graph.json").read_text())
+  with tempfile.TemporaryDirectory() as td:
+   ingest(source,td)
+   actual=json.loads((Path(td)/"graph.json").read_text())
+  self.assertEqual(actual["source_sha256"],expected["source_sha256"])
+  self.assertEqual({e["id"] for e in actual["edges"]},{e["id"] for e in expected["edges"]})
+  self.assertEqual({e["id"]:e["vehicle_access"] for e in actual["edges"]},{e["id"]:e["vehicle_access"] for e in expected["edges"]})
+
 if __name__=="__main__": unittest.main()

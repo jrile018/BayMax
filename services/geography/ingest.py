@@ -25,7 +25,12 @@ def parse_osm_xml(payload):
     try: root=ET.fromstring(payload)
     except ET.ParseError as exc: raise ValueError(f"malformed OSM XML: {exc}") from exc
     if root.tag!="osm": raise ValueError("expected <osm> root")
-    nodes=[]; ways=[]; timestamps=[]
+    nodes=[]; ways=[]; timestamps=[]; declared_bounds=None
+    bounds_element=root.find("bounds")
+    if bounds_element is not None:
+        try:
+            declared_bounds=[float(bounds_element.attrib[k]) for k in ("minlon","minlat","maxlon","maxlat")]
+        except (KeyError,ValueError) as exc: raise ValueError("invalid declared source bbox") from exc
     for elem in root:
         if elem.tag=="node":
             if "id" not in elem.attrib or "lon" not in elem.attrib or "lat" not in elem.attrib: raise ValueError("OSM node missing id/lon/lat")
@@ -51,7 +56,7 @@ def parse_osm_xml(payload):
     node_ids={n["id"] for n in nodes}
     for way in ways:
         if any(ref not in node_ids for ref in way["nodes"]): raise ValueError(f"OSM way {way['id']} references a missing node")
-    return {"elements":nodes+ways,"source_timestamps":timestamps}
+    return {"elements":nodes+ways,"source_timestamps":timestamps,**({"bounds":declared_bounds} if declared_bounds is not None else {})}
 
 def _feature_extent(roads,buildings,landuse):
     coords=[]
@@ -59,6 +64,48 @@ def _feature_extent(roads,buildings,landuse):
         coords.extend(feature.get("geometry_lonlat",[]))
     if not coords: return None
     return [min(p[0] for p in coords),min(p[1] for p in coords),max(p[0] for p in coords),max(p[1] for p in coords)]
+
+def _bbox_contains(outer,inner):
+    return outer[0]<=inner[0] and outer[1]<=inner[1] and outer[2]>=inner[2] and outer[3]>=inner[3]
+
+def _declared_bbox(data):
+    declared=data.get("bounds",data.get("bbox"))
+    if declared is None: return None
+    try:
+        if isinstance(declared,dict):
+            bbox=[float(declared[k]) for k in ("minlon","minlat","maxlon","maxlat")]
+        else: bbox=[float(v) for v in declared]
+    except (TypeError,ValueError,KeyError) as exc: raise ValueError("invalid declared source bbox") from exc
+    if len(bbox)!=4 or not all(math.isfinite(v) for v in bbox) or not -180<=bbox[0]<bbox[2]<=180 or not -90<=bbox[1]<bbox[3]<=90:
+        raise ValueError("invalid declared source bbox")
+    return bbox
+
+def _point_in_bbox(point,bbox):
+    return bbox[0]<=point[0]<=bbox[2] and bbox[1]<=point[1]<=bbox[3]
+
+def _segment_intersects_bbox(a,b,bbox):
+    dx=b[0]-a[0]; dy=b[1]-a[1]; low=0.0; high=1.0
+    for p,q in ((-dx,a[0]-bbox[0]),(dx,bbox[2]-a[0]),(-dy,a[1]-bbox[1]),(dy,bbox[3]-a[1])):
+        if p==0:
+            if q<0: return False
+            continue
+        ratio=q/p
+        if p<0: low=max(low,ratio)
+        else: high=min(high,ratio)
+        if low>high: return False
+    return True
+
+def _polygon_contains(point,ring):
+    inside=False; x,y=point
+    for (x1,y1),(x2,y2) in zip(ring,ring[1:]):
+        if (y1>y)!=(y2>y) and x<(x2-x1)*(y-y1)/(y2-y1)+x1: inside=not inside
+    return inside
+
+def _feature_intersects_bbox(feature,bbox):
+    coords=feature.get("geometry_lonlat",[])
+    if any(_point_in_bbox(p,bbox) for p in coords): return True
+    if any(_segment_intersects_bbox(a,b,bbox) for a,b in zip(coords,coords[1:])): return True
+    return len(coords)>=4 and coords[0]==coords[-1] and _polygon_contains(((bbox[0]+bbox[2])/2,(bbox[1]+bbox[3])/2),coords)
 
 def _union_bounds(a,b):
     if b is None: return list(a)
@@ -91,8 +138,13 @@ def ingest(input_path,output_dir,downloaded_at_utc=None,endpoint=ENDPOINT,area_i
     if auto_bounds: bbox,origin=_auto_bounds(data,pad_degrees)
     elif area_id=="paradise-ca": bbox,origin=PARADISE_BBOX,PARADISE_ORIGIN
     else: raise ValueError("non-Paradise inputs require --auto-bounds")
+    declared_bbox=_declared_bbox(data)
+    if declared_bbox is not None and not _bbox_contains(declared_bbox,bbox):
+        raise ValueError("declared source bbox does not contain acquisition bbox")
     query_hash=sha256(query_file) if query_file else None
     roads,buildings,landuse,graph=import_osm(data,tuple(origin))
+    if not auto_bounds and not any(_feature_intersects_bbox(feature,bbox) for feature in roads+buildings+landuse):
+        raise ValueError("source contains no supported geometry intersecting acquisition bbox")
     osm3s=data.get("osm3s",{}); source_time=osm3s.get("timestamp_osm_base") or osm3s.get("timestamp_areas_base")
     timestamps=data.get("source_timestamps",[])
     if timestamps: source_time={"min":min(timestamps),"max":max(timestamps)}

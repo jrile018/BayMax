@@ -46,12 +46,31 @@ def _speed(tags,highway):
 def _yes(value): return str(value).strip().lower() in ("yes","designated","permissive","official","1","true")
 def _no(value): return str(value).strip().lower() in ("no","private","0","false")
 
+ACCESS_ORDER={
+    "motor_vehicle":("motor_vehicle","vehicle","access"),
+    "motorcar":("motorcar","motor_vehicle","vehicle","access"),
+    "bus":("bus","motor_vehicle","vehicle","access"),
+    "hgv":("hgv","motor_vehicle","vehicle","access"),
+}
+ACCESS_KEYS={key for order in ACCESS_ORDER.values() for key in order}
+ACCESS_KEYS.update(key+":conditional" for key in tuple(ACCESS_KEYS))
+
+def _vehicle_access(tags,highway):
+    default=highway not in {"footway","path","cycleway","steps","pedestrian"}
+    result={}
+    for mode,order in ACCESS_ORDER.items():
+        # A time- or purpose-qualified permission is not an unrestricted edge.
+        if any(key+":conditional" in tags for key in order):
+            result[mode]=False
+            continue
+        result[mode]=next((_yes(tags[key]) for key in order if key in tags),default)
+    return result
+
 def import_osm(data,origin=(-121.607,39.754)):
     _validate_origin(origin)
     elements=data.get("elements",[])
     nodes={e["id"]:(e["lon"],e["lat"]) for e in elements if e.get("type")=="node" and "lon" in e}
     roads=[]; buildings=[]; landuse=[]; edges=[]; graph_nodes={}
-    pedestrian_only={"footway","path","cycleway","steps","pedestrian"}
     for w in (e for e in elements if e.get("type")=="way"):
         tags=w.get("tags",{}); ids=w.get("nodes",[])
         complete=bool(ids) and all(n in nodes for n in ids)
@@ -60,12 +79,11 @@ def import_osm(data,origin=(-121.607,39.754)):
         ident=str(w["id"]); metric=[project(lon,lat,origin) for lon,lat in coords]
         if "highway" in tags:
             roads.append({"id":ident,"name":tags.get("name"),"highway":tags["highway"],"geometry_lonlat":coords,"geometry_m":metric})
-            def access_for(key,default):
-                value=tags.get(key,tags.get("vehicle",tags.get("access",default)))
-                return not _no(value)
-            explicit_motor=_yes(tags.get("motor_vehicle",tags.get("motorcar",tags.get("vehicle",tags.get("access","")))))
-            motor_allowed=access_for("motor_vehicle", "no" if tags["highway"] in pedestrian_only and not explicit_motor else "yes")
-            vehicle_access={"motor_vehicle":motor_allowed,"motorcar":motor_allowed and not _no(tags.get("motorcar","yes")),"bus":motor_allowed and not _no(tags.get("bus","yes")),"hgv":motor_allowed and not _no(tags.get("hgv","yes"))}
+            vehicle_access=_vehicle_access(tags,tags["highway"])
+            access_tags={key:tags[key] for key in ACCESS_KEYS if key in tags}
+            access_metadata={"access_tags":access_tags} if access_tags else {}
+            if _yes(tags.get("bus")):
+                access_metadata["bus_access_assumption"]="OSM public-service bus"
             oneway=str(tags.get("oneway","")).lower() in ("yes","1","true") or tags.get("junction")=="roundabout"
             reverse=str(tags.get("oneway","")).lower() in ("-1","reverse")
             speed,speed_source=_speed(tags,tags["highway"])
@@ -74,10 +92,10 @@ def import_osm(data,origin=(-121.607,39.754)):
                 graph_nodes[na]={"id":na,"lonlat":a,"geometry_m":project(*a,origin)}
                 graph_nodes[nb]={"id":nb,"lonlat":b,"geometry_m":project(*b,origin)}
                 ma,mb=project(*a,origin),project(*b,origin); length=math.dist(ma,mb)
-                directions=[] if not motor_allowed else ([(nb,na,"rev")] if reverse else [(na,nb,"fwd")]+([] if oneway else [(nb,na,"rev")]))
+                directions=[] if not any(vehicle_access.values()) else ([(nb,na,"rev")] if reverse else [(na,nb,"fwd")]+([] if oneway else [(nb,na,"rev")]))
                 for u,v,direction in directions:
                     geom=[mb,ma] if direction=="rev" else [ma,mb]
-                    edges.append({"id":f"{ident}/{i}/{direction}","way_id":ident,"segment_index":i,"from_node":u,"to_node":v,"geometry_m":geom,"length_m":length,"travel_time_s":length/speed,"speed_mps":speed,"speed_assumption":speed_source,"vehicle_access":vehicle_access})
+                    edges.append({"id":f"{ident}/{i}/{direction}","way_id":ident,"segment_index":i,"from_node":u,"to_node":v,"geometry_m":geom,"length_m":length,"travel_time_s":length/speed,"speed_mps":speed,"speed_assumption":speed_source,"vehicle_access":vehicle_access,**access_metadata})
         if "building" in tags: buildings.append({"id":ident,"geometry_lonlat":coords,"geometry_m":metric})
         kind=tags.get("landuse") or ("water" if tags.get("natural")=="water" or "waterway" in tags else None)
         if kind: landuse.append({"id":ident,"kind":kind,"geometry_lonlat":coords})

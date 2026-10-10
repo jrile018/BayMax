@@ -47171,168 +47171,6 @@
       }
     },
     {
-      "id": "10291570/0/fwd",
-      "way_id": "10291570",
-      "segment_index": 0,
-      "from_node": "86614848",
-      "to_node": "6775720454",
-      "geometry_m": [
-        [
-          950.9599864977619,
-          -607.9257426525742
-        ],
-        [
-          939.1885002516257,
-          -588.5333206599797
-        ]
-      ],
-      "length_m": 22.685544277839895,
-      "travel_time_s": 2.7331981057638424,
-      "speed_mps": 8.3,
-      "speed_assumption": "assumed highway-class speed 8.3 m/s",
-      "vehicle_access": {
-        "motor_vehicle": true,
-        "motorcar": true,
-        "bus": true,
-        "hgv": true
-      }
-    },
-    {
-      "id": "10291570/0/rev",
-      "way_id": "10291570",
-      "segment_index": 0,
-      "from_node": "6775720454",
-      "to_node": "86614848",
-      "geometry_m": [
-        [
-          939.1885002516257,
-          -588.5333206599797
-        ],
-        [
-          950.9599864977619,
-          -607.9257426525742
-        ]
-      ],
-      "length_m": 22.685544277839895,
-      "travel_time_s": 2.7331981057638424,
-      "speed_mps": 8.3,
-      "speed_assumption": "assumed highway-class speed 8.3 m/s",
-      "vehicle_access": {
-        "motor_vehicle": true,
-        "motorcar": true,
-        "bus": true,
-        "hgv": true
-      }
-    },
-    {
-      "id": "10291570/1/fwd",
-      "way_id": "10291570",
-      "segment_index": 1,
-      "from_node": "6775720454",
-      "to_node": "6775720455",
-      "geometry_m": [
-        [
-          939.1885002516257,
-          -588.5333206599797
-        ],
-        [
-          940.8725836150853,
-          -491.81583987242954
-        ]
-      ],
-      "length_m": 96.73214164208927,
-      "travel_time_s": 11.65447489663726,
-      "speed_mps": 8.3,
-      "speed_assumption": "assumed highway-class speed 8.3 m/s",
-      "vehicle_access": {
-        "motor_vehicle": true,
-        "motorcar": true,
-        "bus": true,
-        "hgv": true
-      }
-    },
-    {
-      "id": "10291570/1/rev",
-      "way_id": "10291570",
-      "segment_index": 1,
-      "from_node": "6775720455",
-      "to_node": "6775720454",
-      "geometry_m": [
-        [
-          940.8725836150853,
-          -491.81583987242954
-        ],
-        [
-          939.1885002516257,
-          -588.5333206599797
-        ]
-      ],
-      "length_m": 96.73214164208927,
-      "travel_time_s": 11.65447489663726,
-      "speed_mps": 8.3,
-      "speed_assumption": "assumed highway-class speed 8.3 m/s",
-      "vehicle_access": {
-        "motor_vehicle": true,
-        "motorcar": true,
-        "bus": true,
-        "hgv": true
-      }
-    },
-    {
-      "id": "10291570/2/fwd",
-      "way_id": "10291570",
-      "segment_index": 2,
-      "from_node": "6775720455",
-      "to_node": "86455621",
-      "geometry_m": [
-        [
-          940.8725836150853,
-          -491.81583987242954
-        ],
-        [
-          1077.240592753615,
-          -483.50956737909763
-        ]
-      ],
-      "length_m": 136.62074542008463,
-      "travel_time_s": 16.46033077350417,
-      "speed_mps": 8.3,
-      "speed_assumption": "assumed highway-class speed 8.3 m/s",
-      "vehicle_access": {
-        "motor_vehicle": true,
-        "motorcar": true,
-        "bus": true,
-        "hgv": true
-      }
-    },
-    {
-      "id": "10291570/2/rev",
-      "way_id": "10291570",
-      "segment_index": 2,
-      "from_node": "86455621",
-      "to_node": "6775720455",
-      "geometry_m": [
-        [
-          1077.240592753615,
-          -483.50956737909763
-        ],
-        [
-          940.8725836150853,
-          -491.81583987242954
-        ]
-      ],
-      "length_m": 136.62074542008463,
-      "travel_time_s": 16.46033077350417,
-      "speed_mps": 8.3,
-      "speed_assumption": "assumed highway-class speed 8.3 m/s",
-      "vehicle_access": {
-        "motor_vehicle": true,
-        "motorcar": true,
-        "bus": true,
-        "hgv": true
-      }
-    },
-    {
       "id": "10291574/0/fwd",
       "way_id": "10291574",
       "segment_index": 0,
@@ -123983,6 +123821,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124010,6 +123851,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124037,6 +123881,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124064,6 +123911,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124091,6 +123941,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124118,6 +123971,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124145,6 +124001,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124172,6 +124031,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124199,6 +124061,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124226,6 +124091,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124253,6 +124121,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124280,6 +124151,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124307,6 +124181,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124334,6 +124211,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124361,6 +124241,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124388,6 +124271,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124415,6 +124301,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124442,6 +124331,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124469,6 +124361,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124496,6 +124391,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124523,6 +124421,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124550,6 +124451,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124577,6 +124481,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124604,6 +124511,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124631,6 +124541,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124658,6 +124571,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124685,6 +124601,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124712,6 +124631,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124739,6 +124661,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124766,6 +124691,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124793,6 +124721,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124820,6 +124751,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124847,6 +124781,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124874,6 +124811,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124901,6 +124841,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124928,6 +124871,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124955,6 +124901,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -124982,6 +124931,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125009,6 +124961,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125036,6 +124991,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125063,6 +125021,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125090,6 +125051,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125117,6 +125081,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125144,6 +125111,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125171,6 +125141,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125198,6 +125171,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125225,6 +125201,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125252,6 +125231,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125279,6 +125261,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125306,6 +125291,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125333,6 +125321,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125360,6 +125351,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125387,6 +125381,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125414,6 +125411,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125441,6 +125441,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125468,6 +125471,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125495,6 +125501,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125522,6 +125531,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125549,6 +125561,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125576,6 +125591,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125603,6 +125621,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125630,6 +125651,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125657,6 +125681,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125684,6 +125711,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125711,6 +125741,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125738,6 +125771,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125765,6 +125801,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125792,6 +125831,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125819,6 +125861,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125846,6 +125891,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125873,6 +125921,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125900,6 +125951,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125927,6 +125981,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125954,6 +126011,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -125981,6 +126041,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -126008,6 +126071,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -126035,6 +126101,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -126062,6 +126131,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -126089,6 +126161,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -126116,6 +126191,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -126143,6 +126221,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -126170,6 +126251,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -126197,6 +126281,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -126224,6 +126311,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -126251,6 +126341,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -126278,6 +126371,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -126305,6 +126401,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -126332,6 +126431,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -126359,6 +126461,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -126386,6 +126491,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -126413,6 +126521,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -126440,6 +126551,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -126467,6 +126581,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -126494,6 +126611,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -126521,6 +126641,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -126548,6 +126671,9 @@
         "motorcar": true,
         "bus": true,
         "hgv": true
+      },
+      "access_tags": {
+        "hgv": "designated"
       }
     },
     {
@@ -160048,114 +160174,6 @@
       ],
       "length_m": 130.024528762117,
       "travel_time_s": 15.665605874953854,
-      "speed_mps": 8.3,
-      "speed_assumption": "assumed highway-class speed 8.3 m/s",
-      "vehicle_access": {
-        "motor_vehicle": true,
-        "motorcar": true,
-        "bus": true,
-        "hgv": true
-      }
-    },
-    {
-      "id": "1024505987/0/fwd",
-      "way_id": "1024505987",
-      "segment_index": 0,
-      "from_node": "86551599",
-      "to_node": "86551601",
-      "geometry_m": [
-        [
-          1130.98593336582,
-          -708.0902709265619
-        ],
-        [
-          1131.1569062968172,
-          -655.9397782975475
-        ]
-      ],
-      "length_m": 52.150772891607424,
-      "travel_time_s": 6.283225649591255,
-      "speed_mps": 8.3,
-      "speed_assumption": "assumed highway-class speed 8.3 m/s",
-      "vehicle_access": {
-        "motor_vehicle": true,
-        "motorcar": true,
-        "bus": true,
-        "hgv": true
-      }
-    },
-    {
-      "id": "1024505987/0/rev",
-      "way_id": "1024505987",
-      "segment_index": 0,
-      "from_node": "86551601",
-      "to_node": "86551599",
-      "geometry_m": [
-        [
-          1131.1569062968172,
-          -655.9397782975475
-        ],
-        [
-          1130.98593336582,
-          -708.0902709265619
-        ]
-      ],
-      "length_m": 52.150772891607424,
-      "travel_time_s": 6.283225649591255,
-      "speed_mps": 8.3,
-      "speed_assumption": "assumed highway-class speed 8.3 m/s",
-      "vehicle_access": {
-        "motor_vehicle": true,
-        "motorcar": true,
-        "bus": true,
-        "hgv": true
-      }
-    },
-    {
-      "id": "1024505987/1/fwd",
-      "way_id": "1024505987",
-      "segment_index": 1,
-      "from_node": "86551601",
-      "to_node": "86509633",
-      "geometry_m": [
-        [
-          1131.1569062968172,
-          -655.9397782975475
-        ],
-        [
-          1132.0117709481592,
-          -600.3422381805156
-        ]
-      ],
-      "length_m": 55.604111904040785,
-      "travel_time_s": 6.699290590848287,
-      "speed_mps": 8.3,
-      "speed_assumption": "assumed highway-class speed 8.3 m/s",
-      "vehicle_access": {
-        "motor_vehicle": true,
-        "motorcar": true,
-        "bus": true,
-        "hgv": true
-      }
-    },
-    {
-      "id": "1024505987/1/rev",
-      "way_id": "1024505987",
-      "segment_index": 1,
-      "from_node": "86509633",
-      "to_node": "86551601",
-      "geometry_m": [
-        [
-          1132.0117709481592,
-          -600.3422381805156
-        ],
-        [
-          1131.1569062968172,
-          -655.9397782975475
-        ]
-      ],
-      "length_m": 55.604111904040785,
-      "travel_time_s": 6.699290590848287,
       "speed_mps": 8.3,
       "speed_assumption": "assumed highway-class speed 8.3 m/s",
       "vehicle_access": {
