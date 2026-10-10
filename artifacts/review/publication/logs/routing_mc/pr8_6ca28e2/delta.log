@@ -1,0 +1,9 @@
+PINNED_SHA=6ca28e232992360a638e0e1ffb9b5e0842ff2a2a
+....................................................                [100%]
+52 passed, 5 subtests passed in 0.30s
+TEST_EXIT_CODE=0
+REROUTE {'delivered_goods': {}, 'medical_people_served': 0, 'on_time_medical_people': 0, 'safe_evacuated_people': 2}
+STRANDED {'delivered_goods': {}, 'medical_people_served': 0, 'on_time_medical_people': 0, 'safe_evacuated_people': 0}
+AID {'delivered_goods': {'water': 5}, 'medical_people_served': 1, 'on_time_medical_people': 1, 'safe_evacuated_people': 2}
+TIMING_SAMPLES 10
+REPLAY_EXIT_CODE=0
