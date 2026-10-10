@@ -1,4 +1,5 @@
 import unittest
+import tempfile
 from pathlib import Path
 from services.dashboard_api.replay import ReplayStore
 from services.dashboard_api.export_preview import render_preview
@@ -27,5 +28,42 @@ class PreviewTests(unittest.TestCase):
         root=Path(__file__).resolve().parents[3]
         html=render_preview(Store(),root/'web')
         self.assertNotIn('</script><script>injection()',html)
+
+    def test_all_local_assets_are_embedded_in_script_order(self):
+        class Store:
+            def bootstrap(self):return {'mode':'mock-replay','replay':{'frame_count':1}}
+            def frame(self,i):return {'snapshot_hash':'fixed'}
+        with tempfile.TemporaryDirectory() as d:
+            web=Path(d)
+            (web/'index.html').write_text('<!doctype html><html><head><link rel="stylesheet" href="./other.css"><script src="./tools.js" defer></script><script src="./app.js" defer></script></head><body><main>Ready</main></body></html>')
+            (web/'other.css').write_text('/* OTHER_STYLE */ body {color:red}')
+            (web/'tools.js').write_text('/* TOOLS_FIRST */ window.tools=true;')
+            (web/'app.js').write_text('/* APP_SECOND */ window.app=true;')
+            html=render_preview(Store(),web)
+            self.assertIn('OTHER_STYLE',html)
+            self.assertNotIn('src="./',html)
+            self.assertLess(html.index('const savedReplay'),html.index('TOOLS_FIRST'))
+            self.assertLess(html.index('TOOLS_FIRST'),html.index('APP_SECOND'))
+            self.assertLess(html.index('<main>Ready</main>'),html.index('TOOLS_FIRST'))
+    def test_export_rejects_remote_or_traversing_assets(self):
+        class Store:
+            def bootstrap(self):return {'mode':'mock-replay','replay':{'frame_count':1}}
+            def frame(self,i):return {'snapshot_hash':'fixed'}
+        with tempfile.TemporaryDirectory() as d:
+            web=Path(d)
+            for source in ('https://example.com/x.js','../outside.js'):
+                (web/'index.html').write_text('<body><script src="'+source+'" defer></script></body>')
+                with self.subTest(source=source),self.assertRaises(ValueError):render_preview(Store(),web)
+    def test_inline_assets_cannot_close_their_script_element(self):
+        class Store:
+            def bootstrap(self):return {'mode':'mock-replay','replay':{'frame_count':1}}
+            def frame(self,i):return {'snapshot_hash':'fixed'}
+        with tempfile.TemporaryDirectory() as d:
+            web=Path(d)
+            (web/'index.html').write_text('<body><script src="./tools.js" defer></script></body>')
+            (web/'tools.js').write_text('const literal="</script>";')
+            html=render_preview(Store(),web)
+            self.assertNotIn('const literal="</script>"',html)
+            self.assertIn('const literal=',html)
 
 if __name__=='__main__':unittest.main()

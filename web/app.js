@@ -1,395 +1,100 @@
 "use strict";
+const $=id=>document.getElementById(id), NS="http://www.w3.org/2000/svg";
+const LAYERS=[["roads","Roads","layer-roads"],["buildings","Buildings","layer-buildings"],["landuse","Landuse & water","layer-land"],["fire","Fire overlay","layer-hazards"],["closures","Closures","layer-closures"],["routes","Committed route","layer-route"],["oldRoutes","Previous route","layer-old-route"],["trails","Completed trail","layer-trails"],["units","Field units","layer-vehicles"]];
+const S={boot:null,frame:null,index:0,selected:null,serial:0,playing:false,timer:null,epoch:0,speed:1,projection:null,view:{x:0,y:0,w:1000,h:700},pointer:null,follow:false,tool:null,layers:Object.fromEntries(LAYERS.map(([k])=>[k,true])),pins:[],pinPoint:null,measure:[],events:[],feature:null,panels:{left:true,right:true},tab:"fleet",roads:[]};
+const node=(tag,cls="",value)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(value!==undefined)n.textContent=value;return n};
+const sn=(tag,attrs={})=>{const n=document.createElementNS(NS,tag);for(const[k,v]of Object.entries(attrs))n.setAttribute(k,String(v));return n};
+const txt=(id,v)=>$(id).textContent=v==null?"--":String(v),empty=id=>$(id).replaceChildren();
+const finite=v=>v!==null&&v!==undefined&&v!==""&&Number.isFinite(Number(v));
+const time=v=>!finite(v)?"--:--":String(Math.floor(Number(v)/3600)).padStart(2,"0")+":"+String(Math.floor(Number(v)%3600/60)).padStart(2,"0")+":"+String(Math.round(Number(v)%60)).padStart(2,"0");
+const dist=v=>!finite(v)?"Unknown":Number(v)>=1000?(Number(v)/1000).toFixed(1)+" km":Math.round(Number(v))+" m";
+const eta=v=>!finite(v)?"Unknown":Math.ceil(Number(v)/60)<60?Math.ceil(Number(v)/60)+" min":Math.floor(Math.ceil(Number(v)/60)/60)+" h "+String(Math.ceil(Number(v)/60)%60).padStart(2,"0")+" m";
+const pair=p=>Array.isArray(p)&&p.length>=2&&!Array.isArray(p[0])&&finite(p[0])&&finite(p[1])?[Number(p[0]),Number(p[1])]:null;
+const groups=g=>!Array.isArray(g)?[]:g.length&&pair(g[0])?[g.map(pair).filter(Boolean)]:g.flatMap(groups);
+const project=p=>{const q=S.projection;return[(p[0]-q.lon0)*q.cos*q.scale+q.ox,(q.lat1-p[1])*q.scale+q.oy]};
+const unproject=p=>{const q=S.projection;return[q.lon0+(p.x-q.ox)/(q.cos*q.scale),q.lat1-(p.y-q.oy)/q.scale]};
+const path=(g,closed=false)=>groups(g).filter(a=>a.length>(closed?2:1)).map(a=>a.map((p,i)=>{const[x,y]=project(p);return(i?"L":"M")+x.toFixed(2)+" "+y.toFixed(2)}).join(" ")+(closed?" Z":"")).join(" ");
+function add(layer,g,cls,closed=false,attrs={}){const d=path(g,closed);if(!d)return null;const n=sn("path",{d,class:cls,...attrs});$(layer).append(n);return n}
+function bboxProjection(b){if(!Array.isArray(b)||b.length<4)throw Error("Area bounds missing");const[a,c,d,e]=b.map(Number);if(![a,c,d,e].every(Number.isFinite)||d<=a||e<=c)throw Error("Area bounds invalid");const cos=Math.cos((c+e)*Math.PI/360),w=(d-a)*cos,h=e-c,scale=Math.min(900/w,600/h);return{lon0:a,lat1:e,cos,scale,ox:(1000-w*scale)/2,oy:(700-h*scale)/2}}
+function setView(v){const w=Math.max(65,Math.min(2200,v.w));S.view={x:v.x,y:v.y,w,h:w*.7};$("map").setAttribute("viewBox",[v.x,v.y,w,w*.7].map(x=>x.toFixed(2)).join(" "));const rect=$("map").getBoundingClientRect(),pixelsPerUnit=Math.min(rect.width/w,rect.height/(w*.7)),metres=35/pixelsPerUnit/S.projection.scale*111320;txt("map-scale","35 px ≈ "+dist(metres)+" straight line");updateSymbolScale();$("layer-road-labels").classList.toggle("layer-hidden",!S.layers.roads||w>800)}
+function fit(b,pad=40){if(!S.projection||!b)return;const a=project([b[0],b[3]]),c=project([b[2],b[1]]),w=Math.max(c[0]-a[0]+pad*2,(c[1]-a[1]+pad*2)/.7);setView({x:(a[0]+c[0]-w)/2,y:(a[1]+c[1]-w*.7)/2,w})}
+function fitArea(){if(S.boot){S.follow=false;followState();fit(S.boot.area.coverage_bbox_lonlat||S.boot.area.bbox_lonlat)}}
+function fitContext(){if(S.boot){S.follow=false;followState();fit(S.boot.area.bbox_lonlat,30)}}
+function focus(p,retain=false){p=pair(p);if(!p||!S.projection)return;const[x,y]=project(p),v=S.view;setView({x:x-v.w/2,y:y-v.h/2,w:v.w});if(!retain){S.follow=false;followState()}}
+function center(g){const a=groups(g).flat();return a.length?[a.reduce((s,p)=>s+p[0],0)/a.length,a.reduce((s,p)=>s+p[1],0)/a.length]:null}
+function screenPointWithMatrix(x,y,matrix){if(!matrix)return null;const p=$("map").createSVGPoint();p.x=x;p.y=y;const q=p.matrixTransform(matrix);return{x:q.x,y:q.y}}
+function screenPoint(x,y){const m=$("map").getScreenCTM();return screenPointWithMatrix(x,y,m?.inverse())}
+function zoom(factor,cx,cy){const v=S.view,p=screenPoint(cx,cy)||{x:v.x+v.w/2,y:v.y+v.h/2},rx=(p.x-v.x)/v.w,ry=(p.y-v.y)/v.h,w=Math.max(65,Math.min(2200,v.w*factor));setView({x:p.x-rx*w,y:p.y-ry*w*.7,w});S.follow=false;followState()}
+function zoomCenter(factor){const r=$("map").getBoundingClientRect();zoom(factor,r.left+r.width/2,r.top+r.height/2)}
+function pan(dx,dy){const v=S.view;setView({x:v.x+dx*v.w,y:v.y+dy*v.h,w:v.w});S.follow=false;followState()}
+function roadWidth(v){const h=String(v||"").toLowerCase();return /motorway|trunk|primary/.test(h)?6:/secondary|tertiary/.test(h)?4.4:2.6}
+function updateSymbolScale(){if(!S.projection)return;const factor=S.view.w/1000;document.querySelectorAll("[data-radius]").forEach(n=>n.setAttribute("r",(Number(n.dataset.radius)*factor).toFixed(2)));document.querySelectorAll("[data-font]").forEach(n=>n.setAttribute("font-size",(Number(n.dataset.font)*factor).toFixed(2)));document.querySelectorAll("[data-anchor-x]").forEach(n=>{n.setAttribute("x",(Number(n.dataset.anchorX)+Number(n.dataset.offsetX||0)*factor).toFixed(2));n.setAttribute("y",(Number(n.dataset.anchorY)+Number(n.dataset.offsetY||0)*factor).toFixed(2))})}
+function drawBase(area){
+ S.projection=bboxProjection(area.bbox_lonlat);
+ const b=area.bbox_lonlat,tl=project([b[0],b[3]]),br=project([b[2],b[1]]);
+ for(const[k,v]of Object.entries({x:tl[0],y:tl[1],width:br[0]-tl[0],height:br[1]-tl[1]}))$("area-clip-rect").setAttribute(k,String(v));
+ ["layer-land","layer-buildings","layer-roads","layer-road-labels","layer-boundary"].forEach(empty);
+ const light=document.body.classList.contains("light"),colors=light?{water:"#b4d4d9",grass:"#cbdabf",forest:"#bdd1bf",retail:"#e3e8df",farmland:"#dce3c4",other:"#d5ded1"}:{water:"#28657b",grass:"#355946",forest:"#284d48",retail:"#3b5354",farmland:"#3b5747",other:"#344d4b"};
+ for(const item of area.landuse||[]){const kind=String(item.kind||"").toLowerCase();add("layer-land",item.geometry_lonlat,"landuse",true,{fill:colors[kind]||(/wood|park/.test(kind)?colors.forest:colors.other)})}
+ for(const item of area.buildings||[])add("layer-buildings",item.geometry_lonlat,"building",true);
+ S.roads=(area.roads||[]).slice().sort((a,b)=>roadWidth(a.highway)-roadWidth(b.highway));
+ S.roads.forEach((item,i)=>{const w=roadWidth(item.highway);add("layer-roads",item.geometry_lonlat,"road-casing",false,{"stroke-width":w+1.5});add("layer-roads",item.geometry_lonlat,"road",false,{"stroke-width":w});const hit=add("layer-roads",item.geometry_lonlat,"road-interact",false,{"data-feature":"road","data-index":i});if(hit){const title=sn("title");title.textContent=item.name||item.highway||"OSM road";hit.append(title)}});
+ const names=new Set();for(const item of S.roads.slice().reverse()){if(!item.name||names.has(item.name)||names.size>=38)continue;names.add(item.name);const p=center(item.geometry_lonlat);if(!p)continue;const[x,y]=project(p),label=sn("text",{x,y,class:"road-label","data-font":11});label.textContent=item.name;$("layer-road-labels").append(label)}
+ const[a,c,d,e]=(area.coverage_bbox_lonlat||area.bbox_lonlat).map(Number);add("layer-boundary",[[a,c],[d,c],[d,e],[a,e],[a,c]],"area-boundary");const[bx,by]=project([a,e]),place=sn("text",{x:bx+8,y:by+21,class:"area-label","data-font":13,"data-anchor-x":bx,"data-anchor-y":by,"data-offset-x":8,"data-offset-y":21});place.textContent=(area.label||"Exercise area")+" area";$("layer-boundary").append(place);
+ txt("source-chip",S.roads.length?"OSM road geometry":"Road data unavailable");$("osm-attribution").hidden=!S.roads.length;
+ txt("map-title",area.label||"Loaded area");txt("map-area-label",area.label||"Loaded area");txt("map-subtitle",S.roads.length+" roads · "+(area.buildings||[]).length+" buildings");
+ fitArea();applyLayers();updateSymbolScale()
+}
+function layerCounts(){const a=S.boot?.area,f=S.frame;return{roads:a?.roads?.length||0,buildings:a?.buildings?.length||0,landuse:a?.landuse?.length||0,fire:f?.hazards?.length||0,closures:f?.closures?.length||0,units:f?.vehicles?.length||0}}
+function renderLayerToggles(){empty("layer-toggles");const counts=layerCounts();for(const[key,label]of LAYERS){const b=node("button","layer-toggle");b.type="button";b.setAttribute("aria-pressed",String(S.layers[key]));b.append(node("span","layer-eye",S.layers[key]?"✓":"–"),node("span","layer-label",label),node("span","layer-count",counts[key]??""));b.onclick=()=>{S.layers[key]=!S.layers[key];applyLayers()};$("layer-toggles").append(b)}}
+function applyLayers(){for(const[key,,id]of LAYERS)$(id).classList.toggle("layer-hidden",!S.layers[key]);$("layer-road-labels").classList.toggle("layer-hidden",!S.layers.roads||S.view.w>800);$("layer-destination").classList.toggle("layer-hidden",!S.layers.routes);renderLayerToggles()}
+function markMode(){const mock=String(S.boot.mode||"").startsWith("mock"),roads=S.roads.length>0;txt("mode-label",mock?"Recorded mock replay":"Recorded replay");txt("footer-mode",mock?"CONSTRUCTED TRAINING REPLAY":"RECORDED SIMULATION");txt("source-banner",roads?(mock?"REAL OSM BASE MAP · CONSTRUCTED ROUTE & FIRE REPLAY":"OSM BASE MAP · RECORDED REPLAY"):"NO ROAD DATA LOADED · OVERLAYS ARE CONSTRUCTED ILLUSTRATIONS");const n=$("map-notice");n.hidden=!!roads;n.textContent=roads?"Real OSM base map. Vehicle paths and fire overlay are constructed training illustrations.":"No road data loaded. Routes and fire are constructed illustrations."}
+function renderCoverage(area){empty("coverage-list");for(const entry of area.coverage||[]){const row=node("div","coverage-row"),left=node("div");left.append(node("strong","",entry.layer||"Layer"));if(entry.detail)left.append(node("small","",entry.detail));row.append(left,node("span",String(entry.status||"unknown").toLowerCase(),entry.status||"unknown"));$("coverage-list").append(row)}if(area.coverage_bbox_lonlat&&area.source_geometry_bbox_lonlat){const a=area.coverage_bbox_lonlat.map(Number).map(x=>x.toFixed(3)).join(", "),b=area.source_geometry_bbox_lonlat.map(Number).map(x=>x.toFixed(3)).join(", ");$("coverage-list").append(node("p","coverage-note","Dashed boundary: acquisition ["+a+"] lon/lat. Full OSM way context ["+b+"]. Context beyond the boundary is not verified coverage."))}}
+function renderDates(){empty("provenance-dates");const m=S.boot?.area?.source_manifest||{},n=$("provenance-dates");n.append(node("strong","","Source observations"));const edit=m.source_observed_at;const editRange=edit&&typeof edit==="object"?(edit.min||"unknown")+" to "+(edit.max||"unknown"):null;const fields=[["OSM edit-date range",editRange||m.observed_at_utc||m.source_observed_at_utc||m.observation_date],["OSM retrieval",m.downloaded_at_utc||m.retrieved_at_utc||m.acquired_at_utc||m.attempted_at_utc],["Replay snapshot observation",S.frame?.source_observed_at_utc||S.frame?.observed_at_utc]];for(const[label,value]of fields)if(value)n.append(node("div","",label+": "+value));if(n.children.length===1)n.append(node("div","","Observation and retrieval dates were not supplied in this source manifest."))}
+let railFrame=0;
+function rootHeight(){return $("map-surface").getBoundingClientRect().height}
+function scheduleMapRail(){if(railFrame)cancelAnimationFrame(railFrame);railFrame=requestAnimationFrame(()=>{railFrame=0;const tools=document.querySelector(".map-tools"),map=$("map-surface");tools.classList.toggle("compact-rail",rootHeight()<400);if(innerWidth<=760){tools.style.top="";tools.style.bottom="";tools.style.maxHeight="";tools.style.overflowY="";return}const solve=window.KnightHudRail?.resolveHudRailLayout;if(!solve)return;tools.style.maxHeight="";tools.style.overflowY="";const root=map.getBoundingClientRect(),lane=tools.getBoundingClientRect();if(root.height<=0)return;const obstacles=[".map-topline",".source-banner",".map-legend",".map-telemetry",".map-attribution"].map(selector=>document.querySelector(selector)).filter(el=>el&&!el.hidden).map(el=>{const r=el.getBoundingClientRect();return{left:r.left-root.left,right:r.right-root.left,top:r.top-root.top,bottom:r.bottom-root.top}});const layout=solve({viewportHeight:root.height,panelHeight:lane.height,laneLeft:lane.left-root.left,laneRight:lane.right-root.left,obstacles,baseTop:8,baseBottom:root.height-8,gap:12});if(layout){tools.style.top=Math.round(layout.top)+"px";tools.style.bottom="auto";tools.style.maxHeight=Math.max(0,Math.floor(layout.maxHeight))+"px";tools.style.overflowY=layout.constrained?"auto":""}})}
+function bannerHeight(){const b=document.querySelector(".saved-preview-banner");document.documentElement.style.setProperty("--preview-banner-height",b?b.getBoundingClientRect().height+"px":"0px")}
 
-const $ = (id) => document.getElementById(id);
-const NS = "http://www.w3.org/2000/svg";
-const state = {
-  bootstrap: null, frame: null, selectedId: null, index: 0, playing: false,
-  timer: null, requestSerial: 0, projection: null, view: {x:0,y:0,w:1000,h:700},
-  pointer: null
-};
+function followState(){const b=$("follow-unit");if(b){b.setAttribute("aria-pressed",String(S.follow));b.textContent=S.follow?"Following unit":"Follow unit"}}
+function renderFleet(){empty("fleet-list");const units=S.frame?.vehicles||[];txt("fleet-count",units.length);if(!units.length){$("fleet-list").append(node("p","empty-state","No units in this snapshot."));return}if(!units.some(v=>v.vehicle_id===S.selected))S.selected=units[0].vehicle_id;for(const v of units){const b=node("button","fleet-item"+(v.vehicle_id===S.selected?" selected":""));b.type="button";b.setAttribute("aria-pressed",String(v.vehicle_id===S.selected));const icon=node("span","fleet-icon "+String(v.kind||"").toLowerCase(),String(v.kind||"U").slice(0,1).toUpperCase()),label=node("span","fleet-main");label.append(node("strong","",v.label||v.vehicle_id),node("small","",String(v.kind||"unit")+" · "+String(v.phase||"unknown")));b.append(icon,label,node("span","fleet-chevron","›"));b.onclick=()=>selectVehicle(v.vehicle_id,true);$("fleet-list").append(b)}}
+function selectVehicle(id,centerUnit=false){if(!S.frame)return;S.selected=id;S.feature=null;$("feature-inspect").hidden=true;renderFleet();renderAudit();drawFrame();switchTab("fleet");setPanel("right",true);if(centerUnit){const v=S.frame.vehicles.find(x=>x.vehicle_id===id);if(v)focus(v.position_lonlat)}}
+function stat(label,value){const n=node("div","route-stat");n.append(node("small","",label),node("strong","",value));return n}
+function renderAudit(){empty("route-audit");const v=S.frame?.vehicles?.find(x=>x.vehicle_id===S.selected);if(!v){$("route-audit").append(node("p","empty-state","Select a field unit."));return}const title=node("div","route-title");title.append(node("h3","",v.label||v.vehicle_id),node("span","route-phase",v.phase||"unknown"));$("route-audit").append(title);if(String(S.boot.mode||"").startsWith("mock"))$("route-audit").append(node("p","route-caveat","Constructed training path · route calculation unavailable."));$("route-audit").append(node("p","route-reason",v.reason||"No reason recorded for this frame."));const grid=node("div","route-grid");grid.append(stat("Remaining",dist(v.remaining_distance_m)),stat("ETA",eta(v.eta_s)),stat("People aboard",String(v.load?.people??"Unknown")),stat("Supply units",String(v.load?.supply_units??"Unknown")));$("route-audit").append(grid);const p=pair(v.position_lonlat);$("route-audit").append(node("p","route-position","Recorded position: "+(p?p[1].toFixed(5)+", "+p[0].toFixed(5):"Unknown")),node("p","route-version","Route "+(v.route_id||"unassigned")+" · version "+(v.route_version??"--")));const actions=node("div","route-actions"),f=node("button","","Focus unit"),follow=node("button","","Follow unit");f.type=follow.type="button";follow.id="follow-unit";f.onclick=()=>focus(v.position_lonlat);follow.onclick=()=>{S.follow=!S.follow;if(S.follow)focus(v.position_lonlat,true);followState()};actions.append(f,follow);$("route-audit").append(actions);followState()}
+function renderLedger(){empty("needs-list");empty("stock-list");const needs=S.frame?.needs||[];if(!needs.length)$("needs-list").append(node("p","empty-state","No need records in this frame."));for(const v of needs){const row=node("div","ledger-row"),left=node("div");left.append(node("strong","",v.label||v.request_id||"Request"),node("small","",String(v.kind||"need").replaceAll("_"," ")+" · "+String(v.status||"unknown")));row.append(left,node("span","",String(v.remaining??"—")+" / "+String(v.quantity??"—")+" "+String(v.unit||"")));$("needs-list").append(row)}const stock=S.frame?.stocks||[];if(stock.length)$("stock-list").append(node("div","ledger-caption","DEPOT STOCK"));for(const v of stock){const row=node("div","ledger-row");row.append(node("strong","",v.label||v.depot_id||"Depot"),node("span","",String(v.supply_units??"—")+" units"));$("stock-list").append(row)}}
+function drawFrame(){for(const id of ["layer-hazards","layer-old-route","layer-route","layer-destination","layer-trails","layer-closures","layer-vehicles"])empty(id);const f=S.frame;if(!f)return;f.hazards?.forEach((v,i)=>{const p=add("layer-hazards",v.geometry_lonlat,"hazard",true,{"data-feature":"hazard","data-index":i});if(p){const t=sn("title");t.textContent=v.label||"Fire overlay";p.append(t)}});const selected=f.vehicles?.find(v=>v.vehicle_id===S.selected);if(selected){add("layer-old-route",selected.old_route_geometry_lonlat,"old-route");add("layer-route",selected.route_geometry_lonlat,"remaining-route");add("layer-route",selected.remaining_path_lonlat,"remaining-route");add("layer-trails",selected.completed_trail_lonlat,"completed-trail");const lines=groups(selected.route_geometry_lonlat),last=lines.at(-1)?.at(-1);if(last){const[x,y]=project(last),g=sn("g",{"aria-label":"Recorded route endpoint"});g.append(sn("circle",{cx:x,cy:y,r:8,class:"destination-marker","data-radius":8}));const t=sn("text",{x:x+12,y:y-9,class:"destination-label","data-font":11,"data-anchor-x":x,"data-anchor-y":y,"data-offset-x":12,"data-offset-y":-9});t.textContent=String(S.boot.mode||"").startsWith("mock")?"Illustrated route endpoint":"Route endpoint";g.append(t);$("layer-destination").append(g)}}f.closures?.forEach((v,i)=>{const p=add("layer-closures",v.geometry_lonlat,"closure",false,{"data-feature":"closure","data-index":i});if(p){const t=sn("title");t.textContent=v.reason||"Closed road";p.append(t)}});for(const v of f.vehicles||[]){const p=pair(v.position_lonlat);if(!p)continue;const[x,y]=project(p),chosen=v.vehicle_id===S.selected,g=sn("g",{"data-feature":"vehicle","data-id":v.vehicle_id,tabindex:"0",role:"button","aria-label":"Inspect "+(v.label||v.vehicle_id)});g.append(sn("circle",{cx:x,cy:y,r:chosen?11:9,class:"vehicle-marker"+(chosen?" selected":""),"data-radius":chosen?11:9}));g.append(sn("circle",{cx:x,cy:y,r:3,class:"vehicle-center"+(chosen?" selected":""),"data-radius":3}));const label=sn("text",{x:x+14,y:y+4,class:"marker-label","data-font":12,"data-anchor-x":x,"data-anchor-y":y,"data-offset-x":14,"data-offset-y":4});label.textContent=v.label||v.vehicle_id;g.append(label);g.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();selectVehicle(v.vehicle_id,true)}};$("layer-vehicles").append(g)}drawPins();drawMeasure();applyLayers();updateSymbolScale()}
+function renderEvents(){empty("event-list");const events=(S.frame?.events||[]).filter(v=>Number(v.time_s)<=Number(S.frame.time_s)).slice().sort((a,b)=>Number(b.time_s)-Number(a.time_s));txt("event-count",events.length+" events");if(!events.length){$("event-list").append(node("li","empty-state","No recorded events at this frame."));return}for(const v of events){const item=node("li",/clos|rerout/i.test(v.type||"")?"event-closure":""),b=node("button","event-jump");b.type="button";b.append(node("span","event-time",time(v.time_s)+" · "+String(v.type||"event").replaceAll("_"," ").toUpperCase()),node("span","",v.message||"Recorded event"));b.onclick=()=>{const match=S.events.find(x=>x.event_id===v.event_id);if(match){stop();loadFrame(match.index)}else toast("Event frame unavailable.")};item.append(b);$("event-list").append(item)}}
+function eventControls(){const before=S.events.filter(v=>v.index<S.index).at(-1),after=S.events.find(v=>v.index>S.index);$("event-prev").disabled=!before;$("event-next").disabled=!after;empty("event-markers");const count=S.boot?.replay?.frame_count||0;if(count<2)return;for(const v of S.events){const mark=node("i",/clos|rerout/i.test(v.type)?"closure":"");mark.style.left=(100*v.index/(count-1)).toFixed(2)+"%";mark.title=v.type+" · "+time(v.time_s);$("event-markers").append(mark)}}
+function renderFrame(f){S.frame=f;S.index=Number(f.index);txt("frame-index","Frame "+(S.index+1)+" / "+S.boot.replay.frame_count);txt("map-frame-label","Frame "+(S.index+1)+" / "+S.boot.replay.frame_count);txt("metric-clock",time(f.time_s));txt("playback-clock",time(f.time_s));txt("metric-safe",finite(f.metrics?.safely_evacuated)?Number(f.metrics.safely_evacuated).toLocaleString():"--");txt("metric-supply",finite(f.metrics?.delivered_supply_units)?Number(f.metrics.delivered_supply_units).toLocaleString():"--");txt("metric-medical",finite(f.metrics?.medical_served)?Number(f.metrics.medical_served).toLocaleString():"--");txt("footer-hash",f.snapshot_hash||"--");$("frame-slider").value=S.index;$("step-back").disabled=S.index<=0;$("step-forward").disabled=S.index>=S.boot.replay.frame_count-1;renderFleet();renderAudit();renderLedger();drawFrame();renderEvents();eventControls();renderDates();if(S.follow){const v=f.vehicles?.find(x=>x.vehicle_id===S.selected);if(v)focus(v.position_lonlat,true)}refreshFeature()}
+async function getJSON(url){const r=await fetch(url,{headers:{Accept:"application/json"}});if(!r.ok){let detail="";try{const b=await r.json();detail=b.message||b.error||""}catch(_){}throw Error("API "+r.status+" "+r.statusText+(detail?": "+detail:""))}return r.json()}
+async function loadFrame(i){if(!S.boot)return false;const n=Math.max(0,Math.min(S.boot.replay.frame_count-1,Number(i))),serial=++S.serial;try{const f=await getJSON("/api/frame?index="+encodeURIComponent(n));if(serial!==S.serial)return false;if(f.run_id!==S.boot.replay.run_id||Number(f.index)!==n)throw Error("Frame identity mismatch");$("global-error").hidden=true;renderFrame(f);return true}catch(e){if(serial!==S.serial)return false;stop();$("global-error").textContent="Could not load frame: "+e.message;$("global-error").hidden=false;return false}}
+function stop(){S.epoch++;S.serial++;S.playing=false;clearTimeout(S.timer);S.timer=null;txt("play-glyph","▶");txt("play-text","Play");$("play-button").setAttribute("aria-label","Play replay")}
+async function tick(epoch){if(!S.playing||epoch!==S.epoch)return;if(S.index>=S.boot.replay.frame_count-1){stop();return}const ok=await loadFrame(S.index+1);if(ok&&S.playing&&epoch===S.epoch)S.timer=setTimeout(()=>tick(epoch),900/S.speed)}
+async function play(){if(S.playing){stop();return}if(!S.boot)return;if(S.index>=S.boot.replay.frame_count-1&&!await loadFrame(0))return;S.playing=true;const epoch=++S.epoch;txt("play-glyph","Ⅱ");txt("play-text","Pause");$("play-button").setAttribute("aria-label","Pause replay");S.timer=setTimeout(()=>tick(epoch),900/S.speed)}
+async function preloadEvents(){const count=S.boot.replay.frame_count;if(count>120)return;try{const frames=await Promise.all(Array.from({length:count},(_,i)=>getJSON("/api/frame?index="+i))),seen=new Set(),out=[];for(let requested=0;requested<frames.length;requested++){const f=frames[requested];if(f.run_id!==S.boot.replay.run_id||Number(f.index)!==requested)continue;for(const e of f.events||[]){if(seen.has(e.event_id))continue;seen.add(e.event_id);out.push({...e,index:f.index})}}S.events=out.sort((a,b)=>a.index-b.index);eventControls()}catch(e){toast("Event index unavailable: "+e.message)}}
+function inspect(kind,index,activate=true){const a=S.boot?.area,f=S.frame,item=kind==="road"?S.roads[index]:kind==="hazard"?f?.hazards?.[index]:f?.closures?.[index];if(!item){S.feature=null;$("feature-inspect").hidden=true;$("feature-inspect").replaceChildren();return}S.feature={kind,index,id:item.id??item.edge_id??null};const box=$("feature-inspect");box.replaceChildren();box.hidden=false;box.append(node("h3","",kind==="road"?(item.name||"Unnamed OSM road"):kind==="hazard"?(item.label||"Fire overlay"):"Closed road"));if(kind==="road")box.append(node("p","","Highway: "+(item.highway||"unknown")),node("p","","OSM way ID: "+(item.id||"unknown")),node("p","feature-caveat","Base geometry does not prove road access or a calculated replay route."));if(kind==="hazard")box.append(node("p","",item.source_status||"Source status unknown"),node("p","feature-caveat","Recorded overlay; not a current fire incident."));if(kind==="closure")box.append(node("p","",item.reason||"No reason recorded"),node("p","","Observed at "+time(item.observed_at_s)),node("p","",item.source_status||"Source status unknown"));const b=node("button","","Focus feature");b.type="button";b.onclick=()=>{const p=center(item.geometry_lonlat);if(p)focus(p)};box.append(b);if(activate){switchTab("fleet");setPanel("right",true)}}
 
-function setText(id, value) { $(id).textContent = value == null ? "--" : String(value); }
-function el(tag, className, textValue) {
-  const node = document.createElement(tag);
-  if (className) node.className = className;
-  if (textValue !== undefined) node.textContent = textValue;
-  return node;
-}
-function svg(tag, attrs = {}) {
-  const node = document.createElementNS(NS, tag);
-  for (const [key, value] of Object.entries(attrs)) node.setAttribute(key, String(value));
-  return node;
-}
-function clear(id) { $(id).replaceChildren(); }
-function error(message) { const box = $("global-error"); box.textContent = message; box.hidden = !message; }
-function fmtTime(seconds) {
-  if (seconds === null || seconds === undefined || seconds === "" || !Number.isFinite(Number(seconds))) return "--:--";
-  const s = Math.max(0, Math.round(Number(seconds)));
-  return String(Math.floor(s / 3600)).padStart(2,"0") + ":" +
-    String(Math.floor((s % 3600) / 60)).padStart(2,"0") + ":" +
-    String(s % 60).padStart(2,"0");
-}
-function fmtDistance(metres) {
-  if (metres === null || metres === undefined || metres === "" || !Number.isFinite(Number(metres))) return "Unknown";
-  return Number(metres) >= 1000 ? (Number(metres)/1000).toFixed(1) + " km" : Math.round(Number(metres)) + " m";
-}
-function fmtEta(seconds) {
-  if (seconds === null || seconds === undefined || seconds === "" || !Number.isFinite(Number(seconds))) return "Unknown";
-  const minutes = Math.ceil(Number(seconds) / 60);
-  return minutes < 60 ? minutes + " min" : Math.floor(minutes / 60) + " h " + String(minutes % 60).padStart(2,"0") + " m";
-}
-function asPair(point) {
-  return Array.isArray(point) && point.length >= 2 && Number.isFinite(Number(point[0])) && Number.isFinite(Number(point[1])) &&
-    !Array.isArray(point[0]) ? [Number(point[0]),Number(point[1])] : null;
-}
-function lineGroups(geometry) {
-  if (!Array.isArray(geometry)) return [];
-  if (geometry.length && asPair(geometry[0])) return [geometry.map(asPair).filter(Boolean)];
-  return geometry.flatMap(lineGroups);
-}
-function project(pair) {
-  if (!state.projection) return [0,0];
-  const p = state.projection;
-  return [(pair[0] - p.lon0) * p.cos * p.scale + p.offsetX, (p.lat1 - pair[1]) * p.scale + p.offsetY];
-}
-function pathData(geometry, close = false) {
-  return lineGroups(geometry).filter(g => g.length > (close ? 2 : 1)).map(group =>
-    group.map((point,i) => { const [x,y] = project(point); return (i ? "L" : "M") + x.toFixed(2) + " " + y.toFixed(2); }).join(" ") + (close ? " Z" : "")
-  ).join(" ");
-}
-function addPath(layer, geometry, className, close = false, extra = {}) {
-  const d = pathData(geometry, close);
-  if (!d) return null;
-  const node = svg("path", {d, class:className, ...extra});
-  $(layer).append(node);
-  return node;
-}
-function projectionFromBbox(bbox) {
-  if (!Array.isArray(bbox) || bbox.length < 4) throw new Error("Area bounds are missing.");
-  const [lon0,lat0,lon1,lat1] = bbox.map(Number);
-  if (![lon0,lat0,lon1,lat1].every(Number.isFinite) || lon1 <= lon0 || lat1 <= lat0) throw new Error("Area bounds are invalid.");
-  const cos = Math.cos((lat0 + lat1) * Math.PI / 360);
-  const width = (lon1 - lon0) * cos, height = lat1 - lat0;
-  const scale = Math.min(920 / width, 620 / height);
-  return {lon0,lat1,cos,scale,offsetX:(1000-width*scale)/2,offsetY:(700-height*scale)/2};
-}
-function drawBase(area) {
-  state.projection = projectionFromBbox(area.bbox_lonlat);
-  const bounds = area.bbox_lonlat.map(Number);
-  const [clipLeft,clipTop] = project([bounds[0],bounds[3]]);
-  const [clipRight,clipBottom] = project([bounds[2],bounds[1]]);
-  for (const [name,value] of Object.entries({x:clipLeft,y:clipTop,width:clipRight-clipLeft,height:clipBottom-clipTop})) $("area-clip-rect").setAttribute(name,String(value));
-  clear("layer-land"); clear("layer-buildings"); clear("layer-roads"); clear("layer-boundary");
-  const colors = {forest:"#b7c8ad",wood:"#b7c8ad",grass:"#cbd7b7",meadow:"#d3dec1",residential:"#e4e9dc",industrial:"#d7dcca",park:"#c6d3b6",water:"#b8d1cf",reservoir:"#b8d1cf",farmland:"#dce4bd",retail:"#e5e5d9",brownfield:"#ddd8c8",cemetery:"#c7d4bd"};
-  for (const land of area.landuse || []) {
-    const kind = String(land.kind || "").toLowerCase();
-    addPath("layer-land",land.geometry_lonlat,"landuse",true,{fill:colors[kind] || (kind.includes("forest") ? colors.forest : "#d2ddc5")});
-  }
-  for (const building of area.buildings || []) addPath("layer-buildings",building.geometry_lonlat,"building",true);
-  const roads = (area.roads || []).slice().sort((a,b) => roadWidth(a.highway)-roadWidth(b.highway));
-  for (const road of roads) {
-    const width = roadWidth(road.highway);
-    addPath("layer-roads",road.geometry_lonlat,"road-casing",false,{"stroke-width":width+1.8});
-    const item = addPath("layer-roads",road.geometry_lonlat,"road",false,{"stroke-width":width});
-    if (item) item.appendChild(svg("title")).textContent = road.name || road.highway || "Road";
-  }
-  const [lon0,lat0,lon1,lat1] = (area.coverage_bbox_lonlat || area.bbox_lonlat).map(Number);
-  addPath("layer-boundary",[[lon0,lat0],[lon1,lat0],[lon1,lat1],[lon0,lat1],[lon0,lat0]],"area-boundary");
-  const hasRoads = (area.roads || []).length > 0;
-  setText("source-chip",hasRoads ? "OSM road geometry" : "Road data unavailable");
-  $("map-notice").hidden = hasRoads;
-  $("osm-attribution").hidden = !hasRoads;
-  setText("map-area-label",area.label || "Loaded area");
-  setText("map-title",area.label || "Area map");
-  setText("map-subtitle",(area.roads || []).length.toLocaleString() + " road geometries · " + (area.buildings || []).length.toLocaleString() + " buildings");
-  resetMap();
-}
-function roadWidth(highway) {
-  const h = String(highway || "").toLowerCase();
-  if (["motorway","trunk","primary"].some(x => h.includes(x))) return 7;
-  if (["secondary","tertiary"].some(x => h.includes(x))) return 5;
-  return 2.7;
-}
-function setView(view) {
-  const w = Math.max(120,Math.min(1500,view.w)), h = w*.7;
-  const x = Math.max(-250,Math.min(1250-w,view.x));
-  const y = Math.max(-175,Math.min(875-h,view.y));
-  state.view = {x,y,w,h};
-  $("map").setAttribute("viewBox",[x,y,w,h].map(n => n.toFixed(2)).join(" "));
-}
-function resetMap() { setView({x:0,y:0,w:1000,h:700}); }
-function zoom(factor) {
-  const v = state.view, w = v.w * factor, h = w * .7;
-  setView({x:v.x + (v.w-w)/2,y:v.y + (v.h-h)/2,w,h});
-}
-function wireMap() {
-  $("reset-map").addEventListener("click",resetMap);
-  $("zoom-in").addEventListener("click",() => zoom(.78));
-  $("zoom-out").addEventListener("click",() => zoom(1/.78));
-  const map = $("map");
-  map.addEventListener("wheel",event => { event.preventDefault(); zoom(event.deltaY < 0 ? .9 : 1/.9); },{passive:false});
-  map.addEventListener("pointerdown",event => {
-    if (event.button !== 0) return;
-    state.pointer = {id:event.pointerId,x:event.clientX,y:event.clientY,view:{...state.view}};
-    map.setPointerCapture(event.pointerId); map.classList.add("dragging");
-  });
-  map.addEventListener("pointermove",event => {
-    const drag = state.pointer;
-    if (!drag || drag.id !== event.pointerId) return;
-    const bounds = map.getBoundingClientRect();
-    setView({x:drag.view.x-(event.clientX-drag.x)*drag.view.w/bounds.width,
-      y:drag.view.y-(event.clientY-drag.y)*drag.view.h/bounds.height,w:drag.view.w});
-  });
-  const end = () => { state.pointer = null; map.classList.remove("dragging"); };
-  map.addEventListener("pointerup",end); map.addEventListener("pointercancel",end);
-}
-async function getJSON(path) {
-  const response = await fetch(path,{headers:{"Accept":"application/json"}});
-  if (!response.ok) {
-    let detail = "";
-    try { const body = await response.json(); detail = body.message || body.error || ""; } catch (_) {}
-    throw new Error("API " + response.status + " " + response.statusText + (detail ? ": " + detail : ""));
-  }
-  return response.json();
-}
-function markMode(mode) {
-  const mock = String(mode || "").startsWith("mock");
-  setText("mode-label",mock ? "Open map · training replay" : "Open map · recorded replay");
-  setText("footer-mode",mock ? "CONSTRUCTED TRAINING REPLAY" : "RECORDED SIMULATION");
-  const roadsLoaded = !!(state.bootstrap && state.bootstrap.area && (state.bootstrap.area.roads || []).length);
-  setText("source-banner",roadsLoaded ? (mock ? "REAL OSM BASE MAP · CONSTRUCTED ROUTE & FIRE REPLAY" : "RECORDED SIMULATION · OSM BASE MAP") : "NO ROAD DATA LOADED · OVERLAYS ARE CONSTRUCTED ILLUSTRATIONS");
-  if (mock && roadsLoaded) { $("map-notice").hidden = false; $("map-notice").textContent = "Real OSM base map. Vehicle paths and fire overlays are constructed training illustrations."; }
-  document.querySelectorAll(".metric-foot").forEach(node => {
-    if (!node.dataset.original) node.dataset.original = node.textContent;
-    node.textContent = mock ? node.dataset.original + " · mock scenario" : node.dataset.original;
-  });
-}
-function renderCoverage(entries) {
-  clear("coverage-list");
-  if (!entries || !entries.length) {
-    $("coverage-list").append(el("p","empty-state","No coverage manifest returned."));
-    return;
-  }
-  for (const entry of entries) {
-    const row = el("div","coverage-row");
-    const label = el("div"); label.append(el("strong","",entry.layer || "Layer"));
-    if (entry.detail) label.append(el("small","coverage-detail",entry.detail));
-    row.append(label,el("span",String(entry.status || "unknown").toLowerCase(),entry.status || "unknown"));
-    $("coverage-list").append(row);
-  }
-  const area = state.bootstrap && state.bootstrap.area;
-  if (area && area.coverage_bbox_lonlat && area.source_geometry_bbox_lonlat) {
-    const acquired = area.coverage_bbox_lonlat.map(Number).map(x => x.toFixed(3)).join(", ");
-    const context = area.source_geometry_bbox_lonlat.map(Number).map(x => x.toFixed(3)).join(", ");
-    const note = el("p","coverage-note","Dashed boundary: acquisition bounds [" + acquired + "] (lon/lat). Full OSM way context [" + context + "]. Geometry beyond the dashed boundary is context; source coverage there is not verified.");
-    $("coverage-list").append(note);
-  }
-}
-function vehicleIcon(kind) {
-  const wrapper = el("span","fleet-icon " + String(kind || "").toLowerCase());
-  const symbol = svg("svg",{viewBox:"0 0 24 24","aria-hidden":"true"});
-  const paths = {
-    ambulance:"M3 6h12v10H3z M15 9h3l3 3v4h-6z M7 11h5 M9.5 8.5v5 M6 18a1.5 1.5 0 1 0 0-3 M18 18a1.5 1.5 0 1 0 0-3",
-    bus:"M4 5h16v11H4z M7 8h3 M13 8h4 M7 11h3 M13 11h4 M7 18v-2 M17 18v-2",
-    truck:"M3 6h11v10H3z M14 9h4l3 3v4h-7z M6 18a1.5 1.5 0 1 0 0-3 M18 18a1.5 1.5 0 1 0 0-3"
-  };
-  symbol.append(svg("path",{d:paths[String(kind || "").toLowerCase()] || paths.truck,fill:"none",stroke:"currentColor","stroke-width":"1.5","stroke-linejoin":"round","stroke-linecap":"round"}));
-  wrapper.append(symbol); return wrapper;
-}
-function renderFleet(frame) {
-  clear("fleet-list");
-  const vehicles = frame.vehicles || [];
-  setText("fleet-count",vehicles.length);
-  if (!vehicles.length) { $("fleet-list").append(el("p","empty-state","No vehicles in this snapshot.")); return; }
-  if (!vehicles.some(v => v.vehicle_id === state.selectedId)) state.selectedId = vehicles[0].vehicle_id;
-  for (const v of vehicles) {
-    const selected = v.vehicle_id === state.selectedId;
-    const button = el("button","fleet-item" + (selected ? " selected" : ""));
-    button.type = "button"; button.setAttribute("aria-pressed",String(selected));
-    button.setAttribute("aria-label","Inspect " + (v.label || v.vehicle_id));
-    const main = el("span","fleet-main");
-    main.append(el("strong","",v.label || v.vehicle_id),el("small","",String(v.kind || "unit") + " · " + String(v.phase || "unknown")));
-    button.append(vehicleIcon(v.kind),main,el("span","fleet-chevron","›"));
-    button.addEventListener("click",() => { state.selectedId = v.vehicle_id; renderFleet(frame); renderRouteAudit(frame); drawFrameMap(frame); });
-    $("fleet-list").append(button);
-  }
-}
-function auditStat(label,value) {
-  const node = el("div","route-stat");
-  node.append(el("small","",label),el("strong","",value));
-  return node;
-}
-function renderLedger(frame) {
-  clear("needs-list"); clear("stock-list");
-  const needs = frame.needs || [];
-  if (!needs.length) $("needs-list").append(el("p","empty-state","No need records in this frame."));
-  for (const need of needs) {
-    const row = el("div","ledger-row");
-    const name = el("div"); name.append(el("strong","",need.label || need.request_id || "Request"));
-    name.append(el("small","",String(need.kind || "need").replaceAll("_"," ") + " · " + String(need.status || "unknown")));
-    row.append(name,el("span","",String(need.remaining ?? "—") + " / " + String(need.quantity ?? "—") + " " + String(need.unit || "")));
-    $("needs-list").append(row);
-  }
-  const stocks = frame.stocks || [];
-  if (stocks.length) $("stock-list").append(el("div","ledger-caption","DEPOT STOCK"));
-  for (const stock of stocks) {
-    const row = el("div","ledger-row"); row.append(el("strong","",stock.label || stock.depot_id || "Depot"),el("span","",String(stock.supply_units ?? "—") + " units"));
-    $("stock-list").append(row);
-  }
-}
-function renderRouteAudit(frame) {
-  clear("route-audit");
-  const v = (frame.vehicles || []).find(item => item.vehicle_id === state.selectedId);
-  if (!v) { $("route-audit").append(el("p","empty-state","No vehicle selected.")); return; }
-  const heading = el("div","route-name");
-  heading.append(el("strong","",v.label || v.vehicle_id),el("span","route-tag",v.phase || "unknown"));
-  $("route-audit").append(heading);
-  if (String(state.bootstrap.mode || "").startsWith("mock")) $("route-audit").append(el("p","route-caveat","Constructed training path · route calculation unavailable."));
-  else if (!(state.bootstrap.area.roads || []).length) $("route-audit").append(el("p","route-caveat","Road graph unavailable · route calculation status unknown."));
-  $("route-audit").append(el("p","route-reason",v.reason || "No route change reason recorded for this frame."));
-  const grid = el("div","route-grid");
-  grid.append(
-    auditStat("Remaining",fmtDistance(v.remaining_distance_m)),
-    auditStat("Arrival ETA",fmtEta(v.eta_s)),
-    auditStat("People aboard",Number(v.load && v.load.people || 0).toLocaleString()),
-    auditStat("Supply units",Number(v.load && v.load.supply_units || 0).toLocaleString())
-  );
-  $("route-audit").append(grid,el("p","route-version","Route " + (v.route_id || "unassigned") + " · version " + (v.route_version ?? "--")));
-}
-function drawFrameMap(frame) {
-  ["layer-hazards","layer-old-route","layer-route","layer-closures","layer-vehicles"].forEach(clear);
-  for (const hazard of frame.hazards || []) {
-    const path = addPath("layer-hazards",hazard.geometry_lonlat,"hazard",true);
-    if (path) path.appendChild(svg("title")).textContent = (hazard.label || "Fire perimeter") + " · " + (hazard.source_status || "source unknown");
-  }
-  const selected = (frame.vehicles || []).find(v => v.vehicle_id === state.selectedId);
-  if (selected) {
-    addPath("layer-old-route",selected.old_route_geometry_lonlat,"old-route");
-    addPath("layer-route",selected.route_geometry_lonlat,"remaining-route");
-    addPath("layer-route",selected.remaining_path_lonlat,"remaining-route");
-    addPath("layer-route",selected.completed_trail_lonlat,"completed-trail");
-  }
-  for (const closure of frame.closures || []) {
-    const line = addPath("layer-closures",closure.geometry_lonlat,"closure");
-    if (line) line.appendChild(svg("title")).textContent = (closure.reason || "Closed road") + " · observed at " + fmtTime(closure.observed_at_s);
-  }
-  for (const v of frame.vehicles || []) {
-    const point = asPair(v.position_lonlat);
-    if (!point) continue;
-    const [x,y] = project(point), selectedMarker = v.vehicle_id === state.selectedId;
-    const group = svg("g",{tabindex:"0",role:"button","aria-label":"Select " + (v.label || v.vehicle_id)});
-    group.append(svg("circle",{cx:x,cy:y,r:selectedMarker ? 11 : 9,class:"vehicle-marker" + (selectedMarker ? " selected" : "")}));
-    group.append(svg("circle",{cx:x,cy:y,r:3,class:"vehicle-center" + (selectedMarker ? " selected" : "")}));
-    const label = svg("text",{x:x+15,y:y+4,class:"marker-label" + (selectedMarker ? " selected" : "")}); label.textContent = v.label || v.vehicle_id; group.append(label);
-    const select = () => { state.selectedId = v.vehicle_id; renderFleet(frame); renderRouteAudit(frame); drawFrameMap(frame); };
-    group.addEventListener("click",select);
-    group.addEventListener("keydown",event => { if (event.key === "Enter" || event.key === " ") {event.preventDefault();select();} });
-    $("layer-vehicles").append(group);
-  }
-}
-function renderEvents(frame) {
-  clear("event-list");
-  const events = (frame.events || []).filter(e => Number(e.time_s) <= Number(frame.time_s)).slice().sort((a,b) => Number(b.time_s)-Number(a.time_s));
-  setText("event-count",events.length + (events.length === 1 ? " EVENT" : " EVENTS"));
-  if (!events.length) { $("event-list").append(el("li","empty-state","No recorded events at this frame.")); return; }
-  for (const event of events) {
-    const kind = String(event.type || "").toLowerCase();
-    const item = el("li",kind.includes("clos") || kind.includes("rerout") ? "event-closure" : "");
-    item.append(el("span","event-time",fmtTime(event.time_s) + " · " + String(event.type || "event").replaceAll("_"," ").toUpperCase()));
-    item.append(el("span","",event.message || "Recorded event"));
-    $("event-list").append(item);
-  }
-}
-function renderFrame(frame) {
-  state.frame = frame; state.index = Number(frame.index);
-  setText("frame-index",state.index + 1);
-  setText("map-frame-label","FRAME " + (state.index + 1) + " / " + state.bootstrap.replay.frame_count);
-  setText("metric-clock",fmtTime(frame.time_s)); setText("playback-clock",fmtTime(frame.time_s));
-  setText("metric-safe",Number(frame.metrics && frame.metrics.safely_evacuated || 0).toLocaleString());
-  setText("metric-supply",Number(frame.metrics && frame.metrics.delivered_supply_units || 0).toLocaleString());
-  setText("metric-medical",Number(frame.metrics && frame.metrics.medical_served || 0).toLocaleString());
-  setText("footer-hash","SNAPSHOT " + String(frame.snapshot_hash || "--").slice(0,12));
-  $("frame-slider").value = state.index;
-  $("step-back").disabled = state.index <= 0;
-  $("step-forward").disabled = state.index >= state.bootstrap.replay.frame_count - 1;
-  renderFleet(frame); renderRouteAudit(frame); renderLedger(frame); drawFrameMap(frame); renderEvents(frame);
-}
-async function loadFrame(index) {
-  if (!state.bootstrap) return;
-  const clamped = Math.max(0,Math.min(state.bootstrap.replay.frame_count-1,Number(index)));
-  const serial = ++state.requestSerial;
-  try {
-    const frame = await getJSON("/api/frame?index=" + encodeURIComponent(clamped));
-    if (serial !== state.requestSerial) return;
-    if (frame.run_id !== state.bootstrap.replay.run_id || Number(frame.index) !== clamped) throw new Error("Frame identity did not match the requested replay.");
-    error(""); renderFrame(frame);
-  } catch (err) {
-    if (serial !== state.requestSerial) return;
-    stopPlayback(); error("Could not load replay frame: " + err.message);
-  }
-}
-function stopPlayback() {
-  state.playing = false;
-  if (state.timer) clearTimeout(state.timer);
-  state.timer = null;
-  setText("play-glyph","▶"); setText("play-text","Play"); $("play-button").setAttribute("aria-label","Play replay");
-}
-async function playbackTick() {
-  if (!state.playing || !state.bootstrap) return;
-  if (state.index >= state.bootstrap.replay.frame_count - 1) { stopPlayback(); return; }
-  await loadFrame(state.index + 1);
-  if (state.playing) state.timer = setTimeout(playbackTick,900);
-}
-function wirePlayback() {
-  $("play-button").addEventListener("click",async () => {
-    if (state.playing) { stopPlayback(); return; }
-    if (state.index >= state.bootstrap.replay.frame_count - 1) await loadFrame(0);
-    if (!state.frame) return;
-    state.playing = true; setText("play-glyph","Ⅱ"); setText("play-text","Pause"); $("play-button").setAttribute("aria-label","Pause replay");
-    state.timer = setTimeout(playbackTick,900);
-  });
-  $("step-back").addEventListener("click",() => { stopPlayback(); loadFrame(state.index - 1); });
-  $("step-forward").addEventListener("click",() => { stopPlayback(); loadFrame(state.index + 1); });
-  $("frame-slider").addEventListener("input",event => { stopPlayback(); loadFrame(Number(event.target.value)); });
-}
-function wireCoverage() {
-  $("coord-form").addEventListener("submit",async event => {
-    event.preventDefault();
-    const result = $("coord-result"); result.className = "coord-result";
-    const text = $("coord-input").value.trim();
-    const match = text.match(/^\s*([+-]?\d+(?:\.\d+)?)\s*,\s*([+-]?\d+(?:\.\d+)?)\s*$/);
-    if (!match) { result.textContent = "Enter latitude, longitude as decimal numbers."; result.classList.add("unavailable"); return; }
-    const lat = Number(match[1]), lon = Number(match[2]);
-    if (lat < -90 || lat > 90 || lon < -180 || lon > 180) { result.textContent = "Latitude or longitude is out of range."; result.classList.add("unavailable"); return; }
-    result.textContent = "Checking API coverage...";
-    try {
-      const coverage = await getJSON("/api/coverage?lat=" + encodeURIComponent(lat) + "&lon=" + encodeURIComponent(lon));
-      result.textContent = coverage.message || (coverage.available ? "Location is inside the loaded exercise area." : "Unavailable outside loaded exercise area.");
-      result.classList.toggle("unavailable",!coverage.available);
-    } catch (err) {
-      result.textContent = "Coverage check failed: " + err.message; result.classList.add("unavailable");
-    }
-  });
-}
-async function init() {
-  wireMap(); wirePlayback(); wireCoverage();
-  try {
-    const data = await getJSON("/api/bootstrap");
-    if (!data.area || !data.replay || !Number.isInteger(Number(data.replay.frame_count)) || Number(data.replay.frame_count) < 1) throw new Error("Bootstrap response is missing the area or replay.");
-    state.bootstrap = data;
-    drawBase(data.area); renderCoverage(data.area.coverage);
-    markMode(data.mode);
-    setText("run-id","RUN " + String(data.replay.run_id || "--").slice(0,15).toUpperCase());
-    setText("scenario-description",data.replay.description || data.label || "Recorded response exercise.");
-    setText("top-status",data.area.label || "Replay ready");
-    $("frame-slider").max = Number(data.replay.frame_count)-1;
-    $("frame-slider").disabled = false; $("play-button").disabled = false;
-    const times = data.replay.frame_times_s || [];
-    setText("start-time",fmtTime(times[0])); setText("end-time",fmtTime(times[times.length-1]));
-    await loadFrame(0);
-  } catch (err) {
-    setText("top-status","Replay unavailable");
-    error("Could not open the exercise: " + err.message);
-  }
-}
+function refreshFeature(){if(!S.feature)return;const {kind,index,id}=S.feature;if(kind==="road"){inspect(kind,index,false);return}const list=kind==="hazard"?S.frame?.hazards:S.frame?.closures;const next=id==null?-1:(list||[]).findIndex(v=>(v.id??v.edge_id??null)===id);inspect(kind,next,false)}
+function toast(message){const n=$("map-toast");n.textContent=message;n.classList.add("visible");clearTimeout(S.toastTimer);S.toastTimer=setTimeout(()=>n.classList.remove("visible"),2700)}
+function renderPins(){empty("annotation-list");if(!S.pins.length){$("annotation-list").append(node("p","empty-state","Use the pin tool to mark a location. Pins stay in this browser only."));return}for(const v of S.pins){const row=node("div","annotation-row"),go=node("button","",v.label),del=node("button","","×");go.type=del.type="button";go.onclick=()=>focus(v.point);del.setAttribute("aria-label","Remove "+v.label);del.onclick=()=>{S.pins=S.pins.filter(x=>x.id!==v.id);renderPins();drawPins()};row.append(go,del);$("annotation-list").append(row)}}
+function drawPins(){empty("layer-annotations");if(!S.projection)return;for(const v of S.pins){const[x,y]=project(v.point),g=sn("g",{"data-feature":"pin","data-id":v.id,tabindex:"0",role:"button","aria-label":"Local pin "+v.label});g.append(sn("circle",{cx:x,cy:y,r:7,class:"annotation-pin","data-radius":7}));const t=sn("text",{x:x+11,y:y+4,class:"annotation-label","data-font":11,"data-anchor-x":x,"data-anchor-y":y,"data-offset-x":11,"data-offset-y":4});t.textContent=v.label;g.append(t);g.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();toast("Local pin: "+v.label)}};$("layer-annotations").append(g)}updateSymbolScale()}
+function haversine(a,b){const R=6371000,dlat=(b[1]-a[1])*Math.PI/180,dlon=(b[0]-a[0])*Math.PI/180,p1=a[1]*Math.PI/180,p2=b[1]*Math.PI/180,x=Math.sin(dlat/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin(dlon/2)**2;return 2*R*Math.asin(Math.min(1,Math.sqrt(x)))}
+function drawMeasure(){empty("layer-measure");if(!S.projection)return;for(const p of S.measure){const[x,y]=project(p);$("layer-measure").append(sn("circle",{cx:x,cy:y,r:5,class:"measure-point","data-radius":5}))}if(S.measure.length===2){add("layer-measure",S.measure,"measure-line");const a=S.measure[0],b=S.measure[1],[x,y]=project([(a[0]+b[0])/2,(a[1]+b[1])/2]),t=sn("text",{x:x+8,y:y-8,class:"measure-label","data-font":12});t.textContent="Straight line "+dist(haversine(a,b));$("layer-measure").append(t)}updateSymbolScale()}
+function setTool(tool){S.tool=S.tool===tool?null:tool;$("measure-toggle").setAttribute("aria-pressed",String(S.tool==="measure"));$("annotate-toggle").setAttribute("aria-pressed",String(S.tool==="pin"));$("map").classList.toggle("tool-active",!!S.tool);if(S.tool==="measure")toast("Select two points. Measurement is straight-line, not a route.");if(S.tool==="pin")toast("Select a point, then name the local pin.")}
+function mapClick(point,target){if(!S.projection)return;const ll=unproject(point);if(S.tool==="measure"){if(S.measure.length===2)S.measure=[];S.measure.push(ll);drawMeasure();if(S.measure.length===2)toast("Straight-line distance: "+dist(haversine(S.measure[0],S.measure[1])));return}if(S.tool==="pin"){S.pinPoint=ll;$("annotation-editor").hidden=false;$("annotation-input").value="";$("annotation-input").focus();return}const hit=target?.closest?.("[data-feature]");if(!hit)return;const kind=hit.getAttribute("data-feature");if(kind==="vehicle"){selectVehicle(hit.getAttribute("data-id"),true);return}if(kind==="pin"){const v=S.pins.find(x=>x.id===hit.getAttribute("data-id"));if(v)toast("Local pin: "+v.label);return}const i=Number(hit.getAttribute("data-index"));if(["road","hazard","closure"].includes(kind)&&Number.isInteger(i))inspect(kind,i)}
+function wireMap(){const map=$("map");map.addEventListener("wheel",e=>{e.preventDefault();zoom(e.deltaY<0?.86:1/.86,e.clientX,e.clientY)},{passive:false});map.addEventListener("pointerdown",e=>{if(e.button!==0)return;const inverse=map.getScreenCTM()?.inverse();S.pointer={id:e.pointerId,x:e.clientX,y:e.clientY,view:{...S.view},target:e.target,matrix:inverse,point:screenPointWithMatrix(e.clientX,e.clientY,inverse),moved:false};map.setPointerCapture(e.pointerId);map.classList.add("dragging")});map.addEventListener("pointermove",e=>{const p=screenPoint(e.clientX,e.clientY);if(p&&S.projection){const[lon,lat]=unproject(p);txt("cursor-coords",lat.toFixed(5)+", "+lon.toFixed(5)+" lat/lon")}const drag=S.pointer;if(!drag||drag.id!==e.pointerId)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.abs(dx)+Math.abs(dy)>5)drag.moved=true;if(drag.moved&&drag.point){const current=screenPointWithMatrix(e.clientX,e.clientY,drag.matrix);if(current){setView({x:drag.view.x-(current.x-drag.point.x),y:drag.view.y-(current.y-drag.point.y),w:drag.view.w});S.follow=false;followState()}}});map.addEventListener("pointerup",e=>{const d=S.pointer;S.pointer=null;map.classList.remove("dragging");if(d&&d.id===e.pointerId&&!d.moved&&d.point)mapClick(d.point,d.target)});map.addEventListener("pointercancel",()=>{S.pointer=null;map.classList.remove("dragging")});map.addEventListener("pointerleave",()=>txt("cursor-coords","Move pointer over map for coordinates"));$("zoom-in").onclick=()=>zoomCenter(.78);$("zoom-out").onclick=()=>zoomCenter(1/.78);$("fit-area").onclick=fitArea;$("fit-context").onclick=fitContext;$("measure-toggle").onclick=()=>setTool("measure");$("measure-clear").onclick=()=>{S.measure=[];drawMeasure();toast("Measurement cleared.")};$("annotate-toggle").onclick=()=>setTool("pin");$("annotation-cancel").onclick=()=>{$("annotation-editor").hidden=true;S.pinPoint=null};const savePin=e=>{e.preventDefault();if(!S.pinPoint)return;const label=$("annotation-input").value.trim()||"Pin "+(S.pins.length+1);S.pins.push({id:String(Date.now())+"-"+Math.random().toString(36).slice(2),label,point:S.pinPoint});S.pinPoint=null;$("annotation-editor").hidden=true;renderPins();drawPins();toast("Local pin saved: "+label)};$("annotation-editor").onsubmit=savePin;$("annotation-save").onclick=savePin;$("annotation-input").onkeydown=e=>{if(e.key==="Enter")savePin(e)};$("annotations-clear").onclick=()=>{S.pins=[];renderPins();drawPins();toast("Local pins cleared.")};$("layers-reset").onclick=()=>{for(const key of Object.keys(S.layers))S.layers[key]=true;applyLayers()};$("fullscreen-toggle").onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.querySelector(".app-shell").requestFullscreen()}catch(e){toast("Fullscreen unavailable: "+e.message)}};document.addEventListener("fullscreenchange",()=>$("fullscreen-toggle").setAttribute("aria-label",document.fullscreenElement?"Exit fullscreen":"Enter fullscreen"))}
+function switchTab(tab){for(const key of ["fleet","events","data"]){const active=key===tab,b=$("tab-"+key);b.setAttribute("aria-selected",String(active));b.tabIndex=active?0:-1;$("pane-"+key).hidden=!active}S.tab=tab}
+function setPanel(side,open){S.panels[side]=open;const p=$(side+"-panel");p.classList.toggle("collapsed",!open);p.setAttribute("aria-hidden",String(!open));p.inert=!open;$(side+"-rail").hidden=open;$(side+"-toggle").setAttribute("aria-expanded",String(open));if(innerWidth<=760&&open){const other=side==="left"?"right":"left";if(S.panels[other])setPanel(other,false)}$("mobile-scrim").hidden=innerWidth>760||!(S.panels.left||S.panels.right);scheduleMapRail()}
+function wirePanels(){for(const side of ["left","right"]){$(side+"-toggle").onclick=()=>setPanel(side,!S.panels[side]);$(side+"-close").onclick=()=>setPanel(side,false);$(side+"-collapse").onclick=()=>setPanel(side,false);$(side+"-rail").onclick=()=>setPanel(side,true)}$("mobile-scrim").onclick=()=>{setPanel("left",false);setPanel("right",false)};for(const key of ["fleet","events","data"]){const b=$("tab-"+key);b.onclick=()=>switchTab(key);b.onkeydown=e=>{if(!["ArrowLeft","ArrowRight"].includes(e.key))return;e.preventDefault();const a=["fleet","events","data"],next=a[(a.indexOf(key)+(e.key==="ArrowRight"?1:2))%3];switchTab(next);$("tab-"+next).focus()}}if(innerWidth<=760){setPanel("left",false);setPanel("right",false)}else if(innerWidth<=1120)setPanel("left",false);let mobile=innerWidth<=760;window.addEventListener("resize",()=>{bannerHeight();const next=innerWidth<=760;if(next!==mobile){mobile=next;if(next){setPanel("left",false);setPanel("right",false)}else{setPanel("left",innerWidth>1120);setPanel("right",true)}}if(S.projection)setView({...S.view});scheduleMapRail()})}
+function searchItems(){if(!S.boot)return[];const out=[];for(const v of S.frame?.vehicles||[])out.push({kind:"Unit",label:v.label||v.vehicle_id,detail:v.phase||"",go:()=>selectVehicle(v.vehicle_id,true)});const names=new Set();S.roads.forEach((v,i)=>{if(!v.name||names.has(v.name))return;names.add(v.name);out.push({kind:"Road",label:v.name,detail:v.highway||"",go:()=>{inspect("road",i);const p=center(v.geometry_lonlat);if(p)focus(p)}})});for(const e of S.events)out.push({kind:"Event",label:e.message||e.type,detail:time(e.time_s),go:()=>{stop();loadFrame(e.index);switchTab("events");setPanel("right",true)}});for(const[label,go]of [["Fit acquisition area",fitArea],["Fit full context",fitContext],["Measure straight-line distance",()=>setTool("measure")],["Add local pin",()=>setTool("pin")],["Show map data",()=>{switchTab("data");setPanel("right",true)}],["Show events",()=>{switchTab("events");setPanel("right",true)}],["Shortcut help",()=>openDialog("help-dialog")]])out.push({kind:"Action",label,detail:"",go});return out}
+function renderSearch(){empty("search-results");const q=$("search-input").value.trim().toLowerCase();if(!S.boot){$("search-results").append(node("p","search-empty","Replay has not loaded yet."));return}const found=searchItems().filter(v=>!q||(v.label+" "+v.kind+" "+v.detail).toLowerCase().includes(q)).slice(0,35);if(!found.length){$("search-results").append(node("p","search-empty","No match in loaded units, OSM roads, events, or commands. Online place search is unavailable."));return}for(const v of found){const b=node("button","search-result");b.type="button";b.append(node("strong","",v.label),node("small","",v.kind+(v.detail?" · "+v.detail:"")));b.onclick=()=>{closeDialog("search-dialog");v.go()};$("search-results").append(b)}}
+function openDialog(id){const d=$(id);if(!d.open)d.showModal();if(id==="search-dialog"){$("search-input").value="";renderSearch();$("search-input").focus()}}
+function closeDialog(id){if($(id).open)$(id).close()}
+function wireDialogs(){$("search-open").onclick=()=>openDialog("search-dialog");$("search-close").onclick=()=>closeDialog("search-dialog");$("search-input").oninput=renderSearch;$("search-input").onkeydown=e=>{if(e.key==="Enter"){const first=$("search-results").querySelector("button");if(first){e.preventDefault();first.click()}}};$("help-open").onclick=()=>openDialog("help-dialog");$("help-close").onclick=()=>closeDialog("help-dialog");for(const id of ["search-dialog","help-dialog"])$(id).addEventListener("click",e=>{if(e.target===$(id))closeDialog(id)})}
+
+function wireReplay(){$("play-button").onclick=play;$("step-back").onclick=()=>{stop();loadFrame(S.index-1)};$("step-forward").onclick=()=>{stop();loadFrame(S.index+1)};$("frame-slider").oninput=e=>{stop();loadFrame(Number(e.target.value))};$("speed-select").onchange=e=>{S.speed=Number(e.target.value)||1;if(S.playing){clearTimeout(S.timer);S.serial++;const epoch=++S.epoch;S.timer=setTimeout(()=>tick(epoch),900/S.speed)}};$("event-prev").onclick=()=>{const v=S.events.filter(x=>x.index<S.index).at(-1);if(v){stop();loadFrame(v.index)}};$("event-next").onclick=()=>{const v=S.events.find(x=>x.index>S.index);if(v){stop();loadFrame(v.index)}}}
+function wireKeys(){document.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();openDialog("search-dialog");return}if(e.key==="Escape"){const dialog=["search-dialog","help-dialog"].map($).find(d=>d.open);if(dialog){e.preventDefault();dialog.close();return}$("annotation-editor").hidden=true;S.pinPoint=null;if(S.tool)setTool(S.tool);if(innerWidth<=760){setPanel("left",false);setPanel("right",false)}return}if($("search-dialog").open||$("help-dialog").open)return;if(e.target instanceof Element&&e.target.closest("input,textarea,select,button,a,[role=button],[contenteditable=true],dialog"))return;if(e.shiftKey&&["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].includes(e.key)){e.preventDefault();pan(e.key==="ArrowLeft"?-.1:e.key==="ArrowRight"?.1:0,e.key==="ArrowUp"?-.1:e.key==="ArrowDown"?.1:0);return}if(e.key===" "){e.preventDefault();play()}else if(e.key==="ArrowLeft"){e.preventDefault();stop();loadFrame(S.index-1)}else if(e.key==="ArrowRight"){e.preventDefault();stop();loadFrame(S.index+1)}else if(e.key==="Home"){e.preventDefault();stop();loadFrame(0)}else if(e.key==="End"){e.preventDefault();stop();loadFrame(S.boot?.replay.frame_count-1||0)}else if(e.key==="+"||e.key==="="){e.preventDefault();zoomCenter(.78)}else if(e.key==="-"){e.preventDefault();zoomCenter(1/.78)}})}
+function wireCoverage(){const check=async e=>{e.preventDefault();const out=$("coord-result"),match=$("coord-input").value.trim().match(/^\s*([+-]?\d+(?:\.\d+)?)\s*,\s*([+-]?\d+(?:\.\d+)?)\s*$/);out.className="coord-result";if(!match){out.textContent="Enter latitude, longitude as decimal numbers.";out.classList.add("unavailable");return}const lat=Number(match[1]),lon=Number(match[2]);if(lat<-90||lat>90||lon<-180||lon>180){out.textContent="Latitude or longitude is out of range.";out.classList.add("unavailable");return}out.textContent="Checking server coverage…";try{const c=await getJSON("/api/coverage?lat="+encodeURIComponent(lat)+"&lon="+encodeURIComponent(lon));out.textContent=c.message||(c.available?"Loaded area available.":"Unavailable at this coordinate.");out.classList.toggle("unavailable",!c.available);if(c.in_loaded_area||c.available)focus([lon,lat])}catch(err){out.textContent="Coverage check failed: "+err.message;out.classList.add("unavailable")}};$("coord-form").onsubmit=check;$("coord-check").onclick=check;$("coord-input").onkeydown=e=>{if(e.key==="Enter")check(e)}}
+function wireTheme(){$("theme-toggle").onclick=()=>{const old={...S.view},light=document.body.classList.toggle("light");$("theme-toggle").setAttribute("aria-label",light?"Switch to dark theme":"Switch to light theme");$("theme-toggle").textContent=light?"☾":"☼";if(S.boot){drawBase(S.boot.area);setView(old);drawFrame()}}}
+async function init(){bannerHeight();if(window.ResizeObserver){const b=document.querySelector(".saved-preview-banner");if(b)new ResizeObserver(bannerHeight).observe(b)}wireMap();wirePanels();wireReplay();wireDialogs();wireKeys();wireCoverage();wireTheme();renderLayerToggles();renderPins();try{const b=await getJSON("/api/bootstrap");if(!b.area||!b.replay||!Number.isInteger(Number(b.replay.frame_count))||Number(b.replay.frame_count)<1)throw Error("Bootstrap missing area or replay");S.boot=b;drawBase(b.area);scheduleMapRail();renderCoverage(b.area);renderDates();markMode();txt("run-id","Run "+String(b.replay.run_id||"--"));txt("data-run",b.replay.run_id||"--");txt("scenario-description",b.replay.description||b.label||"Recorded exercise");txt("top-status","Replay ready");$("frame-slider").max=Number(b.replay.frame_count)-1;$("frame-slider").disabled=false;$("play-button").disabled=false;const times=b.replay.frame_times_s||[];txt("start-time",time(times[0]));txt("end-time",time(times.at(-1)));await loadFrame(0);preloadEvents()}catch(err){txt("top-status","Unavailable");$("global-error").textContent="Could not open exercise: "+err.message;$("global-error").hidden=false}}
 init();
