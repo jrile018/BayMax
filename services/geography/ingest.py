@@ -101,11 +101,11 @@ def _polygon_contains(point,ring):
         if (y1>y)!=(y2>y) and x<(x2-x1)*(y-y1)/(y2-y1)+x1: inside=not inside
     return inside
 
-def _feature_intersects_bbox(feature,bbox):
+def _feature_intersects_bbox(feature,bbox,polygon=False):
     coords=feature.get("geometry_lonlat",[])
     if any(_point_in_bbox(p,bbox) for p in coords): return True
     if any(_segment_intersects_bbox(a,b,bbox) for a,b in zip(coords,coords[1:])): return True
-    return len(coords)>=4 and coords[0]==coords[-1] and _polygon_contains(((bbox[0]+bbox[2])/2,(bbox[1]+bbox[3])/2),coords)
+    return polygon and len(coords)>=4 and coords[0]==coords[-1] and _polygon_contains(((bbox[0]+bbox[2])/2,(bbox[1]+bbox[3])/2),coords)
 
 def _union_bounds(a,b):
     if b is None: return list(a)
@@ -144,9 +144,20 @@ def ingest(input_path,output_dir,downloaded_at_utc=None,endpoint=ENDPOINT,area_i
         raise ValueError("declared source bbox does not contain acquisition bbox")
     query_hash=sha256(query_file) if query_file else None
     roads,buildings,landuse,graph=import_osm(data,tuple(origin))
+    # A closed road or stream is still a line. Only area geometry may contain
+    # the entire bbox without any vertex or segment crossing its boundary.
     roads=[feature for feature in roads if _feature_intersects_bbox(feature,bbox)]
-    buildings=[feature for feature in buildings if _feature_intersects_bbox(feature,bbox)]
-    landuse=[feature for feature in landuse if _feature_intersects_bbox(feature,bbox)]
+    buildings=[feature for feature in buildings if _feature_intersects_bbox(feature,bbox,polygon=True)]
+    area_way_ids={
+        str(way["id"]) for way in data.get("elements",[]) if way.get("type")=="way"
+        and way.get("tags",{}).get("area")!="no"
+        and (way.get("tags",{}).get("landuse")
+             or way.get("tags",{}).get("natural")=="water"
+             or way.get("tags",{}).get("waterway")=="riverbank"
+             or way.get("tags",{}).get("area")=="yes")
+    }
+    landuse=[feature for feature in landuse if _feature_intersects_bbox(
+        feature,bbox,polygon=feature["id"] in area_way_ids)]
     if not auto_bounds and not (roads or buildings or landuse):
         raise ValueError("source contains no supported geometry intersecting acquisition bbox")
     road_ids={feature["id"] for feature in roads}

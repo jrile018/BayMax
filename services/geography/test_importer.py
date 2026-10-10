@@ -185,6 +185,42 @@ class ImportTests(unittest.TestCase):
    self.assertEqual(graph["edges"],[])
    self.assertEqual(graph["nodes"],[])
 
+ def test_closed_road_outside_bbox_is_not_a_filled_area(self):
+  outer=[(-121.63,39.73),(-121.58,39.73),(-121.58,39.78),(-121.63,39.78)]
+  nodes=[{"type":"node","id":i,"lon":lon,"lat":lat} for i,(lon,lat) in enumerate(outer,1)]
+  ring={"type":"way","id":9,"nodes":[1,2,3,4,1],"tags":{"highway":"residential"}}
+  local=[
+   {"type":"node","id":5,"lon":-121.608,"lat":39.754},
+   {"type":"node","id":6,"lon":-121.607,"lat":39.754},
+   {"type":"node","id":7,"lon":-121.607,"lat":39.755},
+   {"type":"way","id":10,"nodes":[5,6,7,5],"tags":{"building":"yes"}}]
+  with tempfile.TemporaryDirectory() as td:
+   source=Path(td)/"raw.json"
+   source.write_text(json.dumps({"elements":nodes+[ring]+local}))
+   ingest(source,td)
+   area=json.loads((Path(td)/"area.json").read_text())
+   graph=json.loads((Path(td)/"graph.json").read_text())
+   coverage={entry["layer"]:entry["status"] for entry in area["coverage"]}
+   self.assertEqual(coverage["roads"],"unavailable")
+   self.assertEqual(coverage["buildings"],"available")
+   self.assertEqual(area["roads"],[])
+   self.assertGreaterEqual(area["bbox_lonlat"][0],-121.621)
+   self.assertLessEqual(area["bbox_lonlat"][2],-121.591)
+   self.assertEqual(graph["edges"],[])
+   self.assertEqual(graph["nodes"],[])
+   source.write_text(json.dumps({"elements":nodes+[ring]}))
+   with self.assertRaisesRegex(ValueError,"acquisition bbox"):
+    ingest(source,td)
+   ring["tags"]={"waterway":"stream"}
+   source.write_text(json.dumps({"elements":nodes+[ring]}))
+   with self.assertRaisesRegex(ValueError,"acquisition bbox"):
+    ingest(source,td)
+   ring["tags"]={"landuse":"forest"}
+   source.write_text(json.dumps({"elements":nodes+[ring]}))
+   ingest(source,td)
+   area=json.loads((Path(td)/"area.json").read_text())
+   self.assertEqual(area["coverage"][2]["status"],"available")
+
  def test_committed_paradise_graph_uses_current_access_policy(self):
   root=Path(__file__).resolve().parents[2]
   source=root/"fixtures/geography/paradise/raw.osm"
