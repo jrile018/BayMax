@@ -53,7 +53,7 @@ window.KnightEarth=(()=>{
  function close(){visible=false;if(frame){cancelAnimationFrame(frame);frame=0}$("earth-panel").hidden=true;document.body.classList.remove("earth-mode");
   $("earth-toggle").textContent="EARTH";$("earth-toggle").setAttribute("aria-pressed","false");$("earth-toggle").setAttribute("aria-label","Open interactive Earth globe");
   $("view-chip").textContent=document.body.classList.contains("satellite")?"REAL-WORLD SATELLITE MAP":"OSM VECTOR MAP";$("source-chip").textContent=document.body.classList.contains("satellite")?"Esri satellite + OSM vectors":"OSM vector geometry";
-  $("source-banner").textContent=document.body.classList.contains("satellite")?oldBanner:"OSM VECTOR GEOMETRY · CONSTRUCTED TRAINING REPLAY";
+  $("source-banner").textContent=oldBanner;
   if(setPanel&&panelState){setPanel("left",innerWidth>760&&panelState.left);setPanel("right",innerWidth>760&&panelState.right)}
  }
  function bind(options={}){setPanel=options.setPanel||null;const b=$("earth-toggle");b.onclick=()=>visible?close():open();$("earth-local-button").onclick=close}
