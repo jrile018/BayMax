@@ -1,0 +1,197 @@
+.......................F.....FF............F............F..F............ [ 49%]
+FFFF.......................F................................... [ 93%]
+..........                                                    [100%]
+=================================== FAILURES ===================================
+_________ test_human_acceptance_emits_provenance_bearing_commands_once _________
+
+    def test_human_acceptance_emits_provenance_bearing_commands_once():
+        s=ReviewStore(ALIASES)
+        r=s.submit(report(), payload(), 'mocked_model_fixture')
+        a=s.review(r.proposal_id, 'accepted', 'human:tester')
+>       assert len(a.effects)==2
+E       AssertionError: assert 0 == 2
+E        +  where 0 = len(())
+E        +    where () = ReviewRecord(proposal_id='intake:82f3e9c695dc6b8d1b11818d', proposal=Proposal(report=Report(report_id='r1', source='fi...status='accepted', reviewer_id='human:tester', duplicate_of=None, effects=(), confirmations=(), revision=1, editors=()).effects
+
+services/intake/tests/test_intake.py:70: AssertionError
+__________ test_review_effect_copies_cannot_mutate_stored_acceptance ___________
+
+    def test_review_effect_copies_cannot_mutate_stored_acceptance():
+        s=ReviewStore(ALIASES); r=s.submit(report(),payload(),'mocked_model_fixture')
+        a=s.review(r.proposal_id,'accepted','human:tester')
+>       a.effects[0]['quantity']=999
+        ^^^^^^^^^^^^
+E       IndexError: tuple index out of range
+
+services/intake/tests/test_intake.py:120: IndexError
+__________ test_human_edit_is_pending_only_source_bound_and_auditable __________
+
+    def test_human_edit_is_pending_only_source_bound_and_auditable():
+        s=ReviewStore(ALIASES); r=s.submit(report(),payload(),'mocked_model_fixture')
+        edited=payload(); edited['claims']=edited['claims'][:1]
+        e=s.edit(r.proposal_id,edited,'human:editor')
+        assert e.revision==2 and e.editors==('human:editor',)
+        assert len(e.proposal.claims)==1 and not e.effects
+        a=s.review(r.proposal_id,'accepted','human:tester')
+>       assert len(a.effects)==1 and a.effects[0]['revision']==2
+E       AssertionError: assert (0 == 1)
+E        +  where 0 = len(())
+E        +    where () = ReviewRecord(proposal_id='intake:82f3e9c695dc6b8d1b11818d', proposal=Proposal(report=Report(report_id='r1', source='fi...d', reviewer_id='human:tester', duplicate_of=None, effects=(), confirmations=(), revision=2, editors=('human:editor',)).effects
+
+services/intake/tests/test_intake.py:130: AssertionError
+____ test_demo_labels_scripted_human_actions_and_rejects_duplicate_effects _____
+
+    def test_demo_labels_scripted_human_actions_and_rejects_duplicate_effects():
+        from services.intake.demo import run
+        trace=run()
+        assert trace['provider']=='rule_baseline'
+        assert trace['simulator_mutation'] is False
+        assert trace['pending']['effects']==()
+        assert trace['rejected']['effects']==()
+        assert trace['repost']['review_status']=='duplicate'
+>       assert len(trace['accepted']['effects'])==1
+E       assert 0 == 1
+E        +  where 0 = len(())
+
+services/intake/tests/test_intake.py:243: AssertionError
+___________________ test_unqualified_open_remains_reviewable ___________________
+
+    def test_unqualified_open_remains_reviewable():
+        text = 'Highway A is open.'
+        report = Report('audit:open', 'fictional', 10, text)
+        raw = proposal(claim(text, kind='access', label='open',
+                             evidence=text, location='Highway A'))
+        store = ReviewStore({'Highway A': {'entity_id': 'highway-a',
+                                          'entity_type': 'edge', 'source': 'fictional graph'}})
+        rec = store.submit(report, raw, 'scripted')
+        assert 'qualified_access' not in rec.proposal.claims[0].flags
+>       assert store.review(rec.proposal_id, 'accepted', 'scripted-reviewer').effects[0]['status'] == 'open'
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: tuple index out of range
+
+services/intake/tests/test_intake_audit.py:124: IndexError
+_____ test_explicit_current_request_count_survives_later_delivery_context ______
+
+    def test_explicit_current_request_count_survives_later_delivery_context():
+        text = '10 bottles of water are needed at Pine School after 5 bottles were delivered.'
+        report = Report('audit:current-count', 'fictional', 10, text)
+        raw = proposal(claim(text, kind='need', label='water', evidence=text,
+                             location='Pine School', quantity=10, unit='bottles'))
+        store = ReviewStore({'Pine School': {'entity_id': 'pine',
+                                             'entity_type': 'node', 'source': 'fictional graph'}})
+        rec = store.submit(report, raw, 'scripted')
+        accepted = store.review(rec.proposal_id, 'accepted', 'scripted-reviewer',
+                                expected_revision=1)
+>       assert len(accepted.effects) == 1
+E       AssertionError: assert 0 == 1
+E        +  where 0 = len(())
+E        +    where () = ReviewRecord(proposal_id='intake:55b5a2c0e54ab1a5c32fb804', proposal=Proposal(report=Report(report_id='audit:current-c...s='accepted', reviewer_id='scripted-reviewer', duplicate_of=None, effects=(), confirmations=(), revision=1, editors=()).effects
+
+services/intake/tests/test_intake_audit.py:151: AssertionError
+_______ test_semicolon_independent_vehicle_need_does_not_scope_open_road _______
+
+    def test_semicolon_independent_vehicle_need_does_not_scope_open_road():
+        text = 'Highway A is open; trucks need fuel.'
+        report = Report('audit:independent-semicolon-need', 'fictional', 10, text)
+        raw = proposal(claim(text, kind='access', label='open',
+                             evidence='Highway A is open', location='Highway A'))
+        store = ReviewStore({'Highway A': {'entity_id': 'highway-a',
+                                          'entity_type': 'edge', 'source': 'fictional graph'}})
+        rec = store.submit(report, raw, 'scripted')
+        assert 'qualified_access' not in rec.proposal.claims[0].flags
+        effects = store.review(rec.proposal_id, 'accepted', 'scripted-reviewer',
+                               expected_revision=1).effects
+>       assert len(effects) == 1
+E       assert 0 == 1
+E        +  where 0 = len(())
+
+services/intake/tests/test_intake_audit.py:241: AssertionError
+_______ test_count_after_request_without_prior_event_remains_actionable ________
+
+    def test_count_after_request_without_prior_event_remains_actionable():
+        text = 'We need 10 bottles of water at Pine School.'
+        report = Report('audit:need-count-after-verb', 'fictional', 10, text)
+        raw = proposal(claim(text, kind='need', label='water', evidence=text,
+                             location='Pine School', quantity=10, unit='bottles'))
+        store = ReviewStore({'Pine School': {'entity_id': 'pine',
+                                             'entity_type': 'node', 'source': 'fictional graph'}})
+        rec = store.submit(report, raw, 'scripted')
+        effects = store.review(rec.proposal_id, 'accepted', 'scripted-reviewer',
+                               expected_revision=1).effects
+>       assert len(effects) == 1 and effects[0]['quantity'] == 10
+E       assert (0 == 1)
+E        +  where 0 = len(())
+
+services/intake/tests/test_intake_audit.py:255: AssertionError
+__________ test_only_in_unrelated_fuel_need_does_not_restrict_road[.] __________
+
+separator = '.'
+
+    @pytest.mark.parametrize('separator', ['.', ';'])
+    def test_only_in_unrelated_fuel_need_does_not_restrict_road(separator):
+        text = f'Highway A is open{separator} Only trucks need fuel for it.'
+        report = Report('audit:only-fuel:' + separator, 'fictional', 10, text)
+        raw = proposal(claim(text, kind='access', label='open',
+                             evidence='Highway A is open', location='Highway A'))
+        store = ReviewStore({'Highway A': {'entity_id': 'highway-a',
+                                          'entity_type': 'edge', 'source': 'fictional graph'}})
+        rec = store.submit(report, raw, 'scripted')
+        assert 'qualified_access' not in rec.proposal.claims[0].flags
+        effects = store.review(rec.proposal_id, 'accepted', 'scripted-reviewer',
+                               expected_revision=1).effects
+>       assert len(effects) == 1 and effects[0]['status'] == 'open'
+E       assert (0 == 1)
+E        +  where 0 = len(())
+
+services/intake/tests/test_intake_audit.py:270: AssertionError
+__________ test_only_in_unrelated_fuel_need_does_not_restrict_road[;] __________
+
+separator = ';'
+
+    @pytest.mark.parametrize('separator', ['.', ';'])
+    def test_only_in_unrelated_fuel_need_does_not_restrict_road(separator):
+        text = f'Highway A is open{separator} Only trucks need fuel for it.'
+        report = Report('audit:only-fuel:' + separator, 'fictional', 10, text)
+        raw = proposal(claim(text, kind='access', label='open',
+                             evidence='Highway A is open', location='Highway A'))
+        store = ReviewStore({'Highway A': {'entity_id': 'highway-a',
+                                          'entity_type': 'edge', 'source': 'fictional graph'}})
+        rec = store.submit(report, raw, 'scripted')
+        assert 'qualified_access' not in rec.proposal.claims[0].flags
+        effects = store.review(rec.proposal_id, 'accepted', 'scripted-reviewer',
+                               expected_revision=1).effects
+>       assert len(effects) == 1 and effects[0]['status'] == 'open'
+E       assert (0 == 1)
+E        +  where 0 = len(())
+
+services/intake/tests/test_intake_audit.py:270: AssertionError
+______________ test_acceptance_must_match_the_inspected_revision _______________
+
+    def test_acceptance_must_match_the_inspected_revision():
+        store,raw,rec=pending()
+        newraw=dict(raw); newraw['claims']=raw['claims'][:1]
+        edited=store.edit(rec.proposal_id,newraw,'human:editor',expected_revision=1)
+        assert edited.revision==2
+        with pytest.raises(ValidationError,match='revision'):
+            store.review(rec.proposal_id,'accepted','human:reviewer',expected_revision=1)
+        assert store.get(rec.proposal_id).review_status=='pending'
+        accepted=store.review(rec.proposal_id,'accepted','human:reviewer',expected_revision=2)
+>       assert len(accepted.effects)==1 and accepted.effects[0]['revision']==2
+E       AssertionError: assert (0 == 1)
+E        +  where 0 = len(())
+E        +    where () = ReviewRecord(proposal_id='intake:b9388f1c9f2c206a1546f3e1', proposal=Proposal(report=Report(report_id='revision:1', so..., reviewer_id='human:reviewer', duplicate_of=None, effects=(), confirmations=(), revision=2, editors=('human:editor',)).effects
+
+services/intake/tests/test_review_revision.py:26: AssertionError
+=========================== short test summary info ============================
+FAILED services/intake/tests/test_intake.py::test_human_acceptance_emits_provenance_bearing_commands_once
+FAILED services/intake/tests/test_intake.py::test_review_effect_copies_cannot_mutate_stored_acceptance
+FAILED services/intake/tests/test_intake.py::test_human_edit_is_pending_only_source_bound_and_auditable
+FAILED services/intake/tests/test_intake.py::test_demo_labels_scripted_human_actions_and_rejects_duplicate_effects
+FAILED services/intake/tests/test_intake_audit.py::test_unqualified_open_remains_reviewable
+FAILED services/intake/tests/test_intake_audit.py::test_explicit_current_request_count_survives_later_delivery_context
+FAILED services/intake/tests/test_intake_audit.py::test_semicolon_independent_vehicle_need_does_not_scope_open_road
+FAILED services/intake/tests/test_intake_audit.py::test_count_after_request_without_prior_event_remains_actionable
+FAILED services/intake/tests/test_intake_audit.py::test_only_in_unrelated_fuel_need_does_not_restrict_road[.]
+FAILED services/intake/tests/test_intake_audit.py::test_only_in_unrelated_fuel_need_does_not_restrict_road[;]
+FAILED services/intake/tests/test_review_revision.py::test_acceptance_must_match_the_inspected_revision
+11 failed, 134 passed, 20 subtests passed in 0.78s

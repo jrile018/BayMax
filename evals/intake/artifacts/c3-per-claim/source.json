@@ -1,0 +1,173 @@
+{
+  "branch": "codex/hf",
+  "design_sha256": "6e58ca4a858dbf1dd87cc3bad3e7d418e2fd966adc02944ebcb94ab430154680",
+  "evaluation": "authored fictional reports; frozen rule baseline 5/20 exact, 2/20 evidence-aligned, 15 failures; mocked fixture 20/20 harness control",
+  "plan_sha256": "6c5b485aac0f6970a91cdce0360f79e042fc0bdc6888c2007da6e75a2e7622fe",
+  "publication_status": "withheld pending independent GPT-6.1-Sol/high exact-head review",
+  "source_files": [
+    {
+      "bytes": 3436,
+      "path": "evals/artifact_store/test_backend.py",
+      "sha256": "cd68bfb992d9957a4156e784f71e0a8a08fce11278ef40fcb8784120c658f472"
+    },
+    {
+      "bytes": 5649,
+      "path": "evals/artifact_store/test_duplicate_json.py",
+      "sha256": "ee68fe731598b902a41c90b08b7468489e51867d03356ad114d0f96fb9e03857"
+    },
+    {
+      "bytes": 3055,
+      "path": "evals/artifact_store/test_review.py",
+      "sha256": "c5b9347c8aeb927558e49cba6c78e07dba974ca30f0cc2adad2ba82b70400ccd"
+    },
+    {
+      "bytes": 8883,
+      "path": "evals/artifact_store/test_store.py",
+      "sha256": "2acd7cdcb2fab27a67846c031af065e1302ebcecd94e3d3e284479191f47f9ff"
+    },
+    {
+      "bytes": 50,
+      "path": "evals/intake/__init__.py",
+      "sha256": "fc206941c0a417de0bb78c17404979d4795075cfb22c9267ce035f3db14eedd3"
+    },
+    {
+      "bytes": 17388,
+      "path": "evals/intake/run.py",
+      "sha256": "9b69192384b494cbc27776512866a121d8e27c7018d2a9c75c55f1d9180fe342"
+    },
+    {
+      "bytes": 2516,
+      "path": "evals/intake/tests/test_evidence_alignment.py",
+      "sha256": "98f3e2d0fab1550e4937f87191964149b633b821b7a69bb525c6ffb0384cec8e"
+    },
+    {
+      "bytes": 5342,
+      "path": "evals/intake/tests/test_run.py",
+      "sha256": "d8bb2eaf9d77eff93ad9902f3d9981165399f019a0adf77e913359607c57893e"
+    },
+    {
+      "bytes": 17416,
+      "path": "services/artifact_store/__init__.py",
+      "sha256": "af635c5955b99d5e9167dfb9b74c3127e993efedf26c5809b4ec9d0ddb9df769"
+    },
+    {
+      "bytes": 1865,
+      "path": "services/artifact_store/__main__.py",
+      "sha256": "4edfef8859a1575addfb5b5fc7b417608b0039f86b1ed122e550f4eb018b0637"
+    },
+    {
+      "bytes": 4099,
+      "path": "services/artifact_store/hf_backend.py",
+      "sha256": "a7ccbf8e14b91ed61be8be7df97a41650907fe876449d43d929a982b5be7300d"
+    },
+    {
+      "bytes": 326,
+      "path": "services/intake/__init__.py",
+      "sha256": "7ed518e85306057c01157138aaec491690619e43dd825d6af0e89865403c183d"
+    },
+    {
+      "bytes": 9885,
+      "path": "services/intake/batch.py",
+      "sha256": "21651033a2e33c4672e1c9e4fb4bdf55c0d8377bca41a8087e6754b57524fd85"
+    },
+    {
+      "bytes": 2995,
+      "path": "services/intake/demo.py",
+      "sha256": "46cef0b4dcca3e3944f89aefa71ebe7950ffff076aff2c4128b8989209c03c98"
+    },
+    {
+      "bytes": 3643,
+      "path": "services/intake/providers.py",
+      "sha256": "2df8974ed3f34d2a0867ba6304c4aaa6b8f12176c4da2a92b040aa4b6ab90dc0"
+    },
+    {
+      "bytes": 9011,
+      "path": "services/intake/qwen.py",
+      "sha256": "3cd7cf34d3360318218d190b826f68bc9e92b83353049e15412de7390ae1177a"
+    },
+    {
+      "bytes": 10346,
+      "path": "services/intake/review.py",
+      "sha256": "cfbd4dabbb722c77fd015f71bbd7c2359cddb589fbb629878fc0bd94ead7e93e"
+    },
+    {
+      "bytes": 15634,
+      "path": "services/intake/schema.py",
+      "sha256": "03c17fed5f526c066c79162d37dc8045c9692e615c3741cc3424e8d73f55e970"
+    },
+    {
+      "bytes": 12089,
+      "path": "services/intake/tests/test_batch.py",
+      "sha256": "382da490362643eb664d6c806ead5d8803e203d532813b7dd3d7a9f406cb6736"
+    },
+    {
+      "bytes": 14734,
+      "path": "services/intake/tests/test_intake.py",
+      "sha256": "2775cf390650eb8dc7cd115373fbc8afbf42ff49df182da221347a78c04c0251"
+    },
+    {
+      "bytes": 14807,
+      "path": "services/intake/tests/test_intake_audit.py",
+      "sha256": "395081a2c744912839c3aad02ad809f9751f72f69a7fb998ea71936dcddef5a0"
+    },
+    {
+      "bytes": 9845,
+      "path": "services/intake/tests/test_qwen.py",
+      "sha256": "5fdb54cf686f7708e41e591de83cc901e8ea3b8848b769276f593c333dffbc6c"
+    },
+    {
+      "bytes": 10675,
+      "path": "services/intake/tests/test_review_confirmation.py",
+      "sha256": "7ee2336eeb8ab6a7a9fdad39574c0c57f5b6a1681b7a274dac4515e52ecd0b9a"
+    },
+    {
+      "bytes": 4513,
+      "path": "services/intake/tests/test_review_revision.py",
+      "sha256": "9326bee81cacbe4834047095bedcffb2a53d2944eef3e10ebf1569952df3b6b4"
+    }
+  ],
+  "source_fingerprint_sha256": "662c113c20a79506fc40d38337f3f79592fe4998a29d5db54b16d199180fc1fe",
+  "test_command": "PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 /opt/venv/bin/python -m pytest services/intake/tests evals/intake/tests evals/artifact_store -q -p no:cacheprovider",
+  "test_result": "151 passed; 20 subtests passed; exit 0",
+  "tested_source_head": "aa14b616124d8f3f27babd7d0bf2644dc5b4e64f",
+  "trace": "one scripted pending need command; simulator_mutation=false",
+  "tracked_diff": [],
+  "untracked_paths": [
+    "evals/intake/__pycache__/__init__.cpython-314.pyc",
+    "evals/intake/__pycache__/run.cpython-314.pyc",
+    "evals/intake/artifacts/c3-per-claim/evaluation.json",
+    "evals/intake/artifacts/c3-per-claim/evaluation.log",
+    "evals/intake/artifacts/c3-per-claim/exact-head-evaluation.json",
+    "evals/intake/artifacts/c3-per-claim/exact-head-evaluation.log",
+    "evals/intake/artifacts/c3-per-claim/exact-head-review-trace.json",
+    "evals/intake/artifacts/c3-per-claim/exact-head-review-trace.log",
+    "evals/intake/artifacts/c3-per-claim/exact-head-suite.log",
+    "evals/intake/artifacts/c3-per-claim/owned-suite.log",
+    "evals/intake/artifacts/c3-per-claim/per-claim-confirm-green.log",
+    "evals/intake/artifacts/c3-per-claim/per-claim-confirm-red.log",
+    "evals/intake/artifacts/c3-per-claim/per-claim-first-green.log",
+    "evals/intake/artifacts/c3-per-claim/per-claim-flags.log",
+    "evals/intake/artifacts/c3-per-claim/per-claim-order-green.log",
+    "evals/intake/artifacts/c3-per-claim/per-claim-order-red.log",
+    "evals/intake/artifacts/c3-per-claim/per-claim-red.log",
+    "evals/intake/artifacts/c3-per-claim/per-claim-repros.log",
+    "evals/intake/artifacts/c3-per-claim/per-claim-suite-migration-green.log",
+    "evals/intake/artifacts/c3-per-claim/per-claim-suite-migration-red.log",
+    "evals/intake/artifacts/c3-per-claim/per-claim-validation-green.log",
+    "evals/intake/artifacts/c3-per-claim/per-claim-validation-red.log",
+    "evals/intake/artifacts/c3-per-claim/review-trace.json",
+    "evals/intake/artifacts/c3-per-claim/review-trace.log",
+    "evals/intake/tests/__pycache__/test_run.cpython-314-pytest-9.1.1.pyc",
+    "services/intake/__pycache__/__init__.cpython-314.pyc",
+    "services/intake/__pycache__/batch.cpython-314.pyc",
+    "services/intake/__pycache__/demo.cpython-314.pyc",
+    "services/intake/__pycache__/providers.cpython-314.pyc",
+    "services/intake/__pycache__/qwen.cpython-314.pyc",
+    "services/intake/__pycache__/review.cpython-314.pyc",
+    "services/intake/__pycache__/schema.cpython-314.pyc",
+    "services/intake/tests/__pycache__/test_batch.cpython-314-pytest-9.1.1.pyc",
+    "services/intake/tests/__pycache__/test_intake.cpython-314-pytest-9.1.1.pyc",
+    "services/intake/tests/__pycache__/test_qwen.cpython-314-pytest-9.1.1.pyc",
+    "services/intake/tests/__pycache__/test_review_revision.cpython-314-pytest-9.1.1.pyc"
+  ]
+}
