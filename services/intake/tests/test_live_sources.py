@@ -200,3 +200,25 @@ class AdditionalOfficialSourceTests(unittest.TestCase):
         self.assertEqual(x["final_url"],alternate)
         self.assertEqual(x["source_id"],"nws")
         self.assertEqual(x["raw_sha256"],doc.sha256)
+    def test_nws_saved_receipt_url_is_valid_without_relabeling(self):
+        actual="https://api.weather.gov/alerts?active=true&area=CA"
+        SourcePolicy("nws",(actual,))
+        x,=parse_nws_alerts(TransportResponse(200,{},packet(NWS,[nws()]).body,actual))
+        self.assertEqual(x["source_url"],actual)
+
+    def test_extreme_numeric_fields_return_stale_or_source_error(self):
+        for field, value in (("mag", 10**1000), ("depth", 10**1000)):
+            bad = usgs(properties={field: value}) if field == "mag" else usgs(
+                geometry={"type":"Point","coordinates":[-151.317,62.569,value]})
+            raw = packet(USGS,[bad])
+            with self.subTest(field=field), self.assertRaises(SourceError):
+                parse_usgs_earthquakes(raw)
+            c=BoundedSourceClient(SourcePolicy("usgs",(USGS,),min_interval_s=0),
+                                  Transport(packet(USGS,[usgs()]),raw),lambda:NOW)
+            self.assertEqual(c.refresh(USGS).state,"fresh")
+            self.assertEqual(c.refresh(USGS).state,"stale")
+    def test_malformed_feature_url_and_extreme_offset_are_source_errors(self):
+        for feature in (nws(id="https://api.weather.gov:bad/alerts/x"),
+                        nws(properties={"sent":"0001-01-01T00:00:00+01:00"})):
+            with self.subTest(feature=feature),self.assertRaises(SourceError):
+                parse_nws_alerts(packet(NWS,[feature]))

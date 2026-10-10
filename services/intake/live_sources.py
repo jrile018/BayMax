@@ -38,8 +38,11 @@ class SourcePolicy:
             _https_url(url)
             parts = urlsplit(url)
             if self.source_id == "nws":
-                if (parts.netloc != "api.weather.gov" or parts.path != "/alerts/active"
-                        or re.fullmatch(r"area=[A-Z]{2}", parts.query) is None):
+                active_area = (parts.path == "/alerts/active"
+                               and re.fullmatch(r"area=[A-Z]{2}", parts.query) is not None)
+                filtered_alerts = (parts.path == "/alerts"
+                                   and re.fullmatch(r"active=true&area=[A-Z]{2}", parts.query) is not None)
+                if parts.netloc != "api.weather.gov" or not (active_area or filtered_alerts):
                     raise SourceError("NWS URL outside registered active-alert area shape")
             elif (parts.netloc != "earthquake.usgs.gov"
                   or parts.path != "/earthquakes/feed/v1.0/summary/all_hour.geojson"
@@ -89,8 +92,12 @@ class Refresh:
 def _https_url(url):
     if not isinstance(url, str):
         raise SourceError("URL must be text")
-    p = urlsplit(url)
-    if p.scheme != "https" or not p.hostname or p.username or p.password or p.fragment or p.port:
+    try:
+        p = urlsplit(url)
+        forbidden = p.username or p.password or p.fragment or p.port
+    except ValueError as exc:
+        raise SourceError("malformed source URL") from exc
+    if p.scheme != "https" or not p.hostname or forbidden:
         raise SourceError("source URL must be canonical HTTPS with no credentials, port or fragment")
     if p.hostname != p.hostname.lower() or not p.path.startswith("/"):
         raise SourceError("noncanonical source URL")
@@ -214,7 +221,10 @@ def _utc(value):
         raise SourceError("invalid timestamp") from exc
     if parsed.tzinfo is None:
         raise SourceError("timestamp requires offset")
-    return parsed.astimezone(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
+    try:
+        return parsed.astimezone(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
+    except (OverflowError, ValueError) as exc:
+        raise SourceError("timestamp out of range") from exc
 
 
 def _optional_utc(value):
@@ -231,10 +241,24 @@ def _ms_utc(value):
 
 
 def _finite_float(value):
-    parsed = float(value)
+    try:
+        parsed = float(value)
+    except (OverflowError, ValueError) as exc:
+        raise SourceError("invalid JSON number") from exc
     if not math.isfinite(parsed):
         raise SourceError("nonfinite JSON number")
     return parsed
+
+
+def _finite_number(value):
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise SourceError("invalid provider number")
+    try:
+        if not math.isfinite(value):
+            raise SourceError("nonfinite provider number")
+    except OverflowError as exc:
+        raise SourceError("provider number out of range") from exc
+    return value
 
 
 def _object_pairs(pairs):
@@ -298,8 +322,8 @@ def _coord(point):
     if not isinstance(point, list) or len(point) < 2 or len(point) > 3:
         raise SourceError("invalid GeoJSON coordinate")
     lon, lat = point[:2]
-    if any(isinstance(x, bool) or not isinstance(x, (int, float)) or not math.isfinite(x) for x in point):
-        raise SourceError("nonfinite GeoJSON coordinate")
+    for value in point:
+        _finite_number(value)
     if not -180 <= lon <= 180 or not -90 <= lat <= 90:
         raise SourceError("GeoJSON longitude/latitude out of range")
 
@@ -429,8 +453,8 @@ def parse_usgs_earthquakes(document, *, max_records=200):
             raise SourceError("unknown USGS status")
         event_type = _text(props.get("type"), "USGS type")
         mag = props.get("mag")
-        if mag is not None and (isinstance(mag, bool) or not isinstance(mag, (int, float)) or not math.isfinite(mag)):
-            raise SourceError("invalid USGS magnitude")
+        if mag is not None:
+            _finite_number(mag)
         geometry = feature.get("geometry")
         if not isinstance(geometry, dict) or geometry.get("type") != "Point":
             raise SourceError("USGS geometry must be point")
