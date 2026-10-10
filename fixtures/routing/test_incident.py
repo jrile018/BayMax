@@ -148,6 +148,27 @@ class IncidentBridgeTests(unittest.TestCase):
         self.assertEqual(self.engine.snapshot(), before_executor)
         self.assertEqual(self.ledger.export_state(), before_ledger)
 
+    def test_disabled_static_reference_reports_gate_reason_for_connected_and_same_node(self):
+        disabled = self.run_bridge().safety
+        zero_graph = Graph({'A': (0, 0)}, [], version='same-node-v1')
+        for graph, destination in ((self.graph, 'D'), (zero_graph, 'A')):
+            with self.subTest(destination=destination):
+                structural = static_reference(graph, 'A', destination, 'bus', 5)
+                self.assertEqual(structural.status, 'feasible')
+                blocked = static_reference(graph, 'A', destination, 'bus', 5, disabled)
+                self.assertEqual(blocked.status, 'no_feasible_candidate')
+                self.assertIsNone(blocked.arrival_s)
+                self.assertEqual(blocked.edge_ids, ())
+                self.assertEqual(blocked.legs, ())
+                self.assertEqual(blocked.geometry, ())
+                self.assertFalse(blocked.safety_validated)
+                search = candidate_routes(graph, 'A', destination, 'bus', 5, disabled)
+                self.assertEqual(search.status, 'no_feasible_candidate')
+                self.assertEqual(search.routes, ())
+        disconnected = Graph({'A': (0, 0), 'D': (1, 0)}, [], version='disconnected-v1')
+        self.assertEqual(static_reference(disconnected, 'A', 'D', 'bus', 5).status,
+                         'unreachable_static')
+
     def test_disabled_safety_blocks_static_and_zero_edge_dispatch(self):
         disabled = self.run_bridge().safety
         self.assertFalse(disabled.operational_enabled)

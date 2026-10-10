@@ -26,7 +26,7 @@ def static_reference(graph,start,end,vehicle_kind,departure_s,safety=None,route_
         raise ValueError("departure precedes available snapshot")
     if safety and not safety.operational_enabled:
         return _record(graph,start,end,vehicle_kind,departure,(),safety,route_version,False,
-                       "static_dijkstra","unreachable_static")
+                       "static_dijkstra","no_feasible_candidate")
     queue=[(0.0,(),start)]
     best={start:(0.0,())}
     while queue:
