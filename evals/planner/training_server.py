@@ -9,6 +9,9 @@ import secrets
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+
+_VENDOR_DIR = Path(__file__).resolve().parent / "vendor" / "gods_eye_view"
+_VENDOR_MODULES = ("practiceShell.js", "railTimeline.js", "panelRailGeometry.js", "panelStackLayout.js")
 from urllib.parse import urlsplit
 
 from evals.planner.practice import _debrief, _visible, render_practice_html, select_practice_actions
@@ -94,6 +97,10 @@ def make_server(pack, host="127.0.0.1", port=8766, *,
         "episodes": [{"name": episode["name"]} for episode in pack["episodes"]],
     }
     html = render_practice_html().encode("utf-8")
+    modules = {
+        f"/vendor/gods_eye_view/{name}": (_VENDOR_DIR / name).read_bytes()
+        for name in _VENDOR_MODULES
+    }
 
     class Handler(BaseHTTPRequestHandler):
         def log_message(self, fmt, *args):
@@ -127,6 +134,8 @@ def make_server(pack, host="127.0.0.1", port=8766, *,
                 self._send(200, html, "text/html; charset=utf-8")
             elif route == "/meta":
                 self._send(200, meta)
+            elif route in modules:
+                self._send(200, modules[route], "text/javascript; charset=utf-8")
             else:
                 self._send(404, {"error": "not_found"})
 

@@ -1,0 +1,8 @@
+{
+  "repository": "https://github.com/bilawalsidhu/gods-eye-view",
+  "commit": "591f299d11f38a612629a274463196d57ae3862e",
+  "transport_sha256": "4512d252cd55caf0f8b504186ed0e7ca99c278f890bf1612b9b1549781e2cc4a",
+  "entries": 1700,
+  "form": "source-and-documents filtered transport; not Git clone; public media/models and bundled noncommercial local_data excluded",
+  "full_archive_sha256": "0e3e62e1f8267960e8a07a18e55ce68e1cdca80264a4306020cc188a8a7e1262"
+}
