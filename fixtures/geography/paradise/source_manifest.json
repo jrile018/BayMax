@@ -1,0 +1,31 @@
+{
+  "source": "OpenStreetMap",
+  "endpoint": "https://api.openstreetmap.org/api/0.6/map?bbox=-121.621,39.742,-121.591,39.765",
+  "downloaded_at_utc": "2026-10-10T07:00:45Z",
+  "source_observed_at": {
+    "min": "2007-10-25T04:57:29Z",
+    "max": "2026-09-09T03:34:43Z"
+  },
+  "raw_file": "fixtures/geography/paradise/raw.osm",
+  "raw_sha256": "b73334f6280cc756fee13ab9687ccbd7d47368785f0703fea9dafd97c6035897",
+  "decompressed_sha256": "b73334f6280cc756fee13ab9687ccbd7d47368785f0703fea9dafd97c6035897",
+  "query_file": null,
+  "query_sha256": null,
+  "coverage_bbox_lonlat": [
+    -121.621,
+    39.742,
+    -121.591,
+    39.765
+  ],
+  "source_geometry_bbox_lonlat": [
+    -121.6316959,
+    39.7241925,
+    -121.572416,
+    39.7935035
+  ],
+  "geometry_coverage_note": "OSM API bbox is the requested coverage; ways intersecting that bbox may include full node geometry outside it, which is partial way context rather than complete outside coverage.",
+  "license": "ODbL 1.0",
+  "license_url": "https://www.openstreetmap.org/copyright",
+  "attribution": "© OpenStreetMap contributors",
+  "attribution_url": "https://www.openstreetmap.org/copyright"
+}

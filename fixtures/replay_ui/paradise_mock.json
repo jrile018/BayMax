@@ -1,0 +1,1632 @@
+{
+  "mode": "mock-replay",
+  "label": "Hand-authored mock replay \u00b7 source acquisition pending",
+  "description": "Constructed UI demonstration. No calculated routes, physical wildfire, actual incident, live vehicle tracking or conserved routing ledger claimed. Geographic source coverage is disclosed separately.",
+  "frames": [
+    {
+      "run_id": "maps-mock-001",
+      "scenario_id": "paradise-constructed-ui-exercise",
+      "snapshot_version": 1,
+      "index": 0,
+      "time_s": 0,
+      "mode": "mock-replay",
+      "geometry_status": "constructed illustration, not surveyed roadway or calculated path",
+      "vehicles": [
+        {
+          "vehicle_id": "ambulance-01",
+          "label": "Ambulance 01",
+          "kind": "ambulance",
+          "phase": "traveling",
+          "position_lonlat": [
+            -121.616,
+            39.747
+          ],
+          "route_id": "illustration-route",
+          "route_version": 1,
+          "route_geometry_lonlat": [
+            [
+              -121.616,
+              39.747
+            ],
+            [
+              -121.611,
+              39.747
+            ],
+            [
+              -121.611,
+              39.753
+            ],
+            [
+              -121.611,
+              39.759
+            ],
+            [
+              -121.599,
+              39.759
+            ]
+          ],
+          "remaining_path_lonlat": [
+            [
+              -121.616,
+              39.747
+            ],
+            [
+              -121.611,
+              39.747
+            ],
+            [
+              -121.611,
+              39.753
+            ],
+            [
+              -121.611,
+              39.759
+            ],
+            [
+              -121.599,
+              39.759
+            ]
+          ],
+          "completed_trail_lonlat": [
+            [
+              -121.616,
+              39.747
+            ]
+          ],
+          "old_route_geometry_lonlat": [],
+          "remaining_distance_m": 2150,
+          "eta_s": 240,
+          "load": {
+            "people": 1,
+            "supply_units": 0
+          },
+          "reason": "Recorded mock ambulance state; not live tracking."
+        },
+        {
+          "vehicle_id": "bus-02",
+          "label": "Evacuation bus 02",
+          "kind": "bus",
+          "phase": "idle",
+          "position_lonlat": [
+            -121.615,
+            39.75
+          ],
+          "route_id": null,
+          "route_version": 0,
+          "route_geometry_lonlat": [],
+          "remaining_path_lonlat": [],
+          "completed_trail_lonlat": [],
+          "remaining_distance_m": null,
+          "eta_s": null,
+          "load": {
+            "people": 0,
+            "supply_units": 0
+          },
+          "reason": "Available in mock training stock. No dispatch computed."
+        },
+        {
+          "vehicle_id": "truck-03",
+          "label": "Supply truck 03",
+          "kind": "truck",
+          "phase": "idle",
+          "position_lonlat": [
+            -121.614,
+            39.746
+          ],
+          "route_id": null,
+          "route_version": 0,
+          "route_geometry_lonlat": [],
+          "remaining_path_lonlat": [],
+          "completed_trail_lonlat": [],
+          "remaining_distance_m": null,
+          "eta_s": null,
+          "load": {
+            "people": 0,
+            "supply_units": 20
+          },
+          "reason": "Mock supply load; no actual delivery."
+        }
+      ],
+      "hazards": [
+        {
+          "id": "mock-fire",
+          "kind": "fire",
+          "label": "Hand-authored fire overlay",
+          "geometry_lonlat": [
+            [
+              -121.61,
+              39.757
+            ],
+            [
+              -121.602,
+              39.757
+            ],
+            [
+              -121.601,
+              39.763
+            ],
+            [
+              -121.612,
+              39.762
+            ],
+            [
+              -121.61,
+              39.757
+            ]
+          ],
+          "source_status": "mock; physical fire adapter not connected"
+        }
+      ],
+      "closures": [],
+      "events": [
+        {
+          "event_id": "mock-start",
+          "type": "dispatch",
+          "time_s": 0,
+          "vehicle_id": "ambulance-01",
+          "message": "Mock recorded dispatch begins. Route illustration is not solver output."
+        }
+      ],
+      "metrics": {
+        "safely_evacuated": 0,
+        "delivered_supply_units": 0,
+        "medical_served": 0
+      },
+      "needs": [
+        {
+          "request_id": "mock-medical",
+          "kind": "medical",
+          "label": "Medical pickup \u00b7 training request",
+          "quantity": 1,
+          "remaining": 1,
+          "unit": "person",
+          "status": "committed"
+        },
+        {
+          "request_id": "mock-evac",
+          "kind": "evacuation",
+          "label": "Shelter transport \u00b7 training request",
+          "quantity": 12,
+          "remaining": 12,
+          "unit": "people",
+          "status": "unmet"
+        }
+      ],
+      "stocks": [
+        {
+          "depot_id": "mock-depot",
+          "label": "Training depot",
+          "supply_units": 80
+        }
+      ],
+      "snapshot_hash": "cd07096e008f8b9dfea80a44266d39871d78c61fd2aff6eb362b2c3d453e0e32"
+    },
+    {
+      "run_id": "maps-mock-001",
+      "scenario_id": "paradise-constructed-ui-exercise",
+      "snapshot_version": 2,
+      "index": 1,
+      "time_s": 60,
+      "mode": "mock-replay",
+      "geometry_status": "constructed illustration, not surveyed roadway or calculated path",
+      "vehicles": [
+        {
+          "vehicle_id": "ambulance-01",
+          "label": "Ambulance 01",
+          "kind": "ambulance",
+          "phase": "traveling",
+          "position_lonlat": [
+            -121.611,
+            39.747
+          ],
+          "route_id": "illustration-route",
+          "route_version": 1,
+          "route_geometry_lonlat": [
+            [
+              -121.616,
+              39.747
+            ],
+            [
+              -121.611,
+              39.747
+            ],
+            [
+              -121.611,
+              39.753
+            ],
+            [
+              -121.611,
+              39.759
+            ],
+            [
+              -121.599,
+              39.759
+            ]
+          ],
+          "remaining_path_lonlat": [
+            [
+              -121.611,
+              39.747
+            ],
+            [
+              -121.611,
+              39.753
+            ],
+            [
+              -121.611,
+              39.759
+            ],
+            [
+              -121.599,
+              39.759
+            ]
+          ],
+          "completed_trail_lonlat": [
+            [
+              -121.616,
+              39.747
+            ],
+            [
+              -121.611,
+              39.747
+            ]
+          ],
+          "old_route_geometry_lonlat": [],
+          "remaining_distance_m": 1720,
+          "eta_s": 180,
+          "load": {
+            "people": 1,
+            "supply_units": 0
+          },
+          "reason": "Recorded mock ambulance state; not live tracking."
+        },
+        {
+          "vehicle_id": "bus-02",
+          "label": "Evacuation bus 02",
+          "kind": "bus",
+          "phase": "idle",
+          "position_lonlat": [
+            -121.615,
+            39.75
+          ],
+          "route_id": null,
+          "route_version": 0,
+          "route_geometry_lonlat": [],
+          "remaining_path_lonlat": [],
+          "completed_trail_lonlat": [],
+          "remaining_distance_m": null,
+          "eta_s": null,
+          "load": {
+            "people": 0,
+            "supply_units": 0
+          },
+          "reason": "Available in mock training stock. No dispatch computed."
+        },
+        {
+          "vehicle_id": "truck-03",
+          "label": "Supply truck 03",
+          "kind": "truck",
+          "phase": "idle",
+          "position_lonlat": [
+            -121.614,
+            39.746
+          ],
+          "route_id": null,
+          "route_version": 0,
+          "route_geometry_lonlat": [],
+          "remaining_path_lonlat": [],
+          "completed_trail_lonlat": [],
+          "remaining_distance_m": null,
+          "eta_s": null,
+          "load": {
+            "people": 0,
+            "supply_units": 20
+          },
+          "reason": "Mock supply load; no actual delivery."
+        }
+      ],
+      "hazards": [
+        {
+          "id": "mock-fire",
+          "kind": "fire",
+          "label": "Hand-authored fire overlay",
+          "geometry_lonlat": [
+            [
+              -121.6094,
+              39.757
+            ],
+            [
+              -121.6014,
+              39.757
+            ],
+            [
+              -121.6004,
+              39.763
+            ],
+            [
+              -121.61139999999999,
+              39.762
+            ],
+            [
+              -121.6094,
+              39.757
+            ]
+          ],
+          "source_status": "mock; physical fire adapter not connected"
+        }
+      ],
+      "closures": [],
+      "events": [
+        {
+          "event_id": "mock-start",
+          "type": "dispatch",
+          "time_s": 0,
+          "vehicle_id": "ambulance-01",
+          "message": "Mock recorded dispatch begins. Route illustration is not solver output."
+        }
+      ],
+      "metrics": {
+        "safely_evacuated": 0,
+        "delivered_supply_units": 0,
+        "medical_served": 0
+      },
+      "needs": [
+        {
+          "request_id": "mock-medical",
+          "kind": "medical",
+          "label": "Medical pickup \u00b7 training request",
+          "quantity": 1,
+          "remaining": 1,
+          "unit": "person",
+          "status": "committed"
+        },
+        {
+          "request_id": "mock-evac",
+          "kind": "evacuation",
+          "label": "Shelter transport \u00b7 training request",
+          "quantity": 12,
+          "remaining": 12,
+          "unit": "people",
+          "status": "unmet"
+        }
+      ],
+      "stocks": [
+        {
+          "depot_id": "mock-depot",
+          "label": "Training depot",
+          "supply_units": 80
+        }
+      ],
+      "snapshot_hash": "d4ffc9ff0bea82d989d9b287369ded49ccaac7ae89cf5638387f13687f6352a4"
+    },
+    {
+      "run_id": "maps-mock-001",
+      "scenario_id": "paradise-constructed-ui-exercise",
+      "snapshot_version": 3,
+      "index": 2,
+      "time_s": 120,
+      "mode": "mock-replay",
+      "geometry_status": "constructed illustration, not surveyed roadway or calculated path",
+      "vehicles": [
+        {
+          "vehicle_id": "ambulance-01",
+          "label": "Ambulance 01",
+          "kind": "ambulance",
+          "phase": "waiting",
+          "position_lonlat": [
+            -121.611,
+            39.753
+          ],
+          "route_id": "illustration-route",
+          "route_version": 1,
+          "route_geometry_lonlat": [
+            [
+              -121.616,
+              39.747
+            ],
+            [
+              -121.611,
+              39.747
+            ],
+            [
+              -121.611,
+              39.753
+            ],
+            [
+              -121.611,
+              39.759
+            ],
+            [
+              -121.599,
+              39.759
+            ]
+          ],
+          "remaining_path_lonlat": [
+            [
+              -121.611,
+              39.753
+            ],
+            [
+              -121.611,
+              39.759
+            ],
+            [
+              -121.599,
+              39.759
+            ]
+          ],
+          "completed_trail_lonlat": [
+            [
+              -121.616,
+              39.747
+            ],
+            [
+              -121.611,
+              39.747
+            ],
+            [
+              -121.611,
+              39.753
+            ]
+          ],
+          "old_route_geometry_lonlat": [],
+          "remaining_distance_m": 1050,
+          "eta_s": 120,
+          "load": {
+            "people": 1,
+            "supply_units": 0
+          },
+          "reason": "Recorded mock ambulance state; not live tracking."
+        },
+        {
+          "vehicle_id": "bus-02",
+          "label": "Evacuation bus 02",
+          "kind": "bus",
+          "phase": "idle",
+          "position_lonlat": [
+            -121.615,
+            39.75
+          ],
+          "route_id": null,
+          "route_version": 0,
+          "route_geometry_lonlat": [],
+          "remaining_path_lonlat": [],
+          "completed_trail_lonlat": [],
+          "remaining_distance_m": null,
+          "eta_s": null,
+          "load": {
+            "people": 0,
+            "supply_units": 0
+          },
+          "reason": "Available in mock training stock. No dispatch computed."
+        },
+        {
+          "vehicle_id": "truck-03",
+          "label": "Supply truck 03",
+          "kind": "truck",
+          "phase": "idle",
+          "position_lonlat": [
+            -121.614,
+            39.746
+          ],
+          "route_id": null,
+          "route_version": 0,
+          "route_geometry_lonlat": [],
+          "remaining_path_lonlat": [],
+          "completed_trail_lonlat": [],
+          "remaining_distance_m": null,
+          "eta_s": null,
+          "load": {
+            "people": 0,
+            "supply_units": 20
+          },
+          "reason": "Mock supply load; no actual delivery."
+        }
+      ],
+      "hazards": [
+        {
+          "id": "mock-fire",
+          "kind": "fire",
+          "label": "Hand-authored fire overlay",
+          "geometry_lonlat": [
+            [
+              -121.6088,
+              39.757
+            ],
+            [
+              -121.6008,
+              39.757
+            ],
+            [
+              -121.5998,
+              39.763
+            ],
+            [
+              -121.6108,
+              39.762
+            ],
+            [
+              -121.6088,
+              39.757
+            ]
+          ],
+          "source_status": "mock; physical fire adapter not connected"
+        }
+      ],
+      "closures": [
+        {
+          "edge_id": "mock-closure-illustration",
+          "geometry_lonlat": [
+            [
+              -121.611,
+              39.753
+            ],
+            [
+              -121.611,
+              39.759
+            ]
+          ],
+          "reason": "Constructed fire/access closure for UI validation",
+          "observed_at_s": 120,
+          "source_status": "mock observation"
+        }
+      ],
+      "events": [
+        {
+          "event_id": "mock-start",
+          "type": "dispatch",
+          "time_s": 0,
+          "vehicle_id": "ambulance-01",
+          "message": "Mock recorded dispatch begins. Route illustration is not solver output."
+        },
+        {
+          "event_id": "mock-closure",
+          "type": "closure",
+          "time_s": 120,
+          "vehicle_id": "ambulance-01",
+          "message": "Constructed closure observation; recorded vehicle waits at a decision point."
+        }
+      ],
+      "metrics": {
+        "safely_evacuated": 0,
+        "delivered_supply_units": 0,
+        "medical_served": 0
+      },
+      "needs": [
+        {
+          "request_id": "mock-medical",
+          "kind": "medical",
+          "label": "Medical pickup \u00b7 training request",
+          "quantity": 1,
+          "remaining": 1,
+          "unit": "person",
+          "status": "committed"
+        },
+        {
+          "request_id": "mock-evac",
+          "kind": "evacuation",
+          "label": "Shelter transport \u00b7 training request",
+          "quantity": 12,
+          "remaining": 12,
+          "unit": "people",
+          "status": "unmet"
+        }
+      ],
+      "stocks": [
+        {
+          "depot_id": "mock-depot",
+          "label": "Training depot",
+          "supply_units": 80
+        }
+      ],
+      "snapshot_hash": "0cd6bb9486ab78f3a9f00fbe3de5d7550de7bf624e5dac46e4176a132436f6ef"
+    },
+    {
+      "run_id": "maps-mock-001",
+      "scenario_id": "paradise-constructed-ui-exercise",
+      "snapshot_version": 4,
+      "index": 3,
+      "time_s": 180,
+      "mode": "mock-replay",
+      "geometry_status": "constructed illustration, not surveyed roadway or calculated path",
+      "vehicles": [
+        {
+          "vehicle_id": "ambulance-01",
+          "label": "Ambulance 01",
+          "kind": "ambulance",
+          "phase": "traveling",
+          "position_lonlat": [
+            -121.611,
+            39.753
+          ],
+          "route_id": "illustration-route",
+          "route_version": 2,
+          "route_geometry_lonlat": [
+            [
+              -121.616,
+              39.747
+            ],
+            [
+              -121.611,
+              39.747
+            ],
+            [
+              -121.611,
+              39.753
+            ],
+            [
+              -121.605,
+              39.753
+            ],
+            [
+              -121.599,
+              39.753
+            ],
+            [
+              -121.599,
+              39.759
+            ]
+          ],
+          "remaining_path_lonlat": [
+            [
+              -121.611,
+              39.753
+            ],
+            [
+              -121.605,
+              39.753
+            ],
+            [
+              -121.599,
+              39.753
+            ],
+            [
+              -121.599,
+              39.759
+            ]
+          ],
+          "completed_trail_lonlat": [
+            [
+              -121.616,
+              39.747
+            ],
+            [
+              -121.611,
+              39.747
+            ],
+            [
+              -121.611,
+              39.753
+            ]
+          ],
+          "old_route_geometry_lonlat": [
+            [
+              -121.611,
+              39.753
+            ],
+            [
+              -121.611,
+              39.759
+            ],
+            [
+              -121.599,
+              39.759
+            ]
+          ],
+          "remaining_distance_m": 1050,
+          "eta_s": 180,
+          "load": {
+            "people": 1,
+            "supply_units": 0
+          },
+          "reason": "Recorded mock reroute decision at the same junction, before movement. Calculated path/feasibility unavailable."
+        },
+        {
+          "vehicle_id": "bus-02",
+          "label": "Evacuation bus 02",
+          "kind": "bus",
+          "phase": "idle",
+          "position_lonlat": [
+            -121.615,
+            39.75
+          ],
+          "route_id": null,
+          "route_version": 0,
+          "route_geometry_lonlat": [],
+          "remaining_path_lonlat": [],
+          "completed_trail_lonlat": [],
+          "remaining_distance_m": null,
+          "eta_s": null,
+          "load": {
+            "people": 0,
+            "supply_units": 0
+          },
+          "reason": "Available in mock training stock. No dispatch computed."
+        },
+        {
+          "vehicle_id": "truck-03",
+          "label": "Supply truck 03",
+          "kind": "truck",
+          "phase": "idle",
+          "position_lonlat": [
+            -121.614,
+            39.746
+          ],
+          "route_id": null,
+          "route_version": 0,
+          "route_geometry_lonlat": [],
+          "remaining_path_lonlat": [],
+          "completed_trail_lonlat": [],
+          "remaining_distance_m": null,
+          "eta_s": null,
+          "load": {
+            "people": 0,
+            "supply_units": 20
+          },
+          "reason": "Mock supply load; no actual delivery."
+        }
+      ],
+      "hazards": [
+        {
+          "id": "mock-fire",
+          "kind": "fire",
+          "label": "Hand-authored fire overlay",
+          "geometry_lonlat": [
+            [
+              -121.6088,
+              39.757
+            ],
+            [
+              -121.6008,
+              39.757
+            ],
+            [
+              -121.5998,
+              39.763
+            ],
+            [
+              -121.6108,
+              39.762
+            ],
+            [
+              -121.6088,
+              39.757
+            ]
+          ],
+          "source_status": "mock; physical fire adapter not connected"
+        }
+      ],
+      "closures": [
+        {
+          "edge_id": "mock-closure-illustration",
+          "geometry_lonlat": [
+            [
+              -121.611,
+              39.753
+            ],
+            [
+              -121.611,
+              39.759
+            ]
+          ],
+          "reason": "Constructed fire/access closure for UI validation",
+          "observed_at_s": 120,
+          "source_status": "mock observation"
+        }
+      ],
+      "events": [
+        {
+          "event_id": "mock-start",
+          "type": "dispatch",
+          "time_s": 0,
+          "vehicle_id": "ambulance-01",
+          "message": "Mock recorded dispatch begins. Route illustration is not solver output."
+        },
+        {
+          "event_id": "mock-closure",
+          "type": "closure",
+          "time_s": 120,
+          "vehicle_id": "ambulance-01",
+          "message": "Constructed closure observation; recorded vehicle waits at a decision point."
+        },
+        {
+          "event_id": "mock-reroute",
+          "type": "reroute",
+          "time_s": 180,
+          "vehicle_id": "ambulance-01",
+          "message": "Hand-authored detour decision recorded at the waiting junction. Position, completed trail and load preserved before later movement. No solver feasibility claim."
+        }
+      ],
+      "metrics": {
+        "safely_evacuated": 0,
+        "delivered_supply_units": 0,
+        "medical_served": 0
+      },
+      "needs": [
+        {
+          "request_id": "mock-medical",
+          "kind": "medical",
+          "label": "Medical pickup \u00b7 training request",
+          "quantity": 1,
+          "remaining": 1,
+          "unit": "person",
+          "status": "committed"
+        },
+        {
+          "request_id": "mock-evac",
+          "kind": "evacuation",
+          "label": "Shelter transport \u00b7 training request",
+          "quantity": 12,
+          "remaining": 12,
+          "unit": "people",
+          "status": "unmet"
+        }
+      ],
+      "stocks": [
+        {
+          "depot_id": "mock-depot",
+          "label": "Training depot",
+          "supply_units": 80
+        }
+      ],
+      "snapshot_hash": "ad7ad9b8c4126f3cf31313155963000e47f80d5dddfce032e33d3691d029c504"
+    },
+    {
+      "run_id": "maps-mock-001",
+      "scenario_id": "paradise-constructed-ui-exercise",
+      "snapshot_version": 5,
+      "index": 4,
+      "time_s": 240,
+      "mode": "mock-replay",
+      "geometry_status": "constructed illustration, not surveyed roadway or calculated path",
+      "vehicles": [
+        {
+          "vehicle_id": "ambulance-01",
+          "label": "Ambulance 01",
+          "kind": "ambulance",
+          "phase": "traveling",
+          "position_lonlat": [
+            -121.605,
+            39.753
+          ],
+          "route_id": "illustration-route",
+          "route_version": 2,
+          "route_geometry_lonlat": [
+            [
+              -121.616,
+              39.747
+            ],
+            [
+              -121.611,
+              39.747
+            ],
+            [
+              -121.611,
+              39.753
+            ],
+            [
+              -121.605,
+              39.753
+            ],
+            [
+              -121.599,
+              39.753
+            ],
+            [
+              -121.599,
+              39.759
+            ]
+          ],
+          "remaining_path_lonlat": [
+            [
+              -121.605,
+              39.753
+            ],
+            [
+              -121.599,
+              39.753
+            ],
+            [
+              -121.599,
+              39.759
+            ]
+          ],
+          "completed_trail_lonlat": [
+            [
+              -121.616,
+              39.747
+            ],
+            [
+              -121.611,
+              39.747
+            ],
+            [
+              -121.611,
+              39.753
+            ],
+            [
+              -121.605,
+              39.753
+            ]
+          ],
+          "old_route_geometry_lonlat": [
+            [
+              -121.611,
+              39.753
+            ],
+            [
+              -121.611,
+              39.759
+            ],
+            [
+              -121.599,
+              39.759
+            ]
+          ],
+          "remaining_distance_m": 560,
+          "eta_s": 120,
+          "load": {
+            "people": 1,
+            "supply_units": 0
+          },
+          "reason": "Constructed illustrative path, not a computed road route. Closure detour is hand-authored for UI validation."
+        },
+        {
+          "vehicle_id": "bus-02",
+          "label": "Evacuation bus 02",
+          "kind": "bus",
+          "phase": "idle",
+          "position_lonlat": [
+            -121.615,
+            39.75
+          ],
+          "route_id": null,
+          "route_version": 0,
+          "route_geometry_lonlat": [],
+          "remaining_path_lonlat": [],
+          "completed_trail_lonlat": [],
+          "remaining_distance_m": null,
+          "eta_s": null,
+          "load": {
+            "people": 0,
+            "supply_units": 0
+          },
+          "reason": "Available in mock training stock. No dispatch computed."
+        },
+        {
+          "vehicle_id": "truck-03",
+          "label": "Supply truck 03",
+          "kind": "truck",
+          "phase": "idle",
+          "position_lonlat": [
+            -121.614,
+            39.746
+          ],
+          "route_id": null,
+          "route_version": 0,
+          "route_geometry_lonlat": [],
+          "remaining_path_lonlat": [],
+          "completed_trail_lonlat": [],
+          "remaining_distance_m": null,
+          "eta_s": null,
+          "load": {
+            "people": 0,
+            "supply_units": 20
+          },
+          "reason": "Mock supply load; no actual delivery."
+        }
+      ],
+      "hazards": [
+        {
+          "id": "mock-fire",
+          "kind": "fire",
+          "label": "Hand-authored fire overlay",
+          "geometry_lonlat": [
+            [
+              -121.6082,
+              39.757
+            ],
+            [
+              -121.6002,
+              39.757
+            ],
+            [
+              -121.5992,
+              39.763
+            ],
+            [
+              -121.61019999999999,
+              39.762
+            ],
+            [
+              -121.6082,
+              39.757
+            ]
+          ],
+          "source_status": "mock; physical fire adapter not connected"
+        }
+      ],
+      "closures": [
+        {
+          "edge_id": "mock-closure-illustration",
+          "geometry_lonlat": [
+            [
+              -121.611,
+              39.753
+            ],
+            [
+              -121.611,
+              39.759
+            ]
+          ],
+          "reason": "Constructed fire/access closure for UI validation",
+          "observed_at_s": 120,
+          "source_status": "mock observation"
+        }
+      ],
+      "events": [
+        {
+          "event_id": "mock-start",
+          "type": "dispatch",
+          "time_s": 0,
+          "vehicle_id": "ambulance-01",
+          "message": "Mock recorded dispatch begins. Route illustration is not solver output."
+        },
+        {
+          "event_id": "mock-closure",
+          "type": "closure",
+          "time_s": 120,
+          "vehicle_id": "ambulance-01",
+          "message": "Constructed closure observation; recorded vehicle waits at a decision point."
+        },
+        {
+          "event_id": "mock-reroute",
+          "type": "reroute",
+          "time_s": 180,
+          "vehicle_id": "ambulance-01",
+          "message": "Hand-authored detour decision recorded at the waiting junction. Position, completed trail and load preserved before later movement. No solver feasibility claim."
+        }
+      ],
+      "metrics": {
+        "safely_evacuated": 0,
+        "delivered_supply_units": 0,
+        "medical_served": 0
+      },
+      "needs": [
+        {
+          "request_id": "mock-medical",
+          "kind": "medical",
+          "label": "Medical pickup \u00b7 training request",
+          "quantity": 1,
+          "remaining": 1,
+          "unit": "person",
+          "status": "committed"
+        },
+        {
+          "request_id": "mock-evac",
+          "kind": "evacuation",
+          "label": "Shelter transport \u00b7 training request",
+          "quantity": 12,
+          "remaining": 12,
+          "unit": "people",
+          "status": "unmet"
+        }
+      ],
+      "stocks": [
+        {
+          "depot_id": "mock-depot",
+          "label": "Training depot",
+          "supply_units": 80
+        }
+      ],
+      "snapshot_hash": "0e16318035771126798ea96406f2817df0ae08c5045d886b36ebc7b29a694c25"
+    },
+    {
+      "run_id": "maps-mock-001",
+      "scenario_id": "paradise-constructed-ui-exercise",
+      "snapshot_version": 6,
+      "index": 5,
+      "time_s": 300,
+      "mode": "mock-replay",
+      "geometry_status": "constructed illustration, not surveyed roadway or calculated path",
+      "vehicles": [
+        {
+          "vehicle_id": "ambulance-01",
+          "label": "Ambulance 01",
+          "kind": "ambulance",
+          "phase": "traveling",
+          "position_lonlat": [
+            -121.599,
+            39.753
+          ],
+          "route_id": "illustration-route",
+          "route_version": 2,
+          "route_geometry_lonlat": [
+            [
+              -121.616,
+              39.747
+            ],
+            [
+              -121.611,
+              39.747
+            ],
+            [
+              -121.611,
+              39.753
+            ],
+            [
+              -121.605,
+              39.753
+            ],
+            [
+              -121.599,
+              39.753
+            ],
+            [
+              -121.599,
+              39.759
+            ]
+          ],
+          "remaining_path_lonlat": [
+            [
+              -121.599,
+              39.753
+            ],
+            [
+              -121.599,
+              39.759
+            ]
+          ],
+          "completed_trail_lonlat": [
+            [
+              -121.616,
+              39.747
+            ],
+            [
+              -121.611,
+              39.747
+            ],
+            [
+              -121.611,
+              39.753
+            ],
+            [
+              -121.605,
+              39.753
+            ],
+            [
+              -121.599,
+              39.753
+            ]
+          ],
+          "old_route_geometry_lonlat": [
+            [
+              -121.611,
+              39.753
+            ],
+            [
+              -121.611,
+              39.759
+            ],
+            [
+              -121.599,
+              39.759
+            ]
+          ],
+          "remaining_distance_m": 400,
+          "eta_s": 60,
+          "load": {
+            "people": 1,
+            "supply_units": 0
+          },
+          "reason": "Constructed illustrative path, not a computed road route. Closure detour is hand-authored for UI validation."
+        },
+        {
+          "vehicle_id": "bus-02",
+          "label": "Evacuation bus 02",
+          "kind": "bus",
+          "phase": "idle",
+          "position_lonlat": [
+            -121.615,
+            39.75
+          ],
+          "route_id": null,
+          "route_version": 0,
+          "route_geometry_lonlat": [],
+          "remaining_path_lonlat": [],
+          "completed_trail_lonlat": [],
+          "remaining_distance_m": null,
+          "eta_s": null,
+          "load": {
+            "people": 0,
+            "supply_units": 0
+          },
+          "reason": "Available in mock training stock. No dispatch computed."
+        },
+        {
+          "vehicle_id": "truck-03",
+          "label": "Supply truck 03",
+          "kind": "truck",
+          "phase": "idle",
+          "position_lonlat": [
+            -121.614,
+            39.746
+          ],
+          "route_id": null,
+          "route_version": 0,
+          "route_geometry_lonlat": [],
+          "remaining_path_lonlat": [],
+          "completed_trail_lonlat": [],
+          "remaining_distance_m": null,
+          "eta_s": null,
+          "load": {
+            "people": 0,
+            "supply_units": 20
+          },
+          "reason": "Mock supply load; no actual delivery."
+        }
+      ],
+      "hazards": [
+        {
+          "id": "mock-fire",
+          "kind": "fire",
+          "label": "Hand-authored fire overlay",
+          "geometry_lonlat": [
+            [
+              -121.6076,
+              39.757
+            ],
+            [
+              -121.59960000000001,
+              39.757
+            ],
+            [
+              -121.5986,
+              39.763
+            ],
+            [
+              -121.6096,
+              39.762
+            ],
+            [
+              -121.6076,
+              39.757
+            ]
+          ],
+          "source_status": "mock; physical fire adapter not connected"
+        }
+      ],
+      "closures": [
+        {
+          "edge_id": "mock-closure-illustration",
+          "geometry_lonlat": [
+            [
+              -121.611,
+              39.753
+            ],
+            [
+              -121.611,
+              39.759
+            ]
+          ],
+          "reason": "Constructed fire/access closure for UI validation",
+          "observed_at_s": 120,
+          "source_status": "mock observation"
+        }
+      ],
+      "events": [
+        {
+          "event_id": "mock-start",
+          "type": "dispatch",
+          "time_s": 0,
+          "vehicle_id": "ambulance-01",
+          "message": "Mock recorded dispatch begins. Route illustration is not solver output."
+        },
+        {
+          "event_id": "mock-closure",
+          "type": "closure",
+          "time_s": 120,
+          "vehicle_id": "ambulance-01",
+          "message": "Constructed closure observation; recorded vehicle waits at a decision point."
+        },
+        {
+          "event_id": "mock-reroute",
+          "type": "reroute",
+          "time_s": 180,
+          "vehicle_id": "ambulance-01",
+          "message": "Hand-authored detour decision recorded at the waiting junction. Position, completed trail and load preserved before later movement. No solver feasibility claim."
+        }
+      ],
+      "metrics": {
+        "safely_evacuated": 0,
+        "delivered_supply_units": 0,
+        "medical_served": 0
+      },
+      "needs": [
+        {
+          "request_id": "mock-medical",
+          "kind": "medical",
+          "label": "Medical pickup \u00b7 training request",
+          "quantity": 1,
+          "remaining": 1,
+          "unit": "person",
+          "status": "committed"
+        },
+        {
+          "request_id": "mock-evac",
+          "kind": "evacuation",
+          "label": "Shelter transport \u00b7 training request",
+          "quantity": 12,
+          "remaining": 12,
+          "unit": "people",
+          "status": "unmet"
+        }
+      ],
+      "stocks": [
+        {
+          "depot_id": "mock-depot",
+          "label": "Training depot",
+          "supply_units": 80
+        }
+      ],
+      "snapshot_hash": "912d441b4b060059ca8d1f66654f6b161b664d9207ea51c83cc35599c5b6376d"
+    },
+    {
+      "run_id": "maps-mock-001",
+      "scenario_id": "paradise-constructed-ui-exercise",
+      "snapshot_version": 7,
+      "index": 6,
+      "time_s": 360,
+      "mode": "mock-replay",
+      "geometry_status": "constructed illustration, not surveyed roadway or calculated path",
+      "vehicles": [
+        {
+          "vehicle_id": "ambulance-01",
+          "label": "Ambulance 01",
+          "kind": "ambulance",
+          "phase": "completed",
+          "position_lonlat": [
+            -121.599,
+            39.759
+          ],
+          "route_id": "illustration-route",
+          "route_version": 2,
+          "route_geometry_lonlat": [
+            [
+              -121.616,
+              39.747
+            ],
+            [
+              -121.611,
+              39.747
+            ],
+            [
+              -121.611,
+              39.753
+            ],
+            [
+              -121.605,
+              39.753
+            ],
+            [
+              -121.599,
+              39.753
+            ],
+            [
+              -121.599,
+              39.759
+            ]
+          ],
+          "remaining_path_lonlat": [
+            [
+              -121.599,
+              39.759
+            ]
+          ],
+          "completed_trail_lonlat": [
+            [
+              -121.616,
+              39.747
+            ],
+            [
+              -121.611,
+              39.747
+            ],
+            [
+              -121.611,
+              39.753
+            ],
+            [
+              -121.605,
+              39.753
+            ],
+            [
+              -121.599,
+              39.753
+            ],
+            [
+              -121.599,
+              39.759
+            ]
+          ],
+          "old_route_geometry_lonlat": [
+            [
+              -121.611,
+              39.753
+            ],
+            [
+              -121.611,
+              39.759
+            ],
+            [
+              -121.599,
+              39.759
+            ]
+          ],
+          "remaining_distance_m": 0,
+          "eta_s": 0,
+          "load": {
+            "people": 0,
+            "supply_units": 0
+          },
+          "reason": "Constructed illustrative path, not a computed road route. Closure detour is hand-authored for UI validation."
+        },
+        {
+          "vehicle_id": "bus-02",
+          "label": "Evacuation bus 02",
+          "kind": "bus",
+          "phase": "idle",
+          "position_lonlat": [
+            -121.615,
+            39.75
+          ],
+          "route_id": null,
+          "route_version": 0,
+          "route_geometry_lonlat": [],
+          "remaining_path_lonlat": [],
+          "completed_trail_lonlat": [],
+          "remaining_distance_m": null,
+          "eta_s": null,
+          "load": {
+            "people": 0,
+            "supply_units": 0
+          },
+          "reason": "Available in mock training stock. No dispatch computed."
+        },
+        {
+          "vehicle_id": "truck-03",
+          "label": "Supply truck 03",
+          "kind": "truck",
+          "phase": "idle",
+          "position_lonlat": [
+            -121.614,
+            39.746
+          ],
+          "route_id": null,
+          "route_version": 0,
+          "route_geometry_lonlat": [],
+          "remaining_path_lonlat": [],
+          "completed_trail_lonlat": [],
+          "remaining_distance_m": null,
+          "eta_s": null,
+          "load": {
+            "people": 0,
+            "supply_units": 20
+          },
+          "reason": "Mock supply load; no actual delivery."
+        }
+      ],
+      "hazards": [
+        {
+          "id": "mock-fire",
+          "kind": "fire",
+          "label": "Hand-authored fire overlay",
+          "geometry_lonlat": [
+            [
+              -121.607,
+              39.757
+            ],
+            [
+              -121.599,
+              39.757
+            ],
+            [
+              -121.598,
+              39.763
+            ],
+            [
+              -121.609,
+              39.762
+            ],
+            [
+              -121.607,
+              39.757
+            ]
+          ],
+          "source_status": "mock; physical fire adapter not connected"
+        }
+      ],
+      "closures": [
+        {
+          "edge_id": "mock-closure-illustration",
+          "geometry_lonlat": [
+            [
+              -121.611,
+              39.753
+            ],
+            [
+              -121.611,
+              39.759
+            ]
+          ],
+          "reason": "Constructed fire/access closure for UI validation",
+          "observed_at_s": 120,
+          "source_status": "mock observation"
+        }
+      ],
+      "events": [
+        {
+          "event_id": "mock-start",
+          "type": "dispatch",
+          "time_s": 0,
+          "vehicle_id": "ambulance-01",
+          "message": "Mock recorded dispatch begins. Route illustration is not solver output."
+        },
+        {
+          "event_id": "mock-closure",
+          "type": "closure",
+          "time_s": 120,
+          "vehicle_id": "ambulance-01",
+          "message": "Constructed closure observation; recorded vehicle waits at a decision point."
+        },
+        {
+          "event_id": "mock-reroute",
+          "type": "reroute",
+          "time_s": 180,
+          "vehicle_id": "ambulance-01",
+          "message": "Hand-authored detour decision recorded at the waiting junction. Position, completed trail and load preserved before later movement. No solver feasibility claim."
+        },
+        {
+          "event_id": "mock-service",
+          "type": "arrival",
+          "time_s": 360,
+          "vehicle_id": "ambulance-01",
+          "message": "Mock medical service outcome recorded once; integration with routing ledger pending."
+        }
+      ],
+      "metrics": {
+        "safely_evacuated": 0,
+        "delivered_supply_units": 0,
+        "medical_served": 1
+      },
+      "needs": [
+        {
+          "request_id": "mock-medical",
+          "kind": "medical",
+          "label": "Medical pickup \u00b7 training request",
+          "quantity": 1,
+          "remaining": 0,
+          "unit": "person",
+          "status": "served"
+        },
+        {
+          "request_id": "mock-evac",
+          "kind": "evacuation",
+          "label": "Shelter transport \u00b7 training request",
+          "quantity": 12,
+          "remaining": 12,
+          "unit": "people",
+          "status": "unmet"
+        }
+      ],
+      "stocks": [
+        {
+          "depot_id": "mock-depot",
+          "label": "Training depot",
+          "supply_units": 80
+        }
+      ],
+      "snapshot_hash": "1bf6ea0514d8030472c5bcb419dde0cd38068dcae527626c4c3482ba20f168d3"
+    }
+  ]
+}

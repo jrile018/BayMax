@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0d151e">
+<title>Knight26 / Response Lab</title>
+<link rel="stylesheet" href="./style.css">
+<script src="./upstream-panel-rail.js" defer></script>
+<script src="./satellite.js" defer></script>
+  <script src="./earth-globe.js" defer></script>
+  <script src="./app.js" defer></script>
+</head>
+<body>
+<div class="app-shell" id="exercise">
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">K<span>26</span></span><div><strong>KNIGHT26</strong><small>Response Lab</small></div></div>
+    <div class="header-divider"></div>
+    <div class="operation"><span class="operation-name" id="map-title">Paradise, California</span><span class="operation-sub" id="run-id">Loading exercise</span></div>
+    <div class="header-status"><span class="status-light"></span><span id="mode-label">Recorded training replay</span><span id="top-status">Connecting</span></div>
+    <div class="header-metrics" aria-label="Recorded outcomes"><span><b id="metric-safe">--</b><small>Safe arrivals</small></span><span><b id="metric-supply">--</b><small>Supplies</small></span><span><b id="metric-medical">--</b><small>Medical</small></span></div>
+    <div class="header-actions">
+      <button id="search-open" class="header-button search-trigger" type="button" aria-label="Search units, roads, events and commands">Search <kbd>Ctrl K</kbd></button>
+      <button id="left-toggle" class="header-button mobile-panel" type="button" aria-controls="left-panel" aria-expanded="false">Layers</button>
+      <button id="right-toggle" class="header-button mobile-panel" type="button" aria-controls="right-panel" aria-expanded="false">Inspect</button>
+      <button id="theme-toggle" class="square-button" type="button" aria-label="Switch to light theme" title="Switch theme">☼</button>
+      <button id="help-open" class="square-button" type="button" aria-label="Open keyboard shortcuts" title="Keyboard shortcuts">?</button>
+    </div>
+  </header>
+
+  <main class="workspace" id="map-panel">
+    <div class="map-surface" id="map-surface">
+      <svg id="map" role="img" aria-label="OpenStreetMap area, recorded replay overlays and local annotations" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <clipPath id="area-clip"><rect id="area-clip-rect" x="0" y="0" width="1000" height="700"></rect></clipPath>
+          <pattern id="closure-hatch" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="10" height="10" fill="#b74946"></rect><path d="M0 0V10" stroke="#edaaa1" stroke-width="4"></path></pattern>
+          <filter id="marker-shadow" x="-100%" y="-100%" width="300%" height="300%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#051017" flood-opacity=".7"></feDropShadow></filter>
+        </defs>
+        <rect id="map-bg" x="-1500" y="-1500" width="4000" height="4000"></rect>
+        <g id="layer-satellite"></g>
+        <g id="layer-land" clip-path="url(#area-clip)"></g>
+        <g id="layer-buildings" clip-path="url(#area-clip)"></g>
+        <g id="layer-roads" clip-path="url(#area-clip)"></g>
+        <g id="layer-road-labels" clip-path="url(#area-clip)"></g>
+        <g id="layer-boundary"></g>
+        <g id="layer-hazards"></g>
+        <g id="layer-old-route"></g>
+        <g id="layer-route"></g>
+        <g id="layer-destination"></g>
+        <g id="layer-trails"></g>
+        <g id="layer-closures"></g>
+        <g id="layer-vehicles"></g>
+        <g id="layer-annotations"></g>
+        <g id="layer-measure"></g>
+      </svg>
+      <div id="earth-panel" class="earth-panel" hidden aria-label="Interactive NASA Earth overview">
+        <div id="earth-canvas" class="earth-canvas"></div>
+        <div class="earth-hero"><span class="earth-kicker">GLOBAL CONTEXT / PARADISE, CALIFORNIA</span><h2>One planet.<br><em>One local story.</em></h2><p>Drag the real Earth to explore. Then open Paradise on satellite imagery and step through the recorded training replay.</p><button id="earth-local-button" type="button">Explore Paradise satellite map <span>↗</span></button><small id="earth-state">Earth view loading…</small></div>
+        <div class="earth-credit">NASA/GSFC SVS Blue Marble composite (historic visualization) · <a href="https://svs.gsfc.nasa.gov/3615" target="_blank" rel="noopener noreferrer">Source &amp; credits</a></div>
+      </div>
+      <div class="map-topline">
+        <div class="map-title"><span id="view-chip" class="local-map-chip">REAL-WORLD SATELLITE MAP</span><span id="source-chip" class="source-chip">Checking map data</span><strong id="map-area-label">Loading area</strong><span id="map-subtitle">Waiting for source records</span></div>
+        <div class="map-status"><span id="map-frame-label">Frame -- / --</span><span id="metric-clock">--:--</span></div>
+      </div>
+      <div id="global-error" class="alert" role="alert" hidden></div>
+      <div id="source-banner" class="source-banner">Checking geographic and replay sources</div>
+      <div id="map-notice" class="map-notice" hidden>No road data loaded. Routes and fire are constructed illustrations.</div>
+      <div class="map-tools" aria-label="Map tools">
+        <button id="earth-toggle" type="button" title="Open interactive Earth globe" aria-label="Open interactive Earth globe" aria-pressed="false">EARTH</button>
+        <button id="basemap-toggle" type="button" title="Switch satellite imagery" aria-label="Switch satellite imagery" aria-pressed="true">SAT</button>
+        <button id="zoom-in" type="button" title="Zoom in" aria-label="Zoom in">+</button>
+        <button id="zoom-out" type="button" title="Zoom out" aria-label="Zoom out">−</button>
+        <button id="fit-area" type="button" title="Fit acquisition area" aria-label="Fit acquisition area">▣</button>
+        <button id="fit-context" type="button" title="Fit full map context" aria-label="Fit full map context">◻</button>
+        <button id="measure-toggle" type="button" title="Measure straight-line distance" aria-pressed="false">⌁<span class="sr-only">Measure distance</span></button>
+        <button id="measure-clear" type="button" title="Clear measurement" aria-label="Clear measurement">×</button>
+        <button id="annotate-toggle" type="button" title="Add a local annotation pin" aria-pressed="false">⌖<span class="sr-only">Add annotation</span></button>
+        <button id="fullscreen-toggle" type="button" title="Toggle fullscreen" aria-label="Enter fullscreen">⛶</button>
+      </div>
+      <div class="map-legend" aria-label="Map legend"><span><i class="legend-road"></i>OSM road</span><span><i class="legend-route"></i>Recorded route</span><span><i class="legend-trail"></i>Completed</span><span><i class="legend-fire"></i>Mock fire</span><span><i class="legend-closure"></i>Closure</span></div>
+      <div class="map-telemetry"><span id="cursor-coords">Move pointer over map for coordinates</span><span id="map-scale">Scale --</span></div>
+      <div id="osm-attribution" class="map-attribution"><span id="esri-credit"><span id="imagery-status">Loading Esri satellite imagery…</span> · Imagery <a href="https://www.esri.com/" target="_blank" rel="noopener noreferrer">Powered by Esri</a> — Source: Esri, Maxar, Earthstar Geographics, GIS User Community</span> · OSM vectors © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a></div>
+      <form id="annotation-editor" class="annotation-editor" hidden><label for="annotation-input">Name this local pin</label><input id="annotation-input" type="text" maxlength="40" placeholder="Observation note"><div><button id="annotation-save" type="button">Save pin</button><button id="annotation-cancel" type="button">Cancel</button></div></form>
+      <div id="map-toast" class="map-toast" role="status" aria-live="polite"></div>
+    </div>
+
+    <aside id="left-panel" class="panel left-panel" aria-label="Layers and contacts">
+      <div class="panel-heading"><div><small>Mission controls</small><h2>Layers &amp; contacts</h2></div><button id="left-close" class="panel-close" type="button" aria-label="Close layers panel">×</button></div>
+      <div class="panel-scroll">
+        <div class="panel-section"><div class="section-heading"><h3>Map layers</h3><button id="layers-reset" type="button">Reset</button></div><div id="layer-toggles" class="layer-toggles"></div></div>
+        <div class="panel-section"><div class="section-heading"><h3>Field units</h3><span id="fleet-count" class="count">0</span></div><div id="fleet-list" class="fleet-list"><p class="empty-state">Waiting for replay snapshot.</p></div></div>
+        <div class="panel-section"><div class="section-heading"><h3>Local marks</h3><button id="annotations-clear" type="button">Clear all</button></div><div id="annotation-list" class="annotation-list"><p class="empty-state">Use the pin tool to mark a location. Marks stay in this browser view only.</p></div></div>
+      </div>
+      <div class="panel-foot"><button id="left-collapse" type="button">Hide panel <span>‹</span></button></div>
+    </aside>
+    <button id="left-rail" class="collapsed-rail left-rail" type="button" aria-label="Show layers and contacts" hidden>Layers <span>›</span></button>
+
+    <aside id="right-panel" class="panel right-panel" aria-label="Inspector">
+      <div class="panel-heading"><div><small>Recorded evidence</small><h2>Inspector</h2></div><button id="right-close" class="panel-close" type="button" aria-label="Close inspector">×</button></div>
+      <div class="inspector-tabs" role="tablist" aria-label="Inspector sections">
+        <button id="tab-fleet" role="tab" type="button" aria-controls="pane-fleet" aria-selected="true">Fleet</button>
+        <button id="tab-events" role="tab" type="button" aria-controls="pane-events" aria-selected="false" tabindex="-1">Events</button>
+        <button id="tab-data" role="tab" type="button" aria-controls="pane-data" aria-selected="false" tabindex="-1">Data</button>
+      </div>
+      <div class="panel-scroll inspector-scroll">
+        <section id="pane-fleet" role="tabpanel" aria-labelledby="tab-fleet">
+          <div id="feature-inspect" class="feature-inspect" hidden></div>
+          <div id="route-audit" class="route-audit"><p class="empty-state">Select a field unit on the map or in contacts.</p></div>
+          <div class="panel-section"><div class="section-heading"><h3>Aid ledger</h3><span>Mock exercise</span></div><div id="needs-list" class="ledger-list"></div><div id="stock-list" class="ledger-list"></div></div>
+        </section>
+        <section id="pane-events" role="tabpanel" aria-labelledby="tab-events" hidden>
+          <div class="section-heading events-heading"><h3>Event timeline</h3><span id="event-count">0 events</span></div>
+          <ol id="event-list" class="event-list"><li class="empty-state">Events appear as replay advances.</li></ol>
+        </section>
+        <section id="pane-data" role="tabpanel" aria-labelledby="tab-data" hidden>
+          <p id="scenario-description" class="data-intro">Loading scenario details.</p>
+          <div id="coverage-list" class="coverage-list"></div>
+          <form id="coord-form" class="coord-form"><label for="coord-input">Check coordinate coverage <span>Lat, lon</span></label><div class="coord-row"><input id="coord-input" type="text" inputmode="decimal" autocomplete="off" placeholder="39.754, -121.607" aria-describedby="coord-help"><button id="coord-check" type="button">Check</button></div><p id="coord-help">Coverage checks use the loaded server area.</p><p id="coord-result" class="coord-result" role="status"></p></form>
+          <div id="provenance-dates" class="provenance-dates"></div><div class="snapshot-meta"><small>Run</small><span id="data-run">--</span><small>Snapshot hash</small><span id="footer-hash">--</span></div>
+        </section>
+      </div>
+      <div class="panel-foot"><button id="right-collapse" type="button">Hide inspector <span>›</span></button></div>
+    </aside>
+    <button id="right-rail" class="collapsed-rail right-rail" type="button" aria-label="Show inspector" hidden><span>‹</span> Inspector</button>
+    <div id="mobile-scrim" class="mobile-scrim" hidden></div>
+  </main>
+
+  <div class="replay-dock" aria-label="Replay controls">
+    <div class="dock-left"><span class="dock-eyebrow">Training replay</span><strong id="playback-clock">--:--</strong><span id="frame-index">Frame --</span></div>
+    <div class="dock-main">
+      <div class="dock-controls">
+        <button id="step-back" type="button" aria-label="Previous frame" disabled>⏮</button>
+        <button id="play-button" class="play-button" type="button" aria-label="Play replay" disabled><span id="play-glyph">▶</span><span id="play-text">Play</span></button>
+        <button id="step-forward" type="button" aria-label="Next frame" disabled>⏭</button>
+        <label for="speed-select">Speed</label><select id="speed-select" aria-label="Playback speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select>
+      </div>
+      <div class="dock-track"><span id="start-time">--:--</span><div class="slider-wrap"><input id="frame-slider" type="range" min="0" max="0" value="0" disabled aria-label="Select replay frame"><div id="event-markers" class="event-markers"></div></div><span id="end-time">--:--</span></div>
+    </div>
+    <div class="dock-right"><button id="event-prev" type="button" disabled>‹ Event</button><button id="event-next" type="button" disabled>Event ›</button><span id="footer-mode">CONSTRUCTED TRAINING REPLAY</span></div>
+  </div>
+
+  <dialog id="search-dialog" class="command-dialog" aria-labelledby="search-title"><div class="dialog-header"><h2 id="search-title">Find in this exercise</h2><button id="search-close" type="button" aria-label="Close search">×</button></div><input id="search-input" type="search" autocomplete="off" placeholder="Units, roads, events, commands…" aria-label="Search current exercise"><div id="search-results" class="search-results"></div><p class="dialog-foot">Local records only. No online place search.</p></dialog>
+  <dialog id="help-dialog" class="help-dialog" aria-labelledby="help-title"><div class="dialog-header"><h2 id="help-title">Controls &amp; shortcuts</h2><button id="help-close" type="button" aria-label="Close shortcuts">×</button></div><div class="help-grid"><span>Search</span><kbd>Ctrl K</kbd><span>Play / pause</span><kbd>Space</kbd><span>Previous / next frame</span><kbd>← / →</kbd><span>First / last frame</span><kbd>Home / End</kbd><span>Close tool or dialog</span><kbd>Esc</kbd><span>Pan map</span><kbd>Shift + arrows</kbd><span>Zoom map</span><kbd>+ / −</kbd></div><p>Wheel zooms around the pointer. Drag pans. Measure makes a straight-line estimate; pins are local annotations.</p></dialog>
+</div>
+</body>
+</html>
