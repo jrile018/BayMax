@@ -4,7 +4,7 @@
 window.KnightEarth=(()=>{
  const THREE_URL="https://unpkg.com/three@0.180.0/build/three.module.js";
  const TEXTURE_URL="./assets/nasa-blue-marble-2009.jpg";
- let initialized=false,setupPromise=null,visible=false,dragging=false,renderer,scene,camera,globe,frame=0,oldBanner="",setPanel=null,panelState=null;
+ let initialized=false,setupPromise=null,visible=false,dragging=false,renderer,scene,camera,globe,frame=0,oldBanner="",setPanel=null,restoreMapLabels=null,panelState=null;
  const $=id=>document.getElementById(id);
  function size(){if(!renderer)return;const host=$("earth-panel"),w=host.clientWidth,h=host.clientHeight;if(w&&h){renderer.setSize(w,h,false);const aspect=w/h;camera.aspect=aspect;camera.position.z=aspect<.9?Math.max(5.7,1.65/(Math.tan(16*Math.PI/180)*aspect)):5.7;if(globe)globe.position.x=aspect<.9?0:.95;camera.updateProjectionMatrix()}}
  async function setup(){if(initialized)return;if(setupPromise)return setupPromise;setupPromise=build();try{await setupPromise}catch(error){setupPromise=null;if(renderer){renderer.dispose();renderer.domElement.remove();renderer=null}throw error}}
@@ -54,8 +54,9 @@ window.KnightEarth=(()=>{
   $("earth-toggle").textContent="EARTH";$("earth-toggle").setAttribute("aria-pressed","false");$("earth-toggle").setAttribute("aria-label","Open interactive Earth globe");
   $("view-chip").textContent=document.body.classList.contains("satellite")?"REAL-WORLD SATELLITE MAP":"OSM VECTOR MAP";$("source-chip").textContent=document.body.classList.contains("satellite")?"Esri satellite + OSM vectors":"OSM vector geometry";
   $("source-banner").textContent=oldBanner;
+  restoreMapLabels?.();
   if(setPanel&&panelState){setPanel("left",innerWidth>760&&panelState.left);setPanel("right",innerWidth>760&&panelState.right)}
  }
- function bind(options={}){setPanel=options.setPanel||null;const b=$("earth-toggle");b.onclick=()=>visible?close():open();$("earth-local-button").onclick=close}
+ function bind(options={}){setPanel=options.setPanel||null;restoreMapLabels=options.restoreMapLabels||null;const b=$("earth-toggle");b.onclick=()=>visible?close():open();$("earth-local-button").onclick=close}
  return{bind,open,close,handleKey};
 })();
