@@ -29,8 +29,9 @@ adapter. It draws no WGS84 geometry, assigns no metric coordinates, infers no
 operational outcomes, and cannot turn authored training assumptions into
 verified completeness. It remains separate from the historical mock dashboard
 replay and the fictional mission fixtures. Source text is data and any UI
-consumer must escape it. A trusted root publication and complete UI wiring
-remain pending; no real incident export was consumed in these tests.
+consumer must escape it. At the time of these fixture tests, a trusted
+root publication and complete UI wiring were pending; these tests consumed no
+real incident export. The later CPU probe below consumed a production snapshot.
 
 ## Accepted situation publication CPU probe — 2026-10-10T17Z
 
@@ -54,3 +55,27 @@ they do not establish current source freshness or a complete live mission.
 The publication has no geography binding or projection input, and the actual
 viewer UI has not consumed this publication. The mock dashboard replay is
 separate from this accepted situation.
+
+## Digest-pinned publication reader — 2026-10-10T17Z
+
+The viewer3d.publication_reader.load_accepted_publication function provides a
+repeatable CPU-only read of the root publisher's current.json. The caller must
+obtain expected_publication_sha256 through a trusted channel and own the
+directory path; copying that digest from the pointer being checked is only a
+structural smoke test. The reader rejects symlinked final directory, pointer
+and publication, nonregular files, oversized or malformed JSON, pointer
+replacements during the read, digest mismatches, incorrect snapshot/mission/
+view hashes and nonliteral-false capabilities. It returns the original
+AdaptedIncident as PublishedIncident.view with no hypothetical branches,
+along with the pointer, publication, view, mission and snapshot identities.
+It does not authenticate upstream providers, check current source freshness,
+project WGS84 geometry or drive the UI.
+
+The root current.json advanced after the prior 17:06Z publication to view
+hash b8389c8667faf5fcd3e12e441ce8bb3af121fb74288a45f3dbfafb302f9fbefc.
+The reader parsed it in a CPU structural smoke test, showing 14 hazards and
+source-health fields marked alive at the 17:15Z sample. At this checkpoint no
+independent source-review receipt for that refresh was found, so this newer
+pointer is not adopted as verified live source evidence here. The earlier
+15-hazard stale publication and its reviewed receipt remain immutable evidence
+for that exact cutoff; they are not the current pointer.
