@@ -7,6 +7,7 @@ from unittest.mock import patch
 
 from services.hazards.wildfire.physical import (
     BackendUnavailable, physical_arrivals, engine_available, _arrival_seconds,
+    _validated_stop_time,
 )
 
 
@@ -32,6 +33,42 @@ def scenario(size=21):
 
 
 class PhysicalContractTests(unittest.TestCase):
+    def test_solver_must_cover_requested_horizon(self):
+        horizon_minutes = 30.0
+        complete = {'stop_time': 30.0, 'stop_condition': 'max duration reached'}
+        self.assertEqual(30.0, _validated_stop_time(complete, horizon_minutes))
+        padded = dict(complete, stop_time=30.02)
+        self.assertEqual(30.02, _validated_stop_time(padded, horizon_minutes, 30.04))
+        with self.assertRaises(RuntimeError):
+            _validated_stop_time(dict(complete, stop_time=30.05), horizon_minutes, 30.04)
+        for seconds_early in (0.1, 1.0, 5.0):
+            incomplete = dict(complete, stop_time=30.0 - seconds_early / 60)
+            with self.subTest(seconds_early=seconds_early), self.assertRaises(RuntimeError):
+                _validated_stop_time(incomplete, horizon_minutes)
+
+    def test_solver_zero_length_or_unknown_stop_fails_closed(self):
+        for condition in ('zero length timestep', 'unexpected'):
+            with self.subTest(condition=condition), self.assertRaises(RuntimeError):
+                _validated_stop_time({'stop_time': 1.0, 'stop_condition': condition}, 30.0)
+
+    def test_absorbing_no_burnable_cells_requires_empty_tracking_and_frontier(self):
+        empty = {'burned_cells': ([], []), 'unburned_cells': ([], [])}
+        result = {'stop_time': 2.0, 'stop_condition': 'no burnable cells',
+                  'num_tracked_cells': 0, 'frontier_cells': empty}
+        self.assertEqual(2.0, _validated_stop_time(result, 30.0))
+        for changed in (dict(result, num_tracked_cells=1),
+                        dict(result, frontier_cells=dict(empty, burned_cells=([1], [1]))),
+                        dict(result, frontier_cells={})):
+            with self.subTest(changed=changed), self.assertRaises(RuntimeError):
+                _validated_stop_time(changed, 30.0)
+
+    def test_malformed_solver_stop_fails_closed(self):
+        for result in (None, {}, {'stop_time': float('nan'), 'stop_condition': 'max duration reached'},
+                       {'stop_time': -1, 'stop_condition': 'max duration reached'},
+                       {'stop_time': 31, 'stop_condition': 'max duration reached'}):
+            with self.subTest(result=result), self.assertRaises(RuntimeError):
+                _validated_stop_time(result, 30.0)
+
     def test_requires_explicit_supported_assumptions(self):
         base = scenario()
         variants = [dict(base, physical_assumptions={}),
@@ -115,6 +152,16 @@ class PhysicalSolverTests(unittest.TestCase):
         self.assertTrue(all(a <= 1800 for a in spread))
         self.assertTrue(provenance['physical_engine_implemented'])
         self.assertEqual('2026.8.10', provenance['model_version'])
+        self.assertGreaterEqual(provenance['solver_settings']['stop_time_min'], 30.0)
+        self.assertGreater(provenance['solver_settings']['solver_time_band_duration_min'], 30.0)
+
+    def test_solver_headroom_does_not_publish_future_arrivals(self):
+        config = scenario()
+        config['horizon_s'] = 60
+        arrivals, provenance = physical_arrivals(config, 21, 21)
+        self.assertEqual(0, arrivals[10][10])
+        self.assertTrue(all(a is None or a <= 60 for row in arrivals for a in row))
+        self.assertGreaterEqual(provenance['solver_settings']['stop_time_min'], 1.0)
 
     def test_wind_direction_changes_arrival(self):
         east = scenario()

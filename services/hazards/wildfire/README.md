@@ -1,6 +1,6 @@
 # Wildfire: pinned surface reference and explicit training fields
 
-The module implements an optional Pyretechnics 2026.8.10 surface-fire backend and a separately selected deterministic training graph. All scenarios are hypothetical. No current incident, measured weather, mapped terrain or real fuel raster is ingested. The pinned compiled extension has imported on the supplied cloud; actual solver verification is still pending the detached test-runner approval. `REFERENCE_GATE.json` records exact evidence. Missing or wrong physical runtimes return unavailable and never silently choose training.
+The module implements an optional Pyretechnics 2026.8.10 surface-fire backend and a separately selected deterministic training graph. All scenarios are hypothetical. No current incident, measured weather, mapped terrain or real fuel raster is ingested. The pinned compiled extension and real solver were verified on the supplied cloud with synthetic inputs (77 tests, 76 passed, one expected skip); the physical reference fixture produced byte-identical artifacts twice. `REFERENCE_GATE.json` records exact evidence. Missing or wrong physical runtimes return unavailable and never silently choose training.
 
 ## Cloud execution and runtime boundary
 
@@ -34,7 +34,7 @@ Every row carries issue/coverage times, source IDs, spatial rule/reason and `sou
 
 Static cubes feed the surface Rothermel level-set solver; canopy values are zero, spotting is disabled, wind limit is enabled, maximum cells per step is 0.4 and buffer width is 3. Solver minutes are converted to seconds; float32 inputs are range checked and arrival times lowered by one ULP conservatively. Provenance distinguishes the expected source-archive SHA from the actual loaded extension SHA and records version/settings/stop condition/boundary contact. Seed is recorded only; this path has no stochastic spotting process.
 
-This is an uncalibrated surface-only reference with assumed fuels/weather/terrain and residence time. It excludes crown/structure fire, suppression and atmosphere feedback. Domain boundaries clip the field; spatial resolution, numerical errors and incomplete inputs limit road forecasts. No physical accuracy or real-incident fitness is established by compilation or synthetic behaviour tests. See [Pyretechnics 2026.8.10](https://pypi.org/project/pyretechnics/2026.8.10/), [Rothermel 1972](https://research.fs.usda.gov/treesearch/32533) and [LANDFIRE](https://landfire.gov/fuel).
+This is an uncalibrated surface-only reference with assumed fuels/weather/terrain and residence time. It excludes crown/structure fire, suppression and atmosphere feedback. Domain boundaries clip the field; spatial resolution, numerical errors and incomplete inputs limit road forecasts. No physical accuracy or real-incident fitness is established by compilation or synthetic behaviour tests. The pinned solver may report completion up to one second before its requested stop; the adapter computes two additional seconds, requires a stop at or after the public horizon, and removes arrivals after that horizon. See [Pyretechnics 2026.8.10](https://pypi.org/project/pyretechnics/2026.8.10/), [Rothermel 1972](https://research.fs.usda.gov/treesearch/32533) and [LANDFIRE](https://landfire.gov/fuel).
 
 ## Explicit training graph
 

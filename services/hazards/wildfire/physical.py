@@ -11,6 +11,7 @@ import importlib.machinery
 import importlib.metadata
 import math
 import struct
+from collections.abc import Mapping
 
 
 VERSION = '2026.8.10'
@@ -92,6 +93,52 @@ def _arrival_seconds(raw_minutes, horizon_s):
     return max(0.0, min(float(horizon_s), lower * 60.0))
 
 
+def _validated_stop_time(result, horizon_minutes, solver_horizon_minutes=None):
+    """Require full modeled coverage or a verified absorbing fire state.
+
+    The pinned solver labels a stop up to one second early as "max duration
+    reached". A public forecast cannot silently fill that unmodeled tail.
+    Only equality at float32 solver resolution counts as full coverage.
+    """
+    if not isinstance(result, Mapping):
+        raise RuntimeError('physical solver returned malformed termination')
+    stop = result.get('stop_time')
+    condition = result.get('stop_condition')
+    if isinstance(stop, bool) or not isinstance(stop, (int, float)) or not math.isfinite(stop) or stop < 0:
+        raise RuntimeError('physical solver returned invalid stop time')
+    try:
+        stop_32 = _float32(stop, 'solver stop time')
+        requested_32 = _float32(horizon_minutes, 'requested horizon')
+    except ValueError as exc:
+        raise RuntimeError('physical solver returned unrepresentable stop time') from exc
+    maximum_32 = _float32(solver_horizon_minutes if solver_horizon_minutes is not None
+                          else horizon_minutes, 'solver horizon')
+    if stop_32 > maximum_32:
+        raise RuntimeError('physical solver stopped beyond solver horizon')
+    if condition == 'max duration reached':
+        if float(stop) < horizon_minutes:
+            raise RuntimeError('physical solver stopped before requested horizon')
+    elif condition == 'no burnable cells':
+        tracked = result.get('num_tracked_cells')
+        frontier = result.get('frontier_cells')
+        if isinstance(tracked, bool) or not isinstance(tracked, int) or tracked != 0:
+            raise RuntimeError('physical solver reported nonabsorbing early stop')
+        if not isinstance(frontier, Mapping) or set(frontier) != {'burned_cells', 'unburned_cells'}:
+            raise RuntimeError('physical solver returned malformed frontier')
+        for name in ('burned_cells', 'unburned_cells'):
+            coordinates = frontier[name]
+            if not isinstance(coordinates, (tuple, list)) or len(coordinates) != 2:
+                raise RuntimeError('physical solver returned malformed frontier')
+            try:
+                if len(coordinates[0]) or len(coordinates[1]):
+                    raise RuntimeError('physical solver reported nonempty frontier')
+            except TypeError as exc:
+                raise RuntimeError('physical solver returned malformed frontier') from exc
+    else:
+        raise RuntimeError(f'physical solver did not complete: {condition!r}')
+    return float(stop)
+
+
 def _validate(config, height, width):
     if not isinstance(config, dict):
         raise ValueError('config must be a dictionary')
@@ -163,7 +210,11 @@ def physical_arrivals(config, height, width):
     _finite(wind_speed, 'converted wind_speed_10m_km_h', nonnegative=True)
     shape = (2, height, width)
     horizon_minutes = float(config['horizon_s']) / 60.0
-    resolution = (horizon_minutes, float(grid['cell_size_m']), float(grid['cell_size_m']))
+    # The pinned engine may declare completion with up to one second left. Give
+    # it two seconds of headroom, then publish only the requested time window.
+    solver_horizon_minutes = _float32(horizon_minutes + 2.0 / 60.0,
+                                      'solver_horizon_minutes')
+    resolution = (solver_horizon_minutes, float(grid['cell_size_m']), float(grid['cell_size_m']))
     cubes = {
         'slope': Cube(shape, np.asarray(grid['slope_rise_run'], dtype=np.float32)),
         'aspect': Cube(shape, np.asarray(grid['aspect_deg'], dtype=np.float32)),
@@ -185,9 +236,10 @@ def physical_arrivals(config, height, width):
         state.ignite_cell(cell)
     state.set_start_time(0.0)
     result = els.spread_fire_with_phi_field(
-        cubes, state, resolution, 0.0, horizon_minutes,
+        cubes, state, resolution, 0.0, solver_horizon_minutes,
         max_cells_per_timestep=0.4, buffer_width=3, use_wind_limit=True,
         surface_lw_ratio_model='rothermel', spot_ignitions={}, spot_config=None)
+    stop_time = _validated_stop_time(result, horizon_minutes, solver_horizon_minutes)
     matrices = result['spread_state'].get_full_matrices(['fire_type', 'time_of_arrival'])
     fire_type, toa = matrices['fire_type'], matrices['time_of_arrival']
     if fire_type.shape != (height, width) or toa.shape != (height, width):
@@ -202,7 +254,13 @@ def physical_arrivals(config, height, width):
             elif grid['fuel_model'][y][x] in NONBURNABLE or int(fire_type[y, x]) == 0:
                 row.append(None)
             else:
-                row.append(_arrival_seconds(float(toa[y, x]), float(config['horizon_s'])))
+                raw_arrival = float(toa[y, x])
+                if not math.isfinite(raw_arrival) or raw_arrival < 0 or raw_arrival > stop_time:
+                    raise ValueError('physical solver returned invalid arrival time')
+                if raw_arrival > _float32(horizon_minutes, 'horizon_minutes'):
+                    row.append(None)
+                else:
+                    row.append(_arrival_seconds(raw_arrival, float(config['horizon_s'])))
             if row[-1] is not None and (y in (0, height - 1) or x in (0, width - 1)):
                 boundary_reached = True
         arrivals.append(row)
@@ -228,8 +286,10 @@ def physical_arrivals(config, height, width):
                             'max_cells_per_timestep': 0.4, 'buffer_width': 3,
                             'use_wind_limit': True, 'spotting': False,
                             'time_band_duration_min': horizon_minutes,
-                            'stop_time_min': float(result['stop_time']),
+                            'solver_time_band_duration_min': solver_horizon_minutes,
+                            'stop_time_min': stop_time,
                             'stop_condition': result['stop_condition'],
+                            'coverage_termination_validated': True,
                             'boundary_reached': boundary_reached},
         'expected_source_archive_sha256': SOURCE_SHA256,
         'model_reference': 'https://github.com/pyregence/pyretechnics/tree/2026.8.10',
