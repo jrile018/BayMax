@@ -1,0 +1,48 @@
+{
+  "branch": "codex/amd",
+  "capture_head": "32f3b6f6d371db824294b92092e5dda6eaacd63c",
+  "excluded": [
+    "existing dirty platform/HANDOFF.md and viewer3d/README.md",
+    "actual host/vendor runtime binaries",
+    "approximately 7MB hash-bound rawOSM/graph/bootstrap and other external input blobs",
+    "unpublished separate FSR source candidate"
+  ],
+  "file_count_excluding_manifest": 27,
+  "files": {
+    "platform/evidence/native-storyboards/amd-native-storyboard-20261010T2047-32f3/.gitattributes": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+    "platform/evidence/native-storyboards/amd-native-storyboard-20261010T2047-32f3/CAPTURE.md": "7cd6970ebacbabb83372a9963e9bc251e48928960941517c40361e74217998c9",
+    "platform/evidence/native-storyboards/amd-native-storyboard-20261010T2047-32f3/README.md": "db41c77c0560924808c6741cd6e306deabfa4e31f3f8eb9b3db044eddfc3ca9e",
+    "platform/evidence/native-storyboards/amd-native-storyboard-20261010T2047-32f3/archive-source/input-manifest.json": "058f5cbde8a1e451e0e7ec884d50f6308d708cf0cfebf29e5370cb34acb8a5bf",
+    "platform/evidence/native-storyboards/amd-native-storyboard-20261010T2047-32f3/archive-source/native-storyboard-job-check.py": "979d5124e8d7b7994811f1c37f3eaf098698f7a9e974d8c76fed68321af60b9c",
+    "platform/evidence/native-storyboards/amd-native-storyboard-20261010T2047-32f3/archive-source/native-storyboard-job.py": "60f4f3c355ae94d89642c4a4cba0d43460b9c5f3a9b911ea73024f9889f07de1",
+    "platform/evidence/native-storyboards/amd-native-storyboard-20261010T2047-32f3/archive-source/native-storyboard-launch.py": "8ab34b60b63bc0d617d333f5e7bc6cdc3111fc66f7f18197d1d9abcb5e73299d",
+    "platform/evidence/native-storyboards/amd-native-storyboard-20261010T2047-32f3/archive-source/runtime-manifest.json": "3dfe6bebf1788b3e9078db3457d15b17e0b22113550e9c626237c2f5346cb8c8",
+    "platform/evidence/native-storyboards/amd-native-storyboard-20261010T2047-32f3/archive-source/spent-native-grant.json": "9a680cda0f58a813257fefe68e82a36bcf8df89fdd17aef01d5f5dca7c205088",
+    "platform/evidence/native-storyboards/amd-native-storyboard-20261010T2047-32f3/execution-started.json": "52a6b9ed57b0ec875140980595c48da019e751679c6ab30409d827ea52d78d62",
+    "platform/evidence/native-storyboards/amd-native-storyboard-20261010T2047-32f3/frame-00-000s.json": "546c35cd42290ffcdeec38b30d555be55245b86ad13b7883dc84ab27cd85e715",
+    "platform/evidence/native-storyboards/amd-native-storyboard-20261010T2047-32f3/frame-00-000s.png": "153e779d791c32c1b7e95aad49ef965b7fd2355e5c8dffd99ef9c377fe299a91",
+    "platform/evidence/native-storyboards/amd-native-storyboard-20261010T2047-32f3/frame-03-180s.json": "3568396fc21a6d9a3399d846e270b8afc1a3ac9433569b1e3ee07f9ec474f39a",
+    "platform/evidence/native-storyboards/amd-native-storyboard-20261010T2047-32f3/frame-03-180s.png": "511d725c34820067e2610c7f642b73240b31e9152eb33af9c71cdfc2c128aee7",
+    "platform/evidence/native-storyboards/amd-native-storyboard-20261010T2047-32f3/frame-06-360s.json": "93295818672a30aca7f432d1a512ee4ef0c31509a5e40eaf9c0c1f94e92e46fa",
+    "platform/evidence/native-storyboards/amd-native-storyboard-20261010T2047-32f3/frame-06-360s.png": "b8bad5f69536ebe24a6592810ab3ec8710341825f10cc47f5d0c2d51dbeedbe8",
+    "platform/evidence/native-storyboards/amd-native-storyboard-20261010T2047-32f3/logs/amd-native-storyboard-20261010T2047-32f3-execute.json": "648e79e1b9697307c9f3c2e64a42bfc74618b5f4ac2b4e1ed11ecf5e6ad2c4ea",
+    "platform/evidence/native-storyboards/amd-native-storyboard-20261010T2047-32f3/logs/amd-native-storyboard-20261010T2047-32f3-execute.log": "68f49249cf02da34d5d94ab57a613280ad25cf966ab78df97858ab1cb1c78071",
+    "platform/evidence/native-storyboards/amd-native-storyboard-20261010T2047-32f3/logs/amd-native-storyboard-20261010T2047-32f3-grant-preflight.json": "6c95050a444396014a8c235e5bb8336923a70333ec97c2d532d4e65ba461276d",
+    "platform/evidence/native-storyboards/amd-native-storyboard-20261010T2047-32f3/logs/amd-native-storyboard-20261010T2047-32f3-prepare.json": "2c2fb2f67db0d785de5afb514c1e710c42216acfcf1962ad180ed8940d336525",
+    "platform/evidence/native-storyboards/amd-native-storyboard-20261010T2047-32f3/logs/amd-native-storyboard-20261010T2047-32f3-prepare.log": "076972000daab19e00563a2fd50be9cde2bb14dc8e91a9bf2b3bf2c168ba0f23",
+    "platform/evidence/native-storyboards/amd-native-storyboard-20261010T2047-32f3/logs/amd-native-storyboard-20261010T2047-32f3-tmux-shell.log": "5c69d8f1c16a0c44392d0f4d925f56ca418baaef148021b2cff02746448d150f",
+    "platform/evidence/native-storyboards/amd-native-storyboard-20261010T2047-32f3/prepared.json": "0b7b072f2ef0a2f98d3e7f11d538e69bd75c2a6272077759d825a3d94338f7e8",
+    "platform/evidence/native-storyboards/amd-native-storyboard-20261010T2047-32f3/receipt.json": "3e76d810fb7da8ecf0f2967bf9e1d0a496f2079fa33b1299cdf0f80eee0273a9",
+    "platform/evidence/native-storyboards/amd-native-storyboard-20261010T2047-32f3/review/native-result-review.md": "a7e7adb6e20a9e237ba1483d50c235f49c4014143505eaa7eb3b833abf8103a8",
+    "platform/evidence/native-storyboards/amd-native-storyboard-20261010T2047-32f3/source-freeze.json": "bf3fe737c484af59d37ede5286658137e0f7eda836a8f31c1be4ce1ce15f146e",
+    "platform/evidence/native-storyboards/amd-native-storyboard-20261010T2047-32f3/status.json": "74118de8cfc332c4c85ad17b3ff8aac5024f0cf931de1f612097c01ca30a714f"
+  },
+  "limits": [
+    "archived scripts are exact inspection copies, not runnable from archive paths",
+    "historical captures occurred at32f3 before this archive commit",
+    "no FSR/ML/real incident routing/equal-depth/VRAMpeak proof"
+  ],
+  "packet_path": "platform/evidence/native-storyboards/amd-native-storyboard-20261010T2047-32f3",
+  "purpose": "Reviewed historical mock native capture archive; no GPU authorization or production source change",
+  "total_bytes_excluding_manifest": 2771111
+}

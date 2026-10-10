@@ -1,0 +1,80 @@
+{
+  "frame_count": 3,
+  "frames": [
+    {
+      "elapsed_seconds": 0.1381141860038042,
+      "frame": {
+        "run_id": "maps-mock-001",
+        "scenario_id": "paradise-constructed-ui-exercise",
+        "snapshot_hash": "cd07096e008f8b9dfea80a44266d39871d78c61fd2aff6eb362b2c3d453e0e32",
+        "time_s": 0
+      },
+      "index": 0,
+      "png": "frame-00-000s.png",
+      "png_sha256": "153e779d791c32c1b7e95aad49ef965b7fd2355e5c8dffd99ef9c377fe299a91",
+      "provider": {
+        "GL_RENDERER": "AMD Radeon Pro W7900D (radeonsi, navi31, ACO, DRM 3.64, 6.8.0-79-generic)",
+        "GL_VENDOR": "AMD",
+        "GL_VERSION": "4.6 (Core Profile) Mesa 26.0.8-1ubuntu0.3"
+      },
+      "sidecar": "frame-00-000s.json",
+      "sidecar_sha256": "546c35cd42290ffcdeec38b30d555be55245b86ad13b7883dc84ab27cd85e715",
+      "time_s": 0,
+      "view_hash": "99aca6e33e0362b079d2857be66314519b808a98c0fb56c5131c19d9cfd6e633"
+    },
+    {
+      "elapsed_seconds": 0.0816408134996891,
+      "frame": {
+        "run_id": "maps-mock-001",
+        "scenario_id": "paradise-constructed-ui-exercise",
+        "snapshot_hash": "ad7ad9b8c4126f3cf31313155963000e47f80d5dddfce032e33d3691d029c504",
+        "time_s": 180
+      },
+      "index": 3,
+      "png": "frame-03-180s.png",
+      "png_sha256": "511d725c34820067e2610c7f642b73240b31e9152eb33af9c71cdfc2c128aee7",
+      "provider": {
+        "GL_RENDERER": "AMD Radeon Pro W7900D (radeonsi, navi31, ACO, DRM 3.64, 6.8.0-79-generic)",
+        "GL_VENDOR": "AMD",
+        "GL_VERSION": "4.6 (Core Profile) Mesa 26.0.8-1ubuntu0.3"
+      },
+      "sidecar": "frame-03-180s.json",
+      "sidecar_sha256": "3568396fc21a6d9a3399d846e270b8afc1a3ac9433569b1e3ee07f9ec474f39a",
+      "time_s": 180,
+      "view_hash": "139a85295461432452a950094cc7db0010fde08da61dd667382cff0ce4ea1934"
+    },
+    {
+      "elapsed_seconds": 0.07650588639080524,
+      "frame": {
+        "run_id": "maps-mock-001",
+        "scenario_id": "paradise-constructed-ui-exercise",
+        "snapshot_hash": "1bf6ea0514d8030472c5bcb419dde0cd38068dcae527626c4c3482ba20f168d3",
+        "time_s": 360
+      },
+      "index": 6,
+      "png": "frame-06-360s.png",
+      "png_sha256": "b8bad5f69536ebe24a6592810ab3ec8710341825f10cc47f5d0c2d51dbeedbe8",
+      "provider": {
+        "GL_RENDERER": "AMD Radeon Pro W7900D (radeonsi, navi31, ACO, DRM 3.64, 6.8.0-79-generic)",
+        "GL_VENDOR": "AMD",
+        "GL_VERSION": "4.6 (Core Profile) Mesa 26.0.8-1ubuntu0.3"
+      },
+      "sidecar": "frame-06-360s.json",
+      "sidecar_sha256": "93295818672a30aca7f432d1a512ee4ef0c31509a5e40eaf9c0c1f94e92e46fa",
+      "time_s": 360,
+      "view_hash": "980bf2c6a7fabd1afa0207d9c9ba71cc542194baafba12ea60d464f7698621ed"
+    }
+  ],
+  "lease_id": "amd-native-reviewed-20261010T205203Z",
+  "lease_sha256": "9a680cda0f58a813257fefe68e82a36bcf8df89fdd17aef01d5f5dca7c205088",
+  "mock_replay": true,
+  "pci": {
+    "device_id": 29771,
+    "render_node": "/dev/dri/renderD128",
+    "vendor_id": 4098
+  },
+  "readme_sha256": "db41c77c0560924808c6741cd6e306deabfa4e31f3f8eb9b3db044eddfc3ca9e",
+  "source_freeze_sha256": "bf3fe737c484af59d37ede5286658137e0f7eda836a8f31c1be4ce1ce15f146e",
+  "status": "rendered",
+  "total_elapsed_seconds": 0.3266030829399824
+}
