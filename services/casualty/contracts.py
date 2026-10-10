@@ -158,8 +158,8 @@ class FaceBox:
     def __post_init__(self) -> None:
         for name in ("x1", "y1", "x2", "y2", "score"):
             number(getattr(self, name), name, 0, 1)
-        if self.x1 >= self.x2 or self.y1 >= self.y2:
-            raise ValueError("boxes must have positive normalized XYXY area")
+        if self.x1 >= self.x2 or self.y1 >= self.y2 or (self.x2-self.x1)*(self.y2-self.y1) <= 0:
+            raise ValueError("boxes must have positive representable normalized XYXY area")
 
 
 @dataclass(frozen=True)

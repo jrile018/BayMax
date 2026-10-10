@@ -19,6 +19,7 @@ def load_fixture() -> tuple[CaseRecord,FaceBox]:
 
 def run_demo(output: Path) -> None:
     case,face=load_fixture()
+    case.rights.require("evaluation")
     broker=CaseBroker()
     result=DetectionResult(case.case_id,case.image.sha256,'localized',(face,),
         'synthetic-box-control','fixture-v1','mock_fixture',5,'Hand-authored geometric control; no inference')

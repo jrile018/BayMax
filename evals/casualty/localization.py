@@ -18,6 +18,13 @@ class LocalizationCounts:
     false_negative: int
     matched_iou_sum: float
 
+    def __post_init__(self) -> None:
+        for name in ("true_positive", "false_positive", "false_negative"):
+            value=getattr(self,name)
+            if type(value) is not int or value < 0:
+                raise ValueError(f"{name} must be a nonnegative integer")
+        number(self.matched_iou_sum,"matched_iou_sum",0,self.true_positive)
+
     @property
     def precision(self) -> float | None:
         n=self.true_positive+self.false_positive

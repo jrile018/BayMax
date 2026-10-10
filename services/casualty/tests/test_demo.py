@@ -17,3 +17,16 @@ def test_scripted_case_review_trace_preserves_abstention_and_need(tmp_path):
     assert data["control_evaluation"]["performance_claim"]=="harness_geometry_only"
     assert data["learning_debrief"]["urgency_source"]=="exercise_metadata_with_human_confirmation"
     assert data["integration_status"]=="pending_root_adapter"
+
+
+def test_demo_cannot_evaluate_without_evaluation_permission(tmp_path,monkeypatch):
+    from dataclasses import replace
+    import pytest
+    from services.casualty import demo
+    case,face=demo.load_fixture()
+    limited=replace(case,rights=replace(case.rights,permitted_uses=('display','face_detection')))
+    monkeypatch.setattr(demo,'load_fixture',lambda:(limited,face))
+    output=tmp_path/'must-not-exist.json'
+    with pytest.raises(ValueError,match='permission'):
+        demo.run_demo(output)
+    assert not output.exists()

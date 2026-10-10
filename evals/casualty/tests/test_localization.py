@@ -50,3 +50,14 @@ def test_invalid_threshold_is_rejected(threshold):
 def test_malformed_predictions_are_not_silently_counted_as_success():
     from evals.casualty.localization import localization_counts
     with pytest.raises(ValueError):localization_counts(("not-a-box",),(box(),))
+
+
+@pytest.mark.parametrize('values',[(1,-1,0,1),(True,0,0,0),(1,0,0,2),(1,0,0,float('nan')),(0,0,0,.1)])
+def test_impossible_counts_cannot_publish_misleading_metrics(values):
+    from evals.casualty.localization import LocalizationCounts
+    with pytest.raises(ValueError):LocalizationCounts(*values)
+
+
+def test_underflowing_box_area_is_rejected_before_evaluation():
+    with pytest.raises(ValueError,match='area'):
+        FaceBox(0,0,1e-200,1e-200,.9)
