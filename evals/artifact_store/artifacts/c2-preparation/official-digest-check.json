@@ -1,0 +1,50 @@
+[
+  {
+    "name": "click",
+    "version": "8.5.0",
+    "filename": "click-8.5.0-py3-none-any.whl",
+    "sha256": "255bc9599cf7748b4b1a446ccc735421bd08a2ae529a8b88597d3de5664ee360",
+    "official_pypi_url": "https://files.pythonhosted.org/packages/58/50/6c0d534c5f134586a8e1ba4e330569e32f057e33372ae556463212fb4cd3/click-8.5.0-py3-none-any.whl",
+    "official_digest_match": true
+  },
+  {
+    "name": "httpx2",
+    "version": "2.13.1",
+    "filename": "httpx2-2.13.1-py3-none-any.whl",
+    "sha256": "6dff50fabc270ee5fd25d845d0b078ed20564579744d6d962850975996d2f9a4",
+    "official_pypi_url": "https://files.pythonhosted.org/packages/d8/9c/6fe8931fd9f381042a9e4c7d5a7b4cbf7016b252bec0c99a49fce42c3326/httpx2-2.13.1-py3-none-any.whl",
+    "official_digest_match": true
+  },
+  {
+    "name": "httpcore2",
+    "version": "2.13.1",
+    "filename": "httpcore2-2.13.1-py3-none-any.whl",
+    "sha256": "e1e05d4f25f7d7d496bfb96748f6f4b67657b03da069b3a68c36069f3db73d0a",
+    "official_pypi_url": "https://files.pythonhosted.org/packages/09/ba/a4568248771ce81957bfb7cc600264a40fbcda092391ee1c415c50be4bea/httpcore2-2.13.1-py3-none-any.whl",
+    "official_digest_match": true
+  },
+  {
+    "name": "truststore",
+    "version": "0.10.4",
+    "filename": "truststore-0.10.4-py3-none-any.whl",
+    "sha256": "adaeaecf1cbb5f4de3b1959b42d41f6fab57b2b1666adb59e89cb0b53361d981",
+    "official_pypi_url": "https://files.pythonhosted.org/packages/19/97/56608b2249fe206a67cd573bc93cd9896e1efb9e98bce9c163bcdc704b88/truststore-0.10.4-py3-none-any.whl",
+    "official_digest_match": true
+  },
+  {
+    "name": "huggingface-hub",
+    "version": "2.2.0",
+    "filename": "huggingface_hub-2.2.0-py3-none-any.whl",
+    "sha256": "1667f145dc56dc210d60966069397df9ecfca9607a5d43db88b308c89dae56b3",
+    "official_pypi_url": "https://files.pythonhosted.org/packages/eb/b0/0f7b430fd100b3a3b037fdbb314878200241082e607b3383c63d91a13a72/huggingface_hub-2.2.0-py3-none-any.whl",
+    "official_digest_match": true
+  },
+  {
+    "name": "hf-xet",
+    "version": "1.7.0",
+    "filename": "hf_xet-1.7.0-cp38-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+    "sha256": "2814a6e999d13464c4d679b788cc5d784eb5a4edfc638a31f10e9a11ab531ef8",
+    "source": "existing model wheelhouse",
+    "source_byte_match": true
+  }
+]

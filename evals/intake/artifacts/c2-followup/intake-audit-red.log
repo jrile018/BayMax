@@ -1,0 +1,52 @@
+..FF......F..                                                            [100%]
+=================================== FAILURES ===================================
+____ test_completed_delivery_count_cannot_cross_request_conjunction[, but] _____
+
+joining = ', but'
+
+    @pytest.mark.parametrize('joining', [', but', ' and'])
+    def test_completed_delivery_count_cannot_cross_request_conjunction(joining):
+        text = f'10 water bottles were delivered to Pine School{joining} water is needed now at Pine School.'
+        report = Report('audit:delivery-' + joining, 'fictional', 10, text)
+        raw = proposal(claim(text, kind='need', label='water', evidence=text,
+                             location='Pine School', quantity=10, unit='bottles'))
+>       with pytest.raises(ValidationError, match='clause'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValidationError
+
+services/intake/tests/test_intake_audit.py:53: Failed
+_____ test_completed_delivery_count_cannot_cross_request_conjunction[ and] _____
+
+joining = ' and'
+
+    @pytest.mark.parametrize('joining', [', but', ' and'])
+    def test_completed_delivery_count_cannot_cross_request_conjunction(joining):
+        text = f'10 water bottles were delivered to Pine School{joining} water is needed now at Pine School.'
+        report = Report('audit:delivery-' + joining, 'fictional', 10, text)
+        raw = proposal(claim(text, kind='need', label='water', evidence=text,
+                             location='Pine School', quantity=10, unit='bottles'))
+>       with pytest.raises(ValidationError, match='clause'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValidationError
+
+services/intake/tests/test_intake_audit.py:53: Failed
+__________ test_following_coreferent_restriction_blocks_unscoped_open __________
+
+    def test_following_coreferent_restriction_blocks_unscoped_open():
+        text = 'Highway A is open. Only bicycles may use it.'
+        report = Report('audit:coreference', 'fictional', 10, text)
+        raw = proposal(claim(text, kind='access', label='open',
+                             evidence='Highway A is open', location='Highway A'))
+        store = ReviewStore({'Highway A': {'entity_id': 'highway-a',
+                                          'entity_type': 'edge', 'source': 'fictional graph'}})
+        rec = store.submit(report, raw, 'scripted')
+>       assert 'qualified_access' in rec.proposal.claims[0].flags
+E       AssertionError: assert 'qualified_access' in ()
+E        +  where () = Claim(claim_id='audit', kind='access', label='open', evidence=Evidence(start=0, end=17, quote='Highway A is open'), qu...t=None, urgency=None, location=Slot(value='Highway A', evidence=Evidence(start=0, end=9, quote='Highway A')), flags=()).flags
+
+services/intake/tests/test_intake_audit.py:102: AssertionError
+=========================== short test summary info ============================
+FAILED services/intake/tests/test_intake_audit.py::test_completed_delivery_count_cannot_cross_request_conjunction[, but]
+FAILED services/intake/tests/test_intake_audit.py::test_completed_delivery_count_cannot_cross_request_conjunction[ and]
+FAILED services/intake/tests/test_intake_audit.py::test_following_coreferent_restriction_blocks_unscoped_open
+3 failed, 10 passed in 0.05s

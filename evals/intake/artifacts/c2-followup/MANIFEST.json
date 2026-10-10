@@ -1,0 +1,50 @@
+{
+  "source_commit": "a2a9f70a5b66479d1cad1c9d3d9432034999dd65",
+  "verification": "107 cloud tests;18 subtests;exit0",
+  "fictional_inputs": true,
+  "real_model_inference": false,
+  "live_bucket_transfer": false,
+  "actual_human_acceptance": false,
+  "files": [
+    {
+      "path": "INTAKE_AUDIT_PROOF.md",
+      "size": 2691,
+      "sha256": "8f179df76cc8e490c86b5ae3266ae364713e37e890fd7f883b4a2f0c7184a5c8"
+    },
+    {
+      "path": "INTAKE_AUDIT_REVIEW.md",
+      "size": 6193,
+      "sha256": "d76562bedb8a2d7cf2c974e5f3af64183ceb24ccc47376db47f39325e2105cb7"
+    },
+    {
+      "path": "README.md",
+      "size": 1951,
+      "sha256": "e6f408a7ab592378cc6eaeba7ef13a15e5b37e02cc8736ee5e5dfdb5e0fcf1e1"
+    },
+    {
+      "path": "cpu-evaluation.json",
+      "size": 77124,
+      "sha256": "977196ec5154dc2d5e5ad952eacbf456d4be76909fdc4f5f58a45e23f44b0432"
+    },
+    {
+      "path": "intake-audit-red.log",
+      "size": 3342,
+      "sha256": "9a025da15fcd991f58c65bafefbc42c213400e9d88a7e6042e3838232f43de27"
+    },
+    {
+      "path": "review-trace.json",
+      "size": 11503,
+      "sha256": "6c6078dc93cdb611a02b949b0c35d879fa88f5e241a784bf2ad18ebc6849a55b"
+    },
+    {
+      "path": "server-checks.log",
+      "size": 915,
+      "sha256": "e83eae8c54729d454acc8c4fd0e55b3d75c77383335088e19a3fc1fe4e3ac906"
+    },
+    {
+      "path": "source.json",
+      "size": 3633,
+      "sha256": "cb2fa05656ab391e93ef9800016836c314de3be1cdf86fb053fae29f14562047"
+    }
+  ]
+}

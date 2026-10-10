@@ -1,0 +1,26 @@
+test_concurrent_reservations_cannot_oversubscribe (evals.artifact_store.test_backend.BackendBudgetTests.test_concurrent_reservations_cannot_oversubscribe) ... ok
+test_invalid_counts_rejected_without_changing_budget (evals.artifact_store.test_backend.BackendBudgetTests.test_invalid_counts_rejected_without_changing_budget) ... ok
+test_sequential_reservations_never_exceed_initial_budget (evals.artifact_store.test_backend.BackendBudgetTests.test_sequential_reservations_never_exceed_initial_budget) ... ok
+test_upload_requires_reservation_and_failed_batch_does_not_refund (evals.artifact_store.test_backend.BackendBudgetTests.test_upload_requires_reservation_and_failed_batch_does_not_refund) ... ok
+test_completed_and_privacy_required (evals.artifact_store.test_store.StoreTests.test_completed_and_privacy_required) ... ok
+test_config_snapshot_hash_and_seed_bound (evals.artifact_store.test_store.StoreTests.test_config_snapshot_hash_and_seed_bound) ... ok
+test_corrupted_download_refused (evals.artifact_store.test_store.StoreTests.test_corrupted_download_refused) ... ok
+test_dry_run_no_mutation (evals.artifact_store.test_store.StoreTests.test_dry_run_no_mutation) ... ok
+test_idempotent_and_valid_collision (evals.artifact_store.test_store.StoreTests.test_idempotent_and_valid_collision) ... ok
+test_live_backend_setup_gate (evals.artifact_store.test_store.StoreTests.test_live_backend_setup_gate) ... ok
+test_malformed_replay_kind_rejected (evals.artifact_store.test_store.StoreTests.test_malformed_replay_kind_rejected) ... ok
+test_manifest_hashes_and_provenance (evals.artifact_store.test_store.StoreTests.test_manifest_hashes_and_provenance) ... ok
+test_manifest_path_injection_refused (evals.artifact_store.test_store.StoreTests.test_manifest_path_injection_refused) ... ok
+test_partial_retry_matching_and_mismatch (evals.artifact_store.test_store.StoreTests.test_partial_retry_matching_and_mismatch) ... ok
+test_paths_and_symlinks_rejected (evals.artifact_store.test_store.StoreTests.test_paths_and_symlinks_rejected) ... ok
+test_sensitive_or_untyped_content_rejected (evals.artifact_store.test_store.StoreTests.test_sensitive_or_untyped_content_rejected) ... ok
+test_freeform_private_content_rejected (evals.artifact_store.test_review.ReviewRegressions.test_freeform_private_content_rejected) ... ok
+test_manifest_file_count_bound (evals.artifact_store.test_review.ReviewRegressions.test_manifest_file_count_bound) ... ok
+test_oversized_manifest_rejected (evals.artifact_store.test_review.ReviewRegressions.test_oversized_manifest_rejected) ... ok
+test_partial_upload_can_resume_without_overwriting (evals.artifact_store.test_review.ReviewRegressions.test_partial_upload_can_resume_without_overwriting) ... ok
+test_unbound_provenance_rejected (evals.artifact_store.test_review.ReviewRegressions.test_unbound_provenance_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 21 tests in 0.032s
+
+OK
