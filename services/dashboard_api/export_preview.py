@@ -1,5 +1,6 @@
 """Export a saved replay on the server for authenticated notebook-file viewing."""
 import argparse
+import base64
 import json
 import re
 from html.parser import HTMLParser
@@ -33,8 +34,13 @@ window.fetch = async function(input) {
 };
 """.replace('SAVED',encoded)
     mode_label='Saved mock replay' if bootstrap.get('mode') == 'mock-replay' else 'Saved recorded replay'
-    banner='<div class="saved-preview-banner" role="note">'+mode_label+' · generated on Radeon Cloud · exact recorded frames · live actions and coverage queries unavailable</div>'
-    document=_PreviewDocument(web_root,bridge,banner)
+    banner='<div class="saved-preview-banner" role="note">'+mode_label+' · generated on Radeon Cloud · exact recorded frames · Earth globe and satellite imagery require an internet connection · live actions and coverage queries unavailable</div>'
+    texture_path=web_root/'assets/nasa-blue-marble-2009.jpg'
+    texture=None
+    if texture_path.is_file():
+        if texture_path.stat().st_size>2_000_000:raise ValueError('Earth texture exceeds preview limit')
+        texture='data:image/jpeg;base64,'+base64.b64encode(texture_path.read_bytes()).decode('ascii')
+    document=_PreviewDocument(web_root,bridge,banner,texture)
     document.feed((web_root/'index.html').read_text(encoding='utf-8'))
     document.close()
     if not document.body_closed:
@@ -49,11 +55,12 @@ def _safe_raw_element(source, tag):
 
 class _PreviewDocument(HTMLParser):
     """Inline local classic assets, then run deferred scripts after the saved API."""
-    def __init__(self,web_root,bridge,banner):
+    def __init__(self,web_root,bridge,banner,texture=None):
         super().__init__(convert_charrefs=False)
         self.web_root=Path(web_root).resolve()
         self.bridge=bridge
         self.banner=banner
+        self.texture=texture
         self.parts=[]
         self.scripts=[]
         self.skip_script=False
@@ -103,6 +110,8 @@ class _PreviewDocument(HTMLParser):
             return
         if tag=='body':
             self.parts.append('<script>'+self.bridge+'</script>')
+            if self.texture:
+                self.parts.append('<script>window.KNIGHT_EARTH_TEXTURE='+json.dumps(self.texture)+';</script>')
             self.parts.extend('<script>'+_safe_raw_element(source,'script')+'</script>' for source in self.scripts)
             self.body_closed=True
         self.parts.append('</'+tag+'>')

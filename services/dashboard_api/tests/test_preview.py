@@ -13,6 +13,8 @@ class PreviewTests(unittest.TestCase):
         self.assertNotIn('href="./style.css"',html);self.assertNotIn('src="./app.js"',html)
         for i in range(store.bootstrap()['replay']['frame_count']):self.assertIn(store.frame(i)['snapshot_hash'],html)
         self.assertIn('CONSTRUCTED TRAINING REPLAY',html)
+        self.assertIn('window.KNIGHT_EARTH_TEXTURE="data:image/jpeg;base64,',html)
+        self.assertIn('Earth globe and satellite imagery require an internet connection',html)
     def test_recorded_replay_banner_is_not_mislabeled_mock(self):
         class Store:
             def bootstrap(self):return {'mode':'recorded-replay','area':{},'replay':{'frame_count':1}}
