@@ -1,0 +1,9 @@
+PINNED_SHA=2e5da5e85f14357853bed4147ff4ad3f05c3a5ec
+servicing initial: servicing
+servicing advance: KeyError 'committed-bus'
+exact exit: stranded 100.0 0
+REPRO_EXIT_CODE=0
+........................................................................ [ 97%]
+..                                                                       [100%]
+74 passed in 0.13s
+TEST_EXIT_CODE=0

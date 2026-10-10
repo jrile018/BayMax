@@ -1,0 +1,3 @@
+{"case": "same_request_across_cases", "same_request_id": true, "same_idempotency_key": false, "rows": [{"case_id": "npc-case-001", "request_id": "exercise-med-001", "idempotency_key": "casualty-exercise-need-b63540305157d819e8dbae82baa9009ba3adc7e8c44375c345b536093ca25ef0", "case_hash": "a6fdbb0a16fd98f44f29696a0b791e2f240c7772359c8e14f0fa1babeb7e65db"}, {"case_id": "npc-case-002", "request_id": "exercise-med-001", "idempotency_key": "casualty-exercise-need-c76169f27d61600989c84ae4b787dcb9fc2318ef07dafc53528e5421e3819c6d", "case_hash": "c21c675513a0917ce9491f73234bd9d2f0113dc01ec21cce90feb05bc10311b1"}]}
+
+EXIT_CODE:0
