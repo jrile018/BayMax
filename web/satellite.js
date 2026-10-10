@@ -16,11 +16,11 @@ window.KnightSatellite=(()=>{
   const inverse=ctm.inverse();
   const corners=[[rect.left,rect.top],[rect.right,rect.top],[rect.left,rect.bottom],[rect.right,rect.bottom]].map(([x,y])=>{const p=new DOMPoint(x,y).matrixTransform(inverse);return unproject({x:p.x,y:p.y})});
   const screenLonScale=q.cos*q.scale*Math.hypot(ctm.a,ctm.b);
-  let z=Math.max(9,Math.min(18,Math.round(Math.log2(screenLonScale*360/256))));
+  let z=Math.max(4,Math.min(18,Math.round(Math.log2(screenLonScale*360/256))));
   const west=Math.max(-180,Math.min(...corners.map(p=>p[0]))),east=Math.min(180,Math.max(...corners.map(p=>p[0])));
   const north=Math.min(85,Math.max(...corners.map(p=>p[1]))),south=Math.max(-85,Math.min(...corners.map(p=>p[1])));
   let x0,x1,y0,y1,n;
-  do{n=2**z;x0=Math.max(0,tx(west,n)-1);x1=Math.min(n-1,tx(east,n)+1);y0=Math.max(0,ty(north,n)-1);y1=Math.min(n-1,ty(south,n)+1);if((x1-x0+1)*(y1-y0+1)<=80)break;z--}while(z>=9);
+  do{n=2**z;x0=Math.max(0,tx(west,n)-1);x1=Math.min(n-1,tx(east,n)+1);y0=Math.max(0,ty(north,n)-1);y1=Math.min(n-1,ty(south,n)+1);if((x1-x0+1)*(y1-y0+1)<=80||z===4)break;z--}while(true);
   const key=[z,x0,x1,y0,y1].join("/");if(key===current){if(!failedForCurrent||retryCount>=1)return;retryCount++}else retryCount=0;current=key;failedForCurrent=0;
   const fragment=document.createDocumentFragment(),token=++generation,total=(x1-x0+1)*(y1-y0+1);let loaded=0,failed=0;const update=()=>{status.textContent=failed?"Imagery degraded · "+failed+" of "+total+" tiles failed":loaded===total?"Esri World Imagery · "+loaded+" tiles loaded":"Loading Esri satellite imagery · "+loaded+"/"+total+" tiles"};
   for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){
