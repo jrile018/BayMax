@@ -168,7 +168,7 @@ def _source_clause(report, ev, kind):
     return lo,hi,report.text[lo:hi]
 
 def _count_in_request_segment(report, context_start, context_end, quantity, unit):
-    # Only an atomic request phrase can size a new need. Mixed past-event
+    # Lexical proximity can reject some borrowed counts, but cannot prove semantic request binding. Mixed past-event
     # phrases or distant modifiers abstain instead of lending their count.
     context=report.text[context_start:context_end]
     cuts=[context_start]

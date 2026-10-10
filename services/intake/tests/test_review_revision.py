@@ -22,9 +22,16 @@ def test_acceptance_must_match_the_inspected_revision():
     with pytest.raises(ValidationError,match='revision'):
         store.review(rec.proposal_id,'accepted','human:reviewer',expected_revision=1)
     assert store.get(rec.proposal_id).review_status=='pending'
-    accepted=store.review(rec.proposal_id,'accepted','human:reviewer',expected_revision=2)
+    c=edited.proposal.claims[0]
+    confirmation={'claim_id':c.claim_id,'kind':'need','mapped_entity_id':'pine',
+                  'confirmed_values':{'category':c.label,'quantity':c.quantity.value,
+                                      'unit':c.unit.value,'location':c.location.value,
+                                      'urgency':c.urgency.value if c.urgency else None},
+                  'semantic_override_reason':None}
+    accepted=store.review(rec.proposal_id,'accepted','human:reviewer',expected_revision=2,
+                          confirmations=(confirmation,))
     assert len(accepted.effects)==1 and accepted.effects[0]['revision']==2
-    assert store.review(rec.proposal_id,'accepted','human:reviewer',expected_revision=2)==accepted
+    assert store.review(rec.proposal_id,'accepted','human:reviewer',expected_revision=2, confirmations=(confirmation,))==accepted
 
 @pytest.mark.parametrize('revision',[True,0,-1,'1',3.0])
 def test_invalid_edit_review_preconditions_fail_closed(revision):

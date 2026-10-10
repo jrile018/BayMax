@@ -25,6 +25,19 @@ def proposal(raw_claim):
     return {'language': 'en', 'flags': [], 'claims': [raw_claim]}
 
 
+def confirmation(record):
+    c = record.proposal.claims[0]
+    values = ({'category': c.label, 'quantity': c.quantity.value,
+               'unit': c.unit.value, 'location': c.location.value,
+               'urgency': c.urgency.value if c.urgency else None}
+              if c.kind == 'need' else
+              {'status': c.label, 'location': c.location.value,
+               'scope': 'unqualified'})
+    return {'claim_id': c.claim_id, 'kind': c.kind,
+            'mapped_entity_id': 'pine' if c.kind == 'need' else 'highway-a',
+            'confirmed_values': values, 'semantic_override_reason': None}
+
+
 def test_completed_delivery_count_cannot_be_borrowed_by_later_need():
     text = '10 bottles were delivered to Pine School. Water is needed at Pine School.'
     report = Report('audit:delivery', 'fictional', 10, text)
@@ -121,7 +134,7 @@ def test_unqualified_open_remains_reviewable():
                                       'entity_type': 'edge', 'source': 'fictional graph'}})
     rec = store.submit(report, raw, 'scripted')
     assert 'qualified_access' not in rec.proposal.claims[0].flags
-    assert store.review(rec.proposal_id, 'accepted', 'scripted-reviewer').effects[0]['status'] == 'open'
+    assert store.review(rec.proposal_id, 'accepted', 'scripted-reviewer', expected_revision=1, confirmations=(confirmation(rec),)).effects[0]['status'] == 'open'
 
 
 @pytest.mark.parametrize('text', [
@@ -147,7 +160,7 @@ def test_explicit_current_request_count_survives_later_delivery_context():
                                          'entity_type': 'node', 'source': 'fictional graph'}})
     rec = store.submit(report, raw, 'scripted')
     accepted = store.review(rec.proposal_id, 'accepted', 'scripted-reviewer',
-                            expected_revision=1)
+                            expected_revision=1, confirmations=(confirmation(rec),))
     assert len(accepted.effects) == 1
     assert accepted.effects[0]['quantity'] == 10
 
@@ -237,7 +250,7 @@ def test_semicolon_independent_vehicle_need_does_not_scope_open_road():
     rec = store.submit(report, raw, 'scripted')
     assert 'qualified_access' not in rec.proposal.claims[0].flags
     effects = store.review(rec.proposal_id, 'accepted', 'scripted-reviewer',
-                           expected_revision=1).effects
+                           expected_revision=1, confirmations=(confirmation(rec),)).effects
     assert len(effects) == 1
     assert effects[0]['status'] == 'open'
 
@@ -251,7 +264,7 @@ def test_count_after_request_without_prior_event_remains_actionable():
                                          'entity_type': 'node', 'source': 'fictional graph'}})
     rec = store.submit(report, raw, 'scripted')
     effects = store.review(rec.proposal_id, 'accepted', 'scripted-reviewer',
-                           expected_revision=1).effects
+                           expected_revision=1, confirmations=(confirmation(rec),)).effects
     assert len(effects) == 1 and effects[0]['quantity'] == 10
 
 
@@ -266,5 +279,5 @@ def test_only_in_unrelated_fuel_need_does_not_restrict_road(separator):
     rec = store.submit(report, raw, 'scripted')
     assert 'qualified_access' not in rec.proposal.claims[0].flags
     effects = store.review(rec.proposal_id, 'accepted', 'scripted-reviewer',
-                           expected_revision=1).effects
+                           expected_revision=1, confirmations=(confirmation(rec),)).effects
     assert len(effects) == 1 and effects[0]['status'] == 'open'

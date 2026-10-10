@@ -16,17 +16,24 @@ def run():
     raw=provider.extract(report); pending=store.submit(report,raw,provider.name)
     edited=dict(raw); edited['claims']=raw['claims'][:1]
     corrected=store.edit(pending.proposal_id,edited,'human:demonstration-editor')
-    accepted=store.review(pending.proposal_id,'accepted','human:demonstration-reviewer')
+    claim=corrected.proposal.claims[0]
+    confirmation={'claim_id':claim.claim_id,'kind':'need','mapped_entity_id':'pine',
+                  'confirmed_values':{'category':claim.label,'quantity':claim.quantity.value,
+                                      'unit':claim.unit.value,'location':claim.location.value,
+                                      'urgency':claim.urgency.value if claim.urgency else None},
+                  'semantic_override_reason':None}
+    accepted=store.review(pending.proposal_id,'accepted','scripted:demonstration-reviewer',
+                          expected_revision=corrected.revision,confirmations=(confirmation,))
     rejected_report=Report('demo:rejected','fictional development exercise',11,'At Pine School, 4 people need evacuation now.')
     rejected=store.submit(rejected_report,provider.extract(rejected_report),provider.name)
     rejected=store.review(rejected.proposal_id,'rejected','human:demonstration-reviewer')
     repost=Report('demo:repost',report.source,report.received_time_s,'Repost: '+text)
     duplicate=store.submit(repost,provider.extract(repost),provider.name)
     return {'mode':'deterministic CPU development demonstration','provider':provider.name,
-        'human_actions':'scripted demonstration calls, not recorded user acceptance',
+        'human_actions':'scripted confirmations, not recorded human acceptance',
         'simulator_mutation':False,'pending':asdict(pending),'corrected':asdict(corrected),
         'accepted':asdict(accepted),'rejected':asdict(rejected),'repost':asdict(duplicate),
-        'integration_requirement':'authenticate actual human and atomically consume effect idempotency keys'}
+        'integration_requirement':'authenticate actual human, show full source and final command, require inspected revision and deliberate per-command action, then atomically consume effect idempotency keys'}
 
 def main():
     parser=argparse.ArgumentParser(); parser.add_argument('--output',type=Path,required=True)

@@ -53,6 +53,21 @@ def test_negation_and_prompt_injection_cannot_become_effect():
 ALIASES = {'Pine School': {'entity_id':'pine','entity_type':'node','source':'fictional graph v1'},
            'East Road': {'entity_id':'east','entity_type':'edge','source':'fictional graph v1'}}
 
+
+def confirmations(record):
+    result = []
+    for c in record.proposal.claims:
+        values = ({'category': c.label, 'quantity': c.quantity.value,
+                   'unit': c.unit.value, 'location': c.location.value,
+                   'urgency': c.urgency.value if c.urgency else None}
+                  if c.kind == 'need' else
+                  {'status': c.label, 'location': c.location.value,
+                   'scope': 'unqualified'})
+        result.append({'claim_id': c.claim_id, 'kind': c.kind,
+                       'mapped_entity_id': ALIASES[c.location.value]['entity_id'],
+                       'confirmed_values': values, 'semantic_override_reason': None})
+    return tuple(result)
+
 def test_pending_rejected_and_unmapped_reports_have_no_effects():
     s = ReviewStore(ALIASES)
     r = s.submit(report(), payload(), 'mocked_model_fixture')
@@ -66,13 +81,13 @@ def test_pending_rejected_and_unmapped_reports_have_no_effects():
 def test_human_acceptance_emits_provenance_bearing_commands_once():
     s=ReviewStore(ALIASES)
     r=s.submit(report(), payload(), 'mocked_model_fixture')
-    a=s.review(r.proposal_id, 'accepted', 'human:tester')
+    a=s.review(r.proposal_id, 'accepted', 'human:tester', expected_revision=1, confirmations=confirmations(r))
     assert len(a.effects)==2
     assert a.effects[0]['type']=='propose_need'
     assert a.effects[0]['quantity']==12
     assert a.effects[0]['mapped_entity']['entity_id']=='pine'
     assert a.effects[0]['reviewer_id']=='human:tester'
-    assert s.review(r.proposal_id,'accepted','human:tester') == a
+    assert s.review(r.proposal_id,'accepted','human:tester', expected_revision=1, confirmations=confirmations(r)) == a
     with pytest.raises(ValidationError): s.review(r.proposal_id,'rejected','human:tester')
     dup=s.submit(report('repost'), payload(), 'mocked_model_fixture')
     assert dup.review_status=='duplicate' and dup.duplicate_of==r.proposal_id and not dup.effects
@@ -116,7 +131,7 @@ def test_fixture_provider_is_explicit_mock_and_bound_to_exact_report():
 
 def test_review_effect_copies_cannot_mutate_stored_acceptance():
     s=ReviewStore(ALIASES); r=s.submit(report(),payload(),'mocked_model_fixture')
-    a=s.review(r.proposal_id,'accepted','human:tester')
+    a=s.review(r.proposal_id,'accepted','human:tester', expected_revision=1, confirmations=confirmations(r))
     a.effects[0]['quantity']=999
     assert s.get(r.proposal_id).effects[0]['quantity']==12
 
@@ -126,7 +141,7 @@ def test_human_edit_is_pending_only_source_bound_and_auditable():
     e=s.edit(r.proposal_id,edited,'human:editor')
     assert e.revision==2 and e.editors==('human:editor',)
     assert len(e.proposal.claims)==1 and not e.effects
-    a=s.review(r.proposal_id,'accepted','human:tester')
+    a=s.review(r.proposal_id,'accepted','human:tester', expected_revision=2, confirmations=confirmations(e))
     assert len(a.effects)==1 and a.effects[0]['revision']==2
     with pytest.raises(ValidationError): s.edit(r.proposal_id,payload(),'human:editor')
 
