@@ -309,5 +309,26 @@ class ComparisonTests(unittest.TestCase):
         self.assertEqual(w.outcome()["metrics"]["route_failures"],1)
 
 
+    def test_next_edge_closure_is_seen_at_exact_arrival_decision_time(self):
+        f=future()
+        f["truth_events"]=[{"event_id":"clinic-entry","kind":"road_closed",
+                            "edge_id":"clinic","time_s":28}]
+        w=MockWorld(snapshot(),f)
+        w.commit(PriorityGreedy().choose(w.policy_view()))
+        w.advance_to(28)
+        ambulance=w.state["vehicles"][1]
+        self.assertEqual(ambulance["phase"],"waiting")
+        self.assertEqual(ambulance["node_id"],"B")
+        self.assertIsNone(ambulance["current_edge_id"])
+        self.assertEqual(ambulance["load"]["patients"],1)
+        self.assertEqual(w.state["ledger"]["reservations"]["urgent-medical"],1)
+        self.assertEqual(w.outcome()["metrics"]["route_failures"],1)
+        self.assertEqual(w.events[-1]["kind"],"blocked_at_node")
+        self.assertEqual(w.events[-1]["time_s"],28)
+        self.assertEqual(w.personal_observations[-1]["received_at_s"],28)
+        w.advance_to(29)
+        self.assertEqual(w.outcome()["metrics"]["route_failures"],1)
+
+
 if __name__=="__main__":
     unittest.main()

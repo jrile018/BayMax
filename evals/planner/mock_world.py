@@ -318,6 +318,11 @@ class MockWorld:
                 nex=v["remaining_path"].pop(0)
                 if self.roads[nex]["source"]!=v["node_id"]:
                     raise ValueError("continuation does not preserve reached node")
+                # Entering the next edge is a decision boundary even when this
+                # advance call ends exactly at the reached junction.
+                if self._closure_time(nex,now,now) is not None:
+                    self._fault(v,now,nex,False)
+                    break
                 v["current_edge_id"]=nex
                 v["node_id"]=None
             else:
