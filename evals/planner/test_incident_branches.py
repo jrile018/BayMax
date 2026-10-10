@@ -153,3 +153,16 @@ def test_fractional_utc_event_and_repeated_view_are_deterministic():
     assert earlier["hypothetical_events"] == []
     assert len(later["hypothetical_events"]) == 1
     assert later == known_at_view(branch, "2026-10-10T09:30:00.123456Z")
+
+
+def test_mixed_precision_events_follow_chronological_order():
+    _, base = _base()
+    spec = _spec(base)
+    second = copy.deepcopy(spec["hypothetical_events"][0])
+    second["event_id"] = "assumed-update-2"
+    second["time_utc"] = "2026-10-10T09:30:00.1Z"
+    spec["hypothetical_events"].append(second)
+    branch = materialize_hypothetical_branches(base, [spec])["scenario_branches"][0]
+    assert [e["event_id"] for e in branch["hypothetical_events"]] == [
+        "assumed-update-1", "assumed-update-2"
+    ]

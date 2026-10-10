@@ -144,7 +144,7 @@ def materialize_hypothetical_branches(
                 raise ValueError("event source is not pinned to this branch")
             _text(raw["description"], "event description")
             events.append({**raw, "lane": "authored_hypothetical"})
-        events.sort(key=lambda event: (event["time_utc"], event["event_id"]))
+        events.sort(key=lambda event: (_utc(event["time_utc"]), event["event_id"]))
         branch = {
             "branch_id": branch_id,
             "incident_id": parent["incident_id"],
