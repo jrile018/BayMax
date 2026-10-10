@@ -1,0 +1,9 @@
+220eb4beb54dc7c5445e70015e3dc4a1c64fb1c6
+........................................................................ [ 59%]
+..................................................   [100%]
+122 passed, 20 subtests passed in 0.57s
+Wrote /workspace/knight26/artifacts/hf/c2-followup/final-cpu-evaluation.json
+mocked_model_fixture: label/slot exact 20/20; evidence-aligned 20/20; failures 0
+rule_baseline: label/slot exact 5/20; evidence-aligned 2/20; failures 15
+{"output": "/workspace/knight26/artifacts/hf/c2-followup/final-review-trace.json", "provider": "rule_baseline", "accepted_command_count": 1, "simulator_mutation": false}
+{"source_commit": "220eb4beb54dc7c5445e70015e3dc4a1c64fb1c6", "intake_source": {"source_sha": "220eb4beb54dc7c5445e70015e3dc4a1c64fb1c6", "source_dirty": false, "source_fingerprint_sha256": "fb550a2895ffa6a2069df1ff5095d5c700306ed03a8c572a79d2d18a0252c487"}, "python_files": 23}

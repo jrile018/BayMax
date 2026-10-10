@@ -1,0 +1,6 @@
+{
+  "python": "3.14.4",
+  "torch_version": "2.13.0+rocm10.0.0",
+  "torch_import_spec_origin": "/opt/venv/lib/python3.14/site-packages/torch/__init__.py",
+  "torch_loaded": false
+}

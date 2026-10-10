@@ -1,0 +1,86 @@
+.............FF.FF                                                       [100%]
+=================================== FAILURES ===================================
+_ test_completed_delivery_count_in_mixed_clause_cannot_become_current_need[10 bottles were delivered to Pine School, water is needed at Pine School.] _
+
+text = '10 bottles were delivered to Pine School, water is needed at Pine School.'
+
+    @pytest.mark.parametrize('text', [
+        '10 bottles were delivered to Pine School, water is needed at Pine School.',
+        'Water is needed at Pine School after 10 bottles were delivered.',
+    ])
+    def test_completed_delivery_count_in_mixed_clause_cannot_become_current_need(text):
+        report = Report('audit:borrowed-count:' + text, 'fictional', 10, text)
+        raw = proposal(claim(text, kind='need', label='water', evidence=text,
+                             location='Pine School', quantity=10, unit='bottles'))
+        store = ReviewStore({'Pine School': {'entity_id': 'pine',
+                                             'entity_type': 'node', 'source': 'fictional graph'}})
+>       with pytest.raises(ValidationError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValidationError
+
+services/intake/tests/test_intake_audit.py:137: Failed
+_ test_completed_delivery_count_in_mixed_clause_cannot_become_current_need[Water is needed at Pine School after 10 bottles were delivered.] _
+
+text = 'Water is needed at Pine School after 10 bottles were delivered.'
+
+    @pytest.mark.parametrize('text', [
+        '10 bottles were delivered to Pine School, water is needed at Pine School.',
+        'Water is needed at Pine School after 10 bottles were delivered.',
+    ])
+    def test_completed_delivery_count_in_mixed_clause_cannot_become_current_need(text):
+        report = Report('audit:borrowed-count:' + text, 'fictional', 10, text)
+        raw = proposal(claim(text, kind='need', label='water', evidence=text,
+                             location='Pine School', quantity=10, unit='bottles'))
+        store = ReviewStore({'Pine School': {'entity_id': 'pine',
+                                             'entity_type': 'node', 'source': 'fictional graph'}})
+>       with pytest.raises(ValidationError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValidationError
+
+services/intake/tests/test_intake_audit.py:137: Failed
+_ test_elliptic_same_road_restriction_blocks_unscoped_open[Highway A is open; bicycles only.] _
+
+text = 'Highway A is open; bicycles only.'
+
+    @pytest.mark.parametrize('text', [
+        'Highway A is open; bicycles only.',
+        'Highway A is open. Only bicycles may cross there.',
+    ])
+    def test_elliptic_same_road_restriction_blocks_unscoped_open(text):
+        report = Report('audit:elliptic:' + text, 'fictional', 10, text)
+        raw = proposal(claim(text, kind='access', label='open',
+                             evidence='Highway A is open', location='Highway A'))
+        store = ReviewStore({'Highway A': {'entity_id': 'highway-a',
+                                          'entity_type': 'edge', 'source': 'fictional graph'}})
+        rec = store.submit(report, raw, 'scripted')
+>       assert 'qualified_access' in rec.proposal.claims[0].flags
+E       AssertionError: assert 'qualified_access' in ()
+E        +  where () = Claim(claim_id='audit', kind='access', label='open', evidence=Evidence(start=0, end=17, quote='Highway A is open'), qu...t=None, urgency=None, location=Slot(value='Highway A', evidence=Evidence(start=0, end=9, quote='Highway A')), flags=()).flags
+
+services/intake/tests/test_intake_audit.py:166: AssertionError
+_ test_elliptic_same_road_restriction_blocks_unscoped_open[Highway A is open. Only bicycles may cross there.] _
+
+text = 'Highway A is open. Only bicycles may cross there.'
+
+    @pytest.mark.parametrize('text', [
+        'Highway A is open; bicycles only.',
+        'Highway A is open. Only bicycles may cross there.',
+    ])
+    def test_elliptic_same_road_restriction_blocks_unscoped_open(text):
+        report = Report('audit:elliptic:' + text, 'fictional', 10, text)
+        raw = proposal(claim(text, kind='access', label='open',
+                             evidence='Highway A is open', location='Highway A'))
+        store = ReviewStore({'Highway A': {'entity_id': 'highway-a',
+                                          'entity_type': 'edge', 'source': 'fictional graph'}})
+        rec = store.submit(report, raw, 'scripted')
+>       assert 'qualified_access' in rec.proposal.claims[0].flags
+E       AssertionError: assert 'qualified_access' in ()
+E        +  where () = Claim(claim_id='audit', kind='access', label='open', evidence=Evidence(start=0, end=17, quote='Highway A is open'), qu...t=None, urgency=None, location=Slot(value='Highway A', evidence=Evidence(start=0, end=9, quote='Highway A')), flags=()).flags
+
+services/intake/tests/test_intake_audit.py:166: AssertionError
+=========================== short test summary info ============================
+FAILED services/intake/tests/test_intake_audit.py::test_completed_delivery_count_in_mixed_clause_cannot_become_current_need[10 bottles were delivered to Pine School, water is needed at Pine School.]
+FAILED services/intake/tests/test_intake_audit.py::test_completed_delivery_count_in_mixed_clause_cannot_become_current_need[Water is needed at Pine School after 10 bottles were delivered.]
+FAILED services/intake/tests/test_intake_audit.py::test_elliptic_same_road_restriction_blocks_unscoped_open[Highway A is open; bicycles only.]
+FAILED services/intake/tests/test_intake_audit.py::test_elliptic_same_road_restriction_blocks_unscoped_open[Highway A is open. Only bicycles may cross there.]
+4 failed, 14 passed in 0.07s

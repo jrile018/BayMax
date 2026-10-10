@@ -1,0 +1,184 @@
+..FFFFFFFFFF                                                             [100%]
+=================================== FAILURES ===================================
+______ test_invalid_confirmation_fails_without_terminal_write[<lambda>0] _______
+
+change = <function <lambda> at 0x7465f9b5d380>
+
+    @pytest.mark.parametrize('change', [
+        lambda c: c['confirmed_values'].__setitem__('quantity', 11),
+        lambda c: c['confirmed_values'].pop('urgency'),
+        lambda c: c.__setitem__('mapped_entity_id', 'east'),
+        lambda c: c.__setitem__('claim_id', 'missing'),
+        lambda c: c.__setitem__('kind', 'access'),
+        lambda c: c.__setitem__('extra', 'not allowed'),
+    ])
+    def test_invalid_confirmation_fails_without_terminal_write(change):
+        store, record = pending()
+        confirmation = need_confirmation(record)
+        change(confirmation)
+>       with pytest.raises(ValidationError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValidationError
+
+services/intake/tests/test_review_confirmation.py:71: Failed
+______ test_invalid_confirmation_fails_without_terminal_write[<lambda>1] _______
+
+change = <function <lambda> at 0x7465f9b5d430>
+
+    @pytest.mark.parametrize('change', [
+        lambda c: c['confirmed_values'].__setitem__('quantity', 11),
+        lambda c: c['confirmed_values'].pop('urgency'),
+        lambda c: c.__setitem__('mapped_entity_id', 'east'),
+        lambda c: c.__setitem__('claim_id', 'missing'),
+        lambda c: c.__setitem__('kind', 'access'),
+        lambda c: c.__setitem__('extra', 'not allowed'),
+    ])
+    def test_invalid_confirmation_fails_without_terminal_write(change):
+        store, record = pending()
+        confirmation = need_confirmation(record)
+        change(confirmation)
+>       with pytest.raises(ValidationError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValidationError
+
+services/intake/tests/test_review_confirmation.py:71: Failed
+______ test_invalid_confirmation_fails_without_terminal_write[<lambda>2] _______
+
+change = <function <lambda> at 0x7465f9b5d4e0>
+
+    @pytest.mark.parametrize('change', [
+        lambda c: c['confirmed_values'].__setitem__('quantity', 11),
+        lambda c: c['confirmed_values'].pop('urgency'),
+        lambda c: c.__setitem__('mapped_entity_id', 'east'),
+        lambda c: c.__setitem__('claim_id', 'missing'),
+        lambda c: c.__setitem__('kind', 'access'),
+        lambda c: c.__setitem__('extra', 'not allowed'),
+    ])
+    def test_invalid_confirmation_fails_without_terminal_write(change):
+        store, record = pending()
+        confirmation = need_confirmation(record)
+        change(confirmation)
+>       with pytest.raises(ValidationError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValidationError
+
+services/intake/tests/test_review_confirmation.py:71: Failed
+______ test_invalid_confirmation_fails_without_terminal_write[<lambda>3] _______
+
+change = <function <lambda> at 0x7465f9b5d590>
+
+    @pytest.mark.parametrize('change', [
+        lambda c: c['confirmed_values'].__setitem__('quantity', 11),
+        lambda c: c['confirmed_values'].pop('urgency'),
+        lambda c: c.__setitem__('mapped_entity_id', 'east'),
+        lambda c: c.__setitem__('claim_id', 'missing'),
+        lambda c: c.__setitem__('kind', 'access'),
+        lambda c: c.__setitem__('extra', 'not allowed'),
+    ])
+    def test_invalid_confirmation_fails_without_terminal_write(change):
+        store, record = pending()
+        confirmation = need_confirmation(record)
+        change(confirmation)
+>       with pytest.raises(ValidationError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValidationError
+
+services/intake/tests/test_review_confirmation.py:71: Failed
+______ test_invalid_confirmation_fails_without_terminal_write[<lambda>4] _______
+
+change = <function <lambda> at 0x7465f9b5d640>
+
+    @pytest.mark.parametrize('change', [
+        lambda c: c['confirmed_values'].__setitem__('quantity', 11),
+        lambda c: c['confirmed_values'].pop('urgency'),
+        lambda c: c.__setitem__('mapped_entity_id', 'east'),
+        lambda c: c.__setitem__('claim_id', 'missing'),
+        lambda c: c.__setitem__('kind', 'access'),
+        lambda c: c.__setitem__('extra', 'not allowed'),
+    ])
+    def test_invalid_confirmation_fails_without_terminal_write(change):
+        store, record = pending()
+        confirmation = need_confirmation(record)
+        change(confirmation)
+>       with pytest.raises(ValidationError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValidationError
+
+services/intake/tests/test_review_confirmation.py:71: Failed
+______ test_invalid_confirmation_fails_without_terminal_write[<lambda>5] _______
+
+change = <function <lambda> at 0x7465f9b5d6f0>
+
+    @pytest.mark.parametrize('change', [
+        lambda c: c['confirmed_values'].__setitem__('quantity', 11),
+        lambda c: c['confirmed_values'].pop('urgency'),
+        lambda c: c.__setitem__('mapped_entity_id', 'east'),
+        lambda c: c.__setitem__('claim_id', 'missing'),
+        lambda c: c.__setitem__('kind', 'access'),
+        lambda c: c.__setitem__('extra', 'not allowed'),
+    ])
+    def test_invalid_confirmation_fails_without_terminal_write(change):
+        store, record = pending()
+        confirmation = need_confirmation(record)
+        change(confirmation)
+>       with pytest.raises(ValidationError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValidationError
+
+services/intake/tests/test_review_confirmation.py:71: Failed
+_________________ test_duplicate_confirmation_fails_atomically _________________
+
+    def test_duplicate_confirmation_fails_atomically():
+        store, record = pending()
+        confirmation = need_confirmation(record)
+>       with pytest.raises(ValidationError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValidationError
+
+services/intake/tests/test_review_confirmation.py:80: Failed
+________________ test_confirmation_requires_inspected_revision _________________
+
+    def test_confirmation_requires_inspected_revision():
+        store, record = pending()
+>       with pytest.raises(ValidationError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValidationError
+
+services/intake/tests/test_review_confirmation.py:88: Failed
+__________ test_terminal_retry_requires_identical_confirmation_values __________
+
+    def test_terminal_retry_requires_identical_confirmation_values():
+        store, record = pending()
+        confirmation = need_confirmation(record)
+        first = store.review(record.proposal_id, 'accepted', 'scripted:reviewer',
+                             expected_revision=1, confirmations=(confirmation,))
+        assert store.review(record.proposal_id, 'accepted', 'scripted:reviewer',
+                            expected_revision=1, confirmations=(confirmation,)) == first
+        changed = copy.deepcopy(confirmation)
+        changed['semantic_override_reason'] = 'different replay'
+>       with pytest.raises(ValidationError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValidationError
+
+services/intake/tests/test_review_confirmation.py:103: Failed
+______ test_rejection_with_confirmation_has_no_effect_and_does_not_accept ______
+
+    def test_rejection_with_confirmation_has_no_effect_and_does_not_accept():
+        store, record = pending()
+>       with pytest.raises(ValidationError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValidationError
+
+services/intake/tests/test_review_confirmation.py:110: Failed
+=========================== short test summary info ============================
+FAILED services/intake/tests/test_review_confirmation.py::test_invalid_confirmation_fails_without_terminal_write[<lambda>0]
+FAILED services/intake/tests/test_review_confirmation.py::test_invalid_confirmation_fails_without_terminal_write[<lambda>1]
+FAILED services/intake/tests/test_review_confirmation.py::test_invalid_confirmation_fails_without_terminal_write[<lambda>2]
+FAILED services/intake/tests/test_review_confirmation.py::test_invalid_confirmation_fails_without_terminal_write[<lambda>3]
+FAILED services/intake/tests/test_review_confirmation.py::test_invalid_confirmation_fails_without_terminal_write[<lambda>4]
+FAILED services/intake/tests/test_review_confirmation.py::test_invalid_confirmation_fails_without_terminal_write[<lambda>5]
+FAILED services/intake/tests/test_review_confirmation.py::test_duplicate_confirmation_fails_atomically
+FAILED services/intake/tests/test_review_confirmation.py::test_confirmation_requires_inspected_revision
+FAILED services/intake/tests/test_review_confirmation.py::test_terminal_retry_requires_identical_confirmation_values
+FAILED services/intake/tests/test_review_confirmation.py::test_rejection_with_confirmation_has_no_effect_and_does_not_accept
+10 failed, 2 passed in 0.07s

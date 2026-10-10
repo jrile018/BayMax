@@ -1,0 +1,905 @@
+{
+  "base": {
+    "python": "3.14.4",
+    "executable": "/opt/venv/bin/python",
+    "torch_version": "2.13.0+rocm10.0.0",
+    "torch_import_spec_origin": "/opt/venv/lib/python3.14/site-packages/torch/__init__.py"
+  },
+  "selected": {
+    "click": "8.5.0",
+    "hf-xet": "1.7.0",
+    "httpcore2": "2.13.1",
+    "httpx2": "2.13.1",
+    "huggingface-hub": "2.2.0",
+    "truststore": "0.10.4"
+  },
+  "wheels": [
+    {
+      "filename": "click-8.5.0-py3-none-any.whl",
+      "sha256": "255bc9599cf7748b4b1a446ccc735421bd08a2ae529a8b88597d3de5664ee360",
+      "name": "click",
+      "version": "8.5.0",
+      "requires_python": ">=3.10",
+      "requires_dist": []
+    },
+    {
+      "filename": "hf_xet-1.7.0-cp38-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "sha256": "2814a6e999d13464c4d679b788cc5d784eb5a4edfc638a31f10e9a11ab531ef8",
+      "name": "hf-xet",
+      "version": "1.7.0",
+      "requires_python": ">=3.8",
+      "requires_dist": [
+        "pytest ; extra == 'tests'"
+      ]
+    },
+    {
+      "filename": "httpcore2-2.13.1-py3-none-any.whl",
+      "sha256": "e1e05d4f25f7d7d496bfb96748f6f4b67657b03da069b3a68c36069f3db73d0a",
+      "name": "httpcore2",
+      "version": "2.13.1",
+      "requires_python": ">=3.10",
+      "requires_dist": [
+        "h11>=0.16",
+        "truststore>=0.10",
+        "anyio<5.0,>=4.5.0; extra == 'asyncio'",
+        "h2<5,>=3; extra == 'http2'",
+        "socksio==1.*; extra == 'socks'",
+        "trio<1.0,>=0.34.0; extra == 'trio'"
+      ]
+    },
+    {
+      "filename": "httpx2-2.13.1-py3-none-any.whl",
+      "sha256": "6dff50fabc270ee5fd25d845d0b078ed20564579744d6d962850975996d2f9a4",
+      "name": "httpx2",
+      "version": "2.13.1",
+      "requires_python": ">=3.10",
+      "requires_dist": [
+        "anyio>=4.10; sys_platform != 'emscripten'",
+        "httpcore2==2.13.1; sys_platform != 'emscripten'",
+        "httpx2-jsfetch; sys_platform == 'emscripten' and python_version >= '3.12'",
+        "idna>=3.18",
+        "truststore>=0.10; sys_platform != 'emscripten'",
+        "typing-extensions>=4.5.0; python_version < '3.13'",
+        "brotli>=1.2.0; (platform_python_implementation == 'CPython') and extra == 'brotli'",
+        "brotlicffi>=1.2.0.2; (platform_python_implementation != 'CPython') and extra == 'brotli'",
+        "click>=8.4.2; extra == 'cli'",
+        "pygments==2.*; extra == 'cli'",
+        "rich<16,>=10; extra == 'cli'",
+        "h2<5,>=3; extra == 'http2'",
+        "socksio==1.*; extra == 'socks'",
+        "wsproto>=1.2; extra == 'ws'",
+        "backports-zstd>=1.0.0; (python_version <= '3.13') and extra == 'zstd'"
+      ]
+    },
+    {
+      "filename": "huggingface_hub-2.2.0-py3-none-any.whl",
+      "sha256": "1667f145dc56dc210d60966069397df9ecfca9607a5d43db88b308c89dae56b3",
+      "name": "huggingface_hub",
+      "version": "2.2.0",
+      "requires_python": ">=3.10.0",
+      "requires_dist": [
+        "click<9.0.0,>=8.4.2",
+        "filelock>=3.10.0",
+        "fsspec>=2023.5.0",
+        "hf-xet<2.0.0,>=1.6.0; platform_machine == \"x86_64\" or platform_machine == \"amd64\" or platform_machine == \"AMD64\" or platform_machine == \"arm64\" or platform_machine == \"ARM64\" or platform_machine == \"aarch64\"",
+        "httpx2<3,>=2.0.0",
+        "packaging>=20.9",
+        "pyyaml>=5.1",
+        "tomli>=1.1.0; python_version < \"3.11\"",
+        "tqdm>=4.42.1",
+        "typing-extensions>=4.1.0",
+        "authlib>=1.8.0; extra == \"oauth\"",
+        "fastapi; extra == \"oauth\"",
+        "itsdangerous; extra == \"oauth\"",
+        "torch; extra == \"torch\"",
+        "safetensors[torch]; extra == \"torch\"",
+        "toml; extra == \"fastai\"",
+        "fastai>=2.4; extra == \"fastai\"",
+        "fastcore>=1.3.27; extra == \"fastai\"",
+        "hf-xet<2.0.0,>=1.6.0; extra == \"hf-xet\"",
+        "mcp<2.0.0,>=1.9.4; extra == \"mcp\"",
+        "authlib>=1.8.0; extra == \"testing\"",
+        "fastapi; extra == \"testing\"",
+        "itsdangerous; extra == \"testing\"",
+        "jedi; extra == \"testing\"",
+        "Jinja2; extra == \"testing\"",
+        "pytest>=8.4.2; extra == \"testing\"",
+        "pytest-cov; extra == \"testing\"",
+        "pytest-env; extra == \"testing\"",
+        "pytest-xdist; extra == \"testing\"",
+        "pytest-vcr; extra == \"testing\"",
+        "pytest-asyncio; extra == \"testing\"",
+        "pytest-rerunfailures>=16.2; extra == \"testing\"",
+        "pytest-mock; extra == \"testing\"",
+        "urllib3<2.0; extra == \"testing\"",
+        "soundfile; extra == \"testing\"",
+        "Pillow; extra == \"testing\"",
+        "numpy; extra == \"testing\"",
+        "duckdb; extra == \"testing\"",
+        "fastapi; extra == \"testing\"",
+        "gradio>=5.0.0; extra == \"gradio\"",
+        "requests; extra == \"gradio\"",
+        "typing-extensions>=4.8.0; extra == \"typing\"",
+        "types-PyYAML; extra == \"typing\"",
+        "types-simplejson; extra == \"typing\"",
+        "types-toml; extra == \"typing\"",
+        "types-tqdm; extra == \"typing\"",
+        "types-urllib3; extra == \"typing\"",
+        "ruff>=0.9.0; extra == \"quality\"",
+        "mypy==1.15.0; extra == \"quality\"",
+        "libcst>=1.4.0; extra == \"quality\"",
+        "ty; extra == \"quality\"",
+        "authlib>=1.8.0; extra == \"all\"",
+        "fastapi; extra == \"all\"",
+        "itsdangerous; extra == \"all\"",
+        "jedi; extra == \"all\"",
+        "Jinja2; extra == \"all\"",
+        "pytest>=8.4.2; extra == \"all\"",
+        "pytest-cov; extra == \"all\"",
+        "pytest-env; extra == \"all\"",
+        "pytest-xdist; extra == \"all\"",
+        "pytest-vcr; extra == \"all\"",
+        "pytest-asyncio; extra == \"all\"",
+        "pytest-rerunfailures>=16.2; extra == \"all\"",
+        "pytest-mock; extra == \"all\"",
+        "urllib3<2.0; extra == \"all\"",
+        "soundfile; extra == \"all\"",
+        "Pillow; extra == \"all\"",
+        "numpy; extra == \"all\"",
+        "duckdb; extra == \"all\"",
+        "fastapi; extra == \"all\"",
+        "ruff>=0.9.0; extra == \"all\"",
+        "mypy==1.15.0; extra == \"all\"",
+        "libcst>=1.4.0; extra == \"all\"",
+        "ty; extra == \"all\"",
+        "typing-extensions>=4.8.0; extra == \"all\"",
+        "types-PyYAML; extra == \"all\"",
+        "types-simplejson; extra == \"all\"",
+        "types-toml; extra == \"all\"",
+        "types-tqdm; extra == \"all\"",
+        "types-urllib3; extra == \"all\"",
+        "authlib>=1.8.0; extra == \"dev\"",
+        "fastapi; extra == \"dev\"",
+        "itsdangerous; extra == \"dev\"",
+        "jedi; extra == \"dev\"",
+        "Jinja2; extra == \"dev\"",
+        "pytest>=8.4.2; extra == \"dev\"",
+        "pytest-cov; extra == \"dev\"",
+        "pytest-env; extra == \"dev\"",
+        "pytest-xdist; extra == \"dev\"",
+        "pytest-vcr; extra == \"dev\"",
+        "pytest-asyncio; extra == \"dev\"",
+        "pytest-rerunfailures>=16.2; extra == \"dev\"",
+        "pytest-mock; extra == \"dev\"",
+        "urllib3<2.0; extra == \"dev\"",
+        "soundfile; extra == \"dev\"",
+        "Pillow; extra == \"dev\"",
+        "numpy; extra == \"dev\"",
+        "duckdb; extra == \"dev\"",
+        "fastapi; extra == \"dev\"",
+        "ruff>=0.9.0; extra == \"dev\"",
+        "mypy==1.15.0; extra == \"dev\"",
+        "libcst>=1.4.0; extra == \"dev\"",
+        "ty; extra == \"dev\"",
+        "typing-extensions>=4.8.0; extra == \"dev\"",
+        "types-PyYAML; extra == \"dev\"",
+        "types-simplejson; extra == \"dev\"",
+        "types-toml; extra == \"dev\"",
+        "types-tqdm; extra == \"dev\"",
+        "types-urllib3; extra == \"dev\""
+      ]
+    },
+    {
+      "filename": "truststore-0.10.4-py3-none-any.whl",
+      "sha256": "adaeaecf1cbb5f4de3b1959b42d41f6fab57b2b1666adb59e89cb0b53361d981",
+      "name": "truststore",
+      "version": "0.10.4",
+      "requires_python": ">= 3.10",
+      "requires_dist": []
+    }
+  ],
+  "requirement_checks": [
+    {
+      "from": "hf-xet",
+      "requirement": "pytest ; extra == 'tests'",
+      "active": false
+    },
+    {
+      "from": "httpcore2",
+      "requirement": "h11>=0.16",
+      "active": true,
+      "resolved_version": "0.16.0",
+      "source": "/opt/venv",
+      "satisfied": true
+    },
+    {
+      "from": "httpcore2",
+      "requirement": "truststore>=0.10",
+      "active": true,
+      "resolved_version": "0.10.4",
+      "source": "wheelhouse",
+      "satisfied": true
+    },
+    {
+      "from": "httpcore2",
+      "requirement": "anyio<5.0,>=4.5.0; extra == 'asyncio'",
+      "active": false
+    },
+    {
+      "from": "httpcore2",
+      "requirement": "h2<5,>=3; extra == 'http2'",
+      "active": false
+    },
+    {
+      "from": "httpcore2",
+      "requirement": "socksio==1.*; extra == 'socks'",
+      "active": false
+    },
+    {
+      "from": "httpcore2",
+      "requirement": "trio<1.0,>=0.34.0; extra == 'trio'",
+      "active": false
+    },
+    {
+      "from": "httpx2",
+      "requirement": "anyio>=4.10; sys_platform != 'emscripten'",
+      "active": true,
+      "resolved_version": "4.15.1",
+      "source": "/opt/venv",
+      "satisfied": true
+    },
+    {
+      "from": "httpx2",
+      "requirement": "httpcore2==2.13.1; sys_platform != 'emscripten'",
+      "active": true,
+      "resolved_version": "2.13.1",
+      "source": "wheelhouse",
+      "satisfied": true
+    },
+    {
+      "from": "httpx2",
+      "requirement": "httpx2-jsfetch; sys_platform == 'emscripten' and python_version >= '3.12'",
+      "active": false
+    },
+    {
+      "from": "httpx2",
+      "requirement": "idna>=3.18",
+      "active": true,
+      "resolved_version": "3.19",
+      "source": "/opt/venv",
+      "satisfied": true
+    },
+    {
+      "from": "httpx2",
+      "requirement": "truststore>=0.10; sys_platform != 'emscripten'",
+      "active": true,
+      "resolved_version": "0.10.4",
+      "source": "wheelhouse",
+      "satisfied": true
+    },
+    {
+      "from": "httpx2",
+      "requirement": "typing-extensions>=4.5.0; python_version < '3.13'",
+      "active": false
+    },
+    {
+      "from": "httpx2",
+      "requirement": "brotli>=1.2.0; (platform_python_implementation == 'CPython') and extra == 'brotli'",
+      "active": false
+    },
+    {
+      "from": "httpx2",
+      "requirement": "brotlicffi>=1.2.0.2; (platform_python_implementation != 'CPython') and extra == 'brotli'",
+      "active": false
+    },
+    {
+      "from": "httpx2",
+      "requirement": "click>=8.4.2; extra == 'cli'",
+      "active": false
+    },
+    {
+      "from": "httpx2",
+      "requirement": "pygments==2.*; extra == 'cli'",
+      "active": false
+    },
+    {
+      "from": "httpx2",
+      "requirement": "rich<16,>=10; extra == 'cli'",
+      "active": false
+    },
+    {
+      "from": "httpx2",
+      "requirement": "h2<5,>=3; extra == 'http2'",
+      "active": false
+    },
+    {
+      "from": "httpx2",
+      "requirement": "socksio==1.*; extra == 'socks'",
+      "active": false
+    },
+    {
+      "from": "httpx2",
+      "requirement": "wsproto>=1.2; extra == 'ws'",
+      "active": false
+    },
+    {
+      "from": "httpx2",
+      "requirement": "backports-zstd>=1.0.0; (python_version <= '3.13') and extra == 'zstd'",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "click<9.0.0,>=8.4.2",
+      "active": true,
+      "resolved_version": "8.5.0",
+      "source": "wheelhouse",
+      "satisfied": true
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "filelock>=3.10.0",
+      "active": true,
+      "resolved_version": "3.32.3",
+      "source": "/opt/venv",
+      "satisfied": true
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "fsspec>=2023.5.0",
+      "active": true,
+      "resolved_version": "2026.7.0",
+      "source": "/opt/venv",
+      "satisfied": true
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "hf-xet<2.0.0,>=1.6.0; platform_machine == \"x86_64\" or platform_machine == \"amd64\" or platform_machine == \"AMD64\" or platform_machine == \"arm64\" or platform_machine == \"ARM64\" or platform_machine == \"aarch64\"",
+      "active": true,
+      "resolved_version": "1.7.0",
+      "source": "wheelhouse",
+      "satisfied": true
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "httpx2<3,>=2.0.0",
+      "active": true,
+      "resolved_version": "2.13.1",
+      "source": "wheelhouse",
+      "satisfied": true
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "packaging>=20.9",
+      "active": true,
+      "resolved_version": "26.3",
+      "source": "/opt/venv",
+      "satisfied": true
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "pyyaml>=5.1",
+      "active": true,
+      "resolved_version": "6.0.3",
+      "source": "/opt/venv",
+      "satisfied": true
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "tomli>=1.1.0; python_version < \"3.11\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "tqdm>=4.42.1",
+      "active": true,
+      "resolved_version": "4.70.0",
+      "source": "/opt/venv",
+      "satisfied": true
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "typing-extensions>=4.1.0",
+      "active": true,
+      "resolved_version": "4.16.0",
+      "source": "/opt/venv",
+      "satisfied": true
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "authlib>=1.8.0; extra == \"oauth\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "fastapi; extra == \"oauth\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "itsdangerous; extra == \"oauth\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "torch; extra == \"torch\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "safetensors[torch]; extra == \"torch\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "toml; extra == \"fastai\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "fastai>=2.4; extra == \"fastai\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "fastcore>=1.3.27; extra == \"fastai\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "hf-xet<2.0.0,>=1.6.0; extra == \"hf-xet\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "mcp<2.0.0,>=1.9.4; extra == \"mcp\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "authlib>=1.8.0; extra == \"testing\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "fastapi; extra == \"testing\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "itsdangerous; extra == \"testing\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "jedi; extra == \"testing\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "Jinja2; extra == \"testing\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "pytest>=8.4.2; extra == \"testing\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "pytest-cov; extra == \"testing\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "pytest-env; extra == \"testing\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "pytest-xdist; extra == \"testing\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "pytest-vcr; extra == \"testing\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "pytest-asyncio; extra == \"testing\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "pytest-rerunfailures>=16.2; extra == \"testing\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "pytest-mock; extra == \"testing\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "urllib3<2.0; extra == \"testing\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "soundfile; extra == \"testing\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "Pillow; extra == \"testing\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "numpy; extra == \"testing\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "duckdb; extra == \"testing\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "fastapi; extra == \"testing\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "gradio>=5.0.0; extra == \"gradio\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "requests; extra == \"gradio\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "typing-extensions>=4.8.0; extra == \"typing\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "types-PyYAML; extra == \"typing\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "types-simplejson; extra == \"typing\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "types-toml; extra == \"typing\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "types-tqdm; extra == \"typing\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "types-urllib3; extra == \"typing\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "ruff>=0.9.0; extra == \"quality\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "mypy==1.15.0; extra == \"quality\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "libcst>=1.4.0; extra == \"quality\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "ty; extra == \"quality\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "authlib>=1.8.0; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "fastapi; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "itsdangerous; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "jedi; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "Jinja2; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "pytest>=8.4.2; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "pytest-cov; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "pytest-env; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "pytest-xdist; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "pytest-vcr; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "pytest-asyncio; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "pytest-rerunfailures>=16.2; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "pytest-mock; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "urllib3<2.0; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "soundfile; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "Pillow; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "numpy; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "duckdb; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "fastapi; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "ruff>=0.9.0; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "mypy==1.15.0; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "libcst>=1.4.0; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "ty; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "typing-extensions>=4.8.0; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "types-PyYAML; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "types-simplejson; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "types-toml; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "types-tqdm; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "types-urllib3; extra == \"all\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "authlib>=1.8.0; extra == \"dev\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "fastapi; extra == \"dev\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "itsdangerous; extra == \"dev\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "jedi; extra == \"dev\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "Jinja2; extra == \"dev\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "pytest>=8.4.2; extra == \"dev\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "pytest-cov; extra == \"dev\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "pytest-env; extra == \"dev\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "pytest-xdist; extra == \"dev\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "pytest-vcr; extra == \"dev\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "pytest-asyncio; extra == \"dev\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "pytest-rerunfailures>=16.2; extra == \"dev\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "pytest-mock; extra == \"dev\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "urllib3<2.0; extra == \"dev\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "soundfile; extra == \"dev\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "Pillow; extra == \"dev\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "numpy; extra == \"dev\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "duckdb; extra == \"dev\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "fastapi; extra == \"dev\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "ruff>=0.9.0; extra == \"dev\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "mypy==1.15.0; extra == \"dev\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "libcst>=1.4.0; extra == \"dev\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "ty; extra == \"dev\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "typing-extensions>=4.8.0; extra == \"dev\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "types-PyYAML; extra == \"dev\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "types-simplejson; extra == \"dev\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "types-toml; extra == \"dev\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "types-tqdm; extra == \"dev\"",
+      "active": false
+    },
+    {
+      "from": "huggingface_hub",
+      "requirement": "types-urllib3; extra == \"dev\"",
+      "active": false
+    }
+  ],
+  "active_requirement_count": 15,
+  "all_active_satisfied": true
+}

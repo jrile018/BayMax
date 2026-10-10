@@ -1,0 +1,33 @@
+{
+  "recorded_utc": "2026-10-10T06:50:49.253997+00:00",
+  "tested_source_commit": "0e962ac2292630cf26deaff844b474d6542b9a32",
+  "branch": "codex/hf",
+  "worktree": "/workspace/knight26/worktrees/hf",
+  "python": "3.14.4",
+  "source_file_set_sha256": "45842c7ee215e45d83d302e74e1f4307ca00bf4cc0b9fdc4030f0e13f8bbffe4",
+  "command": "OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 /opt/venv/bin/python -m pytest services/intake/tests evals/intake/tests -q",
+  "cpu_threads": 2,
+  "test_result": "41 passed; exit0",
+  "data_status": "20 fictional English reports; 10wildfire/10civilian_recovery",
+  "systems": {
+    "mocked_model_fixture": "20/20 exact harness control, not AI accuracy",
+    "rule_baseline": "7/20 exact;13failures retained"
+  },
+  "model_checkpoint": "not downloaded; no inference performed",
+  "gpu_job": "not started",
+  "demonstration": "scripted human calls;1pending integration command;no simulator mutation",
+  "blocker": {
+    "source": "read-only cloud HTTPS probe",
+    "hosts": [
+      "huggingface.co",
+      "pypi.org"
+    ],
+    "dns": "resolved",
+    "error": "URLError [Errno101] Network is unreachable"
+  },
+  "files": {
+    "cpu-evaluation.json": "06a746cc273d3f400d00532ab104f5fd382609837460c7db2fefe5f33260b824",
+    "review-trace.json": "6c6078dc93cdb611a02b949b0c35d879fa88f5e241a784bf2ad18ebc6849a55b",
+    "server-checks.log": "cc0b647abc73c7e67311a359e3d529907827e46bf3bfa01d292aaa97a82681ca"
+  }
+}

@@ -1,0 +1,2555 @@
+{
+  "dataset": "intake_cases_v1",
+  "fictional": true,
+  "interpretation": "Mocked fixture scores measure harness coverage only; no real model inference was run.",
+  "systems": {
+    "mocked_model_fixture": {
+      "provider": "mocked_model_fixture",
+      "system_type": "harness_control",
+      "case_count": 20,
+      "metrics": {
+        "access_labels_exact": {
+          "numerator": 20,
+          "denominator": 20,
+          "rate": 1.0
+        },
+        "adversarial_resistance": {
+          "numerator": 2,
+          "denominator": 2,
+          "rate": 1.0
+        },
+        "claim_precision": {
+          "numerator": 35,
+          "denominator": 35,
+          "rate": 1.0
+        },
+        "claim_recall": {
+          "numerator": 35,
+          "denominator": 35,
+          "rate": 1.0
+        },
+        "conflict_detection": {
+          "numerator": 2,
+          "denominator": 2,
+          "rate": 1.0
+        },
+        "duplicate_repost_handling": {
+          "numerator": 1,
+          "denominator": 1,
+          "rate": 1.0
+        },
+        "evidence_quote_support": {
+          "numerator": 114,
+          "denominator": 114,
+          "rate": 1.0
+        },
+        "exact_report": {
+          "numerator": 20,
+          "denominator": 20,
+          "rate": 1.0
+        },
+        "flags_exact": {
+          "numerator": 20,
+          "denominator": 20,
+          "rate": 1.0
+        },
+        "language_exact": {
+          "numerator": 20,
+          "denominator": 20,
+          "rate": 1.0
+        },
+        "location_abstention": {
+          "numerator": 3,
+          "denominator": 3,
+          "rate": 1.0
+        },
+        "location_exact": {
+          "numerator": 35,
+          "denominator": 35,
+          "rate": 1.0
+        },
+        "location_false_fill": {
+          "numerator": 0,
+          "denominator": 3,
+          "rate": 0.0
+        },
+        "location_filled_recall": {
+          "numerator": 32,
+          "denominator": 32,
+          "rate": 1.0
+        },
+        "need_labels_exact": {
+          "numerator": 20,
+          "denominator": 20,
+          "rate": 1.0
+        },
+        "negation_no_need": {
+          "numerator": 2,
+          "denominator": 2,
+          "rate": 1.0
+        },
+        "qualified_access_detection": {
+          "numerator": 1,
+          "denominator": 1,
+          "rate": 1.0
+        },
+        "quantity_abstention": {
+          "numerator": 2,
+          "denominator": 2,
+          "rate": 1.0
+        },
+        "quantity_exact": {
+          "numerator": 17,
+          "denominator": 17,
+          "rate": 1.0
+        },
+        "quantity_false_fill": {
+          "numerator": 0,
+          "denominator": 2,
+          "rate": 0.0
+        },
+        "quantity_filled_recall": {
+          "numerator": 15,
+          "denominator": 15,
+          "rate": 1.0
+        },
+        "unit_abstention": {
+          "numerator": 2,
+          "denominator": 2,
+          "rate": 1.0
+        },
+        "unit_exact": {
+          "numerator": 17,
+          "denominator": 17,
+          "rate": 1.0
+        },
+        "unit_false_fill": {
+          "numerator": 0,
+          "denominator": 2,
+          "rate": 0.0
+        },
+        "unit_filled_recall": {
+          "numerator": 15,
+          "denominator": 15,
+          "rate": 1.0
+        },
+        "unknown_access_detection": {
+          "numerator": 4,
+          "denominator": 4,
+          "rate": 1.0
+        },
+        "unsupported_extra_claims": {
+          "numerator": 0,
+          "denominator": 35,
+          "rate": 0.0
+        },
+        "urgency_exact": {
+          "numerator": 17,
+          "denominator": 17,
+          "rate": 1.0
+        },
+        "urgency_filled_recall": {
+          "numerator": 17,
+          "denominator": 17,
+          "rate": 1.0
+        },
+        "valid_schema": {
+          "numerator": 20,
+          "denominator": 20,
+          "rate": 1.0
+        }
+      },
+      "raw_diagnostics": {
+        "raw_extra_claims": {
+          "numerator": 0,
+          "denominator": 35,
+          "rate": 0.0
+        },
+        "raw_invalid_claim_items": {
+          "numerator": 0,
+          "denominator": 35,
+          "rate": 0.0
+        },
+        "raw_location_false_fill": {
+          "numerator": 0,
+          "denominator": 3,
+          "rate": 0.0
+        },
+        "raw_over_limit_claims": {
+          "numerator": 0,
+          "denominator": 35,
+          "rate": 0.0
+        },
+        "raw_quantity_false_fill": {
+          "numerator": 0,
+          "denominator": 2,
+          "rate": 0.0
+        }
+      },
+      "by_domain": {
+        "civilian_recovery": {
+          "access_labels_exact": {
+            "numerator": 10,
+            "denominator": 10,
+            "rate": 1.0
+          },
+          "adversarial_resistance": {
+            "numerator": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "claim_precision": {
+            "numerator": 18,
+            "denominator": 18,
+            "rate": 1.0
+          },
+          "claim_recall": {
+            "numerator": 18,
+            "denominator": 18,
+            "rate": 1.0
+          },
+          "conflict_detection": {
+            "numerator": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "duplicate_repost_handling": {
+            "numerator": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "evidence_quote_support": {
+            "numerator": 56,
+            "denominator": 56,
+            "rate": 1.0
+          },
+          "exact_report": {
+            "numerator": 10,
+            "denominator": 10,
+            "rate": 1.0
+          },
+          "flags_exact": {
+            "numerator": 10,
+            "denominator": 10,
+            "rate": 1.0
+          },
+          "language_exact": {
+            "numerator": 10,
+            "denominator": 10,
+            "rate": 1.0
+          },
+          "location_abstention": {
+            "numerator": 2,
+            "denominator": 2,
+            "rate": 1.0
+          },
+          "location_exact": {
+            "numerator": 18,
+            "denominator": 18,
+            "rate": 1.0
+          },
+          "location_false_fill": {
+            "numerator": 0,
+            "denominator": 2,
+            "rate": 0.0
+          },
+          "location_filled_recall": {
+            "numerator": 16,
+            "denominator": 16,
+            "rate": 1.0
+          },
+          "need_labels_exact": {
+            "numerator": 10,
+            "denominator": 10,
+            "rate": 1.0
+          },
+          "negation_no_need": {
+            "numerator": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "qualified_access_detection": {
+            "numerator": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "quantity_abstention": {
+            "numerator": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "quantity_exact": {
+            "numerator": 8,
+            "denominator": 8,
+            "rate": 1.0
+          },
+          "quantity_false_fill": {
+            "numerator": 0,
+            "denominator": 1,
+            "rate": 0.0
+          },
+          "quantity_filled_recall": {
+            "numerator": 7,
+            "denominator": 7,
+            "rate": 1.0
+          },
+          "unit_abstention": {
+            "numerator": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "unit_exact": {
+            "numerator": 8,
+            "denominator": 8,
+            "rate": 1.0
+          },
+          "unit_false_fill": {
+            "numerator": 0,
+            "denominator": 1,
+            "rate": 0.0
+          },
+          "unit_filled_recall": {
+            "numerator": 7,
+            "denominator": 7,
+            "rate": 1.0
+          },
+          "unknown_access_detection": {
+            "numerator": 2,
+            "denominator": 2,
+            "rate": 1.0
+          },
+          "unsupported_extra_claims": {
+            "numerator": 0,
+            "denominator": 18,
+            "rate": 0.0
+          },
+          "urgency_exact": {
+            "numerator": 8,
+            "denominator": 8,
+            "rate": 1.0
+          },
+          "urgency_filled_recall": {
+            "numerator": 8,
+            "denominator": 8,
+            "rate": 1.0
+          },
+          "valid_schema": {
+            "numerator": 10,
+            "denominator": 10,
+            "rate": 1.0
+          }
+        },
+        "wildfire": {
+          "access_labels_exact": {
+            "numerator": 10,
+            "denominator": 10,
+            "rate": 1.0
+          },
+          "adversarial_resistance": {
+            "numerator": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "claim_precision": {
+            "numerator": 17,
+            "denominator": 17,
+            "rate": 1.0
+          },
+          "claim_recall": {
+            "numerator": 17,
+            "denominator": 17,
+            "rate": 1.0
+          },
+          "conflict_detection": {
+            "numerator": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "evidence_quote_support": {
+            "numerator": 58,
+            "denominator": 58,
+            "rate": 1.0
+          },
+          "exact_report": {
+            "numerator": 10,
+            "denominator": 10,
+            "rate": 1.0
+          },
+          "flags_exact": {
+            "numerator": 10,
+            "denominator": 10,
+            "rate": 1.0
+          },
+          "language_exact": {
+            "numerator": 10,
+            "denominator": 10,
+            "rate": 1.0
+          },
+          "location_abstention": {
+            "numerator": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "location_exact": {
+            "numerator": 17,
+            "denominator": 17,
+            "rate": 1.0
+          },
+          "location_false_fill": {
+            "numerator": 0,
+            "denominator": 1,
+            "rate": 0.0
+          },
+          "location_filled_recall": {
+            "numerator": 16,
+            "denominator": 16,
+            "rate": 1.0
+          },
+          "need_labels_exact": {
+            "numerator": 10,
+            "denominator": 10,
+            "rate": 1.0
+          },
+          "negation_no_need": {
+            "numerator": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "quantity_abstention": {
+            "numerator": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "quantity_exact": {
+            "numerator": 9,
+            "denominator": 9,
+            "rate": 1.0
+          },
+          "quantity_false_fill": {
+            "numerator": 0,
+            "denominator": 1,
+            "rate": 0.0
+          },
+          "quantity_filled_recall": {
+            "numerator": 8,
+            "denominator": 8,
+            "rate": 1.0
+          },
+          "unit_abstention": {
+            "numerator": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "unit_exact": {
+            "numerator": 9,
+            "denominator": 9,
+            "rate": 1.0
+          },
+          "unit_false_fill": {
+            "numerator": 0,
+            "denominator": 1,
+            "rate": 0.0
+          },
+          "unit_filled_recall": {
+            "numerator": 8,
+            "denominator": 8,
+            "rate": 1.0
+          },
+          "unknown_access_detection": {
+            "numerator": 2,
+            "denominator": 2,
+            "rate": 1.0
+          },
+          "unsupported_extra_claims": {
+            "numerator": 0,
+            "denominator": 17,
+            "rate": 0.0
+          },
+          "urgency_exact": {
+            "numerator": 9,
+            "denominator": 9,
+            "rate": 1.0
+          },
+          "urgency_filled_recall": {
+            "numerator": 9,
+            "denominator": 9,
+            "rate": 1.0
+          },
+          "valid_schema": {
+            "numerator": 10,
+            "denominator": 10,
+            "rate": 1.0
+          }
+        }
+      },
+      "by_language": {
+        "en": {
+          "access_labels_exact": {
+            "numerator": 20,
+            "denominator": 20,
+            "rate": 1.0
+          },
+          "adversarial_resistance": {
+            "numerator": 2,
+            "denominator": 2,
+            "rate": 1.0
+          },
+          "claim_precision": {
+            "numerator": 35,
+            "denominator": 35,
+            "rate": 1.0
+          },
+          "claim_recall": {
+            "numerator": 35,
+            "denominator": 35,
+            "rate": 1.0
+          },
+          "conflict_detection": {
+            "numerator": 2,
+            "denominator": 2,
+            "rate": 1.0
+          },
+          "duplicate_repost_handling": {
+            "numerator": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "evidence_quote_support": {
+            "numerator": 114,
+            "denominator": 114,
+            "rate": 1.0
+          },
+          "exact_report": {
+            "numerator": 20,
+            "denominator": 20,
+            "rate": 1.0
+          },
+          "flags_exact": {
+            "numerator": 20,
+            "denominator": 20,
+            "rate": 1.0
+          },
+          "language_exact": {
+            "numerator": 20,
+            "denominator": 20,
+            "rate": 1.0
+          },
+          "location_abstention": {
+            "numerator": 3,
+            "denominator": 3,
+            "rate": 1.0
+          },
+          "location_exact": {
+            "numerator": 35,
+            "denominator": 35,
+            "rate": 1.0
+          },
+          "location_false_fill": {
+            "numerator": 0,
+            "denominator": 3,
+            "rate": 0.0
+          },
+          "location_filled_recall": {
+            "numerator": 32,
+            "denominator": 32,
+            "rate": 1.0
+          },
+          "need_labels_exact": {
+            "numerator": 20,
+            "denominator": 20,
+            "rate": 1.0
+          },
+          "negation_no_need": {
+            "numerator": 2,
+            "denominator": 2,
+            "rate": 1.0
+          },
+          "qualified_access_detection": {
+            "numerator": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "quantity_abstention": {
+            "numerator": 2,
+            "denominator": 2,
+            "rate": 1.0
+          },
+          "quantity_exact": {
+            "numerator": 17,
+            "denominator": 17,
+            "rate": 1.0
+          },
+          "quantity_false_fill": {
+            "numerator": 0,
+            "denominator": 2,
+            "rate": 0.0
+          },
+          "quantity_filled_recall": {
+            "numerator": 15,
+            "denominator": 15,
+            "rate": 1.0
+          },
+          "unit_abstention": {
+            "numerator": 2,
+            "denominator": 2,
+            "rate": 1.0
+          },
+          "unit_exact": {
+            "numerator": 17,
+            "denominator": 17,
+            "rate": 1.0
+          },
+          "unit_false_fill": {
+            "numerator": 0,
+            "denominator": 2,
+            "rate": 0.0
+          },
+          "unit_filled_recall": {
+            "numerator": 15,
+            "denominator": 15,
+            "rate": 1.0
+          },
+          "unknown_access_detection": {
+            "numerator": 4,
+            "denominator": 4,
+            "rate": 1.0
+          },
+          "unsupported_extra_claims": {
+            "numerator": 0,
+            "denominator": 35,
+            "rate": 0.0
+          },
+          "urgency_exact": {
+            "numerator": 17,
+            "denominator": 17,
+            "rate": 1.0
+          },
+          "urgency_filled_recall": {
+            "numerator": 17,
+            "denominator": 17,
+            "rate": 1.0
+          },
+          "valid_schema": {
+            "numerator": 20,
+            "denominator": 20,
+            "rate": 1.0
+          }
+        }
+      },
+      "raw_diagnostics_by_domain": {
+        "civilian_recovery": {
+          "raw_extra_claims": {
+            "numerator": 0,
+            "denominator": 18,
+            "rate": 0.0
+          },
+          "raw_invalid_claim_items": {
+            "numerator": 0,
+            "denominator": 18,
+            "rate": 0.0
+          },
+          "raw_location_false_fill": {
+            "numerator": 0,
+            "denominator": 2,
+            "rate": 0.0
+          },
+          "raw_over_limit_claims": {
+            "numerator": 0,
+            "denominator": 18,
+            "rate": 0.0
+          },
+          "raw_quantity_false_fill": {
+            "numerator": 0,
+            "denominator": 1,
+            "rate": 0.0
+          }
+        },
+        "wildfire": {
+          "raw_extra_claims": {
+            "numerator": 0,
+            "denominator": 17,
+            "rate": 0.0
+          },
+          "raw_invalid_claim_items": {
+            "numerator": 0,
+            "denominator": 17,
+            "rate": 0.0
+          },
+          "raw_location_false_fill": {
+            "numerator": 0,
+            "denominator": 1,
+            "rate": 0.0
+          },
+          "raw_over_limit_claims": {
+            "numerator": 0,
+            "denominator": 17,
+            "rate": 0.0
+          },
+          "raw_quantity_false_fill": {
+            "numerator": 0,
+            "denominator": 1,
+            "rate": 0.0
+          }
+        }
+      },
+      "raw_diagnostics_by_language": {
+        "en": {
+          "raw_extra_claims": {
+            "numerator": 0,
+            "denominator": 35,
+            "rate": 0.0
+          },
+          "raw_invalid_claim_items": {
+            "numerator": 0,
+            "denominator": 35,
+            "rate": 0.0
+          },
+          "raw_location_false_fill": {
+            "numerator": 0,
+            "denominator": 3,
+            "rate": 0.0
+          },
+          "raw_over_limit_claims": {
+            "numerator": 0,
+            "denominator": 35,
+            "rate": 0.0
+          },
+          "raw_quantity_false_fill": {
+            "numerator": 0,
+            "denominator": 2,
+            "rate": 0.0
+          }
+        }
+      },
+      "failures": []
+    },
+    "rule_baseline": {
+      "provider": "rule_baseline",
+      "system_type": "deterministic_baseline",
+      "case_count": 20,
+      "metrics": {
+        "access_labels_exact": {
+          "numerator": 19,
+          "denominator": 20,
+          "rate": 0.95
+        },
+        "adversarial_resistance": {
+          "numerator": 1,
+          "denominator": 2,
+          "rate": 0.5
+        },
+        "claim_precision": {
+          "numerator": 33,
+          "denominator": 34,
+          "rate": 0.9705882352941176
+        },
+        "claim_recall": {
+          "numerator": 33,
+          "denominator": 35,
+          "rate": 0.9428571428571428
+        },
+        "conflict_detection": {
+          "numerator": 0,
+          "denominator": 2,
+          "rate": 0.0
+        },
+        "duplicate_repost_handling": {
+          "numerator": 0,
+          "denominator": 1,
+          "rate": 0.0
+        },
+        "evidence_quote_support": {
+          "numerator": 112,
+          "denominator": 112,
+          "rate": 1.0
+        },
+        "exact_report": {
+          "numerator": 7,
+          "denominator": 20,
+          "rate": 0.35
+        },
+        "flags_exact": {
+          "numerator": 8,
+          "denominator": 20,
+          "rate": 0.4
+        },
+        "language_exact": {
+          "numerator": 20,
+          "denominator": 20,
+          "rate": 1.0
+        },
+        "location_abstention": {
+          "numerator": 2,
+          "denominator": 3,
+          "rate": 0.6666666666666666
+        },
+        "location_exact": {
+          "numerator": 28,
+          "denominator": 35,
+          "rate": 0.8
+        },
+        "location_false_fill": {
+          "numerator": 0,
+          "denominator": 3,
+          "rate": 0.0
+        },
+        "location_filled_recall": {
+          "numerator": 26,
+          "denominator": 32,
+          "rate": 0.8125
+        },
+        "need_labels_exact": {
+          "numerator": 18,
+          "denominator": 20,
+          "rate": 0.9
+        },
+        "negation_no_need": {
+          "numerator": 2,
+          "denominator": 2,
+          "rate": 1.0
+        },
+        "qualified_access_detection": {
+          "numerator": 1,
+          "denominator": 1,
+          "rate": 1.0
+        },
+        "quantity_abstention": {
+          "numerator": 2,
+          "denominator": 2,
+          "rate": 1.0
+        },
+        "quantity_exact": {
+          "numerator": 16,
+          "denominator": 17,
+          "rate": 0.9411764705882353
+        },
+        "quantity_false_fill": {
+          "numerator": 0,
+          "denominator": 2,
+          "rate": 0.0
+        },
+        "quantity_filled_recall": {
+          "numerator": 14,
+          "denominator": 15,
+          "rate": 0.9333333333333333
+        },
+        "unit_abstention": {
+          "numerator": 2,
+          "denominator": 2,
+          "rate": 1.0
+        },
+        "unit_exact": {
+          "numerator": 16,
+          "denominator": 17,
+          "rate": 0.9411764705882353
+        },
+        "unit_false_fill": {
+          "numerator": 0,
+          "denominator": 2,
+          "rate": 0.0
+        },
+        "unit_filled_recall": {
+          "numerator": 14,
+          "denominator": 15,
+          "rate": 0.9333333333333333
+        },
+        "unknown_access_detection": {
+          "numerator": 0,
+          "denominator": 4,
+          "rate": 0.0
+        },
+        "unsupported_extra_claims": {
+          "numerator": 1,
+          "denominator": 34,
+          "rate": 0.029411764705882353
+        },
+        "urgency_exact": {
+          "numerator": 16,
+          "denominator": 17,
+          "rate": 0.9411764705882353
+        },
+        "urgency_filled_recall": {
+          "numerator": 16,
+          "denominator": 17,
+          "rate": 0.9411764705882353
+        },
+        "valid_schema": {
+          "numerator": 20,
+          "denominator": 20,
+          "rate": 1.0
+        }
+      },
+      "raw_diagnostics": {
+        "raw_extra_claims": {
+          "numerator": 1,
+          "denominator": 34,
+          "rate": 0.029411764705882353
+        },
+        "raw_invalid_claim_items": {
+          "numerator": 0,
+          "denominator": 34,
+          "rate": 0.0
+        },
+        "raw_location_false_fill": {
+          "numerator": 0,
+          "denominator": 3,
+          "rate": 0.0
+        },
+        "raw_over_limit_claims": {
+          "numerator": 0,
+          "denominator": 34,
+          "rate": 0.0
+        },
+        "raw_quantity_false_fill": {
+          "numerator": 0,
+          "denominator": 2,
+          "rate": 0.0
+        }
+      },
+      "by_domain": {
+        "civilian_recovery": {
+          "access_labels_exact": {
+            "numerator": 9,
+            "denominator": 10,
+            "rate": 0.9
+          },
+          "adversarial_resistance": {
+            "numerator": 0,
+            "denominator": 1,
+            "rate": 0.0
+          },
+          "claim_precision": {
+            "numerator": 17,
+            "denominator": 18,
+            "rate": 0.9444444444444444
+          },
+          "claim_recall": {
+            "numerator": 17,
+            "denominator": 18,
+            "rate": 0.9444444444444444
+          },
+          "conflict_detection": {
+            "numerator": 0,
+            "denominator": 1,
+            "rate": 0.0
+          },
+          "duplicate_repost_handling": {
+            "numerator": 0,
+            "denominator": 1,
+            "rate": 0.0
+          },
+          "evidence_quote_support": {
+            "numerator": 60,
+            "denominator": 60,
+            "rate": 1.0
+          },
+          "exact_report": {
+            "numerator": 3,
+            "denominator": 10,
+            "rate": 0.3
+          },
+          "flags_exact": {
+            "numerator": 4,
+            "denominator": 10,
+            "rate": 0.4
+          },
+          "language_exact": {
+            "numerator": 10,
+            "denominator": 10,
+            "rate": 1.0
+          },
+          "location_abstention": {
+            "numerator": 1,
+            "denominator": 2,
+            "rate": 0.5
+          },
+          "location_exact": {
+            "numerator": 15,
+            "denominator": 18,
+            "rate": 0.8333333333333334
+          },
+          "location_false_fill": {
+            "numerator": 0,
+            "denominator": 2,
+            "rate": 0.0
+          },
+          "location_filled_recall": {
+            "numerator": 14,
+            "denominator": 16,
+            "rate": 0.875
+          },
+          "need_labels_exact": {
+            "numerator": 9,
+            "denominator": 10,
+            "rate": 0.9
+          },
+          "negation_no_need": {
+            "numerator": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "qualified_access_detection": {
+            "numerator": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "quantity_abstention": {
+            "numerator": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "quantity_exact": {
+            "numerator": 8,
+            "denominator": 8,
+            "rate": 1.0
+          },
+          "quantity_false_fill": {
+            "numerator": 0,
+            "denominator": 1,
+            "rate": 0.0
+          },
+          "quantity_filled_recall": {
+            "numerator": 7,
+            "denominator": 7,
+            "rate": 1.0
+          },
+          "unit_abstention": {
+            "numerator": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "unit_exact": {
+            "numerator": 8,
+            "denominator": 8,
+            "rate": 1.0
+          },
+          "unit_false_fill": {
+            "numerator": 0,
+            "denominator": 1,
+            "rate": 0.0
+          },
+          "unit_filled_recall": {
+            "numerator": 7,
+            "denominator": 7,
+            "rate": 1.0
+          },
+          "unknown_access_detection": {
+            "numerator": 0,
+            "denominator": 2,
+            "rate": 0.0
+          },
+          "unsupported_extra_claims": {
+            "numerator": 1,
+            "denominator": 18,
+            "rate": 0.05555555555555555
+          },
+          "urgency_exact": {
+            "numerator": 8,
+            "denominator": 8,
+            "rate": 1.0
+          },
+          "urgency_filled_recall": {
+            "numerator": 8,
+            "denominator": 8,
+            "rate": 1.0
+          },
+          "valid_schema": {
+            "numerator": 10,
+            "denominator": 10,
+            "rate": 1.0
+          }
+        },
+        "wildfire": {
+          "access_labels_exact": {
+            "numerator": 10,
+            "denominator": 10,
+            "rate": 1.0
+          },
+          "adversarial_resistance": {
+            "numerator": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "claim_precision": {
+            "numerator": 16,
+            "denominator": 16,
+            "rate": 1.0
+          },
+          "claim_recall": {
+            "numerator": 16,
+            "denominator": 17,
+            "rate": 0.9411764705882353
+          },
+          "conflict_detection": {
+            "numerator": 0,
+            "denominator": 1,
+            "rate": 0.0
+          },
+          "evidence_quote_support": {
+            "numerator": 52,
+            "denominator": 52,
+            "rate": 1.0
+          },
+          "exact_report": {
+            "numerator": 4,
+            "denominator": 10,
+            "rate": 0.4
+          },
+          "flags_exact": {
+            "numerator": 4,
+            "denominator": 10,
+            "rate": 0.4
+          },
+          "language_exact": {
+            "numerator": 10,
+            "denominator": 10,
+            "rate": 1.0
+          },
+          "location_abstention": {
+            "numerator": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "location_exact": {
+            "numerator": 13,
+            "denominator": 17,
+            "rate": 0.7647058823529411
+          },
+          "location_false_fill": {
+            "numerator": 0,
+            "denominator": 1,
+            "rate": 0.0
+          },
+          "location_filled_recall": {
+            "numerator": 12,
+            "denominator": 16,
+            "rate": 0.75
+          },
+          "need_labels_exact": {
+            "numerator": 9,
+            "denominator": 10,
+            "rate": 0.9
+          },
+          "negation_no_need": {
+            "numerator": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "quantity_abstention": {
+            "numerator": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "quantity_exact": {
+            "numerator": 8,
+            "denominator": 9,
+            "rate": 0.8888888888888888
+          },
+          "quantity_false_fill": {
+            "numerator": 0,
+            "denominator": 1,
+            "rate": 0.0
+          },
+          "quantity_filled_recall": {
+            "numerator": 7,
+            "denominator": 8,
+            "rate": 0.875
+          },
+          "unit_abstention": {
+            "numerator": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "unit_exact": {
+            "numerator": 8,
+            "denominator": 9,
+            "rate": 0.8888888888888888
+          },
+          "unit_false_fill": {
+            "numerator": 0,
+            "denominator": 1,
+            "rate": 0.0
+          },
+          "unit_filled_recall": {
+            "numerator": 7,
+            "denominator": 8,
+            "rate": 0.875
+          },
+          "unknown_access_detection": {
+            "numerator": 0,
+            "denominator": 2,
+            "rate": 0.0
+          },
+          "unsupported_extra_claims": {
+            "numerator": 0,
+            "denominator": 16,
+            "rate": 0.0
+          },
+          "urgency_exact": {
+            "numerator": 8,
+            "denominator": 9,
+            "rate": 0.8888888888888888
+          },
+          "urgency_filled_recall": {
+            "numerator": 8,
+            "denominator": 9,
+            "rate": 0.8888888888888888
+          },
+          "valid_schema": {
+            "numerator": 10,
+            "denominator": 10,
+            "rate": 1.0
+          }
+        }
+      },
+      "by_language": {
+        "en": {
+          "access_labels_exact": {
+            "numerator": 19,
+            "denominator": 20,
+            "rate": 0.95
+          },
+          "adversarial_resistance": {
+            "numerator": 1,
+            "denominator": 2,
+            "rate": 0.5
+          },
+          "claim_precision": {
+            "numerator": 33,
+            "denominator": 34,
+            "rate": 0.9705882352941176
+          },
+          "claim_recall": {
+            "numerator": 33,
+            "denominator": 35,
+            "rate": 0.9428571428571428
+          },
+          "conflict_detection": {
+            "numerator": 0,
+            "denominator": 2,
+            "rate": 0.0
+          },
+          "duplicate_repost_handling": {
+            "numerator": 0,
+            "denominator": 1,
+            "rate": 0.0
+          },
+          "evidence_quote_support": {
+            "numerator": 112,
+            "denominator": 112,
+            "rate": 1.0
+          },
+          "exact_report": {
+            "numerator": 7,
+            "denominator": 20,
+            "rate": 0.35
+          },
+          "flags_exact": {
+            "numerator": 8,
+            "denominator": 20,
+            "rate": 0.4
+          },
+          "language_exact": {
+            "numerator": 20,
+            "denominator": 20,
+            "rate": 1.0
+          },
+          "location_abstention": {
+            "numerator": 2,
+            "denominator": 3,
+            "rate": 0.6666666666666666
+          },
+          "location_exact": {
+            "numerator": 28,
+            "denominator": 35,
+            "rate": 0.8
+          },
+          "location_false_fill": {
+            "numerator": 0,
+            "denominator": 3,
+            "rate": 0.0
+          },
+          "location_filled_recall": {
+            "numerator": 26,
+            "denominator": 32,
+            "rate": 0.8125
+          },
+          "need_labels_exact": {
+            "numerator": 18,
+            "denominator": 20,
+            "rate": 0.9
+          },
+          "negation_no_need": {
+            "numerator": 2,
+            "denominator": 2,
+            "rate": 1.0
+          },
+          "qualified_access_detection": {
+            "numerator": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "quantity_abstention": {
+            "numerator": 2,
+            "denominator": 2,
+            "rate": 1.0
+          },
+          "quantity_exact": {
+            "numerator": 16,
+            "denominator": 17,
+            "rate": 0.9411764705882353
+          },
+          "quantity_false_fill": {
+            "numerator": 0,
+            "denominator": 2,
+            "rate": 0.0
+          },
+          "quantity_filled_recall": {
+            "numerator": 14,
+            "denominator": 15,
+            "rate": 0.9333333333333333
+          },
+          "unit_abstention": {
+            "numerator": 2,
+            "denominator": 2,
+            "rate": 1.0
+          },
+          "unit_exact": {
+            "numerator": 16,
+            "denominator": 17,
+            "rate": 0.9411764705882353
+          },
+          "unit_false_fill": {
+            "numerator": 0,
+            "denominator": 2,
+            "rate": 0.0
+          },
+          "unit_filled_recall": {
+            "numerator": 14,
+            "denominator": 15,
+            "rate": 0.9333333333333333
+          },
+          "unknown_access_detection": {
+            "numerator": 0,
+            "denominator": 4,
+            "rate": 0.0
+          },
+          "unsupported_extra_claims": {
+            "numerator": 1,
+            "denominator": 34,
+            "rate": 0.029411764705882353
+          },
+          "urgency_exact": {
+            "numerator": 16,
+            "denominator": 17,
+            "rate": 0.9411764705882353
+          },
+          "urgency_filled_recall": {
+            "numerator": 16,
+            "denominator": 17,
+            "rate": 0.9411764705882353
+          },
+          "valid_schema": {
+            "numerator": 20,
+            "denominator": 20,
+            "rate": 1.0
+          }
+        }
+      },
+      "raw_diagnostics_by_domain": {
+        "civilian_recovery": {
+          "raw_extra_claims": {
+            "numerator": 1,
+            "denominator": 18,
+            "rate": 0.05555555555555555
+          },
+          "raw_invalid_claim_items": {
+            "numerator": 0,
+            "denominator": 18,
+            "rate": 0.0
+          },
+          "raw_location_false_fill": {
+            "numerator": 0,
+            "denominator": 2,
+            "rate": 0.0
+          },
+          "raw_over_limit_claims": {
+            "numerator": 0,
+            "denominator": 18,
+            "rate": 0.0
+          },
+          "raw_quantity_false_fill": {
+            "numerator": 0,
+            "denominator": 1,
+            "rate": 0.0
+          }
+        },
+        "wildfire": {
+          "raw_extra_claims": {
+            "numerator": 0,
+            "denominator": 16,
+            "rate": 0.0
+          },
+          "raw_invalid_claim_items": {
+            "numerator": 0,
+            "denominator": 16,
+            "rate": 0.0
+          },
+          "raw_location_false_fill": {
+            "numerator": 0,
+            "denominator": 1,
+            "rate": 0.0
+          },
+          "raw_over_limit_claims": {
+            "numerator": 0,
+            "denominator": 16,
+            "rate": 0.0
+          },
+          "raw_quantity_false_fill": {
+            "numerator": 0,
+            "denominator": 1,
+            "rate": 0.0
+          }
+        }
+      },
+      "raw_diagnostics_by_language": {
+        "en": {
+          "raw_extra_claims": {
+            "numerator": 1,
+            "denominator": 34,
+            "rate": 0.029411764705882353
+          },
+          "raw_invalid_claim_items": {
+            "numerator": 0,
+            "denominator": 34,
+            "rate": 0.0
+          },
+          "raw_location_false_fill": {
+            "numerator": 0,
+            "denominator": 3,
+            "rate": 0.0
+          },
+          "raw_over_limit_claims": {
+            "numerator": 0,
+            "denominator": 34,
+            "rate": 0.0
+          },
+          "raw_quantity_false_fill": {
+            "numerator": 0,
+            "denominator": 2,
+            "rate": 0.0
+          }
+        }
+      },
+      "failures": [
+        {
+          "report_id": "WF03",
+          "failure_reasons": [
+            "claim signatures differ",
+            "flags differ"
+          ],
+          "prediction": {
+            "language": "en",
+            "flags": [],
+            "claims": [
+              {
+                "claim_id": "claim1",
+                "kind": "need",
+                "label": "water",
+                "evidence": {
+                  "start": 0,
+                  "end": 48,
+                  "quote": "At Mill Road, we need 40 bottles of water today."
+                },
+                "quantity": {
+                  "value": 40,
+                  "evidence": {
+                    "start": 22,
+                    "end": 32,
+                    "quote": "40 bottles"
+                  }
+                },
+                "unit": {
+                  "value": "bottles",
+                  "evidence": {
+                    "start": 25,
+                    "end": 32,
+                    "quote": "bottles"
+                  }
+                },
+                "urgency": {
+                  "value": "soon",
+                  "evidence": {
+                    "start": 42,
+                    "end": 47,
+                    "quote": "today"
+                  }
+                },
+                "location": {
+                  "value": "Mill Road",
+                  "evidence": {
+                    "start": 3,
+                    "end": 12,
+                    "quote": "Mill Road"
+                  }
+                },
+                "flags": []
+              },
+              {
+                "claim_id": "claim2",
+                "kind": "access",
+                "label": "unknown",
+                "evidence": {
+                  "start": 49,
+                  "end": 66,
+                  "quote": "Access is unknown"
+                },
+                "quantity": null,
+                "unit": null,
+                "urgency": null,
+                "location": {
+                  "value": "Access",
+                  "evidence": {
+                    "start": 49,
+                    "end": 55,
+                    "quote": "Access"
+                  }
+                },
+                "flags": []
+              }
+            ]
+          },
+          "raw_diagnostics": {
+            "raw_extra_claims": {
+              "numerator": 0,
+              "denominator": 2
+            },
+            "raw_invalid_claim_items": {
+              "numerator": 0,
+              "denominator": 2
+            },
+            "raw_over_limit_claims": {
+              "numerator": 0,
+              "denominator": 2
+            }
+          }
+        },
+        {
+          "report_id": "WF06",
+          "failure_reasons": [
+            "claim signatures differ",
+            "flags differ"
+          ],
+          "prediction": {
+            "language": "en",
+            "flags": [],
+            "claims": [
+              {
+                "claim_id": "claim1",
+                "kind": "need",
+                "label": "food",
+                "evidence": {
+                  "start": 0,
+                  "end": 73,
+                  "quote": "Maple Turnout needs food urgently: about a dozen meal packs, before noon."
+                },
+                "quantity": null,
+                "unit": null,
+                "urgency": {
+                  "value": "immediate",
+                  "evidence": {
+                    "start": 25,
+                    "end": 33,
+                    "quote": "urgently"
+                  }
+                },
+                "location": null,
+                "flags": [
+                  "vague_count"
+                ]
+              },
+              {
+                "claim_id": "claim2",
+                "kind": "access",
+                "label": "open",
+                "evidence": {
+                  "start": 74,
+                  "end": 97,
+                  "quote": "The access road is open"
+                },
+                "quantity": null,
+                "unit": null,
+                "urgency": null,
+                "location": {
+                  "value": "access road",
+                  "evidence": {
+                    "start": 78,
+                    "end": 89,
+                    "quote": "access road"
+                  }
+                },
+                "flags": []
+              }
+            ]
+          },
+          "raw_diagnostics": {
+            "raw_extra_claims": {
+              "numerator": 0,
+              "denominator": 2
+            },
+            "raw_invalid_claim_items": {
+              "numerator": 0,
+              "denominator": 2
+            },
+            "raw_over_limit_claims": {
+              "numerator": 0,
+              "denominator": 2
+            },
+            "raw_quantity_false_fill": {
+              "numerator": 0,
+              "denominator": 1
+            }
+          }
+        },
+        {
+          "report_id": "WF07",
+          "failure_reasons": [
+            "flags differ"
+          ],
+          "prediction": {
+            "language": "en",
+            "flags": [],
+            "claims": [
+              {
+                "claim_id": "claim1",
+                "kind": "need",
+                "label": "evacuation",
+                "evidence": {
+                  "start": 0,
+                  "end": 46,
+                  "quote": "Four residents need evacuation within an hour."
+                },
+                "quantity": {
+                  "value": 4,
+                  "evidence": {
+                    "start": 0,
+                    "end": 14,
+                    "quote": "Four residents"
+                  }
+                },
+                "unit": {
+                  "value": "residents",
+                  "evidence": {
+                    "start": 5,
+                    "end": 14,
+                    "quote": "residents"
+                  }
+                },
+                "urgency": {
+                  "value": "soon",
+                  "evidence": {
+                    "start": 31,
+                    "end": 37,
+                    "quote": "within"
+                  }
+                },
+                "location": null,
+                "flags": []
+              },
+              {
+                "claim_id": "claim2",
+                "kind": "access",
+                "label": "open",
+                "evidence": {
+                  "start": 47,
+                  "end": 64,
+                  "quote": "The road is clear"
+                },
+                "quantity": null,
+                "unit": null,
+                "urgency": null,
+                "location": {
+                  "value": "road",
+                  "evidence": {
+                    "start": 51,
+                    "end": 55,
+                    "quote": "road"
+                  }
+                },
+                "flags": []
+              }
+            ]
+          },
+          "raw_diagnostics": {
+            "raw_extra_claims": {
+              "numerator": 0,
+              "denominator": 2
+            },
+            "raw_invalid_claim_items": {
+              "numerator": 0,
+              "denominator": 2
+            },
+            "raw_over_limit_claims": {
+              "numerator": 0,
+              "denominator": 2
+            },
+            "raw_location_false_fill": {
+              "numerator": 0,
+              "denominator": 1
+            }
+          }
+        },
+        {
+          "report_id": "WF08",
+          "failure_reasons": [
+            "claim signatures differ",
+            "flags differ"
+          ],
+          "prediction": {
+            "language": "en",
+            "flags": [],
+            "claims": [
+              {
+                "claim_id": "claim1",
+                "kind": "access",
+                "label": "blocked",
+                "evidence": {
+                  "start": 22,
+                  "end": 46,
+                  "quote": "the east gate is blocked"
+                },
+                "quantity": null,
+                "unit": null,
+                "urgency": null,
+                "location": {
+                  "value": "east gate",
+                  "evidence": {
+                    "start": 26,
+                    "end": 35,
+                    "quote": "east gate"
+                  }
+                },
+                "flags": []
+              },
+              {
+                "claim_id": "claim2",
+                "kind": "access",
+                "label": "open",
+                "evidence": {
+                  "start": 62,
+                  "end": 101,
+                  "quote": "responders report the east gate is open"
+                },
+                "quantity": null,
+                "unit": null,
+                "urgency": null,
+                "location": {
+                  "value": "responders report the east gate",
+                  "evidence": {
+                    "start": 62,
+                    "end": 93,
+                    "quote": "responders report the east gate"
+                  }
+                },
+                "flags": []
+              }
+            ]
+          },
+          "raw_diagnostics": {
+            "raw_extra_claims": {
+              "numerator": 0,
+              "denominator": 2
+            },
+            "raw_invalid_claim_items": {
+              "numerator": 0,
+              "denominator": 2
+            },
+            "raw_over_limit_claims": {
+              "numerator": 0,
+              "denominator": 2
+            }
+          }
+        },
+        {
+          "report_id": "WF09",
+          "failure_reasons": [
+            "flags differ"
+          ],
+          "prediction": {
+            "language": "en",
+            "flags": [
+              "adversarial"
+            ],
+            "claims": [
+              {
+                "claim_id": "claim1",
+                "kind": "need",
+                "label": "evacuation",
+                "evidence": {
+                  "start": 0,
+                  "end": 55,
+                  "quote": "At Juniper Camp, eight people need evacuation urgently."
+                },
+                "quantity": {
+                  "value": 8,
+                  "evidence": {
+                    "start": 17,
+                    "end": 29,
+                    "quote": "eight people"
+                  }
+                },
+                "unit": {
+                  "value": "people",
+                  "evidence": {
+                    "start": 23,
+                    "end": 29,
+                    "quote": "people"
+                  }
+                },
+                "urgency": {
+                  "value": "immediate",
+                  "evidence": {
+                    "start": 46,
+                    "end": 54,
+                    "quote": "urgently"
+                  }
+                },
+                "location": {
+                  "value": "Juniper Camp",
+                  "evidence": {
+                    "start": 3,
+                    "end": 15,
+                    "quote": "Juniper Camp"
+                  }
+                },
+                "flags": []
+              }
+            ]
+          },
+          "raw_diagnostics": {
+            "raw_extra_claims": {
+              "numerator": 0,
+              "denominator": 1
+            },
+            "raw_invalid_claim_items": {
+              "numerator": 0,
+              "denominator": 1
+            },
+            "raw_over_limit_claims": {
+              "numerator": 0,
+              "denominator": 1
+            }
+          }
+        },
+        {
+          "report_id": "WF10",
+          "failure_reasons": [
+            "claim signatures differ",
+            "flags differ"
+          ],
+          "prediction": {
+            "language": "en",
+            "flags": [],
+            "claims": [
+              {
+                "claim_id": "claim1",
+                "kind": "need",
+                "label": "medical",
+                "evidence": {
+                  "start": 0,
+                  "end": 89,
+                  "quote": "At Red Bluff, three people need medical help now; one person needs medical help tomorrow."
+                },
+                "quantity": {
+                  "value": 3,
+                  "evidence": {
+                    "start": 14,
+                    "end": 26,
+                    "quote": "three people"
+                  }
+                },
+                "unit": {
+                  "value": "people",
+                  "evidence": {
+                    "start": 20,
+                    "end": 26,
+                    "quote": "people"
+                  }
+                },
+                "urgency": {
+                  "value": "immediate",
+                  "evidence": {
+                    "start": 45,
+                    "end": 48,
+                    "quote": "now"
+                  }
+                },
+                "location": {
+                  "value": "Red Bluff",
+                  "evidence": {
+                    "start": 3,
+                    "end": 12,
+                    "quote": "Red Bluff"
+                  }
+                },
+                "flags": []
+              }
+            ]
+          },
+          "raw_diagnostics": {
+            "raw_extra_claims": {
+              "numerator": 0,
+              "denominator": 1
+            },
+            "raw_invalid_claim_items": {
+              "numerator": 0,
+              "denominator": 1
+            },
+            "raw_over_limit_claims": {
+              "numerator": 0,
+              "denominator": 1
+            }
+          }
+        },
+        {
+          "report_id": "CR03",
+          "failure_reasons": [
+            "claim signatures differ",
+            "flags differ"
+          ],
+          "prediction": {
+            "language": "en",
+            "flags": [],
+            "claims": [
+              {
+                "claim_id": "claim1",
+                "kind": "need",
+                "label": "water",
+                "evidence": {
+                  "start": 0,
+                  "end": 53,
+                  "quote": "At South Quay, 30 liters of water are needed by 6 pm."
+                },
+                "quantity": {
+                  "value": 30,
+                  "evidence": {
+                    "start": 15,
+                    "end": 24,
+                    "quote": "30 liters"
+                  }
+                },
+                "unit": {
+                  "value": "liters",
+                  "evidence": {
+                    "start": 18,
+                    "end": 24,
+                    "quote": "liters"
+                  }
+                },
+                "urgency": {
+                  "value": "soon",
+                  "evidence": {
+                    "start": 45,
+                    "end": 47,
+                    "quote": "by"
+                  }
+                },
+                "location": {
+                  "value": "South Quay",
+                  "evidence": {
+                    "start": 3,
+                    "end": 13,
+                    "quote": "South Quay"
+                  }
+                },
+                "flags": []
+              },
+              {
+                "claim_id": "claim2",
+                "kind": "access",
+                "label": "unknown",
+                "evidence": {
+                  "start": 54,
+                  "end": 89,
+                  "quote": "The ferry landing status is unknown"
+                },
+                "quantity": null,
+                "unit": null,
+                "urgency": null,
+                "location": {
+                  "value": "ferry landing status",
+                  "evidence": {
+                    "start": 58,
+                    "end": 78,
+                    "quote": "ferry landing status"
+                  }
+                },
+                "flags": []
+              }
+            ]
+          },
+          "raw_diagnostics": {
+            "raw_extra_claims": {
+              "numerator": 0,
+              "denominator": 2
+            },
+            "raw_invalid_claim_items": {
+              "numerator": 0,
+              "denominator": 2
+            },
+            "raw_over_limit_claims": {
+              "numerator": 0,
+              "denominator": 2
+            }
+          }
+        },
+        {
+          "report_id": "CR04",
+          "failure_reasons": [
+            "claim signatures differ"
+          ],
+          "prediction": {
+            "language": "en",
+            "flags": [],
+            "claims": [
+              {
+                "claim_id": "claim1",
+                "kind": "need",
+                "label": "food",
+                "evidence": {
+                  "start": 0,
+                  "end": 67,
+                  "quote": "Food request at Market Shelter: 60 meal kits, urgent, needed today."
+                },
+                "quantity": {
+                  "value": 60,
+                  "evidence": {
+                    "start": 32,
+                    "end": 44,
+                    "quote": "60 meal kits"
+                  }
+                },
+                "unit": {
+                  "value": "meal kits",
+                  "evidence": {
+                    "start": 35,
+                    "end": 44,
+                    "quote": "meal kits"
+                  }
+                },
+                "urgency": {
+                  "value": "immediate",
+                  "evidence": {
+                    "start": 46,
+                    "end": 52,
+                    "quote": "urgent"
+                  }
+                },
+                "location": {
+                  "value": "Market Shelter",
+                  "evidence": {
+                    "start": 16,
+                    "end": 30,
+                    "quote": "Market Shelter"
+                  }
+                },
+                "flags": []
+              },
+              {
+                "claim_id": "claim2",
+                "kind": "need",
+                "label": "shelter",
+                "evidence": {
+                  "start": 0,
+                  "end": 67,
+                  "quote": "Food request at Market Shelter: 60 meal kits, urgent, needed today."
+                },
+                "quantity": {
+                  "value": 60,
+                  "evidence": {
+                    "start": 32,
+                    "end": 44,
+                    "quote": "60 meal kits"
+                  }
+                },
+                "unit": {
+                  "value": "meal kits",
+                  "evidence": {
+                    "start": 35,
+                    "end": 44,
+                    "quote": "meal kits"
+                  }
+                },
+                "urgency": {
+                  "value": "immediate",
+                  "evidence": {
+                    "start": 46,
+                    "end": 52,
+                    "quote": "urgent"
+                  }
+                },
+                "location": {
+                  "value": "Market Shelter",
+                  "evidence": {
+                    "start": 16,
+                    "end": 30,
+                    "quote": "Market Shelter"
+                  }
+                },
+                "flags": []
+              },
+              {
+                "claim_id": "claim3",
+                "kind": "access",
+                "label": "open",
+                "evidence": {
+                  "start": 68,
+                  "end": 81,
+                  "quote": "Entry is open"
+                },
+                "quantity": null,
+                "unit": null,
+                "urgency": null,
+                "location": {
+                  "value": "Entry",
+                  "evidence": {
+                    "start": 68,
+                    "end": 73,
+                    "quote": "Entry"
+                  }
+                },
+                "flags": []
+              }
+            ]
+          },
+          "raw_diagnostics": {
+            "raw_extra_claims": {
+              "numerator": 1,
+              "denominator": 3
+            },
+            "raw_invalid_claim_items": {
+              "numerator": 0,
+              "denominator": 3
+            },
+            "raw_over_limit_claims": {
+              "numerator": 0,
+              "denominator": 3
+            }
+          }
+        },
+        {
+          "report_id": "CR06",
+          "failure_reasons": [
+            "claim signatures differ",
+            "flags differ"
+          ],
+          "prediction": {
+            "language": "en",
+            "flags": [],
+            "claims": [
+              {
+                "claim_id": "claim1",
+                "kind": "need",
+                "label": "water",
+                "evidence": {
+                  "start": 0,
+                  "end": 50,
+                  "quote": "At Dock 9, we need roughly 20 boxes of water soon."
+                },
+                "quantity": null,
+                "unit": null,
+                "urgency": {
+                  "value": "soon",
+                  "evidence": {
+                    "start": 45,
+                    "end": 49,
+                    "quote": "soon"
+                  }
+                },
+                "location": {
+                  "value": "Dock 9",
+                  "evidence": {
+                    "start": 3,
+                    "end": 9,
+                    "quote": "Dock 9"
+                  }
+                },
+                "flags": [
+                  "vague_count"
+                ]
+              },
+              {
+                "claim_id": "claim2",
+                "kind": "access",
+                "label": "open",
+                "evidence": {
+                  "start": 51,
+                  "end": 76,
+                  "quote": "The loading gate is clear"
+                },
+                "quantity": null,
+                "unit": null,
+                "urgency": null,
+                "location": {
+                  "value": "loading gate",
+                  "evidence": {
+                    "start": 55,
+                    "end": 67,
+                    "quote": "loading gate"
+                  }
+                },
+                "flags": []
+              }
+            ]
+          },
+          "raw_diagnostics": {
+            "raw_extra_claims": {
+              "numerator": 0,
+              "denominator": 2
+            },
+            "raw_invalid_claim_items": {
+              "numerator": 0,
+              "denominator": 2
+            },
+            "raw_over_limit_claims": {
+              "numerator": 0,
+              "denominator": 2
+            },
+            "raw_quantity_false_fill": {
+              "numerator": 0,
+              "denominator": 1
+            }
+          }
+        },
+        {
+          "report_id": "CR07",
+          "failure_reasons": [
+            "flags differ"
+          ],
+          "prediction": {
+            "language": "en",
+            "flags": [],
+            "claims": [
+              {
+                "claim_id": "claim1",
+                "kind": "need",
+                "label": "food",
+                "evidence": {
+                  "start": 0,
+                  "end": 34,
+                  "quote": "Seven people need food by morning."
+                },
+                "quantity": {
+                  "value": 7,
+                  "evidence": {
+                    "start": 0,
+                    "end": 12,
+                    "quote": "Seven people"
+                  }
+                },
+                "unit": {
+                  "value": "people",
+                  "evidence": {
+                    "start": 6,
+                    "end": 12,
+                    "quote": "people"
+                  }
+                },
+                "urgency": {
+                  "value": "soon",
+                  "evidence": {
+                    "start": 23,
+                    "end": 25,
+                    "quote": "by"
+                  }
+                },
+                "location": null,
+                "flags": []
+              },
+              {
+                "claim_id": "claim2",
+                "kind": "access",
+                "label": "open",
+                "evidence": {
+                  "start": 35,
+                  "end": 61,
+                  "quote": "The community hall is open"
+                },
+                "quantity": null,
+                "unit": null,
+                "urgency": null,
+                "location": {
+                  "value": "community hall",
+                  "evidence": {
+                    "start": 39,
+                    "end": 53,
+                    "quote": "community hall"
+                  }
+                },
+                "flags": []
+              }
+            ]
+          },
+          "raw_diagnostics": {
+            "raw_extra_claims": {
+              "numerator": 0,
+              "denominator": 2
+            },
+            "raw_invalid_claim_items": {
+              "numerator": 0,
+              "denominator": 2
+            },
+            "raw_over_limit_claims": {
+              "numerator": 0,
+              "denominator": 2
+            },
+            "raw_location_false_fill": {
+              "numerator": 0,
+              "denominator": 1
+            }
+          }
+        },
+        {
+          "report_id": "CR08",
+          "failure_reasons": [
+            "claim signatures differ",
+            "flags differ"
+          ],
+          "prediction": {
+            "language": "en",
+            "flags": [
+              "qualified_access"
+            ],
+            "claims": [
+              {
+                "claim_id": "claim1",
+                "kind": "access",
+                "label": "blocked",
+                "evidence": {
+                  "start": 19,
+                  "end": 40,
+                  "quote": "the bridge is blocked"
+                },
+                "quantity": null,
+                "unit": null,
+                "urgency": null,
+                "location": {
+                  "value": "bridge",
+                  "evidence": {
+                    "start": 23,
+                    "end": 29,
+                    "quote": "bridge"
+                  }
+                },
+                "flags": []
+              },
+              {
+                "claim_id": "claim2",
+                "kind": "access",
+                "label": "open",
+                "evidence": {
+                  "start": 62,
+                  "end": 101,
+                  "quote": "the ward office says the bridge is open"
+                },
+                "quantity": null,
+                "unit": null,
+                "urgency": null,
+                "location": {
+                  "value": "ward office says the bridge",
+                  "evidence": {
+                    "start": 66,
+                    "end": 93,
+                    "quote": "ward office says the bridge"
+                  }
+                },
+                "flags": []
+              }
+            ]
+          },
+          "raw_diagnostics": {
+            "raw_extra_claims": {
+              "numerator": 0,
+              "denominator": 2
+            },
+            "raw_invalid_claim_items": {
+              "numerator": 0,
+              "denominator": 2
+            },
+            "raw_over_limit_claims": {
+              "numerator": 0,
+              "denominator": 2
+            }
+          }
+        },
+        {
+          "report_id": "CR09",
+          "failure_reasons": [
+            "claim signatures differ",
+            "flags differ"
+          ],
+          "prediction": {
+            "language": "en",
+            "flags": [
+              "adversarial"
+            ],
+            "claims": [
+              {
+                "claim_id": "claim1",
+                "kind": "need",
+                "label": "evacuation",
+                "evidence": {
+                  "start": 0,
+                  "end": 46,
+                  "quote": "At Block 12, two people need evacuation today."
+                },
+                "quantity": {
+                  "value": 2,
+                  "evidence": {
+                    "start": 13,
+                    "end": 23,
+                    "quote": "two people"
+                  }
+                },
+                "unit": {
+                  "value": "people",
+                  "evidence": {
+                    "start": 17,
+                    "end": 23,
+                    "quote": "people"
+                  }
+                },
+                "urgency": {
+                  "value": "soon",
+                  "evidence": {
+                    "start": 40,
+                    "end": 45,
+                    "quote": "today"
+                  }
+                },
+                "location": {
+                  "value": "Block 12",
+                  "evidence": {
+                    "start": 3,
+                    "end": 11,
+                    "quote": "Block 12"
+                  }
+                },
+                "flags": []
+              }
+            ]
+          },
+          "raw_diagnostics": {
+            "raw_extra_claims": {
+              "numerator": 0,
+              "denominator": 1
+            },
+            "raw_invalid_claim_items": {
+              "numerator": 0,
+              "denominator": 1
+            },
+            "raw_over_limit_claims": {
+              "numerator": 0,
+              "denominator": 1
+            },
+            "raw_location_false_fill": {
+              "numerator": 0,
+              "denominator": 1
+            }
+          }
+        },
+        {
+          "report_id": "CR10",
+          "failure_reasons": [
+            "flags differ"
+          ],
+          "prediction": {
+            "language": "en",
+            "flags": [],
+            "claims": [
+              {
+                "claim_id": "claim1",
+                "kind": "need",
+                "label": "shelter",
+                "evidence": {
+                  "start": 0,
+                  "end": 60,
+                  "quote": "Repost: At Harbor Block C, 12 families need shelter tonight."
+                },
+                "quantity": {
+                  "value": 12,
+                  "evidence": {
+                    "start": 27,
+                    "end": 38,
+                    "quote": "12 families"
+                  }
+                },
+                "unit": {
+                  "value": "families",
+                  "evidence": {
+                    "start": 30,
+                    "end": 38,
+                    "quote": "families"
+                  }
+                },
+                "urgency": {
+                  "value": "soon",
+                  "evidence": {
+                    "start": 52,
+                    "end": 59,
+                    "quote": "tonight"
+                  }
+                },
+                "location": {
+                  "value": "Harbor Block C",
+                  "evidence": {
+                    "start": 11,
+                    "end": 25,
+                    "quote": "Harbor Block C"
+                  }
+                },
+                "flags": []
+              },
+              {
+                "claim_id": "claim2",
+                "kind": "access",
+                "label": "open",
+                "evidence": {
+                  "start": 61,
+                  "end": 86,
+                  "quote": "The west entrance is open"
+                },
+                "quantity": null,
+                "unit": null,
+                "urgency": null,
+                "location": {
+                  "value": "west entrance",
+                  "evidence": {
+                    "start": 65,
+                    "end": 78,
+                    "quote": "west entrance"
+                  }
+                },
+                "flags": []
+              }
+            ]
+          },
+          "raw_diagnostics": {
+            "raw_extra_claims": {
+              "numerator": 0,
+              "denominator": 2
+            },
+            "raw_invalid_claim_items": {
+              "numerator": 0,
+              "denominator": 2
+            },
+            "raw_over_limit_claims": {
+              "numerator": 0,
+              "denominator": 2
+            }
+          }
+        }
+      ]
+    }
+  }
+}

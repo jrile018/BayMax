@@ -1,0 +1,141 @@
+{
+  "source_commit": "5584ebd41bf2661df65335fa5279f6f7a7df23de",
+  "verification": "114 cloud tests;20 subtests;exit0",
+  "fictional_inputs": true,
+  "real_model_inference": false,
+  "live_bucket_transfer": false,
+  "actual_human_acceptance": false,
+  "files": [
+    {
+      "path": "BUCKET_REVIEW.md",
+      "size": 10281,
+      "sha256": "aedb4ed2b8f45ddcdb0a261a40e672d2fe0edfcd5f35ea284e6e3e9224e0f648"
+    },
+    {
+      "path": "FINAL_61_REVIEW.initial.md",
+      "size": 9806,
+      "sha256": "8a5e6dd78f37a5abc28de777b22eefdb4a6570ef952271e05eee5c56eb451036"
+    },
+    {
+      "path": "README.md",
+      "size": 1490,
+      "sha256": "590100a90ef4b4341e972de9d834353231019870186644abfc85cbbccc2db8f2"
+    },
+    {
+      "path": "SETUP_REPORT.md",
+      "size": 2807,
+      "sha256": "3e1ae3ad6d54f56114b683b144220aec14419910e15d31f800e851a3dd6a46d8"
+    },
+    {
+      "path": "api-capabilities.json",
+      "size": 3689,
+      "sha256": "e10234344be8e13ad4d0a45ab96fdf78378623c327d8c16288fe32172f312279"
+    },
+    {
+      "path": "backend-budget-tests.log",
+      "size": 2947,
+      "sha256": "f4804e938ce8e8fb7351aaecb054735b971dada1cd397a486cb078a3a8bc248e"
+    },
+    {
+      "path": "backend-call-bindings.json",
+      "size": 1848,
+      "sha256": "c71b7b7a61be925ea358703ac1e8aef43bd76726c43b08921c48b7fbf5fee466"
+    },
+    {
+      "path": "base-after.json",
+      "size": 180,
+      "sha256": "819a319d7c3552b212ade63b9edb74c25e158ea7f06c7bd82a3243b1afead022"
+    },
+    {
+      "path": "duplicate-json-green.log",
+      "size": 1108,
+      "sha256": "1318291220b667f836202f7608f80d92967901c27fdc71e05792f2cc3bc723f2"
+    },
+    {
+      "path": "duplicate-json-red.log",
+      "size": 6222,
+      "sha256": "c595ea08b14c3f82dfda51b2e785523882f78682f328c4d370939a82ae591a73"
+    },
+    {
+      "path": "install.log",
+      "size": 595,
+      "sha256": "f2ed5f12c88b5e9bf3b53d0311d82c794179de7272b0425598951c02bc20ba37"
+    },
+    {
+      "path": "model-target-after-api.sha256",
+      "size": 68,
+      "sha256": "d08813db88cfe4b8118e6c902b4b8eef031b78d02c2b65eadb7fa4a8e28e6d59"
+    },
+    {
+      "path": "model-target-after-bind.sha256",
+      "size": 68,
+      "sha256": "d08813db88cfe4b8118e6c902b4b8eef031b78d02c2b65eadb7fa4a8e28e6d59"
+    },
+    {
+      "path": "model-target-before.sha256",
+      "size": 68,
+      "sha256": "d08813db88cfe4b8118e6c902b4b8eef031b78d02c2b65eadb7fa4a8e28e6d59"
+    },
+    {
+      "path": "official-digest-check.json",
+      "size": 2281,
+      "sha256": "508fec671b9959e19a56256121c356a3bc19450ab42353f8737cff915e457008"
+    },
+    {
+      "path": "offline-v2-demo/metadata.json",
+      "size": 600,
+      "sha256": "50cdc45c7e0909d2eb729d71089f67c816ab69d955facc95df729f0cb2d7d6b3"
+    },
+    {
+      "path": "offline-v2-demo/offline_dry_run.log",
+      "size": 397,
+      "sha256": "dede0602db916431e46a6252c9afc5031b044f547c919e45bcc59a9de5c09360"
+    },
+    {
+      "path": "offline-v2-demo/pack/config.json",
+      "size": 92,
+      "sha256": "6447706445c8fd2cfd8b783f205e8428ebf8467ed8d69f47c01e4dbb0c0b7efa"
+    },
+    {
+      "path": "offline-v2-demo/pack/manifest.json",
+      "size": 1025,
+      "sha256": "a2c534edfb398620bf58a7e577bba6ba15e5cd1074627dad146ca511b120861b"
+    },
+    {
+      "path": "offline-v2-demo/pack/metrics.json",
+      "size": 75,
+      "sha256": "a9fe921a74562d3b9763f932f8183d03209e3fc489db09ab7a16f9f0d2401cc5"
+    },
+    {
+      "path": "offline-v2-demo/pack/snapshots.jsonl",
+      "size": 86,
+      "sha256": "c27757dcb1f5af62127bf82a76cec081d4436344c2a876dc40dcd42ac9c34684"
+    },
+    {
+      "path": "offline-v2-demo/pack.log",
+      "size": 451,
+      "sha256": "d99abeaf91bfc4fb099abf875aa2d612cce4747463c6d6c3d4f33e715b76a441"
+    },
+    {
+      "path": "offline-v2-demo/verify.log",
+      "size": 98,
+      "sha256": "db8fe6480960fdb0dcb05145007973e8a3b55dea18bcc805fb009280dc99b884"
+    },
+    {
+      "path": "resolution-plan.json",
+      "size": 25576,
+      "sha256": "9ff52811b237294a3c815840fff1c9ff68381dba5139f87d8606094b8fcc2050"
+    },
+    {
+      "path": "server-checks.log",
+      "size": 913,
+      "sha256": "f1866b69e54a1dfc11832c9b812311bce03e944dfebc87f6d554898044fffc7e"
+    },
+    {
+      "path": "source.json",
+      "size": 3790,
+      "sha256": "e9f816ff1deb734f04a96fc922810d0b7e6940726cc09d3358d151374b2732d0"
+    }
+  ],
+  "log_normalization": "Copied logs use LF; trailing console whitespace removed. Original red log retained in owned server artifacts."
+}

@@ -1,0 +1,3 @@
+Wrote evals/intake/artifacts/c3-per-claim/evaluation.json
+mocked_model_fixture: label/slot exact 20/20; evidence-aligned 20/20; failures 0
+rule_baseline: label/slot exact 5/20; evidence-aligned 2/20; failures 15
