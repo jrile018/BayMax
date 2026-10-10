@@ -11,6 +11,8 @@ import json
 import math
 from pathlib import Path
 import struct
+import shutil
+import tempfile
 
 from .scene import MetricPoint, PreparedScene, Primitive, SceneBounds
 
@@ -238,8 +240,56 @@ _STYLES = {"solid": 0, "dashed": 1, "dotted": 2, "dash-dot": 3}
 _SOFTWARE = ("llvmpipe", "softpipe", "software", "swiftshader", "swrast", "lavapipe")
 
 
+
+def _publish_render_pair(staged_png, staged_metadata, output, recovery):
+    """Publish staged files together, restoring changed destinations on error."""
+    destinations = ((staged_png, output), (staged_metadata, output.with_suffix(".json")))
+    backup_dir = staged_png.parent / "previous"
+    backup_dir.mkdir()
+    backups = {}
+    # Back up both files before replacing either; a backup error changes nothing.
+    for _, destination in destinations:
+        backup = backup_dir / destination.name if destination.exists() else None
+        if backup is not None:
+            shutil.copyfile(destination, backup)
+        backups[destination] = backup
+    try:
+        for staged, destination in destinations:
+            staged.replace(destination)
+    except BaseException as error:
+        # An operation may report failure after changing its destination.
+        # Restore both snapshots rather than trusting its return value.
+        for _, destination in reversed(destinations):
+            backup = backups[destination]
+            try:
+                if backup is None:
+                    destination.unlink(missing_ok=True)
+                else:
+                    try:
+                        backup.replace(destination)
+                    except OSError:
+                        # A failed rename need not imply the old bytes cannot
+                        # be restored. Keep the original publication exception.
+                        shutil.copyfile(backup, destination)
+            except Exception as rollback_error:
+                if backup is not None:
+                    recovery.append(backup)
+                error.add_note(f"artifact rollback failed for {destination}: {rollback_error}; backup={backup}")
+        raise
+
+
+def _write_failed_diagnostic(output, metadata):
+    """An attempt receipt has its own name and never replaces success metadata."""
+    diagnostic = output.with_suffix(".failed.json")
+    with tempfile.TemporaryDirectory(prefix=f".{output.name}.failure-", dir=output.parent,
+                                     ignore_cleanup_errors=True) as directory:
+        staged = Path(directory) / diagnostic.name
+        staged.write_text(json.dumps(metadata, indent=2)+"\n", encoding="utf-8")
+        staged.replace(diagnostic)
+
+
 def render_native(scene: PreparedScene, output_png, *, width=1280, height=720,
-                  require_hardware=True, gl_library=None, egl_library=None):
+                  require_hardware=True, gl_library=None, egl_library=None, replay_metadata=None):
     """Execute native EGL rendering only after caller acquires a GPU lease.
 
     Isolated ModernGL/glcontext packages must be available through the caller's
@@ -251,6 +301,27 @@ def render_native(scene: PreparedScene, output_png, *, width=1280, height=720,
     _dimensions(width, height)
     buffers = build_render_buffers(scene)
     camera = camera_for_bounds(scene.bounds, width, height)
+    replay_copy = None
+    if replay_metadata is not None:
+        try:
+            replay_json = json.dumps(replay_metadata, allow_nan=False)
+            if len(replay_json.encode()) > 32 * 1024 * 1024:
+                raise ValueError("replay metadata JSON budget exceeded")
+            replay_copy = json.loads(replay_json)
+        except (TypeError, ValueError, OverflowError, RecursionError) as error:
+            raise ValueError("replay metadata must be finite JSON-serializable content") from error
+        if type(replay_copy) is not dict or type(replay_copy.get("identity")) is not dict:
+            raise ValueError("replay metadata identity required")
+        expected = asdict(scene.frame)
+        replay_identity = replay_copy["identity"]
+        if any(not isinstance(replay_identity.get(key), str) or not replay_identity[key].strip()
+               for key in ("run_id", "scenario_id", "snapshot_hash")):
+            raise ValueError("replay metadata identity text fields required")
+        replay_time = replay_identity.get("time_s")
+        if type(replay_time) not in (int, float) or not math.isfinite(replay_time) or replay_time < 0:
+            raise ValueError("replay metadata identity time must be finite nonnegative number")
+        if any(replay_identity.get(key) != value for key, value in expected.items()):
+            raise ValueError("replay metadata identity does not match PreparedScene frame")
     output = Path(output_png)
     if output.suffix.casefold() != ".png":
         raise ValueError("output must use .png extension")
@@ -274,8 +345,12 @@ def render_native(scene: PreparedScene, output_png, *, width=1280, height=720,
         "lease": "caller-managed; not certified by renderer",
         "line_patterns": "projected cumulative display distance; original vertices retained",
     }
-    temporary = output.with_name(output.name + ".tmp")
+    if replay_copy is not None:
+        metadata["replay"] = replay_copy
+    staging, recovery, attempt_error = None, [], None
     try:
+        staging = Path(tempfile.mkdtemp(prefix=f".{output.name}.render-", dir=output.parent))
+        temporary = staging / output.name
         # These are the only graphics imports in this module.
         moderngl = importlib.import_module("moderngl")
         image_api = importlib.import_module("PIL.Image")
@@ -302,6 +377,10 @@ def render_native(scene: PreparedScene, output_png, *, width=1280, height=720,
             framebuffer.use()
             ctx.viewport = (0, 0, width, height)
             ctx.enable(moderngl.DEPTH_TEST | moderngl.PROGRAM_POINT_SIZE)
+            # The later line layer owns pixels at exactly the same metric
+            # depth (road, full route, remaining route, then trail). A nearer
+            # surface still wins because its stored depth is strictly less.
+            ctx.depth_func = "<="
             framebuffer.clear(.07, .09, .12, 1., depth=1.)
             program = track(ctx.program(vertex_shader=_VERTEX_SHADER, fragment_shader=_FRAGMENT_SHADER))
             matrix = tuple(camera.view_projection[i][j] for j in range(4) for i in range(4))
@@ -309,7 +388,8 @@ def render_native(scene: PreparedScene, output_png, *, width=1280, height=720,
             program["point_size"].value = 10.
             origin = _xyz(camera.target)
             # Draw filled surfaces, then their exact outlines, then exact glyph
-            # centers. Raster depth offset avoids shifting metric geometry.
+            # centers. Polygon offset and equal-depth line ordering leave
+            # the source's metric coordinates unchanged.
             for topology, mode in (("triangles", moderngl.TRIANGLES), ("lines", moderngl.LINES), ("points", moderngl.POINTS)):
                 ctx.polygon_offset = (1., 1.) if topology == "triangles" else (0., 0.)
                 for batch in buffers.batches:
@@ -340,14 +420,31 @@ def render_native(scene: PreparedScene, output_png, *, width=1280, height=720,
             finally:
                 flipped.close()
                 image.close()
-        # Context and all attachments have been released before publishing.
-        temporary.replace(output)
+        # Context and all attachments are released before either artifact is
+        # published. Stage the complete success receipt before changing output.
         metadata.update(status="rendered", output_written=True)
-    except Exception as error:
-        metadata.update(status="failed", error=f"{type(error).__name__}: {error}")
+        staged_metadata = staging / output.with_suffix(".json").name
+        staged_metadata.write_text(json.dumps(metadata, indent=2)+"\n", encoding="utf-8")
+        _publish_render_pair(temporary, staged_metadata, output, recovery)
+    except BaseException as error:
+        attempt_error = error
+        metadata.update(status="failed", output_written=False, error=f"{type(error).__name__}: {error}")
+        try:
+            _write_failed_diagnostic(output, metadata)
+        except Exception as diagnostic_error:
+            error.add_note(f"failed attempt diagnostic could not be written: {diagnostic_error}")
         raise
     finally:
-        if temporary.exists():
-            temporary.unlink()
-        output.with_suffix(".json").write_text(json.dumps(metadata, indent=2)+"\n", encoding="utf-8")
+        if staging is not None:
+            if recovery:
+                # If storage also refuses rollback, retain only old-file backups
+                # named in the original exception's notes for manual recovery.
+                for staged in staging.iterdir():
+                    if staged.name != "previous" and staged.is_file():
+                        try:
+                            staged.unlink(missing_ok=True)
+                        except OSError as cleanup_error:
+                            attempt_error.add_note(f"staged file cleanup failed for {staged}: {cleanup_error}")
+            else:
+                shutil.rmtree(staging, ignore_errors=True)
     return json.loads(json.dumps(metadata))

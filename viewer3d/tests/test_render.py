@@ -186,6 +186,82 @@ def fake_module(monkeypatch, context):
     return calls
 
 
+class DepthRasterContext(Context):
+    """One-sample fake raster: equal metric depth and foreground occlusion."""
+    def __init__(self):
+        super().__init__()
+        self.depth_func = "<"
+        self.sample_depth = 1.0
+        self.sample_color = (18, 23, 31)
+        self.painted = []
+
+    def framebuffer(self, *args, **kwargs):
+        context = self
+        class Framebuffer(Resource):
+            def clear(self, *args, **kwargs):
+                context.sample_depth = kwargs["depth"]
+            def read(self, **kwargs):
+                return bytes(context.sample_color * 4)
+        return Framebuffer(self, "framebuffer")
+
+    def program(self, **kwargs):
+        class Uniform:
+            def __init__(self):
+                self.value = None
+            def write(self, value):
+                pass
+        class Program(Resource):
+            def __init__(self, ctx):
+                super().__init__(ctx, "program")
+                self.uniforms = {}
+            def __getitem__(self, name):
+                return self.uniforms.setdefault(name, Uniform())
+        return Program(self)
+
+    def vertex_array(self, program, bindings):
+        import struct
+        context = self
+        vertices = tuple(struct.iter_unpack("<4f", bindings[0][0].last_data))
+        color = program["color"].value
+        class RasterVAO(Resource):
+            def render(self, **kwargs):
+                context.draws.append(kwargs)
+                # Higher z is nearer for this one-sample orthographic model.
+                depth = .5 - vertices[0][2] * .01
+                passes = depth <= context.sample_depth if context.depth_func == "<=" else depth < context.sample_depth
+                if passes:
+                    context.sample_depth = depth
+                    context.sample_color = tuple(round(channel * 255) for channel in color)
+                    context.painted.append(context.sample_color)
+        return RasterVAO(self, "vao")
+
+    def buffer(self, data):
+        resource = super().buffer(data)
+        resource.last_data = data
+        return resource
+
+
+def test_equal_depth_trail_wins_over_road_and_nearer_road_still_occludes(tmp_path, monkeypatch):
+    from PIL import Image
+    scene = prepared()
+    road = next(p for p in scene.primitives if p.kind == "road")
+    route = next(p for p in scene.primitives if p.kind == "route")
+    trail = next(p for p in scene.primitives if p.kind == "trail")
+    for road_z, expected in ((0, (166, 178, 217)), (10, (191, 196, 204))):
+        points = tuple(replace(p, z_m=road_z) for p in road.points)
+        full = replace(route, record_id="full", role="committed")
+        remaining = replace(route, record_id="remaining", role="committed")
+        sample_scene = replace(scene, primitives=(replace(road, points=points), full, remaining, trail))
+        ctx = DepthRasterContext()
+        fake_module(monkeypatch, ctx)
+        output = tmp_path / f"depth-{road_z}.png"
+        api().render_native(sample_scene, output, width=2, height=2)
+        with Image.open(output) as image:
+            assert image.getpixel((0, 0)) == expected
+        assert ctx.depth_func == "<="
+        assert len(ctx.painted) == (4 if road_z == 0 else 1)
+
+
 def test_fake_native_lifecycle_records_provider_flips_image_and_releases(tmp_path, monkeypatch):
     import json
     from PIL import Image
@@ -216,7 +292,7 @@ def test_software_provider_rejected_with_failed_sidecar_and_context_cleanup(rend
     path = tmp_path / "rejected.png"
     with pytest.raises(RuntimeError, match="software"):
         api().render_native(prepared(), path, width=2, height=2)
-    metadata = json.loads(path.with_suffix(".json").read_text())
+    metadata = json.loads(path.with_suffix(".failed.json").read_text())
     assert metadata["status"] == "failed"
     assert metadata["provider"]["GL_RENDERER"] == renderer
     assert not path.exists()
@@ -231,7 +307,7 @@ def test_read_failure_releases_all_resources_and_does_not_claim_success(tmp_path
     with pytest.raises(RuntimeError, match="read failed"):
         api().render_native(prepared(), path, width=2, height=2)
     assert ctx.released and all(resource.released for resource in ctx.resources)
-    assert json.loads(path.with_suffix(".json").read_text())["status"] == "failed"
+    assert json.loads(path.with_suffix(".failed.json").read_text())["status"] == "failed"
     assert not path.exists()
 
 
@@ -293,7 +369,7 @@ def test_partial_attachment_creation_failure_releases_previously_created_resourc
     with pytest.raises(RuntimeError, match="depth allocation"):
         api().render_native(prepared(), path, width=2, height=2)
     assert ctx.released and all(resource.released for resource in ctx.resources)
-    assert json.loads(path.with_suffix(".json").read_text())["output_written"] is False
+    assert json.loads(path.with_suffix(".failed.json").read_text())["output_written"] is False
     assert not path.exists()
 
 
@@ -314,7 +390,7 @@ def test_cleanup_failure_still_releases_context_and_prevents_image_publication(t
     with pytest.raises(RuntimeError, match="release failed"):
         api().render_native(prepared(), path, width=2, height=2)
     assert ctx.released and all(resource.released for resource in ctx.resources)
-    assert json.loads(path.with_suffix(".json").read_text())["status"] == "failed"
+    assert json.loads(path.with_suffix(".failed.json").read_text())["status"] == "failed"
     assert not path.exists()
     assert not path.with_name("cleanup.png.tmp").exists()
 
@@ -336,7 +412,7 @@ def test_native_context_failure_writes_failed_sidecar_without_success_claim(tmp_
     path = tmp_path / "no-context.png"
     with pytest.raises(RuntimeError, match="EGL unavailable"):
         api().render_native(prepared(), path, width=2, height=2)
-    metadata = json.loads(path.with_suffix(".json").read_text())
+    metadata = json.loads(path.with_suffix(".failed.json").read_text())
     assert metadata["provider"] == {}
     assert metadata["output_written"] is False
     assert metadata["status"] == "failed"
@@ -399,3 +475,227 @@ def test_sidecar_keeps_original_authoritative_geometry_and_snapshot_hash(tmp_pat
         assert record["points"] == [dict(x_m=p.x_m, y_m=p.y_m, z_m=p.z_m) for p in primitive.points]
         assert record["triangles"] == [list(triangle) for triangle in primitive.triangles]
         assert record["source_id"] == primitive.source.source_id
+
+
+def test_replay_sidecar_hook_retains_mock_labels_without_overriding_native_fields(tmp_path, monkeypatch):
+    from dataclasses import asdict
+    scene=prepared()
+    original={"identity":asdict(scene.frame),"mode":"mock-replay","label":"project-authored mock",
+              "attribution":"© OpenStreetMap contributors","elevation_assumption":"flat-ground visual assumption",
+              "provider":{"GL_RENDERER":"untrusted nested description"},"fsr":"untrusted nested description"}
+    before=__import__("copy").deepcopy(original)
+    ctx=Context()
+    fake_module(monkeypatch,ctx)
+    metadata=api().render_native(scene,tmp_path/"replay.png",width=2,height=2,replay_metadata=original)
+    assert metadata["replay"]==original
+    assert metadata["provider"]==ctx.info and metadata["fsr"]=="not implemented"
+    assert metadata["frame"]["snapshot_hash"]==scene.frame.snapshot_hash
+    assert original==before
+    metadata["replay"]["label"]="changed returned copy"
+    assert original==before
+
+
+@pytest.mark.parametrize("field",["run_id","scenario_id","time_s","snapshot_hash"])
+def test_replay_sidecar_identity_mismatch_rejected_before_context(field,tmp_path,monkeypatch):
+    from dataclasses import asdict
+    scene=prepared()
+    identity=asdict(scene.frame)
+    identity[field]=123 if field=="time_s" else "wrong"
+    ctx=Context()
+    calls=fake_module(monkeypatch,ctx)
+    with pytest.raises(ValueError,match="replay.*identity"):
+        api().render_native(scene,tmp_path/"bad-replay.png",width=2,height=2,replay_metadata={"identity":identity})
+    assert calls==[] and not ctx.released
+
+
+def test_replay_metadata_bool_time_is_not_numeric_identity(tmp_path,monkeypatch):
+    from dataclasses import asdict,replace
+    scene=prepared()
+    frame=replace(scene.frame,time_s=0)
+    scene=replace(scene,frame=frame,primitives=tuple(replace(p,frame=frame) for p in scene.primitives))
+    identity=asdict(frame)
+    identity["time_s"]=False
+    calls=fake_module(monkeypatch,Context())
+    with pytest.raises(ValueError,match="replay.*identity"):
+        api().render_native(scene,tmp_path/"bool-replay.png",width=2,height=2,replay_metadata={"identity":identity})
+    assert calls==[]
+
+
+
+def seed_render_pair(path):
+    """An earlier valid image and its hand-authored success receipt."""
+    from PIL import Image
+    with Image.new("RGB", (2, 2), (12, 34, 56)) as image:
+        image.save(path)
+    sidecar = path.with_suffix(".json")
+    sidecar.write_bytes(b'{"status":"rendered","frame":{"snapshot_hash":"earlier-frame"}}\n')
+    return path.read_bytes(), sidecar.read_bytes()
+
+
+def assert_render_pair_failure(path, previous, error):
+    import json
+    assert (path.read_bytes(), path.with_suffix(".json").read_bytes()) == previous
+    diagnostic = json.loads(path.with_suffix(".failed.json").read_text())
+    assert diagnostic["status"] == "failed" and diagnostic["output_written"] is False
+    assert diagnostic["frame"]["snapshot_hash"] == "exact-hash"
+    assert str(error) in diagnostic["error"]
+    assert set(p.name for p in path.parent.iterdir()) == {path.name, path.with_suffix(".json").name,
+                                                        path.with_suffix(".failed.json").name}
+
+
+def test_render_pair_context_failure_preserves_earlier_image_and_metadata(tmp_path, monkeypatch):
+    r, path = api(), tmp_path / "earlier.png"
+    previous = seed_render_pair(path)
+    failure = RuntimeError("new context unavailable")
+    def fail(**kwargs):
+        raise failure
+    monkeypatch.setitem(sys.modules, "moderngl", SimpleNamespace(create_standalone_context=fail))
+    with pytest.raises(RuntimeError) as caught:
+        r.render_native(prepared(), path, width=2, height=2)
+    assert caught.value is failure
+    assert_render_pair_failure(path, previous, failure)
+
+
+def test_render_pair_encode_failure_cleans_partial_stage_and_preserves_earlier_pair(tmp_path, monkeypatch):
+    from PIL import Image
+    r, path, ctx = api(), tmp_path / "earlier.png", Context()
+    previous = seed_render_pair(path)
+    failure = OSError("PNG encoding failed")
+    def fail(self, filename, *args, **kwargs):
+        from pathlib import Path
+        Path(filename).write_bytes(b"partial new PNG")
+        raise failure
+    monkeypatch.setattr(Image.Image, "save", fail)
+    fake_module(monkeypatch, ctx)
+    with pytest.raises(OSError) as caught:
+        r.render_native(prepared(), path, width=2, height=2)
+    assert caught.value is failure
+    assert ctx.released and all(resource.released for resource in ctx.resources)
+    assert_render_pair_failure(path, previous, failure)
+
+
+@pytest.mark.parametrize("phase", ["metadata-write", "png-publish", "metadata-publish"])
+def test_render_pair_filesystem_failure_restores_earlier_pair(tmp_path, monkeypatch, phase):
+    from pathlib import Path
+    r, path, ctx = api(), tmp_path / "earlier.png", Context()
+    previous = seed_render_pair(path)
+    failure = OSError(phase + " failed")
+    original_write, original_replace = Path.write_text, Path.replace
+    fired = []
+    def write(self, data, *args, **kwargs):
+        if phase == "metadata-write" and self.name == path.with_suffix(".json").name:
+            fired.append(True)
+            raise failure
+        return original_write(self, data, *args, **kwargs)
+    def replace(self, target):
+        target = Path(target)
+        expected = path if phase == "png-publish" else path.with_suffix(".json")
+        if phase in {"png-publish", "metadata-publish"} and target == expected and not fired:
+            fired.append(True)
+            raise failure
+        return original_replace(self, target)
+    monkeypatch.setattr(Path, "write_text", write)
+    monkeypatch.setattr(Path, "replace", replace)
+    fake_module(monkeypatch, ctx)
+    with pytest.raises(OSError) as caught:
+        r.render_native(prepared(), path, width=2, height=2)
+    assert caught.value is failure
+    assert fired
+    assert_render_pair_failure(path, previous, failure)
+
+
+def test_render_pair_first_failure_only_writes_distinct_failed_diagnostic(tmp_path, monkeypatch):
+    import json
+    r, path = api(), tmp_path / "first.png"
+    failure = RuntimeError("first context unavailable")
+    def fail(**kwargs):
+        raise failure
+    monkeypatch.setitem(sys.modules, "moderngl", SimpleNamespace(create_standalone_context=fail))
+    with pytest.raises(RuntimeError) as caught:
+        r.render_native(prepared(), path, width=2, height=2)
+    assert caught.value is failure
+    assert not path.exists() and not path.with_suffix(".json").exists()
+    diagnostic = json.loads(path.with_suffix(".failed.json").read_text())
+    assert diagnostic["status"] == "failed" and diagnostic["output_written"] is False
+    assert diagnostic["frame"]["snapshot_hash"] == "exact-hash"
+    assert set(p.name for p in tmp_path.iterdir()) == {"first.failed.json"}
+
+
+def test_render_pair_diagnostic_failure_does_not_mask_original_context_exception(tmp_path, monkeypatch):
+    from pathlib import Path
+    r, path = api(), tmp_path / "earlier.png"
+    previous = seed_render_pair(path)
+    failure = RuntimeError("original context unavailable")
+    def fail(**kwargs):
+        raise failure
+    monkeypatch.setitem(sys.modules, "moderngl", SimpleNamespace(create_standalone_context=fail))
+    original_write = Path.write_text
+    def write(self, *args, **kwargs):
+        if self.name.endswith(".json"):
+            raise OSError("diagnostic storage unavailable")
+        return original_write(self, *args, **kwargs)
+    monkeypatch.setattr(Path, "write_text", write)
+    with pytest.raises(RuntimeError) as caught:
+        r.render_native(prepared(), path, width=2, height=2)
+    assert caught.value is failure
+    assert (path.read_bytes(), path.with_suffix(".json").read_bytes()) == previous
+    assert set(p.name for p in tmp_path.iterdir()) == {"earlier.png", "earlier.json"}
+
+
+
+def test_render_pair_first_metadata_publication_failure_removes_new_image(tmp_path, monkeypatch):
+    from pathlib import Path
+    r, path = api(), tmp_path / "first.png"
+    failure = OSError("first metadata publication failed")
+    original_replace = Path.replace
+    def replace(self, target):
+        if Path(target) == path.with_suffix(".json"):
+            raise failure
+        return original_replace(self, target)
+    monkeypatch.setattr(Path, "replace", replace)
+    fake_module(monkeypatch, Context())
+    with pytest.raises(OSError) as caught:
+        r.render_native(prepared(), path, width=2, height=2)
+    assert caught.value is failure
+    assert not path.exists() and not path.with_suffix(".json").exists()
+    assert set(p.name for p in tmp_path.iterdir()) == {"first.failed.json"}
+
+
+def test_render_pair_failure_does_not_delete_caller_owned_temporary_file(tmp_path, monkeypatch):
+    r, path = api(), tmp_path / "earlier.png"
+    previous = seed_render_pair(path)
+    unrelated = path.with_name(path.name + ".tmp")
+    unrelated.write_bytes(b"caller-owned scratch bytes")
+    failure = RuntimeError("new context unavailable")
+    def fail(**kwargs):
+        raise failure
+    monkeypatch.setitem(sys.modules, "moderngl", SimpleNamespace(create_standalone_context=fail))
+    with pytest.raises(RuntimeError):
+        r.render_native(prepared(), path, width=2, height=2)
+    assert unrelated.read_bytes() == b"caller-owned scratch bytes"
+    assert (path.read_bytes(), path.with_suffix(".json").read_bytes()) == previous
+    assert set(p.name for p in tmp_path.iterdir()) == {"earlier.png", "earlier.json", "earlier.png.tmp", "earlier.failed.json"}
+
+
+
+@pytest.mark.parametrize("phase", ["png", "metadata"])
+def test_render_pair_publication_error_after_replacement_restores_both_old_files(tmp_path, monkeypatch, phase):
+    from pathlib import Path
+    r, path = api(), tmp_path / "earlier.png"
+    previous = seed_render_pair(path)
+    failure = OSError(phase + " publication result unavailable")
+    original_replace = Path.replace
+    target_to_fail = path if phase == "png" else path.with_suffix(".json")
+    fired = []
+    def replace(self, target):
+        result = original_replace(self, target)
+        if Path(target) == target_to_fail and not fired:
+            fired.append(True)
+            raise failure
+        return result
+    monkeypatch.setattr(Path, "replace", replace)
+    fake_module(monkeypatch, Context())
+    with pytest.raises(OSError) as caught:
+        r.render_native(prepared(), path, width=2, height=2)
+    assert caught.value is failure
+    assert_render_pair_failure(path, previous, failure)
