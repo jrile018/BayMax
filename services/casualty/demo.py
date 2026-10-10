@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 from .contracts import CaseRecord, RightsManifest, ImageRecord, ExerciseNeed, FaceBox, DetectionResult, verify_image
 from .broker import CaseBroker, CandidateEvidence
+from .incident_gate import make_pending_incident_evidence
 from evals.casualty.localization import localization_counts, aggregate
 
 
@@ -28,6 +29,7 @@ def run_demo(output: Path) -> None:
     r=broker.review(p.proposal_id,reviewer_id='scripted-trainee-001',decision='accepted',
         confirmed_evidence=('cue-001',),confirm_exercise_need=True,reviewed_time_s=8)
     request=broker.export_request(r)
+    incident_gate=make_pending_incident_evidence(case,request,review_actor_kind='scripted_demo')
     absent=replace(result,status='no_face',boxes=(),observed_time_s=9)
     p2=broker.submit(case,absent,(),created_time_s=10)
     r2=broker.review(p2.proposal_id,reviewer_id='scripted-trainee-001',decision='accepted',
@@ -38,6 +40,7 @@ def run_demo(output: Path) -> None:
         'review_actor_kind':'scripted_demo_calls','case':asdict(case),'case_hash':case.content_hash,
         'real_detector_status':'pending','actual_photo_status':'pending_rights_and_bytes',
         'clinical_validation_status':'unavailable','integration_status':'pending_root_adapter',
+        'incident_gate':asdict(incident_gate),
         'localized_review':{'proposal':asdict(p),'receipt':asdict(r),'request':asdict(request)},
         'no_face_review':{'proposal':asdict(p2),'receipt':asdict(r2),'request':asdict(request2)},
         'unique_need_keys':len({request.idempotency_key,request2.idempotency_key}),
