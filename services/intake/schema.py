@@ -73,7 +73,7 @@ CLAUSE_NEGATION = r"\b(not|no|never|without|don't|doesn't|didn't|cannot|can't|si
 SOON = r'\b(soon|today|tomorrow|tonight|before|within|by|pronto|hoy|ma[ñn]ana)\b'
 COMPLETED_EVENT = r'\b(?:delivered|distributed|supplied|provided|served|received|evacuated|completed|picked up|dropped off)\b'
 REQUEST_CONJUNCTION = r'\b(?:but|and|however|yet|while|whereas|then)\b'
-ACCESS_COREFERENCE = r'\b(?:it|this road|that road|the road|this route|that route|the route|this highway|that highway|the highway)\b'
+ACCESS_COREFERENCE = r'\b(?:it|there|this road|that road|the road|this route|that route|the route|this highway|that highway|the highway)\b'
 ACCESS_QUALIFIER = (
     r'\b(?:only|except|excluding|unless|until|before|after|between|during|'
     r'bicycles?|bikes?|cyclists?|pedestrians?|peatones?|on foot|'
@@ -161,6 +161,22 @@ def _source_clause(report, ev, kind):
             hi=ev.end+next_end.start() if next_end else len(report.text)
     return lo,hi,report.text[lo:hi]
 
+def _count_in_request_segment(report, context_start, context_end, quantity, unit):
+    # Counts in completed-event segments cannot become a new request count.
+    context=report.text[context_start:context_end]
+    cuts=[context_start]
+    for boundary in re.finditer(r'[,;.!?\n]|\b(?:and|but|however|yet|while|whereas|then|after|before)\b',context,re.I):
+        cuts.extend((context_start+boundary.start(),context_start+boundary.end()))
+    cuts.append(context_end)
+    for lo,hi in zip(cuts[::2],cuts[1::2]):
+        if (lo<=quantity.evidence.start<quantity.evidence.end<=hi
+                and lo<=unit.evidence.start<unit.evidence.end<=hi):
+            segment=report.text[lo:hi]
+            return bool(re.search(NEED_REQUEST,segment,re.I)
+                        and not re.search(COMPLETED_EVENT,segment,re.I))
+    return False
+
+
 def _following_access_restriction(report, context_end, location):
     # A short follow-on sentence may scope an otherwise unqualified 'open'.
     tail=report.text[context_end+1:]
@@ -170,8 +186,13 @@ def _following_access_restriction(report, context_end, location):
     following=tail[:end.start()] if end else tail
     if not re.search(ACCESS_QUALIFIER,following,re.I):
         return False
+    named_road=re.search(r'\b(?:[Hh]ighway|[Rr]oad|[Rr]oute|[Ss]treet|[Bb]ridge|[Aa]venue)\s+(?:[A-Z][A-Za-z0-9-]*|\d+)\b',following)
+    if named_road and named_road.group().casefold()!=location.casefold():
+        return False
     return bool(re.search(ACCESS_COREFERENCE,following,re.I)
-                or re.search(re.escape(location),following,re.I))
+                or re.search(re.escape(location),following,re.I)
+                or report.text[context_end:context_end+1]==';'
+                or re.match(r'\s*only\s+(?:bicycles?|bikes?|cyclists?|pedestrians?|vehicles?|cars?|trucks?|buses?|motorcycles?|ambulances?)\s+(?:may|can|must)\s+(?:cross|use|pass|travel)\b',following,re.I))
 
 
 def parse_proposal(report, payload, provider):
@@ -210,6 +231,9 @@ def parse_proposal(report, payload, provider):
         if bool(slots['quantity'])!=bool(slots['unit']): raise ValidationError('exact quantity requires an explicit quantity unit')
         if slots['quantity'] and re.search(COUNT_UNCERTAINTY,context,re.I):
             raise ValidationError('approximate or range count must remain unknown')
+        if kind=='need' and slots['quantity'] and not _count_in_request_segment(
+                report,context_start,context_end,slots['quantity'],slots['unit']):
+            raise ValidationError('quantity and unit must belong to the current request segment')
         loc=slots['location']
         if loc and not context_start<=loc.evidence.start<loc.evidence.end<=context_end:
             prefix=report.text[:loc.evidence.start]
