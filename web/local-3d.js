@@ -10,15 +10,24 @@ window.KnightLocal3D=(()=>{
  const finite=n=>typeof n==="number"&&Number.isFinite(n);
  const point=p=>Array.isArray(p)&&p.length===2&&finite(p[0])&&finite(p[1]);
  const route=g=>Array.isArray(g)&&g.every(point)?g:[];
+ const samePoint=(a,b)=>a[0]===b[0]&&a[1]===b[1];
+ const usableRoad=item=>{const points=route(item?.geometry_lonlat).slice(0,512);return points.length>=2&&points.some(p=>!samePoint(p,points[0]))};
+ const usableBuilding=item=>{const ring=route(item?.geometry_lonlat);if(ring.length<4||ring.length>256||!samePoint(ring[0],ring[ring.length-1]))return false;
+  const vertices=ring.slice(0,-1);if(new Set(vertices.map(p=>p[0]+","+p[1])).size<3)return false;
+  const anchor=vertices[0];let twiceArea=0;for(let i=0;i<vertices.length;i++){const a=vertices[i],b=vertices[(i+1)%vertices.length];twiceArea+=(a[0]-anchor[0])*(b[1]-anchor[1])-(b[0]-anchor[0])*(a[1]-anchor[1])}
+  return Number.isFinite(twiceArea)&&twiceArea!==0};
+ const usableFeatures=name=>(Array.isArray(area?.[name])?area[name]:[]).filter(name==="roads"?usableRoad:usableBuilding);
  const formatTime=seconds=>finite(seconds)?String(Math.floor(seconds/3600)).padStart(2,"0")+":"+String(Math.floor(seconds%3600/60)).padStart(2,"0")+":"+String(Math.floor(seconds%60)).padStart(2,"0"):"Unknown";
  const bounds=b=>Array.isArray(b)&&b.length===4&&b.every(finite)&&b[0]<b[2]&&b[1]<b[3];
  const within=(p,b)=>point(p)&&bounds(b)&&p[0]>=b[0]&&p[0]<=b[2]&&p[1]>=b[1]&&p[1]<=b[3];
  function localCoverage(){
   const acquired=within([place.lon,place.lat],area?.coverage_bbox_lonlat);
   const layers=Array.isArray(area?.coverage)?area.coverage:[];
-  const available=name=>acquired&&layers.some(layer=>layer.layer===name&&layer.status==="available")&&Array.isArray(area?.[name])&&area[name].length>0;
-  const roads=available("roads"),buildings=available("buildings");
-  return{roads,buildings,available:roads||buildings,training:roads&&training()?.valid===true};
+  const layerAvailable=name=>layers.some(layer=>layer?.layer===name&&layer.status==="available");
+  const roadFeatures=acquired&&layerAvailable("roads")?usableFeatures("roads"):[];
+  const buildingFeatures=acquired&&layerAvailable("buildings")?usableFeatures("buildings"):[];
+  const roads=roadFeatures.length>0,buildings=buildingFeatures.length>0;
+  return{roads,buildings,roadFeatures,buildingFeatures,available:roads||buildings,training:roads&&training()?.valid===true};
  }
  const colorFor=index=>colors[index%colors.length];
  const colorHex=index=>"#"+colorFor(index).toString(16).padStart(6,"0");
@@ -39,19 +48,20 @@ window.KnightLocal3D=(()=>{
  }
  function buildParadise(){
   const roads=new Three.Group(),buildings=new Three.Group();scene.add(roads,buildings);
-  for(const item of (coverage.roads?area.roads:[]).slice(0,500)){
+  for(const item of coverage.roadFeatures.slice(0,500)){
    const geometry=route(item.geometry_lonlat);const road=line(geometry,/primary|secondary|tertiary/.test(item.highway||"")?0x9bb9b9:0x5d8892,1,1);
    if(road)roads.add(road);
   }
-  for(const [index,item] of (coverage.buildings?area.buildings:[]).slice(0,250).entries()){
-   const ring=route(item.geometry_lonlat);if(ring.length<4||ring.length>256)continue;
+  for(const [index,item] of coverage.buildingFeatures.slice(0,250).entries()){
+   const ring=item.geometry_lonlat;
    const shape=new Three.Shape();for(const [i,p] of ring.entries()){const local=xyz(p);if(i===0)shape.moveTo(local.x,-local.z);else shape.lineTo(local.x,-local.z)}
    const height=12+(index*37)%46,geometry=new Three.ExtrudeGeometry(shape,{depth:height,bevelEnabled:false});geometry.rotateX(-Math.PI/2);
    const mesh=new Three.Mesh(geometry,new Three.MeshStandardMaterial({color:index%4===0?0x457589:0x315b6e,roughness:.86,metalness:.08}));
    buildings.add(mesh);
   }
   $("local3d-coverage").textContent="Paradise OSM "+[coverage.roads?"road lines":null,coverage.buildings?"building footprints":null].filter(Boolean).join(" and ")+
-   (coverage.buildings?" · illustrative extrusion heights":"")+" · flat ground, no surveyed terrain"+(coverage.roads?"":" · roads unavailable; no vehicle coverage");
+   (coverage.buildings?" · illustrative extrusion heights":"")+" · flat ground, no surveyed terrain"+
+   (coverage.roads?"":" · roads unavailable; no vehicle coverage")+(coverage.buildings?"":" · buildings unavailable");
  }
  function buildFallback(){
   const pin=new Three.Mesh(new Three.ConeGeometry(span*.022,span*.1,6),new Three.MeshStandardMaterial({color:0xf0ba72,emissive:0x71411b}));

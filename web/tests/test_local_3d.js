@@ -78,5 +78,45 @@ async function test(name,run){try{await run();console.log('PASS '+name)}catch(er
   a.get('local3d-fleet-list').children[0].onclick();assert.match(a.get('local3d-camera').textContent,/OVERVIEW/);
   a.window.KnightTrainingBuses.pause();a.window.KnightLocal3D.update();assert.match(a.get('local3d-hud').textContent,/Whole training fleet/);
  });
- if(failures.length){console.error(`${failures.length} renderer regressions failed`);process.exitCode=1}else console.log('8 local renderer regressions passed');
+ await test('nonempty unusable roads and buildings fail closed for fleet and local coverage',async()=>{
+  const data=structuredClone(area);data.roads=[null,{}];data.buildings=[{}];
+  const a=await app(data),r=await a.open();
+  assert.match(a.get('local3d-coordinate').textContent,/COVERAGE UNAVAILABLE/);
+  assert.equal(a.get('local3d-training').hidden,true,'invalid roads cannot enable training controls');
+  assert.equal(objects(r.scene,x=>x.userData.vehicleId).length,0,'no bus marker is drawn');
+  assert.match(a.get('local3d-coverage').textContent,/No verified local OSM geometry/);
+ });
+ await test('nonempty unusable buildings are not reported as building coverage',async()=>{
+  const data=structuredClone(area);data.buildings=[{}];
+  const a=await app(data),r=await a.open(),groups=r.scene.children.filter(x=>x.type==='Group');
+  assert.equal(groups[1].children.length,0,'no building feature can be drawn');
+  assert.doesNotMatch(a.get('local3d-coverage').textContent,/building footprints/);
+  assert.match(a.get('local3d-coverage').textContent,/buildings unavailable/);
+ });
+ await test('coverage and drawn features agree for mixed malformed and usable geometry',async()=>{
+  const data=structuredClone(area),[west,south]=area.bbox_lonlat;
+  const x=west+.001,y=south+.001;
+  data.roads=[
+   null,
+   {},
+   {geometry_lonlat:[[x,y],[NaN,y]]},
+   {geometry_lonlat:[[x,y]]},
+   {geometry_lonlat:[[x,y],[x,y]]},
+   {geometry_lonlat:[[x,y],[x+.001,y],[x+.002,y]]}
+  ];
+  data.buildings=[
+   null,
+   {},
+   {geometry_lonlat:[[x,y],[NaN,y],[x+.001,y],[x,y]]},
+   {geometry_lonlat:[[x,y],[x+.001,y],[x,y]]},
+   {geometry_lonlat:[[x,y],[x+.001,y],[x+.002,y],[x,y]]},
+   {geometry_lonlat:[[x,y],[x+.001,y],[x+.001,y+.001],[x,y+.001],[x,y]]}
+  ];
+  const a=await app(data),r=await a.open(),groups=r.scene.children.filter(x=>x.type==='Group');
+  assert.equal(groups[0].children.length,1,'only the nondegenerate road is drawn');
+  assert.equal(groups[1].children.length,1,'only the valid closed building ring is extruded');
+  assert.match(a.get('local3d-coverage').textContent,/road lines and building footprints/);
+  assert.doesNotMatch(a.get('local3d-coverage').textContent,/roads unavailable|buildings unavailable/);
+ });
+ if(failures.length){console.error(`${failures.length} renderer regressions failed`);process.exitCode=1}else console.log('11 local renderer regressions passed');
 })();
