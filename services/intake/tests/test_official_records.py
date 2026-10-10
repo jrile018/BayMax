@@ -84,12 +84,22 @@ class OfficialRecordTests(unittest.TestCase):
                                    official_policies=official_policies(CONTRACT))
         self.assertEqual(log.append(record, verification=verification)
                          ["acceptance"]["method"], "official_policy")
-        synopsis = dispatcher_synopsis(log.snapshot("2026-10-10T09:15:00Z"))
+        snapshot = log.snapshot("2026-10-10T09:15:00Z",
+            source_health={"usgs":{"status":"alive",
+                                   "source_time":"2026-10-10T09:13:00Z"}})
+        synopsis = dispatcher_synopsis(snapshot)
         hazard = synopsis["hazards"][0]
         self.assertEqual(hazard["geometry"]["coordinates"], [-151.317, 62.569])
         self.assertEqual(hazard["location_label"], "Example")
         self.assertEqual(hazard["magnitude"], 2.4)
         self.assertEqual(hazard["depth_km"], 90.7)
+        hazard["geometry"]["coordinates"][0] = 0
+        synopsis["source_health"]["usgs"]["status"] = "failure"
+        self.assertEqual(snapshot["categories"]["hazard"][0]
+                         ["geometry"]["coordinates"][0], -151.317)
+        self.assertEqual(snapshot["source_health"]["usgs"]["status"], "alive")
+        self.assertEqual(dispatcher_synopsis(snapshot)["hazards"][0]
+                         ["geometry"]["coordinates"][0], -151.317)
         wrong = IngestionContext(context.accepted_at, context.first_seen_at,
                                  (-125, 32, -114, 42), True)
         with self.assertRaises(SourceError):

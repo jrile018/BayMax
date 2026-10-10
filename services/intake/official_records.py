@@ -6,6 +6,7 @@ module. Provider bytes supply event facts; they never supply acceptance context.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from copy import deepcopy
 from datetime import datetime
 from hashlib import sha256
 import json
@@ -292,7 +293,7 @@ def dispatcher_synopsis(snapshot, *, max_hazards=50):
                 record.get("payload", {}).get("area_desc")
                 or record.get("payload", {}).get("place")
                 or record.get("area_label")),
-            "geometry": record["geometry"],
+            "geometry": deepcopy(record["geometry"]),
             "magnitude": record.get("payload", {}).get("magnitude"),
             "depth_km": record.get("payload", {}).get("depth_km"),
             "effective_at": record.get("payload", {}).get("effective_at"),
@@ -316,6 +317,6 @@ def dispatcher_synopsis(snapshot, *, max_hazards=50):
         "incident_id": snapshot["incident_id"], "cutoff_utc": snapshot["cutoff_utc"],
         "hazards": linked, "hazards_omitted": len(hazards) - len(linked),
         "operational_categories": operational,
-        "source_health": snapshot.get("source_health"),
+        "source_health": deepcopy(snapshot.get("source_health")),
         "can_calculate_operational_outcomes": False,
     }
