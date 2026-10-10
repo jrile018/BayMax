@@ -25,7 +25,8 @@ SOURCE_KINDS = ("observed", "reported", "official_forecast", "authored")
 RECORD_FIELDS = {
     "source_id", "item_id", "revision", "source_url", "raw_sha256", "provider",
     "license", "source_type", "category", "source_kind", "published_at",
-    "observed_at", "valid_through", "first_seen_at", "fetched_at",
+    "observed_at", "valid_from", "valid_through", "message_expires_at",
+    "first_seen_at", "fetched_at",
     "accepted_at", "correction_available_at", "superseded_at", "supersedes", "retracted",
     "source_reference", "geometry", "precision", "area_label",
     "source_uncertainty", "payload",
@@ -273,7 +274,8 @@ class EvidenceLog:
             raise ValueError("unsupported source type or category")
         if r["source_kind"] not in SOURCE_KINDS:
             raise ValueError("unsupported source kind")
-        for field in ("published_at", "observed_at", "valid_through",
+        for field in ("published_at", "observed_at", "valid_from",
+                      "valid_through", "message_expires_at",
                       "correction_available_at"):
             _time(r[field], field, nullable=True)
         for field in ("first_seen_at", "fetched_at", "accepted_at"):

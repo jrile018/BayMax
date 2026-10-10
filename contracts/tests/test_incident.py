@@ -30,7 +30,9 @@ def record(source_id="nws", item_id="alert-1", revision=1, **overrides):
         "source_kind": "official_forecast",
         "published_at": "2026-10-10T08:00:00Z",
         "observed_at": None,
+        "valid_from": None,
         "valid_through": None,
+        "message_expires_at": None,
         "first_seen_at": "2026-10-10T08:30:00Z",
         "fetched_at": "2026-10-10T08:45:00Z",
         "accepted_at": CUT,
@@ -59,7 +61,9 @@ def log():
         [-121, 39, -120, 40],
         official_policies=[
             OfficialPolicy("nws", "NWS", "api.weather.gov",
-                           ("properties.event",), ("event",), "nws-alert-v1")
+                           ("properties.event", "properties.onset",
+                            "properties.ends", "properties.expires"),
+                           ("event",), "nws-alert-v1")
         ],
     )
 
@@ -88,6 +92,20 @@ class IncidentContractTests(unittest.TestCase):
         self.assertEqual(snap["bbox_lonlat"], [-121, 39, -120, 40])
         with self.assertRaises(TypeError):
             store.bbox_lonlat[0] = 0
+
+    def test_nws_onset_and_message_expiration_are_distinct(self):
+        store = log()
+        alert = record(valid_from="2026-10-10T12:00:00Z",
+                       valid_through=None,
+                       message_expires_at="2026-10-10T11:00:00Z",
+                       source_reference={"api_fields": [
+                           "properties.event", "properties.onset",
+                           "properties.ends", "properties.expires"]})
+        store.append(alert, verification=verification())
+        fact = store.snapshot(CUT)["categories"]["hazard"][0]
+        self.assertEqual(fact["valid_from"], "2026-10-10T12:00:00Z")
+        self.assertEqual(fact["message_expires_at"], "2026-10-10T11:00:00Z")
+        self.assertIsNone(fact["valid_through"])
 
     def test_untrusted_self_review_and_official_operational_claim_rejected(self):
         store = log()
