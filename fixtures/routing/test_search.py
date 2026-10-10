@@ -85,6 +85,26 @@ class SearchTests(unittest.TestCase):
         g2=Graph({"A":(0,0),"B":(1,0)},[Edge("ab","A","B",1,1e308)])
         with self.assertRaises(ValueError):
             static_reference(g2,"A","B","bus",1e308)
+    def test_same_node_candidate_requires_forecast_temporal_coverage(self):
+        g = Graph({"A": (0, 0)}, [])
+        safety = SafetySnapshot("forecast", 0, 0, 10,
+                                safe_nodes=frozenset({"A"}),
+                                provenance="authored example")
+        for departure, expected_status in (
+            (9, "feasible"),
+            (10, "feasible"),
+            (11, "no_feasible_candidate"),
+        ):
+            with self.subTest(departure=departure):
+                result = candidate_routes(g, "A", "A", "bus", departure, safety)
+                self.assertEqual(result.status, expected_status)
+                if expected_status == "feasible":
+                    self.assertEqual(result.routes[0].arrival_s, departure)
+                    self.assertEqual(result.routes[0].edge_ids, ())
+                    self.assertTrue(result.routes[0].safety_validated)
+                else:
+                    self.assertEqual(result.routes, ())
+
     def test_departure_before_available_snapshot_rejected(self):
         with self.assertRaises(ValueError):
             candidate_routes(graph(),"A","D","bus",0,known(now=5))

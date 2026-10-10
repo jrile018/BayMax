@@ -71,8 +71,9 @@ def candidate_routes(graph,start,end,vehicle_kind,departure_s,safety,*,max_expan
         clock,path,node,visited=heapq.heappop(queue)
         expansions+=1
         if node==end:
-            routes.append(_record(graph,start,end,vehicle_kind,departure,path,safety,route_version,True,
-                                  "bounded_interval_safe_candidates"))
+            if clock<=safety.horizon_s:
+                routes.append(_record(graph,start,end,vehicle_kind,departure,path,safety,route_version,True,
+                                      "bounded_interval_safe_candidates"))
             continue
         for edge in graph.outgoing[node]:
             if vehicle_kind not in edge.access:

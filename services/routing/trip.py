@@ -105,8 +105,11 @@ class TripExecutor:
                 raise ValueError("route information/graph version is stale")
             if not isclose(route.departure_s,self.now_s+loading,rel_tol=0,abs_tol=1e-8):
                 raise ValueError("route departure must follow actual loading")
-            self.graph.validate_nodes(route.source_node,route.destination_node,route.vehicle_kind)
+            from .checkpoint import _route_valid
+            _route_valid(self.graph,route,self.now_s+loading)
             clock=self.now_s+loading
+            if not route.edge_ids and not safety.known_at_s<=clock<=safety.horizon_s:
+                raise ValueError("zero-edge route departure outside safety coverage")
             node=route.source_node
             if len(route.edge_ids)!=len(route.legs):
                 raise ValueError("route legs must match edge IDs")
@@ -251,8 +254,8 @@ class TripExecutor:
     def replan(self,dispatch_id,safety,trigger_event_id,reason,*,max_expansions=1000):
         with self._atomic():
             self._accept_safety(safety)
-            if not trigger_event_id or not reason:
-                raise ValueError("reroute requires trigger and reason")
+            if not all(isinstance(value,str) and value for value in (safety.version,trigger_event_id,reason)):
+                raise ValueError("reroute requires nonempty string safety version, trigger and reason")
             key=(dispatch_id,trigger_event_id)
             if key in self._triggers:
                 version,old_reason,result=self._triggers[key]
