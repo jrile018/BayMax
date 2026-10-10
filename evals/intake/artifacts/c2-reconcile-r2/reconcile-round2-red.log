@@ -1,0 +1,175 @@
+.....................FFFFFFFF.                                           [100%]
+=================================== FAILURES ===================================
+_ test_prior_event_noun_count_does_not_size_current_request[Water is needed at Pine School following yesterday's delivery of 10 bottles.] _
+
+text = "Water is needed at Pine School following yesterday's delivery of 10 bottles."
+
+    @pytest.mark.parametrize('text', [
+        "Water is needed at Pine School following yesterday's delivery of 10 bottles.",
+        "Water is needed at Pine School despite yesterday's distribution of 10 bottles.",
+        'Water is needed at Pine School following the arrival of 10 bottles.',
+    ])
+    def test_prior_event_noun_count_does_not_size_current_request(text):
+        report = Report('audit:past-noun:' + text, 'fictional', 10, text)
+        raw = proposal(claim(text, kind='need', label='water', evidence=text,
+                             location='Pine School', quantity=10, unit='bottles'))
+        store = ReviewStore({'Pine School': {'entity_id': 'pine',
+                                             'entity_type': 'node', 'source': 'fictional graph'}})
+>       with pytest.raises(ValidationError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValidationError
+
+services/intake/tests/test_intake_audit.py:208: Failed
+_ test_prior_event_noun_count_does_not_size_current_request[Water is needed at Pine School despite yesterday's distribution of 10 bottles.] _
+
+text = "Water is needed at Pine School despite yesterday's distribution of 10 bottles."
+
+    @pytest.mark.parametrize('text', [
+        "Water is needed at Pine School following yesterday's delivery of 10 bottles.",
+        "Water is needed at Pine School despite yesterday's distribution of 10 bottles.",
+        'Water is needed at Pine School following the arrival of 10 bottles.',
+    ])
+    def test_prior_event_noun_count_does_not_size_current_request(text):
+        report = Report('audit:past-noun:' + text, 'fictional', 10, text)
+        raw = proposal(claim(text, kind='need', label='water', evidence=text,
+                             location='Pine School', quantity=10, unit='bottles'))
+        store = ReviewStore({'Pine School': {'entity_id': 'pine',
+                                             'entity_type': 'node', 'source': 'fictional graph'}})
+>       with pytest.raises(ValidationError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValidationError
+
+services/intake/tests/test_intake_audit.py:208: Failed
+_ test_prior_event_noun_count_does_not_size_current_request[Water is needed at Pine School following the arrival of 10 bottles.] _
+
+text = 'Water is needed at Pine School following the arrival of 10 bottles.'
+
+    @pytest.mark.parametrize('text', [
+        "Water is needed at Pine School following yesterday's delivery of 10 bottles.",
+        "Water is needed at Pine School despite yesterday's distribution of 10 bottles.",
+        'Water is needed at Pine School following the arrival of 10 bottles.',
+    ])
+    def test_prior_event_noun_count_does_not_size_current_request(text):
+        report = Report('audit:past-noun:' + text, 'fictional', 10, text)
+        raw = proposal(claim(text, kind='need', label='water', evidence=text,
+                             location='Pine School', quantity=10, unit='bottles'))
+        store = ReviewStore({'Pine School': {'entity_id': 'pine',
+                                             'entity_type': 'node', 'source': 'fictional graph'}})
+>       with pytest.raises(ValidationError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValidationError
+
+services/intake/tests/test_intake_audit.py:208: Failed
+_ test_adjacent_restriction_on_first_road_blocks_unscoped_open[Highway A is open. Only bicycles arriving from Highway B may cross it.] _
+
+text = 'Highway A is open. Only bicycles arriving from Highway B may cross it.'
+
+    @pytest.mark.parametrize('text', [
+        'Highway A is open. Only bicycles arriving from Highway B may cross it.',
+        'Highway A is open. Trucks coming from Highway B may not use it.',
+        'Highway A is open. Bicycles only.',
+        'Highway A is open. Access is limited to bicycles.',
+    ])
+    def test_adjacent_restriction_on_first_road_blocks_unscoped_open(text):
+        report = Report('audit:restricted-a:' + text, 'fictional', 10, text)
+        raw = proposal(claim(text, kind='access', label='open',
+                             evidence='Highway A is open', location='Highway A'))
+        store = ReviewStore({'Highway A': {'entity_id': 'highway-a',
+                                          'entity_type': 'edge', 'source': 'fictional graph'}})
+        rec = store.submit(report, raw, 'scripted')
+>       assert 'qualified_access' in rec.proposal.claims[0].flags
+E       AssertionError: assert 'qualified_access' in ()
+E        +  where () = Claim(claim_id='audit', kind='access', label='open', evidence=Evidence(start=0, end=17, quote='Highway A is open'), qu...t=None, urgency=None, location=Slot(value='Highway A', evidence=Evidence(start=0, end=9, quote='Highway A')), flags=()).flags
+
+services/intake/tests/test_intake_audit.py:225: AssertionError
+_ test_adjacent_restriction_on_first_road_blocks_unscoped_open[Highway A is open. Trucks coming from Highway B may not use it.] _
+
+text = 'Highway A is open. Trucks coming from Highway B may not use it.'
+
+    @pytest.mark.parametrize('text', [
+        'Highway A is open. Only bicycles arriving from Highway B may cross it.',
+        'Highway A is open. Trucks coming from Highway B may not use it.',
+        'Highway A is open. Bicycles only.',
+        'Highway A is open. Access is limited to bicycles.',
+    ])
+    def test_adjacent_restriction_on_first_road_blocks_unscoped_open(text):
+        report = Report('audit:restricted-a:' + text, 'fictional', 10, text)
+        raw = proposal(claim(text, kind='access', label='open',
+                             evidence='Highway A is open', location='Highway A'))
+        store = ReviewStore({'Highway A': {'entity_id': 'highway-a',
+                                          'entity_type': 'edge', 'source': 'fictional graph'}})
+        rec = store.submit(report, raw, 'scripted')
+>       assert 'qualified_access' in rec.proposal.claims[0].flags
+E       AssertionError: assert 'qualified_access' in ()
+E        +  where () = Claim(claim_id='audit', kind='access', label='open', evidence=Evidence(start=0, end=17, quote='Highway A is open'), qu...t=None, urgency=None, location=Slot(value='Highway A', evidence=Evidence(start=0, end=9, quote='Highway A')), flags=()).flags
+
+services/intake/tests/test_intake_audit.py:225: AssertionError
+_ test_adjacent_restriction_on_first_road_blocks_unscoped_open[Highway A is open. Bicycles only.] _
+
+text = 'Highway A is open. Bicycles only.'
+
+    @pytest.mark.parametrize('text', [
+        'Highway A is open. Only bicycles arriving from Highway B may cross it.',
+        'Highway A is open. Trucks coming from Highway B may not use it.',
+        'Highway A is open. Bicycles only.',
+        'Highway A is open. Access is limited to bicycles.',
+    ])
+    def test_adjacent_restriction_on_first_road_blocks_unscoped_open(text):
+        report = Report('audit:restricted-a:' + text, 'fictional', 10, text)
+        raw = proposal(claim(text, kind='access', label='open',
+                             evidence='Highway A is open', location='Highway A'))
+        store = ReviewStore({'Highway A': {'entity_id': 'highway-a',
+                                          'entity_type': 'edge', 'source': 'fictional graph'}})
+        rec = store.submit(report, raw, 'scripted')
+>       assert 'qualified_access' in rec.proposal.claims[0].flags
+E       AssertionError: assert 'qualified_access' in ()
+E        +  where () = Claim(claim_id='audit', kind='access', label='open', evidence=Evidence(start=0, end=17, quote='Highway A is open'), qu...t=None, urgency=None, location=Slot(value='Highway A', evidence=Evidence(start=0, end=9, quote='Highway A')), flags=()).flags
+
+services/intake/tests/test_intake_audit.py:225: AssertionError
+_ test_adjacent_restriction_on_first_road_blocks_unscoped_open[Highway A is open. Access is limited to bicycles.] _
+
+text = 'Highway A is open. Access is limited to bicycles.'
+
+    @pytest.mark.parametrize('text', [
+        'Highway A is open. Only bicycles arriving from Highway B may cross it.',
+        'Highway A is open. Trucks coming from Highway B may not use it.',
+        'Highway A is open. Bicycles only.',
+        'Highway A is open. Access is limited to bicycles.',
+    ])
+    def test_adjacent_restriction_on_first_road_blocks_unscoped_open(text):
+        report = Report('audit:restricted-a:' + text, 'fictional', 10, text)
+        raw = proposal(claim(text, kind='access', label='open',
+                             evidence='Highway A is open', location='Highway A'))
+        store = ReviewStore({'Highway A': {'entity_id': 'highway-a',
+                                          'entity_type': 'edge', 'source': 'fictional graph'}})
+        rec = store.submit(report, raw, 'scripted')
+>       assert 'qualified_access' in rec.proposal.claims[0].flags
+E       AssertionError: assert 'qualified_access' in ()
+E        +  where () = Claim(claim_id='audit', kind='access', label='open', evidence=Evidence(start=0, end=17, quote='Highway A is open'), qu...t=None, urgency=None, location=Slot(value='Highway A', evidence=Evidence(start=0, end=9, quote='Highway A')), flags=()).flags
+
+services/intake/tests/test_intake_audit.py:225: AssertionError
+_______ test_semicolon_independent_vehicle_need_does_not_scope_open_road _______
+
+    def test_semicolon_independent_vehicle_need_does_not_scope_open_road():
+        text = 'Highway A is open; trucks need fuel.'
+        report = Report('audit:independent-semicolon-need', 'fictional', 10, text)
+        raw = proposal(claim(text, kind='access', label='open',
+                             evidence='Highway A is open', location='Highway A'))
+        store = ReviewStore({'Highway A': {'entity_id': 'highway-a',
+                                          'entity_type': 'edge', 'source': 'fictional graph'}})
+        rec = store.submit(report, raw, 'scripted')
+>       assert 'qualified_access' not in rec.proposal.claims[0].flags
+E       AssertionError: assert 'qualified_access' not in ('qualified_access',)
+E        +  where ('qualified_access',) = Claim(claim_id='audit', kind='access', label='open', evidence=Evidence(start=0, end=17, quote='Highway A is open'), qu...e, location=Slot(value='Highway A', evidence=Evidence(start=0, end=9, quote='Highway A')), flags=('qualified_access',)).flags
+
+services/intake/tests/test_intake_audit.py:238: AssertionError
+=========================== short test summary info ============================
+FAILED services/intake/tests/test_intake_audit.py::test_prior_event_noun_count_does_not_size_current_request[Water is needed at Pine School following yesterday's delivery of 10 bottles.]
+FAILED services/intake/tests/test_intake_audit.py::test_prior_event_noun_count_does_not_size_current_request[Water is needed at Pine School despite yesterday's distribution of 10 bottles.]
+FAILED services/intake/tests/test_intake_audit.py::test_prior_event_noun_count_does_not_size_current_request[Water is needed at Pine School following the arrival of 10 bottles.]
+FAILED services/intake/tests/test_intake_audit.py::test_adjacent_restriction_on_first_road_blocks_unscoped_open[Highway A is open. Only bicycles arriving from Highway B may cross it.]
+FAILED services/intake/tests/test_intake_audit.py::test_adjacent_restriction_on_first_road_blocks_unscoped_open[Highway A is open. Trucks coming from Highway B may not use it.]
+FAILED services/intake/tests/test_intake_audit.py::test_adjacent_restriction_on_first_road_blocks_unscoped_open[Highway A is open. Bicycles only.]
+FAILED services/intake/tests/test_intake_audit.py::test_adjacent_restriction_on_first_road_blocks_unscoped_open[Highway A is open. Access is limited to bicycles.]
+FAILED services/intake/tests/test_intake_audit.py::test_semicolon_independent_vehicle_need_does_not_scope_open_road
+8 failed, 22 passed in 0.09s
