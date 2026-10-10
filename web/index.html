@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="./style.css">
 <script src="./upstream-panel-rail.js" defer></script>
 <script src="./satellite.js" defer></script>
+  <script src="./earth-places.js" defer></script>
   <script src="./earth-globe.js" defer></script>
   <script src="./situation.js" defer></script>
   <script src="./app.js" defer></script>
@@ -56,8 +57,12 @@
       </svg>
       <div id="earth-panel" class="earth-panel" hidden aria-label="Interactive NASA Earth overview">
         <div id="earth-canvas" class="earth-canvas"></div>
-        <div class="earth-hero"><span class="earth-kicker">GLOBAL CONTEXT / PARADISE, CALIFORNIA</span><h2>One planet.<br><em>One local story.</em></h2><p>Drag the real Earth to explore. Then open Paradise on satellite imagery and step through the recorded training replay.</p><button id="earth-local-button" type="button">Explore Paradise satellite map <span>↗</span></button><small id="earth-state">Earth view loading…</small></div>
-        <div class="earth-credit">NASA/GSFC SVS Blue Marble composite (historic visualization) · <a href="https://svs.gsfc.nasa.gov/3615" target="_blank" rel="noopener noreferrer">Source &amp; credits</a></div>
+        <div id="earth-pin-layer" class="earth-pin-layer" aria-label="Selectable places on Earth"></div>
+        <div class="earth-head"><div class="earth-brand"><span class="earth-kicker">KNIGHT26 / EARTH CONTEXT</span><strong>Explore verified places</strong><small id="earth-source-state">Checking accepted sources</small></div><button id="earth-local-button" type="button">Paradise local map ↗</button></div>
+        <section class="earth-hero" aria-label="Earth places"><span class="earth-kicker">GLOBAL CONTEXT</span><h2>One planet.<br><em>Many local stories.</em></h2><p>Choose a source-backed place or hover over a globe marker. Historical context and accepted current observations stay separate.</p><div id="earth-place-list" class="earth-place-list" role="group" aria-label="Places and accepted observations"></div><small id="earth-state">Earth view loading…</small></section>
+        <div id="earth-hover" class="earth-hover" role="status" hidden><strong id="earth-hover-title"></strong><p id="earth-hover-summary"></p></div>
+        <aside id="earth-detail" class="earth-detail" aria-label="Selected place details" hidden><button id="earth-detail-close" class="earth-detail-close" type="button" aria-label="Close place details">×</button><small id="earth-detail-kind"></small><h2 id="earth-detail-title"></h2><h3 id="earth-detail-context-heading">Historical context</h3><p id="earth-detail-history"></p><p id="earth-detail-stat" class="earth-detail-stat"></p><a id="earth-detail-history-link" target="_blank" rel="noopener noreferrer" hidden>Historical source ↗</a><h3>Current known situation</h3><p id="earth-detail-current"></p><a id="earth-detail-current-link" target="_blank" rel="noopener noreferrer" hidden>Current source ↗</a><p id="earth-detail-news" class="earth-detail-news"></p><small id="earth-detail-evidence"></small><button id="earth-detail-map" type="button" hidden>Open Paradise training map ↗</button></aside>
+        <div class="earth-credit">NASA/GSFC SVS Blue Marble (historic visualization) · <a href="https://svs.gsfc.nasa.gov/3615" target="_blank" rel="noopener noreferrer">Image source</a> · <span id="earth-provenance">Training replay separate from accepted sources</span></div>
       </div>
       <div class="map-topline">
         <div class="map-title"><span id="view-chip" class="local-map-chip">REAL-WORLD SATELLITE MAP</span><span id="source-chip" class="source-chip">Checking map data</span><strong id="map-area-label">Loading area</strong><span id="map-subtitle">Waiting for source records</span></div>

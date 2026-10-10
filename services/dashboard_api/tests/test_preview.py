@@ -23,6 +23,17 @@ class PreviewTests(unittest.TestCase):
         html=render_preview(Store(),root/'web')
         self.assertIn('Saved recorded replay',html)
         self.assertNotIn('Saved mock replay',html)
+    def test_accepted_asof_snapshot_is_embedded_and_labeled_not_live(self):
+        class Store:
+            def bootstrap(self):return {'mode':'recorded-replay','replay':{'frame_count':0}}
+            def frame(self,i):raise AssertionError('No frames')
+        root=Path(__file__).resolve().parents[3]
+        snapshot={'cutoff_utc':'2026-10-10T20:53:39Z','snapshot_hash':'verified-test-hash','categories':{'hazard':[]}}
+        html=render_preview(Store(),root/'web',lambda:snapshot)
+        self.assertIn('saved snapshot, not live',html)
+        self.assertIn('"status":"available","snapshot":',html)
+        self.assertIn('verified-test-hash',html)
+        self.assertIn("url.pathname.endsWith('/api/situation')",html)
     def test_untrusted_record_json_cannot_end_script(self):
         class Store:
             def bootstrap(self):return {'area':{},'replay':{'frame_count':1},'label':'</script><script>injection()'}

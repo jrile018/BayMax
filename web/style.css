@@ -106,3 +106,32 @@ body.earth-mode .app-shell{grid-template-rows:64px minmax(0,1fr)}
 body.earth-mode .replay-dock{display:none}
 @media(max-width:900px){body.earth-mode .app-shell{grid-template-rows:58px minmax(0,1fr)}}
 @media(max-width:760px){body.earth-mode .app-shell{grid-template-rows:56px minmax(0,1fr)}}
+
+
+/* Earth is a full-window source context, with its own compact controls. */
+body.earth-mode .app-shell,body.earth-mode:has(.saved-preview-banner) .app-shell{height:100dvh;grid-template-rows:minmax(0,1fr)}
+body.earth-mode .topbar,body.earth-mode .replay-dock,body.earth-mode .saved-preview-banner,body.earth-mode .map-topline,body.earth-mode .source-banner,body.earth-mode .map-tools,body.earth-mode .panel,body.earth-mode .collapsed-rail,body.earth-mode .mobile-scrim{display:none!important}
+.earth-head{position:absolute;z-index:7;left:22px;right:22px;top:18px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;pointer-events:none}
+.earth-brand{display:grid;gap:3px;padding:11px 14px;background:#071927d9;border:1px solid #446571;border-radius:5px;box-shadow:var(--shadow)}
+.earth-brand strong{font-size:15px;letter-spacing:-.02em}.earth-brand small{font:10px var(--mono);color:#accbd1;max-width:350px;line-height:1.4}
+.earth-head button{pointer-events:auto;background:#a8e3da;color:#052730;border:1px solid #c8f5ec;border-radius:4px;padding:11px 14px;font:700 11px var(--mono);box-shadow:var(--shadow)}
+.earth-head button:hover{background:#dcfff6}
+.earth-mode .earth-hero{left:22px;top:145px;bottom:auto;right:auto;transform:none;width:min(315px,calc(100vw - 44px));max-width:none;padding:16px;background:#071927db;border:1px solid #446571;border-radius:5px;box-shadow:var(--shadow);pointer-events:auto}
+.earth-hero h2{font-size:clamp(27px,2.8vw,40px);margin:9px 0}.earth-hero p{margin:0 0 13px;font-size:11px;line-height:1.5}
+.earth-place-list{display:grid;gap:5px;max-height:min(33vh,290px);overflow:auto;padding-right:3px}
+.earth-hero .earth-place-list button{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0;padding:9px 10px;width:100%;text-align:left;background:#163243e8;color:#edf7f5;border:1px solid #426774;box-shadow:none;font:600 11px var(--body)}
+.earth-hero .earth-place-list button:hover,.earth-hero .earth-place-list button[aria-pressed=true]{border-color:#a8e3da;background:#245160}
+.earth-place-list button small{display:block;color:#a7c4ca;font:9px var(--mono);margin:2px 0 0}.earth-place-list button b{color:#b3e7e0;font:14px var(--mono)}
+.earth-hero #earth-state{margin-top:10px;line-height:1.4}
+.earth-pin-layer{position:absolute;inset:0;z-index:4;pointer-events:none}
+.earth-pin{position:absolute;width:19px;height:19px;transform:translate(-50%,-50%);pointer-events:auto;border:3px solid #ffe5b4;border-radius:50%;background:#e99650;box-shadow:0 0 0 7px #e996504d,0 0 18px #e99650aa;font-size:0;cursor:pointer}
+.earth-pin.accepted{width:14px;height:14px;border-color:#c6fffa;background:#2cd0ce;box-shadow:0 0 0 5px #2cd0ce4d,0 0 16px #2cd0ceaa}
+.earth-pin:hover,.earth-pin[aria-pressed=true]{outline:2px solid white;outline-offset:7px}
+.earth-hover{position:absolute;z-index:8;max-width:265px;padding:9px 11px;background:#0d2534ed;border:1px solid #8ad8d6;border-radius:4px;box-shadow:var(--shadow);pointer-events:none}
+.earth-hover strong{font-size:12px}.earth-hover p{margin:4px 0 0;color:#bfd4d7;font-size:10px;line-height:1.4}
+.earth-detail{position:absolute;z-index:7;right:22px;top:105px;width:min(350px,calc(100vw - 44px));max-height:calc(100% - 158px);overflow:auto;padding:17px;background:#0a2231f0;border:1px solid #5b8991;border-radius:5px;box-shadow:var(--shadow)}
+.earth-detail-close{float:right;border:1px solid #567783;border-radius:3px;background:#163c4d;color:#eaf8f5;width:32px;height:32px;font-size:22px}.earth-detail>small:first-of-type{display:block;color:#8bd8d5;font:10px var(--mono);letter-spacing:.1em}.earth-detail h2{font-size:20px;line-height:1.15;margin:10px 32px 16px 0}.earth-detail h3{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#8bd8d5;margin:16px 0 7px}.earth-detail p{font-size:11px;line-height:1.55;color:#cadadd;margin:4px 0}.earth-detail .earth-detail-stat{color:#ffcf93;font:11px var(--mono)}.earth-detail a{display:inline-block;margin:5px 0;color:#9ce6e1;font-size:10px}.earth-detail-news{border-top:1px solid #3a5c69;padding-top:10px;color:#f7c588!important}.earth-detail #earth-detail-evidence{display:block;color:#91aeb7;line-height:1.45;margin-top:11px}.earth-detail #earth-detail-map{margin-top:13px;padding:9px 12px;background:#a8e3da;color:#052730;border:0;border-radius:3px;font:700 10px var(--mono)}
+.earth-mode .earth-credit{left:22px;right:auto;bottom:14px;max-width:calc(100% - 44px);line-height:1.4}
+@media(max-width:900px){.earth-mode .earth-hero{top:125px;width:260px}.earth-hero h2{font-size:27px}.earth-detail{right:12px;width:285px}}
+@media(max-width:760px){.earth-head{left:10px;right:10px;top:9px}.earth-brand{padding:7px 9px;max-width:55%}.earth-brand strong{font-size:12px}.earth-brand small{font-size:8px}.earth-head button{padding:9px;font-size:9px;min-height:44px}.earth-mode .earth-hero{left:10px;top:auto;bottom:42px;right:auto;width:min(250px,calc(100vw - 20px));max-height:42vh;overflow:auto;padding:10px}.earth-hero h2{font-size:22px;margin:5px 0}.earth-hero p{font-size:10px;margin-bottom:7px}.earth-place-list{max-height:17vh}.earth-hero .earth-place-list button{min-height:38px;padding:6px 8px}.earth-detail{left:10px;right:10px;top:75px;width:auto;max-height:calc(100% - 137px)}.earth-mode .earth-credit{left:auto;right:8px;bottom:7px;max-width:calc(100% - 270px);font-size:7px;text-align:right}}
+.earth-detail #earth-detail-evidence{overflow-wrap:anywhere}
