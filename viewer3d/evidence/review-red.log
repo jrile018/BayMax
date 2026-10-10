@@ -1,0 +1,113 @@
+COMMAND: taskset -c 0,1 /opt/venv/bin/python -m pytest viewer3d/tests -q -p no:cacheprovider
+ENV: OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 PYTHONDONTWRITEBYTECODE=1
+............................................FFFFFFF                      [100%]
+=================================== FAILURES ===================================
+_ test_route_record_in_plain_line_category_cannot_drop_version_or_role[roads] __
+
+category = 'roads'
+
+    @pytest.mark.parametrize("category", ["roads", "trails"])
+    def test_route_record_in_plain_line_category_cannot_drop_version_or_role(category):
+        s, data = fixture()
+>       with pytest.raises(ValueError, match="record"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+viewer3d/tests/test_scene.py:240: Failed
+_ test_route_record_in_plain_line_category_cannot_drop_version_or_role[trails] _
+
+category = 'trails'
+
+    @pytest.mark.parametrize("category", ["roads", "trails"])
+    def test_route_record_in_plain_line_category_cannot_drop_version_or_role(category):
+        s, data = fixture()
+>       with pytest.raises(ValueError, match="record"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+viewer3d/tests/test_scene.py:240: Failed
+___ test_scene_requires_explicit_horizontal_metres_and_preserves_declaration ___
+
+    def test_scene_requires_explicit_horizontal_metres_and_preserves_declaration():
+        s, data = fixture()
+>       assert "horizontal_units" in data.__dataclass_fields__, "explicit horizontal unit declaration missing"
+E       AssertionError: explicit horizontal unit declaration missing
+E       assert 'horizontal_units' in {'frame': Field(name='frame',type=<class 'viewer3d.scene.FrameIdentity'>,default=<dataclasses._MISSING_TYPE object at ...>,init=True,repr=True,hash=None,compare=True,metadata=mappingproxy({}),kw_only=False,doc=None,_field_type=_FIELD), ...}
+E        +  where {'frame': Field(name='frame',type=<class 'viewer3d.scene.FrameIdentity'>,default=<dataclasses._MISSING_TYPE object at ...>,init=True,repr=True,hash=None,compare=True,metadata=mappingproxy({}),kw_only=False,doc=None,_field_type=_FIELD), ...} = SceneInput(frame=FrameIdentity(run_id='run-a', scenario_id='scenario-a', time_s=12.5, snapshot_hash='snapshot-a'), met...ns=('constructed training geometry',)), kind='medical', position=MetricPoint(x_m=70, y_m=70, z_m=0), status='unmet'),)).__dataclass_fields__
+
+viewer3d/tests/test_scene.py:246: AssertionError
+____ test_missing_or_nonmetre_horizontal_units_rejected[EPSG:4269-degrees] _____
+
+crs = 'EPSG:4269', units = 'degrees'
+
+    @pytest.mark.parametrize("crs,units", [
+        ("EPSG:4269", "degrees"), ("EPSG:2263", "ft"),
+        ("LOCAL_METRIC:fixture", None), ("LOCAL_METRIC:fixture", "unknown"),
+    ])
+    def test_missing_or_nonmetre_horizontal_units_rejected(crs, units):
+        s, data = fixture()
+>       assert "horizontal_units" in data.__dataclass_fields__, "explicit horizontal unit declaration missing"
+E       AssertionError: explicit horizontal unit declaration missing
+E       assert 'horizontal_units' in {'frame': Field(name='frame',type=<class 'viewer3d.scene.FrameIdentity'>,default=<dataclasses._MISSING_TYPE object at ...>,init=True,repr=True,hash=None,compare=True,metadata=mappingproxy({}),kw_only=False,doc=None,_field_type=_FIELD), ...}
+E        +  where {'frame': Field(name='frame',type=<class 'viewer3d.scene.FrameIdentity'>,default=<dataclasses._MISSING_TYPE object at ...>,init=True,repr=True,hash=None,compare=True,metadata=mappingproxy({}),kw_only=False,doc=None,_field_type=_FIELD), ...} = SceneInput(frame=FrameIdentity(run_id='run-a', scenario_id='scenario-a', time_s=12.5, snapshot_hash='snapshot-a'), met...ns=('constructed training geometry',)), kind='medical', position=MetricPoint(x_m=70, y_m=70, z_m=0), status='unmet'),)).__dataclass_fields__
+
+viewer3d/tests/test_scene.py:257: AssertionError
+_______ test_missing_or_nonmetre_horizontal_units_rejected[EPSG:2263-ft] _______
+
+crs = 'EPSG:2263', units = 'ft'
+
+    @pytest.mark.parametrize("crs,units", [
+        ("EPSG:4269", "degrees"), ("EPSG:2263", "ft"),
+        ("LOCAL_METRIC:fixture", None), ("LOCAL_METRIC:fixture", "unknown"),
+    ])
+    def test_missing_or_nonmetre_horizontal_units_rejected(crs, units):
+        s, data = fixture()
+>       assert "horizontal_units" in data.__dataclass_fields__, "explicit horizontal unit declaration missing"
+E       AssertionError: explicit horizontal unit declaration missing
+E       assert 'horizontal_units' in {'frame': Field(name='frame',type=<class 'viewer3d.scene.FrameIdentity'>,default=<dataclasses._MISSING_TYPE object at ...>,init=True,repr=True,hash=None,compare=True,metadata=mappingproxy({}),kw_only=False,doc=None,_field_type=_FIELD), ...}
+E        +  where {'frame': Field(name='frame',type=<class 'viewer3d.scene.FrameIdentity'>,default=<dataclasses._MISSING_TYPE object at ...>,init=True,repr=True,hash=None,compare=True,metadata=mappingproxy({}),kw_only=False,doc=None,_field_type=_FIELD), ...} = SceneInput(frame=FrameIdentity(run_id='run-a', scenario_id='scenario-a', time_s=12.5, snapshot_hash='snapshot-a'), met...ns=('constructed training geometry',)), kind='medical', position=MetricPoint(x_m=70, y_m=70, z_m=0), status='unmet'),)).__dataclass_fields__
+
+viewer3d/tests/test_scene.py:257: AssertionError
+_ test_missing_or_nonmetre_horizontal_units_rejected[LOCAL_METRIC:fixture-None] _
+
+crs = 'LOCAL_METRIC:fixture', units = None
+
+    @pytest.mark.parametrize("crs,units", [
+        ("EPSG:4269", "degrees"), ("EPSG:2263", "ft"),
+        ("LOCAL_METRIC:fixture", None), ("LOCAL_METRIC:fixture", "unknown"),
+    ])
+    def test_missing_or_nonmetre_horizontal_units_rejected(crs, units):
+        s, data = fixture()
+>       assert "horizontal_units" in data.__dataclass_fields__, "explicit horizontal unit declaration missing"
+E       AssertionError: explicit horizontal unit declaration missing
+E       assert 'horizontal_units' in {'frame': Field(name='frame',type=<class 'viewer3d.scene.FrameIdentity'>,default=<dataclasses._MISSING_TYPE object at ...>,init=True,repr=True,hash=None,compare=True,metadata=mappingproxy({}),kw_only=False,doc=None,_field_type=_FIELD), ...}
+E        +  where {'frame': Field(name='frame',type=<class 'viewer3d.scene.FrameIdentity'>,default=<dataclasses._MISSING_TYPE object at ...>,init=True,repr=True,hash=None,compare=True,metadata=mappingproxy({}),kw_only=False,doc=None,_field_type=_FIELD), ...} = SceneInput(frame=FrameIdentity(run_id='run-a', scenario_id='scenario-a', time_s=12.5, snapshot_hash='snapshot-a'), met...ns=('constructed training geometry',)), kind='medical', position=MetricPoint(x_m=70, y_m=70, z_m=0), status='unmet'),)).__dataclass_fields__
+
+viewer3d/tests/test_scene.py:257: AssertionError
+_ test_missing_or_nonmetre_horizontal_units_rejected[LOCAL_METRIC:fixture-unknown] _
+
+crs = 'LOCAL_METRIC:fixture', units = 'unknown'
+
+    @pytest.mark.parametrize("crs,units", [
+        ("EPSG:4269", "degrees"), ("EPSG:2263", "ft"),
+        ("LOCAL_METRIC:fixture", None), ("LOCAL_METRIC:fixture", "unknown"),
+    ])
+    def test_missing_or_nonmetre_horizontal_units_rejected(crs, units):
+        s, data = fixture()
+>       assert "horizontal_units" in data.__dataclass_fields__, "explicit horizontal unit declaration missing"
+E       AssertionError: explicit horizontal unit declaration missing
+E       assert 'horizontal_units' in {'frame': Field(name='frame',type=<class 'viewer3d.scene.FrameIdentity'>,default=<dataclasses._MISSING_TYPE object at ...>,init=True,repr=True,hash=None,compare=True,metadata=mappingproxy({}),kw_only=False,doc=None,_field_type=_FIELD), ...}
+E        +  where {'frame': Field(name='frame',type=<class 'viewer3d.scene.FrameIdentity'>,default=<dataclasses._MISSING_TYPE object at ...>,init=True,repr=True,hash=None,compare=True,metadata=mappingproxy({}),kw_only=False,doc=None,_field_type=_FIELD), ...} = SceneInput(frame=FrameIdentity(run_id='run-a', scenario_id='scenario-a', time_s=12.5, snapshot_hash='snapshot-a'), met...ns=('constructed training geometry',)), kind='medical', position=MetricPoint(x_m=70, y_m=70, z_m=0), status='unmet'),)).__dataclass_fields__
+
+viewer3d/tests/test_scene.py:257: AssertionError
+=========================== short test summary info ============================
+FAILED viewer3d/tests/test_scene.py::test_route_record_in_plain_line_category_cannot_drop_version_or_role[roads]
+FAILED viewer3d/tests/test_scene.py::test_route_record_in_plain_line_category_cannot_drop_version_or_role[trails]
+FAILED viewer3d/tests/test_scene.py::test_scene_requires_explicit_horizontal_metres_and_preserves_declaration
+FAILED viewer3d/tests/test_scene.py::test_missing_or_nonmetre_horizontal_units_rejected[EPSG:4269-degrees]
+FAILED viewer3d/tests/test_scene.py::test_missing_or_nonmetre_horizontal_units_rejected[EPSG:2263-ft]
+FAILED viewer3d/tests/test_scene.py::test_missing_or_nonmetre_horizontal_units_rejected[LOCAL_METRIC:fixture-None]
+FAILED viewer3d/tests/test_scene.py::test_missing_or_nonmetre_horizontal_units_rejected[LOCAL_METRIC:fixture-unknown]
+7 failed, 44 passed in 0.11s
+
+EXIT_CODE:1

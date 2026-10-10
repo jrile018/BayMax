@@ -1,0 +1,5 @@
+# CPython3.14 Linuxx86_64 wheels; metadata verified2026-10-10, not installed.
+# https://pypi.org/project/moderngl/5.13.0/#files
+moderngl==5.13.0 --hash=sha256:e58fd41ce49b52701fec5a08d20733d64527e6efdabaf242b09e7f717734db1a
+# https://pypi.org/project/glcontext/3.1.0/#files
+glcontext==3.1.0 --hash=sha256:3a96f4424212e79358a105b4869faa0818bd18f36a55155cf67f01e9f37341d5

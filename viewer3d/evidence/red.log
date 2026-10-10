@@ -1,0 +1,996 @@
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF                                   [100%]
+=================================== FAILURES ===================================
+________ test_exact_authoritative_position_route_and_trail_are_retained ________
+
+    def test_exact_authoritative_position_route_and_trail_are_retained():
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+____ test_terrain_mesh_and_source_manifest_survive_deterministic_projection ____
+
+    def test_terrain_mesh_and_source_manifest_survive_deterministic_projection():
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+_____ test_missing_height_stays_unknown_and_explicit_assumption_is_labeled _____
+
+    def test_missing_height_stays_unknown_and_explicit_assumption_is_labeled():
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+_____ test_route_roles_are_distinguishable_without_color[candidate-dashed] _____
+
+role = 'candidate', style = 'dashed'
+
+    @pytest.mark.parametrize("role,style", [("candidate", "dashed"), ("committed", "solid"), ("previous", "dash-dot")])
+    def test_route_roles_are_distinguishable_without_color(role, style):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+_____ test_route_roles_are_distinguishable_without_color[committed-solid] ______
+
+role = 'committed', style = 'solid'
+
+    @pytest.mark.parametrize("role,style", [("candidate", "dashed"), ("committed", "solid"), ("previous", "dash-dot")])
+    def test_route_roles_are_distinguishable_without_color(role, style):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+____ test_route_roles_are_distinguishable_without_color[previous-dash-dot] _____
+
+role = 'previous', style = 'dash-dot'
+
+    @pytest.mark.parametrize("role,style", [("candidate", "dashed"), ("committed", "solid"), ("previous", "dash-dot")])
+    def test_route_roles_are_distinguishable_without_color(role, style):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+________________ test_mixed_frame_identity_is_rejected[run_id] _________________
+
+field = 'run_id'
+
+    @pytest.mark.parametrize("field", ["run_id", "scenario_id", "time_s", "snapshot_hash"])
+    def test_mixed_frame_identity_is_rejected(field):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:92: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+______________ test_mixed_frame_identity_is_rejected[scenario_id] ______________
+
+field = 'scenario_id'
+
+    @pytest.mark.parametrize("field", ["run_id", "scenario_id", "time_s", "snapshot_hash"])
+    def test_mixed_frame_identity_is_rejected(field):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:92: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+________________ test_mixed_frame_identity_is_rejected[time_s] _________________
+
+field = 'time_s'
+
+    @pytest.mark.parametrize("field", ["run_id", "scenario_id", "time_s", "snapshot_hash"])
+    def test_mixed_frame_identity_is_rejected(field):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:92: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+_____________ test_mixed_frame_identity_is_rejected[snapshot_hash] _____________
+
+field = 'snapshot_hash'
+
+    @pytest.mark.parametrize("field", ["run_id", "scenario_id", "time_s", "snapshot_hash"])
+    def test_mixed_frame_identity_is_rejected(field):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:92: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+___________ test_nonfinite_or_nonnumeric_positions_are_rejected[nan] ___________
+
+coordinate = nan
+
+    @pytest.mark.parametrize("coordinate", [math.nan, math.inf, -math.inf, True, "2"])
+    def test_nonfinite_or_nonnumeric_positions_are_rejected(coordinate):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+___________ test_nonfinite_or_nonnumeric_positions_are_rejected[inf] ___________
+
+coordinate = inf
+
+    @pytest.mark.parametrize("coordinate", [math.nan, math.inf, -math.inf, True, "2"])
+    def test_nonfinite_or_nonnumeric_positions_are_rejected(coordinate):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+__________ test_nonfinite_or_nonnumeric_positions_are_rejected[-inf] ___________
+
+coordinate = -inf
+
+    @pytest.mark.parametrize("coordinate", [math.nan, math.inf, -math.inf, True, "2"])
+    def test_nonfinite_or_nonnumeric_positions_are_rejected(coordinate):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+__________ test_nonfinite_or_nonnumeric_positions_are_rejected[True] ___________
+
+coordinate = True
+
+    @pytest.mark.parametrize("coordinate", [math.nan, math.inf, -math.inf, True, "2"])
+    def test_nonfinite_or_nonnumeric_positions_are_rejected(coordinate):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+____________ test_nonfinite_or_nonnumeric_positions_are_rejected[2] ____________
+
+coordinate = '2'
+
+    @pytest.mark.parametrize("coordinate", [math.nan, math.inf, -math.inf, True, "2"])
+    def test_nonfinite_or_nonnumeric_positions_are_rejected(coordinate):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+___________________ test_invalid_frame_time_is_rejected[nan] ___________________
+
+time = nan
+
+    @pytest.mark.parametrize("time", [math.nan, math.inf, -1, True])
+    def test_invalid_frame_time_is_rejected(time):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:109: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+___________________ test_invalid_frame_time_is_rejected[inf] ___________________
+
+time = inf
+
+    @pytest.mark.parametrize("time", [math.nan, math.inf, -1, True])
+    def test_invalid_frame_time_is_rejected(time):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:109: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+___________________ test_invalid_frame_time_is_rejected[-1] ____________________
+
+time = -1
+
+    @pytest.mark.parametrize("time", [math.nan, math.inf, -1, True])
+    def test_invalid_frame_time_is_rejected(time):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:109: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+__________________ test_invalid_frame_time_is_rejected[True] ___________________
+
+time = True
+
+    @pytest.mark.parametrize("time", [math.nan, math.inf, -1, True])
+    def test_invalid_frame_time_is_rejected(time):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:109: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+___ test_unlicensed_or_google_derived_geography_is_rejected[source_change0] ____
+
+source_change = {'license_id': ''}
+
+    @pytest.mark.parametrize("source_change", [
+        {"license_id": ""}, {"independently_sourced": False},
+        {"provider": "Google Maps"}, {"reference": "https://maps.googleapis.com/geometry"},
+        {"assumptions": ("Google-derived building footprint",)},
+    ])
+    def test_unlicensed_or_google_derived_geography_is_rejected(source_change):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:120: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+___ test_unlicensed_or_google_derived_geography_is_rejected[source_change1] ____
+
+source_change = {'independently_sourced': False}
+
+    @pytest.mark.parametrize("source_change", [
+        {"license_id": ""}, {"independently_sourced": False},
+        {"provider": "Google Maps"}, {"reference": "https://maps.googleapis.com/geometry"},
+        {"assumptions": ("Google-derived building footprint",)},
+    ])
+    def test_unlicensed_or_google_derived_geography_is_rejected(source_change):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:120: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+___ test_unlicensed_or_google_derived_geography_is_rejected[source_change2] ____
+
+source_change = {'provider': 'Google Maps'}
+
+    @pytest.mark.parametrize("source_change", [
+        {"license_id": ""}, {"independently_sourced": False},
+        {"provider": "Google Maps"}, {"reference": "https://maps.googleapis.com/geometry"},
+        {"assumptions": ("Google-derived building footprint",)},
+    ])
+    def test_unlicensed_or_google_derived_geography_is_rejected(source_change):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:120: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+___ test_unlicensed_or_google_derived_geography_is_rejected[source_change3] ____
+
+source_change = {'reference': 'https://maps.googleapis.com/geometry'}
+
+    @pytest.mark.parametrize("source_change", [
+        {"license_id": ""}, {"independently_sourced": False},
+        {"provider": "Google Maps"}, {"reference": "https://maps.googleapis.com/geometry"},
+        {"assumptions": ("Google-derived building footprint",)},
+    ])
+    def test_unlicensed_or_google_derived_geography_is_rejected(source_change):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:120: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+___ test_unlicensed_or_google_derived_geography_is_rejected[source_change4] ____
+
+source_change = {'assumptions': ('Google-derived building footprint',)}
+
+    @pytest.mark.parametrize("source_change", [
+        {"license_id": ""}, {"independently_sourced": False},
+        {"provider": "Google Maps"}, {"reference": "https://maps.googleapis.com/geometry"},
+        {"assumptions": ("Google-derived building footprint",)},
+    ])
+    def test_unlicensed_or_google_derived_geography_is_rejected(source_change):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:120: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+_____________ test_combat_or_unsupported_units_are_rejected[tank] ______________
+
+kind = 'tank'
+
+    @pytest.mark.parametrize("kind", ["tank", "infantry", "fighter", "combat", "unknown"])
+    def test_combat_or_unsupported_units_are_rejected(kind):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:128: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+___________ test_combat_or_unsupported_units_are_rejected[infantry] ____________
+
+kind = 'infantry'
+
+    @pytest.mark.parametrize("kind", ["tank", "infantry", "fighter", "combat", "unknown"])
+    def test_combat_or_unsupported_units_are_rejected(kind):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:128: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+____________ test_combat_or_unsupported_units_are_rejected[fighter] ____________
+
+kind = 'fighter'
+
+    @pytest.mark.parametrize("kind", ["tank", "infantry", "fighter", "combat", "unknown"])
+    def test_combat_or_unsupported_units_are_rejected(kind):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:128: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+____________ test_combat_or_unsupported_units_are_rejected[combat] _____________
+
+kind = 'combat'
+
+    @pytest.mark.parametrize("kind", ["tank", "infantry", "fighter", "combat", "unknown"])
+    def test_combat_or_unsupported_units_are_rejected(kind):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:128: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+____________ test_combat_or_unsupported_units_are_rejected[unknown] ____________
+
+kind = 'unknown'
+
+    @pytest.mark.parametrize("kind", ["tank", "infantry", "fighter", "combat", "unknown"])
+    def test_combat_or_unsupported_units_are_rejected(kind):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:128: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+_ test_civilian_rescue_logistics_units_have_exact_marker_positions[ambulance] __
+
+kind = 'ambulance'
+
+    @pytest.mark.parametrize("kind", ["ambulance", "bus", "supply_truck", "rescue_vehicle", "fire_engine"])
+    def test_civilian_rescue_logistics_units_have_exact_marker_positions(kind):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+____ test_civilian_rescue_logistics_units_have_exact_marker_positions[bus] _____
+
+kind = 'bus'
+
+    @pytest.mark.parametrize("kind", ["ambulance", "bus", "supply_truck", "rescue_vehicle", "fire_engine"])
+    def test_civilian_rescue_logistics_units_have_exact_marker_positions(kind):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+_ test_civilian_rescue_logistics_units_have_exact_marker_positions[supply_truck] _
+
+kind = 'supply_truck'
+
+    @pytest.mark.parametrize("kind", ["ambulance", "bus", "supply_truck", "rescue_vehicle", "fire_engine"])
+    def test_civilian_rescue_logistics_units_have_exact_marker_positions(kind):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+_ test_civilian_rescue_logistics_units_have_exact_marker_positions[rescue_vehicle] _
+
+kind = 'rescue_vehicle'
+
+    @pytest.mark.parametrize("kind", ["ambulance", "bus", "supply_truck", "rescue_vehicle", "fire_engine"])
+    def test_civilian_rescue_logistics_units_have_exact_marker_positions(kind):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+_ test_civilian_rescue_logistics_units_have_exact_marker_positions[fire_engine] _
+
+kind = 'fire_engine'
+
+    @pytest.mark.parametrize("kind", ["ambulance", "bus", "supply_truck", "rescue_vehicle", "fire_engine"])
+    def test_civilian_rescue_logistics_units_have_exact_marker_positions(kind):
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+___________ test_malformed_mesh_line_polygon_and_height_are_rejected ___________
+
+    def test_malformed_mesh_line_polygon_and_height_are_rejected():
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:143: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+____________________ test_self_crossing_footprint_rejected _____________________
+
+    def test_self_crossing_footprint_rejected():
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:158: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+_____ test_bounds_and_total_geometry_limits_are_enforced_before_projection _____
+
+    def test_bounds_and_total_geometry_limits_are_enforced_before_projection():
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:165: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+__ test_declared_metric_reference_duplicate_ids_and_route_version_validation ___
+
+    def test_declared_metric_reference_duplicate_ids_and_route_version_validation():
+>       s, data = fixture()
+                  ^^^^^^^^^
+
+viewer3d/tests/test_scene.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+viewer3d/tests/test_scene.py:15: in fixture
+    s = api()
+        ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.scene") is not None, "CPU scene projection missing"
+E       AssertionError: CPU scene projection missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7cdd6ef3ac40>('viewer3d.scene')
+E        +    where <function find_spec at 0x7cdd6ef3ac40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_scene.py:10: AssertionError
+=========================== short test summary info ============================
+FAILED viewer3d/tests/test_scene.py::test_exact_authoritative_position_route_and_trail_are_retained
+FAILED viewer3d/tests/test_scene.py::test_terrain_mesh_and_source_manifest_survive_deterministic_projection
+FAILED viewer3d/tests/test_scene.py::test_missing_height_stays_unknown_and_explicit_assumption_is_labeled
+FAILED viewer3d/tests/test_scene.py::test_route_roles_are_distinguishable_without_color[candidate-dashed]
+FAILED viewer3d/tests/test_scene.py::test_route_roles_are_distinguishable_without_color[committed-solid]
+FAILED viewer3d/tests/test_scene.py::test_route_roles_are_distinguishable_without_color[previous-dash-dot]
+FAILED viewer3d/tests/test_scene.py::test_mixed_frame_identity_is_rejected[run_id]
+FAILED viewer3d/tests/test_scene.py::test_mixed_frame_identity_is_rejected[scenario_id]
+FAILED viewer3d/tests/test_scene.py::test_mixed_frame_identity_is_rejected[time_s]
+FAILED viewer3d/tests/test_scene.py::test_mixed_frame_identity_is_rejected[snapshot_hash]
+FAILED viewer3d/tests/test_scene.py::test_nonfinite_or_nonnumeric_positions_are_rejected[nan]
+FAILED viewer3d/tests/test_scene.py::test_nonfinite_or_nonnumeric_positions_are_rejected[inf]
+FAILED viewer3d/tests/test_scene.py::test_nonfinite_or_nonnumeric_positions_are_rejected[-inf]
+FAILED viewer3d/tests/test_scene.py::test_nonfinite_or_nonnumeric_positions_are_rejected[True]
+FAILED viewer3d/tests/test_scene.py::test_nonfinite_or_nonnumeric_positions_are_rejected[2]
+FAILED viewer3d/tests/test_scene.py::test_invalid_frame_time_is_rejected[nan]
+FAILED viewer3d/tests/test_scene.py::test_invalid_frame_time_is_rejected[inf]
+FAILED viewer3d/tests/test_scene.py::test_invalid_frame_time_is_rejected[-1]
+FAILED viewer3d/tests/test_scene.py::test_invalid_frame_time_is_rejected[True]
+FAILED viewer3d/tests/test_scene.py::test_unlicensed_or_google_derived_geography_is_rejected[source_change0]
+FAILED viewer3d/tests/test_scene.py::test_unlicensed_or_google_derived_geography_is_rejected[source_change1]
+FAILED viewer3d/tests/test_scene.py::test_unlicensed_or_google_derived_geography_is_rejected[source_change2]
+FAILED viewer3d/tests/test_scene.py::test_unlicensed_or_google_derived_geography_is_rejected[source_change3]
+FAILED viewer3d/tests/test_scene.py::test_unlicensed_or_google_derived_geography_is_rejected[source_change4]
+FAILED viewer3d/tests/test_scene.py::test_combat_or_unsupported_units_are_rejected[tank]
+FAILED viewer3d/tests/test_scene.py::test_combat_or_unsupported_units_are_rejected[infantry]
+FAILED viewer3d/tests/test_scene.py::test_combat_or_unsupported_units_are_rejected[fighter]
+FAILED viewer3d/tests/test_scene.py::test_combat_or_unsupported_units_are_rejected[combat]
+FAILED viewer3d/tests/test_scene.py::test_combat_or_unsupported_units_are_rejected[unknown]
+FAILED viewer3d/tests/test_scene.py::test_civilian_rescue_logistics_units_have_exact_marker_positions[ambulance]
+FAILED viewer3d/tests/test_scene.py::test_civilian_rescue_logistics_units_have_exact_marker_positions[bus]
+FAILED viewer3d/tests/test_scene.py::test_civilian_rescue_logistics_units_have_exact_marker_positions[supply_truck]
+FAILED viewer3d/tests/test_scene.py::test_civilian_rescue_logistics_units_have_exact_marker_positions[rescue_vehicle]
+FAILED viewer3d/tests/test_scene.py::test_civilian_rescue_logistics_units_have_exact_marker_positions[fire_engine]
+FAILED viewer3d/tests/test_scene.py::test_malformed_mesh_line_polygon_and_height_are_rejected
+FAILED viewer3d/tests/test_scene.py::test_self_crossing_footprint_rejected - ...
+FAILED viewer3d/tests/test_scene.py::test_bounds_and_total_geometry_limits_are_enforced_before_projection
+FAILED viewer3d/tests/test_scene.py::test_declared_metric_reference_duplicate_ids_and_route_version_validation
+38 failed in 0.30s
+
+EXIT_CODE:1
+
+COMMAND: taskset -c 0,1 /opt/venv/bin/python -m pytest viewer3d/tests -q
+ENV: OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2

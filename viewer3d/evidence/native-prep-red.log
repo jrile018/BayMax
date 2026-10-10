@@ -1,0 +1,662 @@
+COMMAND: taskset -c 0,1 /opt/venv/bin/python -m pytest viewer3d/tests/test_render.py -q -p no:cacheprovider
+CPU_ONLY: fake graphics contexts only
+STARTED_AT:2026-10-10T06:56:48Z
+FFFFFFFFFFFFFFFFFFFFFFFFF                                                [100%]
+=================================== FAILURES ===================================
+________ test_buffers_keep_frame_provenance_and_exact_supplied_geometry ________
+
+    def test_buffers_keep_frame_provenance_and_exact_supplied_geometry():
+>       r, scene = api(), prepared()
+                   ^^^^^
+
+viewer3d/tests/test_render.py:39: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.render"), "native renderer preparation missing"
+E       AssertionError: native renderer preparation missing
+E       assert None
+E        +  where None = <function find_spec at 0x753e32d62c40>('viewer3d.render')
+E        +    where <function find_spec at 0x753e32d62c40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_render.py:13: AssertionError
+__ test_building_derives_only_explicit_height_and_missing_height_is_footprint __
+
+    def test_building_derives_only_explicit_height_and_missing_height_is_footprint():
+>       batches = {b.primitive.record_id: b for b in api().build_render_buffers(prepared()).batches}
+                                                     ^^^^^
+
+viewer3d/tests/test_render.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.render"), "native renderer preparation missing"
+E       AssertionError: native renderer preparation missing
+E       assert None
+E        +  where None = <function find_spec at 0x753e32d62c40>('viewer3d.render')
+E        +    where <function find_spec at 0x753e32d62c40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_render.py:13: AssertionError
+_________ test_concave_fire_tessellation_preserves_polygon_area[False] _________
+
+reverse = False
+
+    @pytest.mark.parametrize("reverse", [False, True])
+    def test_concave_fire_tessellation_preserves_polygon_area(reverse):
+        scene = prepared()
+        fire = next(p for p in scene.primitives if p.kind == "fire")
+        if reverse:
+            fire = replace(fire, points=fire.points[::-1])
+>       batch = api().build_render_buffers(replace(scene, primitives=(fire,))).batches[0]
+                ^^^^^
+
+viewer3d/tests/test_render.py:75: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.render"), "native renderer preparation missing"
+E       AssertionError: native renderer preparation missing
+E       assert None
+E        +  where None = <function find_spec at 0x753e32d62c40>('viewer3d.render')
+E        +    where <function find_spec at 0x753e32d62c40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_render.py:13: AssertionError
+_________ test_concave_fire_tessellation_preserves_polygon_area[True] __________
+
+reverse = True
+
+    @pytest.mark.parametrize("reverse", [False, True])
+    def test_concave_fire_tessellation_preserves_polygon_area(reverse):
+        scene = prepared()
+        fire = next(p for p in scene.primitives if p.kind == "fire")
+        if reverse:
+            fire = replace(fire, points=fire.points[::-1])
+>       batch = api().build_render_buffers(replace(scene, primitives=(fire,))).batches[0]
+                ^^^^^
+
+viewer3d/tests/test_render.py:75: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.render"), "native renderer preparation missing"
+E       AssertionError: native renderer preparation missing
+E       assert None
+E        +  where None = <function find_spec at 0x753e32d62c40>('viewer3d.render')
+E        +    where <function find_spec at 0x753e32d62c40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_render.py:13: AssertionError
+_ test_camera_is_finite_deterministic_and_contains_every_bounds_corner[bounds0-size0] _
+
+size = (1280, 720)
+bounds = SceneBounds(minimum=MetricPoint(x_m=0, y_m=0, z_m=0), maximum=MetricPoint(x_m=100, y_m=100, z_m=30))
+
+    @pytest.mark.parametrize("size", [(1280, 720), (320, 1000), (1, 1)])
+    @pytest.mark.parametrize("bounds", [
+        s.SceneBounds(s.MetricPoint(0, 0, 0), s.MetricPoint(100, 100, 30)),
+        s.SceneBounds(s.MetricPoint(1e6, -2e6, 0), s.MetricPoint(1e6+10, -2e6+100, 80)),
+        s.SceneBounds(s.MetricPoint(5, 5, 5), s.MetricPoint(5, 5, 5)),
+    ])
+    def test_camera_is_finite_deterministic_and_contains_every_bounds_corner(size, bounds):
+>       camera = api().camera_for_bounds(bounds, *size)
+                 ^^^^^
+
+viewer3d/tests/test_render.py:93: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.render"), "native renderer preparation missing"
+E       AssertionError: native renderer preparation missing
+E       assert None
+E        +  where None = <function find_spec at 0x753e32d62c40>('viewer3d.render')
+E        +    where <function find_spec at 0x753e32d62c40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_render.py:13: AssertionError
+_ test_camera_is_finite_deterministic_and_contains_every_bounds_corner[bounds0-size1] _
+
+size = (320, 1000)
+bounds = SceneBounds(minimum=MetricPoint(x_m=0, y_m=0, z_m=0), maximum=MetricPoint(x_m=100, y_m=100, z_m=30))
+
+    @pytest.mark.parametrize("size", [(1280, 720), (320, 1000), (1, 1)])
+    @pytest.mark.parametrize("bounds", [
+        s.SceneBounds(s.MetricPoint(0, 0, 0), s.MetricPoint(100, 100, 30)),
+        s.SceneBounds(s.MetricPoint(1e6, -2e6, 0), s.MetricPoint(1e6+10, -2e6+100, 80)),
+        s.SceneBounds(s.MetricPoint(5, 5, 5), s.MetricPoint(5, 5, 5)),
+    ])
+    def test_camera_is_finite_deterministic_and_contains_every_bounds_corner(size, bounds):
+>       camera = api().camera_for_bounds(bounds, *size)
+                 ^^^^^
+
+viewer3d/tests/test_render.py:93: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.render"), "native renderer preparation missing"
+E       AssertionError: native renderer preparation missing
+E       assert None
+E        +  where None = <function find_spec at 0x753e32d62c40>('viewer3d.render')
+E        +    where <function find_spec at 0x753e32d62c40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_render.py:13: AssertionError
+_ test_camera_is_finite_deterministic_and_contains_every_bounds_corner[bounds0-size2] _
+
+size = (1, 1)
+bounds = SceneBounds(minimum=MetricPoint(x_m=0, y_m=0, z_m=0), maximum=MetricPoint(x_m=100, y_m=100, z_m=30))
+
+    @pytest.mark.parametrize("size", [(1280, 720), (320, 1000), (1, 1)])
+    @pytest.mark.parametrize("bounds", [
+        s.SceneBounds(s.MetricPoint(0, 0, 0), s.MetricPoint(100, 100, 30)),
+        s.SceneBounds(s.MetricPoint(1e6, -2e6, 0), s.MetricPoint(1e6+10, -2e6+100, 80)),
+        s.SceneBounds(s.MetricPoint(5, 5, 5), s.MetricPoint(5, 5, 5)),
+    ])
+    def test_camera_is_finite_deterministic_and_contains_every_bounds_corner(size, bounds):
+>       camera = api().camera_for_bounds(bounds, *size)
+                 ^^^^^
+
+viewer3d/tests/test_render.py:93: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.render"), "native renderer preparation missing"
+E       AssertionError: native renderer preparation missing
+E       assert None
+E        +  where None = <function find_spec at 0x753e32d62c40>('viewer3d.render')
+E        +    where <function find_spec at 0x753e32d62c40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_render.py:13: AssertionError
+_ test_camera_is_finite_deterministic_and_contains_every_bounds_corner[bounds1-size0] _
+
+size = (1280, 720)
+bounds = SceneBounds(minimum=MetricPoint(x_m=1000000.0, y_m=-2000000.0, z_m=0), maximum=MetricPoint(x_m=1000010.0, y_m=-1999900.0, z_m=80))
+
+    @pytest.mark.parametrize("size", [(1280, 720), (320, 1000), (1, 1)])
+    @pytest.mark.parametrize("bounds", [
+        s.SceneBounds(s.MetricPoint(0, 0, 0), s.MetricPoint(100, 100, 30)),
+        s.SceneBounds(s.MetricPoint(1e6, -2e6, 0), s.MetricPoint(1e6+10, -2e6+100, 80)),
+        s.SceneBounds(s.MetricPoint(5, 5, 5), s.MetricPoint(5, 5, 5)),
+    ])
+    def test_camera_is_finite_deterministic_and_contains_every_bounds_corner(size, bounds):
+>       camera = api().camera_for_bounds(bounds, *size)
+                 ^^^^^
+
+viewer3d/tests/test_render.py:93: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.render"), "native renderer preparation missing"
+E       AssertionError: native renderer preparation missing
+E       assert None
+E        +  where None = <function find_spec at 0x753e32d62c40>('viewer3d.render')
+E        +    where <function find_spec at 0x753e32d62c40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_render.py:13: AssertionError
+_ test_camera_is_finite_deterministic_and_contains_every_bounds_corner[bounds1-size1] _
+
+size = (320, 1000)
+bounds = SceneBounds(minimum=MetricPoint(x_m=1000000.0, y_m=-2000000.0, z_m=0), maximum=MetricPoint(x_m=1000010.0, y_m=-1999900.0, z_m=80))
+
+    @pytest.mark.parametrize("size", [(1280, 720), (320, 1000), (1, 1)])
+    @pytest.mark.parametrize("bounds", [
+        s.SceneBounds(s.MetricPoint(0, 0, 0), s.MetricPoint(100, 100, 30)),
+        s.SceneBounds(s.MetricPoint(1e6, -2e6, 0), s.MetricPoint(1e6+10, -2e6+100, 80)),
+        s.SceneBounds(s.MetricPoint(5, 5, 5), s.MetricPoint(5, 5, 5)),
+    ])
+    def test_camera_is_finite_deterministic_and_contains_every_bounds_corner(size, bounds):
+>       camera = api().camera_for_bounds(bounds, *size)
+                 ^^^^^
+
+viewer3d/tests/test_render.py:93: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.render"), "native renderer preparation missing"
+E       AssertionError: native renderer preparation missing
+E       assert None
+E        +  where None = <function find_spec at 0x753e32d62c40>('viewer3d.render')
+E        +    where <function find_spec at 0x753e32d62c40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_render.py:13: AssertionError
+_ test_camera_is_finite_deterministic_and_contains_every_bounds_corner[bounds1-size2] _
+
+size = (1, 1)
+bounds = SceneBounds(minimum=MetricPoint(x_m=1000000.0, y_m=-2000000.0, z_m=0), maximum=MetricPoint(x_m=1000010.0, y_m=-1999900.0, z_m=80))
+
+    @pytest.mark.parametrize("size", [(1280, 720), (320, 1000), (1, 1)])
+    @pytest.mark.parametrize("bounds", [
+        s.SceneBounds(s.MetricPoint(0, 0, 0), s.MetricPoint(100, 100, 30)),
+        s.SceneBounds(s.MetricPoint(1e6, -2e6, 0), s.MetricPoint(1e6+10, -2e6+100, 80)),
+        s.SceneBounds(s.MetricPoint(5, 5, 5), s.MetricPoint(5, 5, 5)),
+    ])
+    def test_camera_is_finite_deterministic_and_contains_every_bounds_corner(size, bounds):
+>       camera = api().camera_for_bounds(bounds, *size)
+                 ^^^^^
+
+viewer3d/tests/test_render.py:93: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.render"), "native renderer preparation missing"
+E       AssertionError: native renderer preparation missing
+E       assert None
+E        +  where None = <function find_spec at 0x753e32d62c40>('viewer3d.render')
+E        +    where <function find_spec at 0x753e32d62c40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_render.py:13: AssertionError
+_ test_camera_is_finite_deterministic_and_contains_every_bounds_corner[bounds2-size0] _
+
+size = (1280, 720)
+bounds = SceneBounds(minimum=MetricPoint(x_m=5, y_m=5, z_m=5), maximum=MetricPoint(x_m=5, y_m=5, z_m=5))
+
+    @pytest.mark.parametrize("size", [(1280, 720), (320, 1000), (1, 1)])
+    @pytest.mark.parametrize("bounds", [
+        s.SceneBounds(s.MetricPoint(0, 0, 0), s.MetricPoint(100, 100, 30)),
+        s.SceneBounds(s.MetricPoint(1e6, -2e6, 0), s.MetricPoint(1e6+10, -2e6+100, 80)),
+        s.SceneBounds(s.MetricPoint(5, 5, 5), s.MetricPoint(5, 5, 5)),
+    ])
+    def test_camera_is_finite_deterministic_and_contains_every_bounds_corner(size, bounds):
+>       camera = api().camera_for_bounds(bounds, *size)
+                 ^^^^^
+
+viewer3d/tests/test_render.py:93: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.render"), "native renderer preparation missing"
+E       AssertionError: native renderer preparation missing
+E       assert None
+E        +  where None = <function find_spec at 0x753e32d62c40>('viewer3d.render')
+E        +    where <function find_spec at 0x753e32d62c40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_render.py:13: AssertionError
+_ test_camera_is_finite_deterministic_and_contains_every_bounds_corner[bounds2-size1] _
+
+size = (320, 1000)
+bounds = SceneBounds(minimum=MetricPoint(x_m=5, y_m=5, z_m=5), maximum=MetricPoint(x_m=5, y_m=5, z_m=5))
+
+    @pytest.mark.parametrize("size", [(1280, 720), (320, 1000), (1, 1)])
+    @pytest.mark.parametrize("bounds", [
+        s.SceneBounds(s.MetricPoint(0, 0, 0), s.MetricPoint(100, 100, 30)),
+        s.SceneBounds(s.MetricPoint(1e6, -2e6, 0), s.MetricPoint(1e6+10, -2e6+100, 80)),
+        s.SceneBounds(s.MetricPoint(5, 5, 5), s.MetricPoint(5, 5, 5)),
+    ])
+    def test_camera_is_finite_deterministic_and_contains_every_bounds_corner(size, bounds):
+>       camera = api().camera_for_bounds(bounds, *size)
+                 ^^^^^
+
+viewer3d/tests/test_render.py:93: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.render"), "native renderer preparation missing"
+E       AssertionError: native renderer preparation missing
+E       assert None
+E        +  where None = <function find_spec at 0x753e32d62c40>('viewer3d.render')
+E        +    where <function find_spec at 0x753e32d62c40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_render.py:13: AssertionError
+_ test_camera_is_finite_deterministic_and_contains_every_bounds_corner[bounds2-size2] _
+
+size = (1, 1)
+bounds = SceneBounds(minimum=MetricPoint(x_m=5, y_m=5, z_m=5), maximum=MetricPoint(x_m=5, y_m=5, z_m=5))
+
+    @pytest.mark.parametrize("size", [(1280, 720), (320, 1000), (1, 1)])
+    @pytest.mark.parametrize("bounds", [
+        s.SceneBounds(s.MetricPoint(0, 0, 0), s.MetricPoint(100, 100, 30)),
+        s.SceneBounds(s.MetricPoint(1e6, -2e6, 0), s.MetricPoint(1e6+10, -2e6+100, 80)),
+        s.SceneBounds(s.MetricPoint(5, 5, 5), s.MetricPoint(5, 5, 5)),
+    ])
+    def test_camera_is_finite_deterministic_and_contains_every_bounds_corner(size, bounds):
+>       camera = api().camera_for_bounds(bounds, *size)
+                 ^^^^^
+
+viewer3d/tests/test_render.py:93: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.render"), "native renderer preparation missing"
+E       AssertionError: native renderer preparation missing
+E       assert None
+E        +  where None = <function find_spec at 0x753e32d62c40>('viewer3d.render')
+E        +    where <function find_spec at 0x753e32d62c40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_render.py:13: AssertionError
+________________ test_camera_rejects_invalid_dimensions[size0] _________________
+
+size = (0, 720)
+
+    @pytest.mark.parametrize("size", [(0, 720), (-1, 2), (True, 2), (2.5, 3), (2, 0)])
+    def test_camera_rejects_invalid_dimensions(size):
+        with pytest.raises(ValueError, match="dimensions"):
+>           api().camera_for_bounds(prepared().bounds, *size)
+            ^^^^^
+
+viewer3d/tests/test_render.py:109: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.render"), "native renderer preparation missing"
+E       AssertionError: native renderer preparation missing
+E       assert None
+E        +  where None = <function find_spec at 0x753e32d62c40>('viewer3d.render')
+E        +    where <function find_spec at 0x753e32d62c40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_render.py:13: AssertionError
+________________ test_camera_rejects_invalid_dimensions[size1] _________________
+
+size = (-1, 2)
+
+    @pytest.mark.parametrize("size", [(0, 720), (-1, 2), (True, 2), (2.5, 3), (2, 0)])
+    def test_camera_rejects_invalid_dimensions(size):
+        with pytest.raises(ValueError, match="dimensions"):
+>           api().camera_for_bounds(prepared().bounds, *size)
+            ^^^^^
+
+viewer3d/tests/test_render.py:109: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.render"), "native renderer preparation missing"
+E       AssertionError: native renderer preparation missing
+E       assert None
+E        +  where None = <function find_spec at 0x753e32d62c40>('viewer3d.render')
+E        +    where <function find_spec at 0x753e32d62c40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_render.py:13: AssertionError
+________________ test_camera_rejects_invalid_dimensions[size2] _________________
+
+size = (True, 2)
+
+    @pytest.mark.parametrize("size", [(0, 720), (-1, 2), (True, 2), (2.5, 3), (2, 0)])
+    def test_camera_rejects_invalid_dimensions(size):
+        with pytest.raises(ValueError, match="dimensions"):
+>           api().camera_for_bounds(prepared().bounds, *size)
+            ^^^^^
+
+viewer3d/tests/test_render.py:109: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.render"), "native renderer preparation missing"
+E       AssertionError: native renderer preparation missing
+E       assert None
+E        +  where None = <function find_spec at 0x753e32d62c40>('viewer3d.render')
+E        +    where <function find_spec at 0x753e32d62c40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_render.py:13: AssertionError
+________________ test_camera_rejects_invalid_dimensions[size3] _________________
+
+size = (2.5, 3)
+
+    @pytest.mark.parametrize("size", [(0, 720), (-1, 2), (True, 2), (2.5, 3), (2, 0)])
+    def test_camera_rejects_invalid_dimensions(size):
+        with pytest.raises(ValueError, match="dimensions"):
+>           api().camera_for_bounds(prepared().bounds, *size)
+            ^^^^^
+
+viewer3d/tests/test_render.py:109: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.render"), "native renderer preparation missing"
+E       AssertionError: native renderer preparation missing
+E       assert None
+E        +  where None = <function find_spec at 0x753e32d62c40>('viewer3d.render')
+E        +    where <function find_spec at 0x753e32d62c40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_render.py:13: AssertionError
+________________ test_camera_rejects_invalid_dimensions[size4] _________________
+
+size = (2, 0)
+
+    @pytest.mark.parametrize("size", [(0, 720), (-1, 2), (True, 2), (2.5, 3), (2, 0)])
+    def test_camera_rejects_invalid_dimensions(size):
+        with pytest.raises(ValueError, match="dimensions"):
+>           api().camera_for_bounds(prepared().bounds, *size)
+            ^^^^^
+
+viewer3d/tests/test_render.py:109: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.render"), "native renderer preparation missing"
+E       AssertionError: native renderer preparation missing
+E       assert None
+E        +  where None = <function find_spec at 0x753e32d62c40>('viewer3d.render')
+E        +    where <function find_spec at 0x753e32d62c40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_render.py:13: AssertionError
+_______________ test_cpu_path_does_not_import_graphics_or_torch ________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x753e30edd940>
+
+    def test_cpu_path_does_not_import_graphics_or_torch(monkeypatch):
+        original = __import__
+        seen = []
+        def guarded(name, *args, **kwargs):
+            if name.split(".")[0] in {"moderngl", "glcontext", "torch", "PIL"}:
+                seen.append(name)
+                raise AssertionError("CPU preparation attempted graphics import")
+            return original(name, *args, **kwargs)
+        monkeypatch.setattr("builtins.__import__", guarded)
+>       r = importlib.reload(api())
+                             ^^^^^
+
+viewer3d/tests/test_render.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.render"), "native renderer preparation missing"
+E       AssertionError: native renderer preparation missing
+E       assert None
+E        +  where None = <function find_spec at 0x753e32d62c40>('viewer3d.render')
+E        +    where <function find_spec at 0x753e32d62c40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_render.py:13: AssertionError
+_____ test_fake_native_lifecycle_records_provider_flips_image_and_releases _____
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_fake_native_lifecycle_rec0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x753e30eddf30>
+
+    def test_fake_native_lifecycle_records_provider_flips_image_and_releases(tmp_path, monkeypatch):
+        import json
+        from PIL import Image
+>       r, ctx = api(), Context()
+                 ^^^^^
+
+viewer3d/tests/test_render.py:186: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.render"), "native renderer preparation missing"
+E       AssertionError: native renderer preparation missing
+E       assert None
+E        +  where None = <function find_spec at 0x753e32d62c40>('viewer3d.render')
+E        +    where <function find_spec at 0x753e32d62c40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_render.py:13: AssertionError
+_ test_software_provider_rejected_with_failed_sidecar_and_context_cleanup[llvmpipe (LLVM)] _
+
+renderer = 'llvmpipe (LLVM)'
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_software_provider_rejecte0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x753e3102b0b0>
+
+    @pytest.mark.parametrize("renderer", ["llvmpipe (LLVM)", "softpipe", "Software Rasterizer", "SwiftShader"])
+    def test_software_provider_rejected_with_failed_sidecar_and_context_cleanup(renderer, tmp_path, monkeypatch):
+        import json
+        ctx = Context(renderer)
+        fake_module(monkeypatch, ctx)
+        path = tmp_path / "rejected.png"
+        with pytest.raises(RuntimeError, match="software"):
+>           api().render_native(prepared(), path, width=2, height=2)
+            ^^^^^
+
+viewer3d/tests/test_render.py:212: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.render"), "native renderer preparation missing"
+E       AssertionError: native renderer preparation missing
+E       assert None
+E        +  where None = <function find_spec at 0x753e32d62c40>('viewer3d.render')
+E        +    where <function find_spec at 0x753e32d62c40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_render.py:13: AssertionError
+_ test_software_provider_rejected_with_failed_sidecar_and_context_cleanup[softpipe] _
+
+renderer = 'softpipe'
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_software_provider_rejecte1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x753e30f1ff00>
+
+    @pytest.mark.parametrize("renderer", ["llvmpipe (LLVM)", "softpipe", "Software Rasterizer", "SwiftShader"])
+    def test_software_provider_rejected_with_failed_sidecar_and_context_cleanup(renderer, tmp_path, monkeypatch):
+        import json
+        ctx = Context(renderer)
+        fake_module(monkeypatch, ctx)
+        path = tmp_path / "rejected.png"
+        with pytest.raises(RuntimeError, match="software"):
+>           api().render_native(prepared(), path, width=2, height=2)
+            ^^^^^
+
+viewer3d/tests/test_render.py:212: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.render"), "native renderer preparation missing"
+E       AssertionError: native renderer preparation missing
+E       assert None
+E        +  where None = <function find_spec at 0x753e32d62c40>('viewer3d.render')
+E        +    where <function find_spec at 0x753e32d62c40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_render.py:13: AssertionError
+_ test_software_provider_rejected_with_failed_sidecar_and_context_cleanup[Software Rasterizer] _
+
+renderer = 'Software Rasterizer'
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_software_provider_rejecte2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x753e3108c160>
+
+    @pytest.mark.parametrize("renderer", ["llvmpipe (LLVM)", "softpipe", "Software Rasterizer", "SwiftShader"])
+    def test_software_provider_rejected_with_failed_sidecar_and_context_cleanup(renderer, tmp_path, monkeypatch):
+        import json
+        ctx = Context(renderer)
+        fake_module(monkeypatch, ctx)
+        path = tmp_path / "rejected.png"
+        with pytest.raises(RuntimeError, match="software"):
+>           api().render_native(prepared(), path, width=2, height=2)
+            ^^^^^
+
+viewer3d/tests/test_render.py:212: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.render"), "native renderer preparation missing"
+E       AssertionError: native renderer preparation missing
+E       assert None
+E        +  where None = <function find_spec at 0x753e32d62c40>('viewer3d.render')
+E        +    where <function find_spec at 0x753e32d62c40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_render.py:13: AssertionError
+_ test_software_provider_rejected_with_failed_sidecar_and_context_cleanup[SwiftShader] _
+
+renderer = 'SwiftShader'
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_software_provider_rejecte3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x753e31066a50>
+
+    @pytest.mark.parametrize("renderer", ["llvmpipe (LLVM)", "softpipe", "Software Rasterizer", "SwiftShader"])
+    def test_software_provider_rejected_with_failed_sidecar_and_context_cleanup(renderer, tmp_path, monkeypatch):
+        import json
+        ctx = Context(renderer)
+        fake_module(monkeypatch, ctx)
+        path = tmp_path / "rejected.png"
+        with pytest.raises(RuntimeError, match="software"):
+>           api().render_native(prepared(), path, width=2, height=2)
+            ^^^^^
+
+viewer3d/tests/test_render.py:212: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.render"), "native renderer preparation missing"
+E       AssertionError: native renderer preparation missing
+E       assert None
+E        +  where None = <function find_spec at 0x753e32d62c40>('viewer3d.render')
+E        +    where <function find_spec at 0x753e32d62c40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_render.py:13: AssertionError
+_____ test_read_failure_releases_all_resources_and_does_not_claim_success ______
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_read_failure_releases_all0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x753e31067050>
+
+    def test_read_failure_releases_all_resources_and_does_not_claim_success(tmp_path, monkeypatch):
+        import json
+        ctx = Context(fail_read=True)
+        fake_module(monkeypatch, ctx)
+        path = tmp_path / "failed.png"
+        with pytest.raises(RuntimeError, match="read failed"):
+>           api().render_native(prepared(), path, width=2, height=2)
+            ^^^^^
+
+viewer3d/tests/test_render.py:226: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def api():
+>       assert importlib.util.find_spec("viewer3d.render"), "native renderer preparation missing"
+E       AssertionError: native renderer preparation missing
+E       assert None
+E        +  where None = <function find_spec at 0x753e32d62c40>('viewer3d.render')
+E        +    where <function find_spec at 0x753e32d62c40> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+viewer3d/tests/test_render.py:13: AssertionError
+=========================== short test summary info ============================
+FAILED viewer3d/tests/test_render.py::test_buffers_keep_frame_provenance_and_exact_supplied_geometry
+FAILED viewer3d/tests/test_render.py::test_building_derives_only_explicit_height_and_missing_height_is_footprint
+FAILED viewer3d/tests/test_render.py::test_concave_fire_tessellation_preserves_polygon_area[False]
+FAILED viewer3d/tests/test_render.py::test_concave_fire_tessellation_preserves_polygon_area[True]
+FAILED viewer3d/tests/test_render.py::test_camera_is_finite_deterministic_and_contains_every_bounds_corner[bounds0-size0]
+FAILED viewer3d/tests/test_render.py::test_camera_is_finite_deterministic_and_contains_every_bounds_corner[bounds0-size1]
+FAILED viewer3d/tests/test_render.py::test_camera_is_finite_deterministic_and_contains_every_bounds_corner[bounds0-size2]
+FAILED viewer3d/tests/test_render.py::test_camera_is_finite_deterministic_and_contains_every_bounds_corner[bounds1-size0]
+FAILED viewer3d/tests/test_render.py::test_camera_is_finite_deterministic_and_contains_every_bounds_corner[bounds1-size1]
+FAILED viewer3d/tests/test_render.py::test_camera_is_finite_deterministic_and_contains_every_bounds_corner[bounds1-size2]
+FAILED viewer3d/tests/test_render.py::test_camera_is_finite_deterministic_and_contains_every_bounds_corner[bounds2-size0]
+FAILED viewer3d/tests/test_render.py::test_camera_is_finite_deterministic_and_contains_every_bounds_corner[bounds2-size1]
+FAILED viewer3d/tests/test_render.py::test_camera_is_finite_deterministic_and_contains_every_bounds_corner[bounds2-size2]
+FAILED viewer3d/tests/test_render.py::test_camera_rejects_invalid_dimensions[size0]
+FAILED viewer3d/tests/test_render.py::test_camera_rejects_invalid_dimensions[size1]
+FAILED viewer3d/tests/test_render.py::test_camera_rejects_invalid_dimensions[size2]
+FAILED viewer3d/tests/test_render.py::test_camera_rejects_invalid_dimensions[size3]
+FAILED viewer3d/tests/test_render.py::test_camera_rejects_invalid_dimensions[size4]
+FAILED viewer3d/tests/test_render.py::test_cpu_path_does_not_import_graphics_or_torch
+FAILED viewer3d/tests/test_render.py::test_fake_native_lifecycle_records_provider_flips_image_and_releases
+FAILED viewer3d/tests/test_render.py::test_software_provider_rejected_with_failed_sidecar_and_context_cleanup[llvmpipe (LLVM)]
+FAILED viewer3d/tests/test_render.py::test_software_provider_rejected_with_failed_sidecar_and_context_cleanup[softpipe]
+FAILED viewer3d/tests/test_render.py::test_software_provider_rejected_with_failed_sidecar_and_context_cleanup[Software Rasterizer]
+FAILED viewer3d/tests/test_render.py::test_software_provider_rejected_with_failed_sidecar_and_context_cleanup[SwiftShader]
+FAILED viewer3d/tests/test_render.py::test_read_failure_releases_all_resources_and_does_not_claim_success
+25 failed in 0.21s
+
+EXIT_CODE:1

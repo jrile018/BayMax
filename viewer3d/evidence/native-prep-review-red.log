@@ -1,0 +1,37 @@
+COMMAND: taskset -c 0,1 /opt/venv/bin/python -m pytest viewer3d/tests/test_render.py::test_camera_rejects_finite_bounds_that_overflow_derived_projection viewer3d/tests/test_render.py::test_sidecar_associates_each_primitive_with_its_exact_source -q -p no:cacheprovider
+CPU_ONLY: fake graphics contexts only
+STARTED_AT:2026-10-10T07:01:05Z
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+______ test_camera_rejects_finite_bounds_that_overflow_derived_projection ______
+
+    def test_camera_rejects_finite_bounds_that_overflow_derived_projection():
+        p = s.MetricPoint
+>       with pytest.raises(ValueError, match="finite"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+viewer3d/tests/test_render.py:368: Failed
+_________ test_sidecar_associates_each_primitive_with_its_exact_source _________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-4/test_sidecar_associates_each_p0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x73c6135b69e0>
+
+    def test_sidecar_associates_each_primitive_with_its_exact_source(tmp_path, monkeypatch):
+        scene = prepared()
+        distinct = replace(scene.sources[0], source_id="other-source", provider="second independent fixture")
+        first, second = scene.primitives[0], replace(scene.primitives[1], source=distinct)
+        scene = replace(scene, primitives=(first, second), sources=(first.source, distinct))
+        fake_module(monkeypatch, Context())
+        metadata = api().render_native(scene, tmp_path / "sources.png", width=2, height=2)
+>       assert [p["source_id"] for p in metadata["primitives"]] == [first.source.source_id, distinct.source_id]
+                ^^^^^^^^^^^^^^
+E       KeyError: 'source_id'
+
+viewer3d/tests/test_render.py:379: KeyError
+=========================== short test summary info ============================
+FAILED viewer3d/tests/test_render.py::test_camera_rejects_finite_bounds_that_overflow_derived_projection
+FAILED viewer3d/tests/test_render.py::test_sidecar_associates_each_primitive_with_its_exact_source
+2 failed in 0.09s
+
+EXIT_CODE:1

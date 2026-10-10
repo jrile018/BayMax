@@ -1,0 +1,211 @@
+{
+  "captured_at_utc": "2026-10-10T07:17:16.526299+00:00",
+  "inputs": [
+    {
+      "original_path": "/workspace/knight26/worktrees/maps/fixtures/geography/paradise/area.json",
+      "frozen_path": "viewer3d/evidence/replay-adapter-inputs/area.json",
+      "bytes": 858769,
+      "sha256": "8d30c559e94bdcf6fd3db8db7c442015a874d94fb060a0273656535f2c9b0cb6"
+    },
+    {
+      "original_path": "/workspace/knight26/worktrees/maps/fixtures/geography/paradise/graph.json",
+      "frozen_path": "viewer3d/evidence/replay-adapter-inputs/graph.json",
+      "bytes": 4464272,
+      "sha256": "0b9350b23f099e8527accbf6c1d6e72fb1af196d86f4f9de004fb1a5807aa1c5"
+    },
+    {
+      "original_path": "/workspace/knight26/worktrees/maps/fixtures/geography/paradise/source_manifest.json",
+      "frozen_path": "viewer3d/evidence/replay-adapter-inputs/source_manifest.json",
+      "bytes": 1150,
+      "sha256": "e58dbf698d3a50bba58bd23ddc806eeb5458094f19b99a053e697ef8604f0f5e"
+    },
+    {
+      "original_path": "/workspace/knight26/worktrees/maps/fixtures/geography/paradise/raw.osm",
+      "frozen_path": "viewer3d/evidence/replay-adapter-inputs/raw.osm",
+      "bytes": 1539894,
+      "sha256": "b73334f6280cc756fee13ab9687ccbd7d47368785f0703fea9dafd97c6035897"
+    },
+    {
+      "original_path": "/workspace/knight26/worktrees/maps/fixtures/replay_ui/paradise_mock.json",
+      "frozen_path": "viewer3d/evidence/replay-adapter-inputs/replay.json",
+      "bytes": 41913,
+      "sha256": "723d343d77459cfd1c8c26bacd826f0d6b65961fa397452258ce2f39343fc3e1"
+    },
+    {
+      "original_path": "/workspace/knight26/worktrees/maps/services/dashboard_api/replay.py",
+      "frozen_path": "viewer3d/evidence/replay-adapter-inputs/maps-replay.py",
+      "bytes": 5766,
+      "sha256": "b4bd702256509161b7d21135311c8d22bfc131a065980510ebfc0df687520398"
+    },
+    {
+      "original_path": "/workspace/knight26/worktrees/maps/services/geography/importer.py",
+      "frozen_path": "viewer3d/evidence/replay-adapter-inputs/maps-importer.py",
+      "bytes": 5651,
+      "sha256": "f48df23a7a37ce070274a18b2c213e403f791edcf6f8bf1250fdb819f6f4a1ca"
+    },
+    {
+      "original_path": "/workspace/knight26/worktrees/maps/services/geography/ingest.py",
+      "frozen_path": "viewer3d/evidence/replay-adapter-inputs/maps-ingest.py",
+      "bytes": 10399,
+      "sha256": "61a02c7f87b928b9020353e9026346e48457b3ca3ce7438bb078ad23876605f3"
+    },
+    {
+      "original_path": "/workspace/knight26/worktrees/routing/services/routing/trip.py",
+      "frozen_path": "viewer3d/evidence/replay-adapter-inputs/routing-trip.py",
+      "bytes": 17858,
+      "sha256": "ba31961738c94bf8861b01fb528cba7e8e0ed2ef7d5849a6d6b1419d03294261"
+    }
+  ],
+  "/workspace/knight26/worktrees/maps": {
+    "head_before": "cf5251e6897152e30be8defbd129610b9db4e2bb",
+    "status_before": "",
+    "head_after": "cf5251e6897152e30be8defbd129610b9db4e2bb",
+    "status_after": ""
+  },
+  "/workspace/knight26/worktrees/routing": {
+    "head_before": "6ca28e232992360a638e0e1ffb9b5e0842ff2a2a",
+    "status_before": "?? fixtures/ledger/__pycache__/\n?? fixtures/routing/__pycache__/\n?? services/routing/__pycache__/\n",
+    "head_after": "6ca28e232992360a638e0e1ffb9b5e0842ff2a2a",
+    "status_after": "?? fixtures/ledger/__pycache__/\n?? fixtures/routing/__pycache__/\n?? services/routing/__pycache__/\n"
+  },
+  "binding_hashes": [
+    {
+      "run_id": "maps-mock-001",
+      "scenario_id": "paradise-constructed-ui-exercise",
+      "index": 0,
+      "time_s": 0,
+      "snapshot_hash": "cd07096e008f8b9dfea80a44266d39871d78c61fd2aff6eb362b2c3d453e0e32",
+      "bootstrap_hash": "5234767d3b79190c487c56270afc6eec1aa1f6007fb315e52cf9cdaa1da905c9",
+      "graph_hash": "604f0f6c6bb6ab7b62c17ef5560b8c9350bd8ada8276f7f991d7479694e50b66",
+      "raw_source_sha256": "b73334f6280cc756fee13ab9687ccbd7d47368785f0703fea9dafd97c6035897"
+    },
+    {
+      "run_id": "maps-mock-001",
+      "scenario_id": "paradise-constructed-ui-exercise",
+      "index": 1,
+      "time_s": 60,
+      "snapshot_hash": "d4ffc9ff0bea82d989d9b287369ded49ccaac7ae89cf5638387f13687f6352a4",
+      "bootstrap_hash": "5234767d3b79190c487c56270afc6eec1aa1f6007fb315e52cf9cdaa1da905c9",
+      "graph_hash": "604f0f6c6bb6ab7b62c17ef5560b8c9350bd8ada8276f7f991d7479694e50b66",
+      "raw_source_sha256": "b73334f6280cc756fee13ab9687ccbd7d47368785f0703fea9dafd97c6035897"
+    },
+    {
+      "run_id": "maps-mock-001",
+      "scenario_id": "paradise-constructed-ui-exercise",
+      "index": 2,
+      "time_s": 120,
+      "snapshot_hash": "0cd6bb9486ab78f3a9f00fbe3de5d7550de7bf624e5dac46e4176a132436f6ef",
+      "bootstrap_hash": "5234767d3b79190c487c56270afc6eec1aa1f6007fb315e52cf9cdaa1da905c9",
+      "graph_hash": "604f0f6c6bb6ab7b62c17ef5560b8c9350bd8ada8276f7f991d7479694e50b66",
+      "raw_source_sha256": "b73334f6280cc756fee13ab9687ccbd7d47368785f0703fea9dafd97c6035897"
+    },
+    {
+      "run_id": "maps-mock-001",
+      "scenario_id": "paradise-constructed-ui-exercise",
+      "index": 3,
+      "time_s": 180,
+      "snapshot_hash": "ad7ad9b8c4126f3cf31313155963000e47f80d5dddfce032e33d3691d029c504",
+      "bootstrap_hash": "5234767d3b79190c487c56270afc6eec1aa1f6007fb315e52cf9cdaa1da905c9",
+      "graph_hash": "604f0f6c6bb6ab7b62c17ef5560b8c9350bd8ada8276f7f991d7479694e50b66",
+      "raw_source_sha256": "b73334f6280cc756fee13ab9687ccbd7d47368785f0703fea9dafd97c6035897"
+    },
+    {
+      "run_id": "maps-mock-001",
+      "scenario_id": "paradise-constructed-ui-exercise",
+      "index": 4,
+      "time_s": 240,
+      "snapshot_hash": "0e16318035771126798ea96406f2817df0ae08c5045d886b36ebc7b29a694c25",
+      "bootstrap_hash": "5234767d3b79190c487c56270afc6eec1aa1f6007fb315e52cf9cdaa1da905c9",
+      "graph_hash": "604f0f6c6bb6ab7b62c17ef5560b8c9350bd8ada8276f7f991d7479694e50b66",
+      "raw_source_sha256": "b73334f6280cc756fee13ab9687ccbd7d47368785f0703fea9dafd97c6035897"
+    },
+    {
+      "run_id": "maps-mock-001",
+      "scenario_id": "paradise-constructed-ui-exercise",
+      "index": 5,
+      "time_s": 300,
+      "snapshot_hash": "912d441b4b060059ca8d1f66654f6b161b664d9207ea51c83cc35599c5b6376d",
+      "bootstrap_hash": "5234767d3b79190c487c56270afc6eec1aa1f6007fb315e52cf9cdaa1da905c9",
+      "graph_hash": "604f0f6c6bb6ab7b62c17ef5560b8c9350bd8ada8276f7f991d7479694e50b66",
+      "raw_source_sha256": "b73334f6280cc756fee13ab9687ccbd7d47368785f0703fea9dafd97c6035897"
+    },
+    {
+      "run_id": "maps-mock-001",
+      "scenario_id": "paradise-constructed-ui-exercise",
+      "index": 6,
+      "time_s": 360,
+      "snapshot_hash": "1bf6ea0514d8030472c5bcb419dde0cd38068dcae527626c4c3482ba20f168d3",
+      "bootstrap_hash": "5234767d3b79190c487c56270afc6eec1aa1f6007fb315e52cf9cdaa1da905c9",
+      "graph_hash": "604f0f6c6bb6ab7b62c17ef5560b8c9350bd8ada8276f7f991d7479694e50b66",
+      "raw_source_sha256": "b73334f6280cc756fee13ab9687ccbd7d47368785f0703fea9dafd97c6035897"
+    }
+  ],
+  "derived_frozen_files": [
+    {
+      "path": "viewer3d/evidence/replay-adapter-inputs/area.json",
+      "bytes": 858769,
+      "sha256": "8d30c559e94bdcf6fd3db8db7c442015a874d94fb060a0273656535f2c9b0cb6"
+    },
+    {
+      "path": "viewer3d/evidence/replay-adapter-inputs/bindings.json",
+      "bytes": 3409,
+      "sha256": "979ad8ba8bff2fedee3bb91494543b89222ec6e0817ca43cd904d443dad23f7f"
+    },
+    {
+      "path": "viewer3d/evidence/replay-adapter-inputs/bootstrap.json",
+      "bytes": 956869,
+      "sha256": "2a0c593ffc9f9c3924344a30b500113f29b1105250ce15205075fdfb5b5f82b2"
+    },
+    {
+      "path": "viewer3d/evidence/replay-adapter-inputs/frame-0.json",
+      "bytes": 4168,
+      "sha256": "2d2d7c6d3430be0812a083b19dfa2b5787b36dcd720bb2d032d32079896ac440"
+    },
+    {
+      "path": "viewer3d/evidence/replay-adapter-inputs/frame-1.json",
+      "bytes": 4186,
+      "sha256": "4f483ee31d90ad70b454946a17d771e4042e05c59c224e8b5280ee99cfdea7b1"
+    },
+    {
+      "path": "viewer3d/evidence/replay-adapter-inputs/frame-2.json",
+      "bytes": 4751,
+      "sha256": "76291c38f7ba24a429e50bb4b92b4dbf3a9100dcbd8999e54f3b986b585099e0"
+    },
+    {
+      "path": "viewer3d/evidence/replay-adapter-inputs/frame-3.json",
+      "bytes": 5419,
+      "sha256": "a78f6685cd2b5b2eb28a93545ea1b2f3986492be5e867492f6880e5f1a82b7be"
+    },
+    {
+      "path": "viewer3d/evidence/replay-adapter-inputs/frame-4.json",
+      "bytes": 5426,
+      "sha256": "3249900559e462469d889347aaa434a979159bec9aa1e25f408de48a745f36c2"
+    },
+    {
+      "path": "viewer3d/evidence/replay-adapter-inputs/frame-5.json",
+      "bytes": 5425,
+      "sha256": "dec20099dd5e768032669eadaddb518cf342e46729eaab35ca3b60ec1bebff62"
+    },
+    {
+      "path": "viewer3d/evidence/replay-adapter-inputs/frame-6.json",
+      "bytes": 5637,
+      "sha256": "77bfe058124788b26b71cbb72c450a21822e75b674b49015f5891ded00c94c4b"
+    },
+    {
+      "path": "viewer3d/evidence/replay-adapter-inputs/graph.json",
+      "bytes": 4464272,
+      "sha256": "0b9350b23f099e8527accbf6c1d6e72fb1af196d86f4f9de004fb1a5807aa1c5"
+    },
+    {
+      "path": "viewer3d/evidence/replay-adapter-inputs/replay.json",
+      "bytes": 41913,
+      "sha256": "723d343d77459cfd1c8c26bacd826f0d6b65961fa397452258ce2f39343fc3e1"
+    },
+    {
+      "path": "viewer3d/evidence/replay-adapter-inputs/source_manifest.json",
+      "bytes": 1150,
+      "sha256": "e58dbf698d3a50bba58bd23ddc806eeb5458094f19b99a053e697ef8604f0f5e"
+    }
+  ],
+  "integrity_note": "Exact file bytes are frozen and hashed; Git HEAD alone does not identify mutable/dirty source inputs. Canonical bootstrap/graph hashes bind exported mappings separately from original file-byte SHA256."
+}

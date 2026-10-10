@@ -1,0 +1,28 @@
+{
+  "scope": "native-storyboard",
+  "head": "32f3b6f6d371db824294b92092e5dda6eaacd63c",
+  "run_id": "amd-native-storyboard-20261010T2047-32f3",
+  "run_limit": 1,
+  "job_sha256": "60f4f3c355ae94d89642c4a4cba0d43460b9c5f3a9b911ea73024f9889f07de1",
+  "runtime_manifest_sha256": "3dfe6bebf1788b3e9078db3457d15b17e0b22113550e9c626237c2f5346cb8c8",
+  "max_diagnostic_seconds": 280,
+  "uid": 65534,
+  "gid": 993,
+  "supplementary_groups": [],
+  "render_node": "/dev/dri/renderD128",
+  "gpu": "W7900D",
+  "gpu_count": 1,
+  "vram_cap_gib": 12,
+  "cpu_cores": [
+    0,
+    1
+  ],
+  "pci_vendor_id": 4098,
+  "pci_device_id": 29771,
+  "id": "amd-native-reviewed-20261010T205203Z",
+  "start_utc": "2026-10-10T20:52:03Z",
+  "end_utc": "2026-10-10T21:07:03Z",
+  "originating_shared_state_sha256": "1da1f31bccb18a25cbed51e391cf4186ca3660d0a7f72be37eb1481008392c9e",
+  "originating_contract_sha256": "b49a113c4f86fb0c230533153a928589db066cbdea585bda655ac9c1f0c8eaa0",
+  "originating_grant_scope": "One exact-reviewed native storyboard; no FSR, model training, real-incident geography, public upload, or foreign service change."
+}

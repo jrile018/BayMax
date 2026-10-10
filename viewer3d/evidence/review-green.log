@@ -1,0 +1,7 @@
+COMMAND: taskset -c 0,1 /opt/venv/bin/python -m pytest viewer3d/tests -q -p no:cacheprovider -k 'route_record_in_plain or horizontal'
+ENV: OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 PYTHONDONTWRITEBYTECODE=1
+STARTED_AT:2026-10-10T06:43:36Z
+.......                                                                  [100%]
+7 passed, 44 deselected in 0.04s
+
+EXIT_CODE:0
