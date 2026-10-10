@@ -1,5 +1,8 @@
 import hashlib
 import json
+import os
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -97,6 +100,25 @@ class PublicationReaderTests(unittest.TestCase):
         (self.directory/'current.json').unlink()
         (self.directory/'current.json').symlink_to(self.directory/'elsewhere.json')
         with self.assertRaises(ValueError):PublicationReader(self.directory).read()
+
+
+    @unittest.skipUnless(hasattr(os, 'mkfifo'), 'POSIX FIFO required')
+    def test_rejects_fifo_pointer_without_blocking(self):
+        os.mkfifo(self.directory/'current.json')
+        probe = (
+            'import sys\n'
+            'from services.dashboard_api.situation import PublicationReader\n'
+            'try:\n'
+            '    PublicationReader(sys.argv[1]).read()\n'
+            'except ValueError:\n'
+            '    print("rejected")\n'
+        )
+        result = subprocess.run(
+            [sys.executable, '-c', probe, str(self.directory)],
+            text=True, capture_output=True, timeout=2, check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(result.stdout.strip(), 'rejected')
 
 
 if __name__=='__main__':unittest.main()

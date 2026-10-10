@@ -26,7 +26,7 @@ def _digest(value):
 
 def _read_regular(directory_fd,name,limit):
     try:
-        fd=os.open(name,os.O_RDONLY|os.O_NOFOLLOW,dir_fd=directory_fd)
+        fd=os.open(name,os.O_RDONLY|os.O_NOFOLLOW|os.O_NONBLOCK,dir_fd=directory_fd)
     except FileNotFoundError:
         return None
     except OSError as error:

@@ -95,6 +95,7 @@ async function loadSituation(){
  host.replaceChildren(node("p","empty-state","Checking accepted snapshot…"));
  $("layer-situation").replaceChildren();$("situation-fit").disabled=true;
  S.situation=null;S.situationBbox=null;situationBanner();
+ if(S.boot?.area){txt("map-area-label",S.boot.area.label||"Loaded area");txt("map-subtitle",S.roads.length+" roads · "+(S.boot.area.buildings||[]).length+" buildings");}
  try{
   const response=await getJSON("/api/situation");
   if(serial!==S.situationSerial||S.tab!=="situation")return;
