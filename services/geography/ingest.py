@@ -147,10 +147,13 @@ def ingest(input_path,output_dir,downloaded_at_utc=None,endpoint=ENDPOINT,area_i
     # A closed road or stream is still a line. Only area geometry may contain
     # the entire bbox without any vertex or segment crossing its boundary.
     roads=[feature for feature in roads if _feature_intersects_bbox(feature,bbox)]
-    buildings=[feature for feature in buildings if _feature_intersects_bbox(feature,bbox,polygon=True)]
+    linear_area_ids={str(way["id"]) for way in data.get("elements",[])
+                     if way.get("type")=="way" and way.get("tags",{}).get("area")=="no"}
+    buildings=[feature for feature in buildings if _feature_intersects_bbox(
+        feature,bbox,polygon=feature["id"] not in linear_area_ids)]
     area_way_ids={
         str(way["id"]) for way in data.get("elements",[]) if way.get("type")=="way"
-        and way.get("tags",{}).get("area")!="no"
+        and str(way["id"]) not in linear_area_ids
         and (way.get("tags",{}).get("landuse")
              or way.get("tags",{}).get("natural")=="water"
              or way.get("tags",{}).get("waterway")=="riverbank"

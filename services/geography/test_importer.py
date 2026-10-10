@@ -221,6 +221,29 @@ class ImportTests(unittest.TestCase):
    area=json.loads((Path(td)/"area.json").read_text())
    self.assertEqual(area["coverage"][2]["status"],"available")
 
+ def test_non_area_or_denied_building_does_not_claim_coverage(self):
+  outer=[(-121.63,39.73),(-121.58,39.73),(-121.58,39.78),(-121.63,39.78)]
+  nodes=[{"type":"node","id":i,"lon":lon,"lat":lat} for i,(lon,lat) in enumerate(outer,1)]
+  ring={"type":"way","id":9,"nodes":[1,2,3,4,1],"tags":{"building":"yes","area":"no"}}
+  with tempfile.TemporaryDirectory() as td:
+   source=Path(td)/"raw.json"
+   source.write_text(json.dumps({"elements":nodes+[ring]}))
+   with self.assertRaisesRegex(ValueError,"acquisition bbox"):
+    ingest(source,td)
+   ring["tags"]={"building":"yes"}
+   source.write_text(json.dumps({"elements":nodes+[ring]}))
+   ingest(source,td)
+   area=json.loads((Path(td)/"area.json").read_text())
+   self.assertEqual(area["coverage"][1]["status"],"available")
+   local=[
+    {"type":"node","id":5,"lon":-121.608,"lat":39.754},
+    {"type":"node","id":6,"lon":-121.607,"lat":39.754},
+    {"type":"node","id":7,"lon":-121.607,"lat":39.755},
+    {"type":"way","id":10,"nodes":[5,6,7,5],"tags":{"building":"no"}}]
+   source.write_text(json.dumps({"elements":local}))
+   with self.assertRaisesRegex(ValueError,"acquisition bbox"):
+    ingest(source,td)
+
  def test_committed_paradise_graph_uses_current_access_policy(self):
   root=Path(__file__).resolve().parents[2]
   source=root/"fixtures/geography/paradise/raw.osm"

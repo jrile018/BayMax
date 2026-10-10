@@ -102,7 +102,8 @@ def import_osm(data,origin=(-121.607,39.754)):
                 for u,v,direction in directions:
                     geom=[mb,ma] if direction=="rev" else [ma,mb]
                     edges.append({"id":f"{ident}/{i}/{direction}","way_id":ident,"segment_index":i,"from_node":u,"to_node":v,"geometry_m":geom,"length_m":length,"travel_time_s":length/speed,"speed_mps":speed,"speed_assumption":speed_source,"vehicle_access":vehicle_access,**access_metadata})
-        if "building" in tags: buildings.append({"id":ident,"geometry_lonlat":coords,"geometry_m":metric})
+        if str(tags.get("building","")).strip().lower() not in ("","no","0","false"):
+            buildings.append({"id":ident,"geometry_lonlat":coords,"geometry_m":metric})
         kind=tags.get("landuse") or ("water" if tags.get("natural")=="water" or "waterway" in tags else None)
         if kind: landuse.append({"id":ident,"kind":kind,"geometry_lonlat":coords})
     return roads,buildings,landuse,{"nodes":list(graph_nodes.values()),"edges":edges}
