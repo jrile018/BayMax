@@ -97,6 +97,8 @@ class TripExecutor:
                 if old.signature!=signature:
                     raise ValueError("conflicting dispatch ID")
                 return self._trip_dict(old)
+            if not safety.operational_enabled:
+                raise ValueError("dispatch requires operationally enabled safety")
             if route.status!="feasible" or not route.safety_validated:
                 raise ValueError("dispatch requires interval-validated feasible route")
             if route.graph_version!=self.graph.version or route.known_version!=safety.version:

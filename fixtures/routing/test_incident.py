@@ -9,7 +9,8 @@ from copy import deepcopy
 from dataclasses import replace
 from pathlib import Path
 
-from services.routing import Graph, candidate_routes
+from services.routing import Graph, SafetySnapshot, candidate_routes, static_reference
+from services.planner.ledger import Ledger, Vehicle, Request, Destination
 from services.routing.checkpoint import graph_fingerprint
 from services.routing.incident import (
     bind_checkpoint, bridge_incident_v1, verify_frozen_contract,
@@ -129,6 +130,40 @@ class IncidentBridgeTests(unittest.TestCase):
         self.assertEqual(self.engine.snapshot(), before)
         self.assertEqual(self.engine.ledger.export_state()['outcome_totals']['safe_evacuated_people'], 0)
 
+    def test_disabled_safety_blocks_static_and_zero_edge_dispatch(self):
+        disabled = self.run_bridge().safety
+        self.assertFalse(disabled.operational_enabled)
+        self.assertFalse(disabled.open_now('ab', 5))
+        self.assertNotEqual(static_reference(self.graph, 'A', 'D', 'bus', 5, disabled).status,
+                            'feasible')
+        zero_graph = Graph({'A': (0, 0)}, [], version='same-node-v1')
+        zero_search = candidate_routes(zero_graph, 'A', 'A', 'bus', 5, disabled)
+        self.assertEqual(zero_search.routes, ())
+        self.assertNotEqual(zero_search.status, 'feasible')
+        ledger = Ledger([Vehicle('bus1', 'bus', 'A', 1, 0)],
+                        [Request('evac1', 'evacuation', 'A', 'A', ('p1',))],
+                        [Destination('shelter1', 'A', 'shelter', 1)], {})
+        executor = TripExecutor(zero_graph, ledger, start_s=5)
+        enabled = SafetySnapshot(disabled.version, 5, 5, 65,
+                                 provenance='explicit fictional test',
+                                 safe_nodes=frozenset({'A'}))
+        self.assertTrue(enabled.operational_enabled)
+        legitimate_route = candidate_routes(zero_graph, 'A', 'A', 'bus', 5, enabled).routes[0]
+        before = executor.snapshot()
+        with self.assertRaises(ValueError):
+            executor.dispatch('dispatch1', 'bus1', 'evac1', legitimate_route, disabled)
+        self.assertEqual(executor.snapshot(), before)
+        self.assertEqual(ledger.assignments, {})
+        committed = executor.dispatch('dispatch1', 'bus1', 'evac1', legitimate_route, enabled)
+        after = executor.snapshot()
+        self.assertEqual(committed['dispatch_id'], 'dispatch1')
+        self.assertEqual(len(ledger.assignments), 1)
+        self.assertEqual(executor.dispatch('dispatch1', 'bus1', 'evac1', legitimate_route,
+                                           disabled), committed)
+        self.assertEqual(executor.snapshot(), after)
+        with self.assertRaises(ValueError):
+            SafetySnapshot('bad', 0, 0, 1, operational_enabled=1)
+
     def test_frozen_contract_tamper_and_manifest_gate_rejected(self):
         verify_frozen_contract(self.manifest, self.files, self.receipt)
         files = dict(self.files)
@@ -186,6 +221,46 @@ class IncidentBridgeTests(unittest.TestCase):
                        issued_at='2026-10-10T09:00:05.000001Z',
                        received_at='2026-10-10T09:00:05.000001Z')
         with self.assertRaises(ValueError): self.run_bridge(edge_bindings=[binding])
+
+    def test_record_validity_times_and_known_order_follow_frozen_contract(self):
+        accepted = '2026-10-10T09:00:03Z'
+        mutations = (
+            {'valid_from': 'not-utc'},
+            {'valid_through': True},
+            {'message_expires_at': 0},
+            {'valid_from': '2026-10-10T11:00:00Z',
+             'valid_through': '2026-10-10T10:00:00Z'},
+            {'published_at': '2026-10-10T09:00:04Z'},
+            {'observed_at': '2026-10-10T09:00:04Z', 'source_kind': 'observed'},
+        )
+        for mutation in mutations:
+            record = closure_record(accepted=accepted)
+            record.update(mutation)
+            altered = snapshot(self.bound, [record])
+            with self.subTest(mutation=mutation), self.assertRaises(ValueError):
+                self.run_bridge(snapshot=altered,
+                    trusted_expected_snapshot_hash=altered['snapshot_hash'],
+                    edge_bindings=[])
+        prior = closure_record(accepted='2026-10-10T09:00:02Z')
+        prior['superseded_at'] = accepted
+        correction = closure_record(accepted=accepted, revision=2,
+            supersedes=['county', 'notice', 1])
+        correction['correction_available_at'] = '2026-10-10T09:00:04Z'
+        altered = snapshot(self.bound, [prior, correction])
+        altered['categories']['closures'] = [correction]
+        altered['accepted_source_refs'] = [{key: correction[key] for key in
+            ('source_id', 'item_id', 'revision', 'raw_sha256')}]
+        seal(altered)
+        with self.assertRaises(ValueError): self.run_bridge(snapshot=altered,
+            trusted_expected_snapshot_hash=altered['snapshot_hash'], edge_bindings=[])
+        future_validity = closure_record(accepted=accepted)
+        future_validity['valid_from'] = '2026-10-10T10:00:00Z'
+        future_validity['valid_through'] = '2026-10-10T11:00:00Z'
+        future_validity['message_expires_at'] = '2026-10-10T09:00:04Z'
+        valid = snapshot(self.bound, [future_validity])
+        result = self.run_bridge(snapshot=valid,
+            trusted_expected_snapshot_hash=valid['snapshot_hash'], edge_bindings=[])
+        self.assertFalse(result.can_calculate_operational_outcomes)
 
     def test_actual_frozen_evidence_log_snapshot_compatibility(self):
         verify_frozen_contract(self.manifest, self.files, self.receipt)

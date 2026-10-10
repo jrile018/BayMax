@@ -185,9 +185,20 @@ def _validate_record(record, cutoff):
     accepted = _utc(record['accepted_at'], 'accepted_at')
     _require(_utc(record['first_seen_at'], 'first_seen_at') <=
              _utc(record['fetched_at'], 'fetched_at') <= accepted, 'record acquisition order')
-    for name in ('published_at', 'observed_at', 'correction_available_at', 'superseded_at'):
+    known_times = {}
+    for name in ('published_at', 'observed_at', 'correction_available_at'):
         when = _optional_utc(record[name], name)
-        _require(when is None or when <= cutoff, 'future known ' + name)
+        _require(when is None or when <= accepted, name + ' after acceptance')
+        known_times[name] = when
+    superseded = _optional_utc(record['superseded_at'], 'superseded_at')
+    _require(superseded is None or superseded <= cutoff, 'future known superseded_at')
+    valid_from = _optional_utc(record['valid_from'], 'valid_from')
+    valid_through = _optional_utc(record['valid_through'], 'valid_through')
+    _optional_utc(record['message_expires_at'], 'message_expires_at')
+    _require(valid_from is None or valid_through is None or valid_from <= valid_through,
+             'valid_from after valid_through')
+    _require(record['source_kind'] != 'observed' or known_times['observed_at'] is not None,
+             'observed claim needs observed_at')
     acceptance = record['acceptance']
     _require(isinstance(acceptance, dict) and acceptance.get('method') in
              ('official_policy', 'human_review'), 'record acceptance')
@@ -346,6 +357,7 @@ def bridge_incident_v1(*, graph, checkpoint, epoch_utc, graph_identity, snapshot
                             horizon_s=now_s + horizon_minutes * 60,
                             closures=(), covered_edges=frozenset(),
                             safe_nodes=frozenset(),
+                            operational_enabled=False,
                             provenance='incident v1 disabled: operational safety unverified')
     return IncidentBridgeResult(s['snapshot_hash'], s['cutoff_utc'],
                                 _utc_string(horizon), bound['ledger_watermark']['graph_fingerprint'],

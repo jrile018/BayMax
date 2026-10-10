@@ -24,6 +24,9 @@ def static_reference(graph,start,end,vehicle_kind,departure_s,safety=None,route_
     departure=finite_nonnegative(departure_s,"departure_s")
     if safety and departure<safety.known_at_s:
         raise ValueError("departure precedes available snapshot")
+    if safety and not safety.operational_enabled:
+        return _record(graph,start,end,vehicle_kind,departure,(),safety,route_version,False,
+                       "static_dijkstra","unreachable_static")
     queue=[(0.0,(),start)]
     best={start:(0.0,())}
     while queue:
@@ -54,6 +57,8 @@ def candidate_routes(graph,start,end,vehicle_kind,departure_s,safety,*,max_expan
     if isinstance(max_candidates,bool) or not isinstance(max_candidates,int) or max_candidates<1:
         raise ValueError("max_candidates must be positive integer")
     began=perf_counter()
+    if not safety.operational_enabled:
+        return SearchResult("no_feasible_candidate",(),(),0,False,(perf_counter()-began)*1000)
     # Structural disconnection is the only proof of static unreachability here.
     reference=static_reference(graph,start,end,vehicle_kind,departure)
     if reference.status=="unreachable_static":

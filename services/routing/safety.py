@@ -31,25 +31,31 @@ class SafetySnapshot:
     provenance: str = "declared scenario interval assumptions"
 
     safe_nodes: frozenset[str] = frozenset()
+    operational_enabled: bool = True
 
     def __post_init__(self):
         for name in ("known_at_s","issued_s","horizon_s","safety_buffer_s"):
             finite_nonnegative(getattr(self,name),name)
         if self.issued_s>self.known_at_s or self.horizon_s<self.issued_s or not self.provenance:
             raise ValueError("invalid forecast issue/horizon/provenance")
+        if type(self.operational_enabled) is not bool:
+            raise ValueError("operational_enabled must be Boolean")
 
     def visible_closures(self, edge_id):
         return tuple(c for c in self.closures if c.edge_id==edge_id
                      and c.issued_s<=self.known_at_s and c.received_s<=self.known_at_s)
 
     def open_now(self, edge_id, when_s):
-        return not any(c.start_s<=when_s<c.end_s for c in self.visible_closures(edge_id))
+        return self.operational_enabled and not any(
+            c.start_s<=when_s<c.end_s for c in self.visible_closures(edge_id))
 
     def traversal(self, edge_id, entry_s, exit_s):
         finite_nonnegative(entry_s,"entry_s")
         finite_nonnegative(exit_s,"exit_s")
         if entry_s<self.known_at_s or exit_s<entry_s:
             raise ValueError("traversal must not precede available information")
+        if not self.operational_enabled:
+            return False,"operational_disabled",self.provenance
         end=exit_s+self.safety_buffer_s
         if end>self.horizon_s or (self.covered_edges is not None and edge_id not in self.covered_edges):
             return False,"unknown_coverage",self.provenance
@@ -60,4 +66,5 @@ class SafetySnapshot:
         return True,"safe_under_declared_intervals",self.provenance
 
     def destination_safe(self,node_id,when_s):
-        return self.known_at_s<=when_s<=self.horizon_s and node_id in self.safe_nodes
+        return (self.operational_enabled and self.known_at_s<=when_s<=self.horizon_s
+                and node_id in self.safe_nodes)
