@@ -83,6 +83,22 @@ class WfigsCandidateTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             incident_candidate(raw(ids), raw(features), IRWIN, FETCHED)
 
+    def test_point_rejects_duplicate_keys_and_nonfinite_constants(self):
+        ids, features = point_bodies()
+        with self.assertRaises(ValueError):
+            incident_candidate(b'{"objectIds":[7],"objectIds":[8]}',
+                               raw(features), IRWIN, FETCHED)
+        with self.assertRaises(ValueError):
+            incident_candidate(raw(ids),
+                               raw(features).replace(b'"GlobalID": "a"',
+                                                     b'"GlobalID": NaN'),
+                               IRWIN, FETCHED)
+        with self.assertRaises(ValueError):
+            incident_candidate(raw(ids),
+                               raw(features).replace(b'"GlobalID": "a"',
+                                                     b'"GlobalID": 1e400'),
+                               IRWIN, FETCHED)
+
     def test_point_rejects_malformed_spatial_reference(self):
         ids, features = point_bodies()
         features["spatialReference"] = None

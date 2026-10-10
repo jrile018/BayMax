@@ -12,6 +12,7 @@ from hashlib import sha256
 import json
 import math
 import re
+from urllib.parse import parse_qs, urlsplit
 
 _IRWIN = re.compile(r"\{[0-9A-F]{8}-(?:[0-9A-F]{4}-){3}[0-9A-F]{12}\}")
 _POINT_SERVICE = (
@@ -62,11 +63,36 @@ def _number(value: object, label: str, low: float, high: float | None = None) ->
     return value
 
 
+def _unique_object(pairs: list[tuple[str, object]]) -> dict:
+    value = {}
+    for key, item in pairs:
+        if key in value:
+            raise ValueError("duplicate JSON key")
+        value[key] = item
+    return value
+
+
+def _reject_constant(value: str) -> None:
+    raise ValueError("nonfinite JSON constant")
+
+
+def _finite_float(value: str) -> float:
+    try:
+        parsed = float(value)
+    except (ValueError, OverflowError) as exc:
+        raise ValueError("invalid JSON float") from exc
+    if not math.isfinite(parsed):
+        raise ValueError("nonfinite JSON float")
+    return parsed
+
+
 def _raw_json(raw: bytes, label: str, max_bytes: int) -> dict:
     if not isinstance(raw, bytes) or not raw or len(raw) > max_bytes:
         raise ValueError(f"{label} size or type invalid")
     try:
-        value = json.loads(raw)
+        value = json.loads(raw, object_pairs_hook=_unique_object,
+                           parse_constant=_reject_constant,
+                           parse_float=_finite_float)
     except (ValueError, UnicodeDecodeError) as exc:
         raise ValueError(f"{label} is not JSON") from exc
     if not isinstance(value, dict) or "error" in value:
@@ -256,4 +282,131 @@ def perimeter_candidate(ids_raw: bytes, features_raw: bytes,
         "feature_reference_url": f"{_PERIMETER_SERVICE}/{a['OBJECTID']}",
         "ids_raw_sha256": sha256(ids_raw).hexdigest(),
         "features_raw_sha256": sha256(features_raw).hexdigest(),
+    }
+_QUERY_PATH = (
+    "/T4QMspbfLg3qTGWY/ArcGIS/rest/services/"
+    "WFIGS_Incident_Locations_Current/FeatureServer/0/query"
+)
+_QUERY_FIELDS = (
+    "OBJECTID,GlobalID,IrwinID,IncidentName,IncidentTypeCategory,"
+    "FireDiscoveryDateTime,ModifiedOnDateTime_dt,IncidentSize,PercentContained,"
+    "FireOutDateTime,InitialLatitude,InitialLongitude"
+)
+_API_FIELDS = [
+    "features[].attributes.OBJECTID",
+    "features[].attributes.IrwinID",
+    "features[].attributes.IncidentName",
+    "features[].attributes.IncidentTypeCategory",
+    "features[].attributes.FireDiscoveryDateTime",
+    "features[].attributes.ModifiedOnDateTime_dt",
+    "features[].attributes.IncidentSize",
+    "features[].attributes.PercentContained",
+    "features[].attributes.FireOutDateTime",
+    "features[].attributes.InitialLatitude",
+    "features[].attributes.InitialLongitude",
+    "features[].geometry.x",
+    "features[].geometry.y",
+]
+
+
+def _query_url(value: str, irwin_id: str, *, ids: bool) -> str:
+    """Validate a narrow, exact WFIGS query URL; do not verify transport."""
+    if (not isinstance(value, str) or len(value) > 4096 or
+            any(char.isspace() or ord(char) < 32 or ord(char) == 127
+                for char in value)):
+        raise ValueError("invalid WFIGS acquisition URL")
+    parts = urlsplit(value)
+    if (parts.scheme != "https" or parts.netloc != "services3.arcgis.com"
+            or parts.path != _QUERY_PATH or parts.fragment):
+        raise ValueError("WFIGS acquisition URL outside exact endpoint")
+    try:
+        query = parse_qs(parts.query, strict_parsing=True, keep_blank_values=True)
+    except ValueError as exc:
+        raise ValueError("malformed WFIGS query") from exc
+    if any(len(values) != 1 for values in query.values()):
+        raise ValueError("ambiguous WFIGS query parameter")
+    actual = {key: values[0] for key, values in query.items()}
+    expected = {"f": "json", "where": "IrwinID='" + irwin_id + "'"}
+    if ids:
+        expected["returnIdsOnly"] = "true"
+    else:
+        expected.update({
+            "outFields": _QUERY_FIELDS,
+            "returnGeometry": "true",
+            "outSR": "4326",
+            "orderByFields": "OBJECTID ASC",
+            "resultRecordCount": "10",
+        })
+    if actual != expected:
+        raise ValueError("WFIGS query does not match bounded IRWIN selector")
+    return value
+
+
+def reported_record_proposal(
+    ids_raw: bytes, features_raw: bytes, irwin_id: str, *,
+    ids_query_url: str, feature_query_url: str,
+    first_seen_at_utc: str, fetched_at_utc: str,
+    proposed_acceptance_at_utc: str,
+) -> dict:
+    """Draft a complete incident-v1 reported record for exact human review.
+
+    This does not verify transport, authenticate a reviewer, construct a
+    VerifiedSource, append evidence, or publish a snapshot. The trusted caller
+    must independently verify the acquisition receipts and present every field
+    of this exact draft for authenticated per-record review before acceptance.
+    """
+    irwin_id = _expected_irwin(irwin_id)
+    _query_url(ids_query_url, irwin_id, ids=True)
+    source_url = _query_url(feature_query_url, irwin_id, ids=False)
+    first = _utc_text(first_seen_at_utc)
+    fetched = _utc_text(fetched_at_utc)
+    proposed = _utc_text(proposed_acceptance_at_utc)
+    if first > fetched or fetched > proposed:
+        raise ValueError("record draft chronology invalid")
+    if len(_paired(ids_raw, features_raw)) != 1:
+        raise ValueError("narrow IRWIN query must return exactly one feature")
+    point = incident_candidate(ids_raw, features_raw, irwin_id, fetched_at_utc)
+    return {
+        "source_id": "wfigs",
+        "item_id": irwin_id[1:-1],
+        "revision": 1,
+        "source_url": source_url,
+        "raw_sha256": point["features_raw_sha256"],
+        "provider": "Wildland Fire Interagency Geospatial Services",
+        "license": "WFIGS public layer; redistribution terms unresolved",
+        "source_type": "official_api",
+        "category": "hazard",
+        "source_kind": "reported",
+        "published_at": None,
+        "observed_at": None,
+        "valid_from": None,
+        "valid_through": None,
+        "message_expires_at": None,
+        "first_seen_at": first_seen_at_utc,
+        "fetched_at": fetched_at_utc,
+        "accepted_at": proposed_acceptance_at_utc,
+        "correction_available_at": None,
+        "superseded_at": None,
+        "supersedes": None,
+        "retracted": False,
+        "source_reference": {"api_fields": list(_API_FIELDS)},
+        "geometry": {"type": "Point", "coordinates": point["point_lonlat"]},
+        "precision": "point",
+        "area_label": None,
+        "source_uncertainty": (
+            "Reported incident point, not a perimeter or observed fire front; "
+            "source modification is an edit time, not an observation; "
+            "reuse rights require separate review."
+        ),
+        "payload": {
+            "incident_name": point["incident_name"],
+            "incident_type_category": "WF",
+            "size_acres": point["size_acres"],
+            "percent_contained": point["percent_contained"],
+            "discovered_at": point["discovered_at_utc"],
+            "source_modified_at": point["modified_at_utc"],
+            "fire_out_at": point["fire_out_at_utc"],
+            "initial_point_lonlat": point["initial_point_lonlat"],
+            "feature_reference_url": point["feature_reference_url"],
+        },
     }
