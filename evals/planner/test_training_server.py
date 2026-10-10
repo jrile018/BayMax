@@ -73,8 +73,8 @@ def test_initial_html_and_metadata_expose_no_future(live_server):
     assert "<img src=x>" not in html
     assert '"truth_events"' not in html
     assert "node.children" not in html
-    assert "if(pending)return" in html
-    assert "app.querySelectorAll" in html
+    assert 'id="mission-network"' in html
+    assert 'src="/vendor/gods_eye_view/practiceShell.js"' in html
     status, metadata = get(live_server, "/meta")
     assert status == 200
     assert json.loads(metadata)["episodes"] == [{"name": "Episode 1"}]
@@ -212,3 +212,47 @@ def test_live_mission_receives_later_request_and_debriefs_at_horizon():
         server.shutdown()
         server.server_close()
         thread.join(timeout=2)
+
+
+def test_mit_shell_modules_are_served_without_exposing_pack(live_server):
+    status, html = get(live_server, "/")
+    assert status == 200
+    assert 'id="mission-network"' in html
+    assert 'id="left-panel-stack"' in html
+    assert 'id="right-context-rail"' in html
+    assert 'src="/vendor/gods_eye_view/practiceShell.js"' in html
+    for name in ("practiceShell.js", "railTimeline.js", "panelRailGeometry.js",
+                 "panelStackLayout.js"):
+        code, source = get(live_server, f"/vendor/gods_eye_view/{name}")
+        assert code == 200
+        assert "export " in source or "import " in source
+        assert "truth_events" not in source
+    assert get(live_server, "/vendor/gods_eye_view/../../practice.json")[0] == 404
+
+
+def test_shell_wires_real_rail_modules_and_keeps_only_recorded_snapshots(live_server):
+    status, module = get(live_server, "/vendor/gods_eye_view/practiceShell.js")
+    assert status == 200
+    assert "createRailTimeline" in module
+    assert "resolveHudRailLayout" in module
+    assert "allocatePanelStackHeights" in module
+    assert "request('/meta')" in module
+    assert "request('/start'" in module
+    assert "request('/step'" in module
+    assert "request('/current'" in module
+    assert "decision_nonce: choice.nonce" in module
+    assert "if (readOnly || pending || review" in module
+    assert "const choiceDuration = pauseDecisionClock()" in module
+    assert "choiceRecovery.submit({ session, nonce, actionId, choiceDuration })" in module
+    assert "choiceRecovery.reconcile()" in module
+    assert "choiceRecovery.hasUnresolved()" in module
+    assert "recordChoice(result.actionId, result.choiceDuration)" in module
+    assert "setInterval(updateThinkingDisplay, 200)" in module
+    assert "history.map((entry) => entry.time_s)" in module
+    assert "truth_events" not in module
+    assert "innerHTML" not in module
+    status, timeline = get(live_server, "/vendor/gods_eye_view/railTimeline.js")
+    assert status == 200
+    assert "if (!document?.createElement || !container) return null" in timeline
+    assert "Simulated mission history" in timeline
+    assert "Review decisions" in timeline

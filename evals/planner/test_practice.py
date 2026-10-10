@@ -4,7 +4,7 @@ import re
 
 import pytest
 
-from evals.planner.practice import build_practice_pack, render_practice_html
+from evals.planner.practice import build_practice_pack, render_practice_html, render_current_preview_html
 
 
 class SmallWorld:
@@ -96,11 +96,11 @@ def test_reproducible_and_html_script_safe():
     assert len(re.findall(r"</script", html, flags=re.I)) == 1
     assert "<img src=x" not in html
     assert "\\u003c/img" not in html  # no raw malicious HTML element in markup
-    assert "branch_limit" in html
     assert "node.children" not in html
-    assert "Restart" in html
-    assert "Thinking time" in html
-    assert "Instructor severity scale" in html
+    assert 'id="mission-network"' in html
+    assert 'id="mission-timeline"' in html
+    assert 'src="/vendor/gods_eye_view/practiceShell.js"' in html
+    assert "browser timer" in html.lower()
     assert [x["level"] for x in first["severity_scale"]] == list(range(1, 11))
 
 
@@ -199,3 +199,28 @@ def test_instructor_profile_and_coverage_threshold_are_recorded():
     assert situations[0]["situation"]["assumptions"]["road_failure_probability"] == 0.2
     assert situations[0]["situation"]["goals"]["coverage_threshold_s"] == 90
     assert summary["coverage_threshold_s"] == 90
+
+
+def test_saved_preview_is_current_only_inline_scoped_and_script_safe():
+    pack = build_practice_pack([_episode()], world_factory=SmallWorld, depth_limit=1)
+    current = pack["episodes"][0]["root"]
+    preview = render_current_preview_html(
+        "</script><img src=x>", pack["severity_scale"], current)
+    assert 'data-practice-preview' in preview
+    assert "Saved current decision preview" in preview
+    assert 'id="gods-eye-view-mit-license"' in preview
+    assert "Copyright (c) 2026 Bilawal Sidhu" in preview
+    assert "The above copyright notice and this permission notice" in preview
+    assert '<script type="module"' not in preview
+    assert 'src="/vendor/' not in preview
+    assert preview.count(" = (() => {") == 4
+    assert "mountPracticeShell({fetcher, readOnly: true})" in preview
+    assert "secret-closure" not in preview
+    assert '"truth_events"' not in preview
+    assert '"children"' not in preview
+    assert "</script><img" not in preview
+    assert r"\u003c/script" in preview
+    bad = dict(current)
+    bad["knowledge"] = dict(current["knowledge"], truth_events=["private"])
+    with pytest.raises(ValueError, match="truth_events"):
+        render_current_preview_html("bad", pack["severity_scale"], bad)
