@@ -1,0 +1,3 @@
+{"case": "stale_review_without_revision_precondition", "inspected_revision": 1, "accepted_revision": 2, "accepted_effect_count": 1, "edited_revision": 2, "actual_human_review": false}
+
+EXIT_CODE:0

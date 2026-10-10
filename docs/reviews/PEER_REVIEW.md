@@ -1,6 +1,6 @@
 # Focused peer review of audit documents
 
-Scope: `docs/reviews/README.md`, `STRUCTURE_AND_INTEGRATION.md`, `REQUIREMENTS_AND_JUDGE_EVIDENCE.md`, and the three pinned domain reports `routing_mc.md`, `hf_fire.md`, `maps_amd.md` on the review worktree. This checks the synthesis against those reports and the accepted mission boundary; it does not rerun source reviews. Maps' newer delta and the faces report are intentionally pending.
+Initial peer-pass scope (before first publication): `docs/reviews/README.md`, `STRUCTURE_AND_INTEGRATION.md`, `REQUIREMENTS_AND_JUDGE_EVIDENCE.md`, and the three pinned domain reports `routing_mc.md`, `hf_fire.md`, `maps_amd.md` on the review worktree. This checks the synthesis against those reports and the accepted mission boundary; it does not rerun source reviews. Maps' newer delta and the faces report are intentionally pending.
 
 ## Corrections before publication
 
@@ -20,3 +20,11 @@ Scope: `docs/reviews/README.md`, `STRUCTURE_AND_INTEGRATION.md`, `REQUIREMENTS_A
 ## Publication resolution
 
 The primary reviewer corrected the diagram and proposed-command wording, and the domain reviewer removed invented numerical gates before publication. Latest Maps cf5251 and faces4bef reports were subsequently reviewed with exact logs by the primary reviewer; this peer pass did not independently re-review those later source deltas.
+
+## Later publication consistency pass
+
+The maps/AMD reviewer read the three synthesis documents after initial publication and identified stale face/routing pins, a renderer-existence overstatement, initial-six-head scope wording, a Gainesville implemented-versus-planned ambiguity, and missing visible OSM source-date proof. The primary reviewer corrected these synthesis claims. Routing's changed scope is independently reviewed at6ca28e2 and resolves the historical missing-ledger finding; other concrete MC and shared-restoration gates remain. This pass did not add numeric coverage/complexity requirements or certify later source heads.
+
+Casualty changed-scope source at4ebda08 independently passed47 tests. Its broker is byte-identical to historical4befc43, and the same request ID still produces distinct per-case command keys; FACE1 stays open as an integration deduplication condition. The additional rights/count/box regression fixes are present, without actual photo/model/authentication proof.
+
+Final intake delta a28b890 was independently source-reviewed and tested:71 CPU checks pass; three earlier semantic/evidence probes still reproduce. The optional revision precondition adds a MED caller guard, qualified as scripted acceptance without proof of an actual UI race or human approval. Corrected current-head command line references and cloud-only clone wording were checked. Automatic approval review initially blocked the revised report transfer; after the human instructed publication to main, a same-route exact-payload transfer was reviewed and allowed. The cloud file SHA256 matches33d59cf249071c77edba497dc06acfeedcb0dd9f9b4336167fa299d05816ca09.
