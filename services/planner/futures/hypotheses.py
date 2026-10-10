@@ -14,6 +14,7 @@ from typing import Any
 from .incident import _copy_json, _digest, pin_incident_projection
 
 _ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$")
+_SOURCE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$")
 _UTC = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?Z$")
 _REF_KEYS = {"source_id", "item_id", "revision", "raw_sha256"}
 _SPEC_KEYS = {"branch_id", "accepted_hazard_refs", "authored_assumptions", "hypothetical_events"}
@@ -51,8 +52,9 @@ def _ref(value: Any) -> dict[str, Any]:
     if not isinstance(value, dict) or set(value) != _REF_KEYS:
         raise ValueError("source reference has unexpected fields")
     result = _copy_json(value)
-    _id(result["source_id"], "source_id")
-    _id(result["item_id"], "item_id")
+    for label in ("source_id", "item_id"):
+        if not isinstance(result[label], str) or not _SOURCE_ID.fullmatch(result[label]):
+            raise ValueError(f"{label} must match frozen contract identifier syntax")
     if type(result["revision"]) is not int or result["revision"] < 1:
         raise ValueError("revision must be a positive integer")
     digest = result["raw_sha256"]

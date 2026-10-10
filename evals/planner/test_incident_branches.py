@@ -166,3 +166,14 @@ def test_mixed_precision_events_follow_chronological_order():
     assert [e["event_id"] for e in branch["hypothetical_events"]] == [
         "assumed-update-1", "assumed-update-2"
     ]
+
+
+def test_accepts_frozen_contract_max_length_source_item_id():
+    store = _log()
+    record = _record()
+    record["item_id"] = "a" * 128
+    _append(store, record)
+    snapshot = store.snapshot(CUT)
+    base = pin_incident_projection(snapshot, _input(snapshot))
+    branch = materialize_hypothetical_branches(base, [_spec(base)])["scenario_branches"][0]
+    assert branch["accepted_hazard_refs"][0]["item_id"] == "a" * 128
