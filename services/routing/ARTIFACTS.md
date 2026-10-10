@@ -14,4 +14,12 @@ Command:
 
 No waiting/retreat model or arbitrary time-dependent global optimality certificate. A structural compatible directed disconnection is unreachable_static; finite simple-path candidate failure is no_feasible_candidate; bounds report search_limit. Explicit safe destination declarations are proposed for the trip dependency, not inferred from road coverage.
 
-TripExecutor and ledger tests are not in this first reviewed-search commit. They will be added to the same draft PR after end-to-end checks. C1 movement/reroute/exactly-once service is not yet complete.
+TripExecutor is now in the draft: actual metric edge progress, polyline trail/remaining geometry, reachable-junction replanning, in-place stranding, loading/arrival/service phases, deterministic snapshot hash and route events. It requires the proposed Ledger.transaction API; real ledger implementation/integration is pending at an automatic-approval boundary.
+
+Four focused trip-only fault tests use a clearly labeled test StubLedger. They do not prove any real ledger capacity/service outcomes. Command:
+```
+/opt/venv/bin/python -m unittest discover -s fixtures/routing -p test_trip_faults.py -v
+```
+trip-review-red.log recorded four failures (positive-duration collapsed connector, partial clock/state advance, ETA update split state and stranded ledger split state). trip-review-green.log records four passed, exit0. Independent follow-up review found no further material issue. Corrected trips use duration independent of distance and atomic executor+ledger rollback.
+
+The real trip/ledger acceptance files remain pending until the ledger dependency is unblocked. C1 movement/reroute/exactly-once service is not yet complete.
