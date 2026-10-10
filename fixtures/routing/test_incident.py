@@ -31,6 +31,7 @@ def canonical(value):
 
 
 def seal(snapshot):
+    snapshot.pop('snapshot_hash', None)
     snapshot['snapshot_hash'] = hashlib.sha256(canonical(snapshot)).hexdigest()
     return snapshot
 
@@ -130,6 +131,23 @@ class IncidentBridgeTests(unittest.TestCase):
         self.assertEqual(self.engine.snapshot(), before)
         self.assertEqual(self.engine.ledger.export_state()['outcome_totals']['safe_evacuated_people'], 0)
 
+    def test_valid_resealed_snapshot_preserves_disabled_context_and_state(self):
+        before_executor = deepcopy(self.engine.snapshot())
+        before_ledger = deepcopy(self.ledger.export_state())
+        self.evidence = seal(deepcopy(self.evidence))
+        result = self.run_bridge()
+        self.assertFalse(result.can_calculate_operational_outcomes)
+        self.assertFalse(result.safety.operational_enabled)
+        self.assertEqual(result.unknown_operational_categories, OPERATIONAL)
+        self.assertEqual(result.unverified_operational_categories, OPERATIONAL)
+        self.assertEqual(result.safety.covered_edges, frozenset())
+        self.assertEqual(result.safety.safe_nodes, frozenset())
+        self.assertEqual(result.safety.closures, ())
+        self.assertEqual(candidate_routes(self.graph, 'A', 'D', 'bus', 5,
+                                         result.safety).routes, ())
+        self.assertEqual(self.engine.snapshot(), before_executor)
+        self.assertEqual(self.ledger.export_state(), before_ledger)
+
     def test_disabled_safety_blocks_static_and_zero_edge_dispatch(self):
         disabled = self.run_bridge().safety
         self.assertFalse(disabled.operational_enabled)
@@ -192,8 +210,9 @@ class IncidentBridgeTests(unittest.TestCase):
         future['categories']['closures'][0]['accepted_at'] = '2026-10-10T09:00:05.000001Z'
         future['revision_history'][0]['accepted_at'] = '2026-10-10T09:00:05.000001Z'
         seal(future)
-        with self.assertRaises(ValueError): self.run_bridge(snapshot=future,
-            trusted_expected_snapshot_hash=future['snapshot_hash'])
+        with self.assertRaisesRegex(ValueError, 'future known accepted_at'):
+            self.run_bridge(snapshot=future,
+                trusted_expected_snapshot_hash=future['snapshot_hash'])
         just_before = closure_record(accepted='2026-10-10T09:00:04.999999Z')
         accepted = snapshot(self.bound, [just_before])
         result = self.run_bridge(snapshot=accepted,
@@ -213,7 +232,9 @@ class IncidentBridgeTests(unittest.TestCase):
                 else:
                     record[field] = '2026-10-10T09:00:05.000001Z'
             seal(altered)
-            with self.subTest(field=field), self.assertRaises(ValueError):
+            reason = {'fetched_at': 'future known fetched_at',
+                      'acceptance': 'review outside acquisition/acceptance'}[field]
+            with self.subTest(field=field), self.assertRaisesRegex(ValueError, reason):
                 self.run_bridge(snapshot=altered,
                     trusted_expected_snapshot_hash=altered['snapshot_hash'])
         binding = dict(source_id='county', item_id='notice', revision=1,
@@ -251,8 +272,9 @@ class IncidentBridgeTests(unittest.TestCase):
         altered['accepted_source_refs'] = [{key: correction[key] for key in
             ('source_id', 'item_id', 'revision', 'raw_sha256')}]
         seal(altered)
-        with self.assertRaises(ValueError): self.run_bridge(snapshot=altered,
-            trusted_expected_snapshot_hash=altered['snapshot_hash'], edge_bindings=[])
+        with self.assertRaisesRegex(ValueError, 'correction_available_at after acceptance'):
+            self.run_bridge(snapshot=altered,
+                trusted_expected_snapshot_hash=altered['snapshot_hash'], edge_bindings=[])
         future_validity = closure_record(accepted=accepted)
         future_validity['valid_from'] = '2026-10-10T10:00:00Z'
         future_validity['valid_through'] = '2026-10-10T11:00:00Z'
@@ -305,8 +327,9 @@ class IncidentBridgeTests(unittest.TestCase):
         double = deepcopy(self.evidence)
         double['in_flight_commitments'].append(deepcopy(double['in_flight_commitments'][0]))
         seal(double)
-        with self.assertRaises(ValueError): self.run_bridge(snapshot=double,
-            trusted_expected_snapshot_hash=double['snapshot_hash'])
+        with self.assertRaisesRegex(ValueError, 'stale or missing checkpoint binding'):
+            self.run_bridge(snapshot=double,
+                trusted_expected_snapshot_hash=double['snapshot_hash'])
 
     def test_valid_later_actual_checkpoint_cannot_reuse_old_snapshot(self):
         old = deepcopy(self.evidence)
@@ -321,8 +344,10 @@ class IncidentBridgeTests(unittest.TestCase):
     def test_null_binding_and_foreign_or_unknown_edges_rejected(self):
         for field in ('ledger_watermark', 'in_flight_commitments'):
             altered = deepcopy(self.evidence); altered[field] = None; seal(altered)
-            with self.subTest(field=field), self.assertRaises(ValueError): self.run_bridge(
-                snapshot=altered, trusted_expected_snapshot_hash=altered['snapshot_hash'])
+            with self.subTest(field=field), self.assertRaisesRegex(
+                    ValueError, 'stale or missing checkpoint binding'):
+                self.run_bridge(snapshot=altered,
+                    trusted_expected_snapshot_hash=altered['snapshot_hash'])
         for mutation in ({'edge_ids': ['missing']}, {'source_id': 'foreign'},
                          {'issued_at': '2026-10-10T09:00:06Z'},
                          {'received_at': '2026-10-10T09:00:06Z'},
@@ -346,8 +371,19 @@ class IncidentBridgeTests(unittest.TestCase):
         evidence['categories']['closures'] = None
         evidence['accepted_source_refs'] = []
         seal(evidence)
-        with self.assertRaises(ValueError): self.run_bridge(snapshot=evidence,
-            trusted_expected_snapshot_hash=evidence['snapshot_hash'])
+        with self.subTest(reference='edge binding'), self.assertRaisesRegex(
+                ValueError, 'edge binding lacks current accepted closure'):
+            self.run_bridge(snapshot=evidence,
+                trusted_expected_snapshot_hash=evidence['snapshot_hash'])
+        for record in (first, later):
+            altered = deepcopy(evidence)
+            altered['accepted_source_refs'] = [{key: record[key] for key in
+                ('source_id', 'item_id', 'revision', 'raw_sha256')}]
+            seal(altered)
+            with self.subTest(revision=record['revision']), self.assertRaisesRegex(
+                    ValueError, 'accepted refs differ from current records'):
+                self.run_bridge(snapshot=altered,
+                    trusted_expected_snapshot_hash=altered['snapshot_hash'], edge_bindings=[])
 
     def test_restoration_preserves_actual_mid_edge_commitments_and_no_alias(self):
         restored = TripExecutor.from_checkpoint(self.graph, deepcopy(self.checkpoint))
