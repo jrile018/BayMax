@@ -1,0 +1,55 @@
+{
+  "source_commit": "05b59bde6cc584b225eacfb53467af22850bbe0b",
+  "verification": "133 cloud tests;20 subtests;exit0",
+  "fictional_inputs": true,
+  "real_model_inference": false,
+  "live_bucket_transfer": false,
+  "actual_human_acceptance": false,
+  "files": [
+    {
+      "path": "README.md",
+      "size": 2269,
+      "sha256": "a3370c399d00eb0e4e17e9d8c766ca138d1a5be8d16cebedc03705f8a5aad2af"
+    },
+    {
+      "path": "committed-checks.log",
+      "size": 973,
+      "sha256": "d97595de35a78cd63c56fb3378469387c1824c09669e97bbba7876c2b976140f"
+    },
+    {
+      "path": "cpu-evaluation.json",
+      "size": 77124,
+      "sha256": "977196ec5154dc2d5e5ad952eacbf456d4be76909fdc4f5f58a45e23f44b0432"
+    },
+    {
+      "path": "focused-green.log",
+      "size": 99,
+      "sha256": "5fc4e88642ca0cf99ce1b1155ffd20642f488f43a0af14d1940531cd77757eea"
+    },
+    {
+      "path": "full-green.log",
+      "size": 252,
+      "sha256": "3f415202d8070a20cf5f04c2358d6a046fa8af9112afc6d66df1c3de9c8d147f"
+    },
+    {
+      "path": "reconcile-round2-extra-red.log",
+      "size": 2991,
+      "sha256": "c1e39a3228db6d829632486cf507d7f737debf633618e216c339fe80a833dbaf"
+    },
+    {
+      "path": "reconcile-round2-red.log",
+      "size": 12213,
+      "sha256": "f7fd059bbbbbe363562c6bd5b2d3645fbd566ff6e3b630e5d4af3373ca31c1ef"
+    },
+    {
+      "path": "review-trace.json",
+      "size": 11503,
+      "sha256": "6c6078dc93cdb611a02b949b0c35d879fa88f5e241a784bf2ad18ebc6849a55b"
+    },
+    {
+      "path": "source.json",
+      "size": 3790,
+      "sha256": "bc3cf08236516ef7242fe469f8bff80cdaa89cf7e81f2ee0dc95e40052a05220"
+    }
+  ]
+}

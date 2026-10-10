@@ -1,0 +1,89 @@
+{
+  "checked_utc": "2026-10-10T07:56:00.441574+00:00",
+  "method": "read-only filesystem existence/stat; no weight hashing or model load",
+  "cloud_snapshot": "/workspace/knight26/cache/huggingface/models--Qwen--Qwen3-4B/snapshots/1cfa9a7208912126459214e8b04321603b3df60c",
+  "snapshot_exists": true,
+  "expected_files": [
+    {
+      "filename": "LICENSE",
+      "path": "/workspace/knight26/cache/huggingface/models--Qwen--Qwen3-4B/snapshots/1cfa9a7208912126459214e8b04321603b3df60c/LICENSE",
+      "exists": false,
+      "size": null
+    },
+    {
+      "filename": "README.md",
+      "path": "/workspace/knight26/cache/huggingface/models--Qwen--Qwen3-4B/snapshots/1cfa9a7208912126459214e8b04321603b3df60c/README.md",
+      "exists": false,
+      "size": null
+    },
+    {
+      "filename": "config.json",
+      "path": "/workspace/knight26/cache/huggingface/models--Qwen--Qwen3-4B/snapshots/1cfa9a7208912126459214e8b04321603b3df60c/config.json",
+      "exists": false,
+      "size": null
+    },
+    {
+      "filename": "generation_config.json",
+      "path": "/workspace/knight26/cache/huggingface/models--Qwen--Qwen3-4B/snapshots/1cfa9a7208912126459214e8b04321603b3df60c/generation_config.json",
+      "exists": false,
+      "size": null
+    },
+    {
+      "filename": "merges.txt",
+      "path": "/workspace/knight26/cache/huggingface/models--Qwen--Qwen3-4B/snapshots/1cfa9a7208912126459214e8b04321603b3df60c/merges.txt",
+      "exists": false,
+      "size": null
+    },
+    {
+      "filename": "vocab.json",
+      "path": "/workspace/knight26/cache/huggingface/models--Qwen--Qwen3-4B/snapshots/1cfa9a7208912126459214e8b04321603b3df60c/vocab.json",
+      "exists": false,
+      "size": null
+    },
+    {
+      "filename": "tokenizer_config.json",
+      "path": "/workspace/knight26/cache/huggingface/models--Qwen--Qwen3-4B/snapshots/1cfa9a7208912126459214e8b04321603b3df60c/tokenizer_config.json",
+      "exists": false,
+      "size": null
+    },
+    {
+      "filename": "tokenizer.json",
+      "path": "/workspace/knight26/cache/huggingface/models--Qwen--Qwen3-4B/snapshots/1cfa9a7208912126459214e8b04321603b3df60c/tokenizer.json",
+      "exists": false,
+      "size": null
+    },
+    {
+      "filename": "model.safetensors.index.json",
+      "path": "/workspace/knight26/cache/huggingface/models--Qwen--Qwen3-4B/snapshots/1cfa9a7208912126459214e8b04321603b3df60c/model.safetensors.index.json",
+      "exists": false,
+      "size": null
+    },
+    {
+      "filename": "model-00001-of-00003.safetensors",
+      "path": "/workspace/knight26/cache/huggingface/models--Qwen--Qwen3-4B/snapshots/1cfa9a7208912126459214e8b04321603b3df60c/model-00001-of-00003.safetensors",
+      "exists": false,
+      "size": null
+    },
+    {
+      "filename": "model-00002-of-00003.safetensors",
+      "path": "/workspace/knight26/cache/huggingface/models--Qwen--Qwen3-4B/snapshots/1cfa9a7208912126459214e8b04321603b3df60c/model-00002-of-00003.safetensors",
+      "exists": false,
+      "size": null
+    },
+    {
+      "filename": "model-00003-of-00003.safetensors",
+      "path": "/workspace/knight26/cache/huggingface/models--Qwen--Qwen3-4B/snapshots/1cfa9a7208912126459214e8b04321603b3df60c/model-00003-of-00003.safetensors",
+      "exists": false,
+      "size": null
+    }
+  ],
+  "actual_files": [],
+  "total_actual_bytes": 0,
+  "code_head": "5584ebd41bf2661df65335fa5279f6f7a7df23de",
+  "controller_manifest_origin": "evals/intake/artifacts/c2-preparation/MODEL_VERIFIED.json was copied from controller byte verification; it does not prove cloud residency",
+  "cloud_model_load": false,
+  "gpu_lease": "No HF GPU grant; fresh coordinator confirmation still required",
+  "runtime": "isolated deps/hf ready; model weights missing",
+  "upload_choice": "Observer02 manual12files or explicitly temporary browser file-URL permission question pending; no permission toggle",
+  "no_model_inference": true
+}

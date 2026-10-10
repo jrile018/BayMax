@@ -1,0 +1,76 @@
+test_duplicate_downloaded_artifact_and_manifest_rejected (evals.artifact_store.test_duplicate_json.DuplicateJSONTests.test_duplicate_downloaded_artifact_and_manifest_rejected) ... FAIL
+test_escaped_equivalent_key_rejected (evals.artifact_store.test_duplicate_json.DuplicateJSONTests.test_escaped_equivalent_key_rejected) ... FAIL
+test_hidden_duplicate_bytes_rejected_before_upload (evals.artifact_store.test_duplicate_json.DuplicateJSONTests.test_hidden_duplicate_bytes_rejected_before_upload) ... FAIL
+test_jsonl_row_duplicate_rejected (evals.artifact_store.test_duplicate_json.DuplicateJSONTests.test_jsonl_row_duplicate_rejected) ... FAIL
+test_privacy_attestation_requires_json_booleans (evals.artifact_store.test_duplicate_json.DuplicateJSONTests.test_privacy_attestation_requires_json_booleans) ... FAIL
+test_top_level_and_nested_duplicate_artifact_keys_rejected_before_copy (evals.artifact_store.test_duplicate_json.DuplicateJSONTests.test_top_level_and_nested_duplicate_artifact_keys_rejected_before_copy) ...
+  test_top_level_and_nested_duplicate_artifact_keys_rejected_before_copy (evals.artifact_store.test_duplicate_json.DuplicateJSONTests.test_top_level_and_nested_duplicate_artifact_keys_rejected_before_copy) (payload='{"schema":"knight26.aggregate.v1","metrics":{"notes":"raw audio"},"metrics":{"score":0.5}}') ... FAIL
+test_top_level_and_nested_duplicate_artifact_keys_rejected_before_copy (evals.artifact_store.test_duplicate_json.DuplicateJSONTests.test_top_level_and_nested_duplicate_artifact_keys_rejected_before_copy) ... FAIL
+
+======================================================================
+FAIL: test_duplicate_downloaded_artifact_and_manifest_rejected (evals.artifact_store.test_duplicate_json.DuplicateJSONTests.test_duplicate_downloaded_artifact_and_manifest_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/knight26/worktrees/hf/evals/artifact_store/test_duplicate_json.py", line 96, in test_duplicate_downloaded_artifact_and_manifest_rejected
+    with self.assertRaises(ArtifactError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+AssertionError: ArtifactError not raised
+
+======================================================================
+FAIL: test_escaped_equivalent_key_rejected (evals.artifact_store.test_duplicate_json.DuplicateJSONTests.test_escaped_equivalent_key_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/knight26/worktrees/hf/evals/artifact_store/test_duplicate_json.py", line 45, in test_escaped_equivalent_key_rejected
+    with self.assertRaises(ArtifactError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+AssertionError: ArtifactError not raised
+
+======================================================================
+FAIL: test_hidden_duplicate_bytes_rejected_before_upload (evals.artifact_store.test_duplicate_json.DuplicateJSONTests.test_hidden_duplicate_bytes_rejected_before_upload)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/knight26/worktrees/hf/evals/artifact_store/test_duplicate_json.py", line 67, in test_hidden_duplicate_bytes_rejected_before_upload
+    with self.assertRaises(ArtifactError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+AssertionError: ArtifactError not raised
+
+======================================================================
+FAIL: test_jsonl_row_duplicate_rejected (evals.artifact_store.test_duplicate_json.DuplicateJSONTests.test_jsonl_row_duplicate_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/knight26/worktrees/hf/evals/artifact_store/test_duplicate_json.py", line 54, in test_jsonl_row_duplicate_rejected
+    with self.assertRaises(ArtifactError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+AssertionError: ArtifactError not raised
+
+======================================================================
+FAIL: test_privacy_attestation_requires_json_booleans (evals.artifact_store.test_duplicate_json.DuplicateJSONTests.test_privacy_attestation_requires_json_booleans)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/knight26/worktrees/hf/evals/artifact_store/test_duplicate_json.py", line 76, in test_privacy_attestation_requires_json_booleans
+    with self.assertRaises(ArtifactError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+AssertionError: ArtifactError not raised
+
+======================================================================
+FAIL: test_top_level_and_nested_duplicate_artifact_keys_rejected_before_copy (evals.artifact_store.test_duplicate_json.DuplicateJSONTests.test_top_level_and_nested_duplicate_artifact_keys_rejected_before_copy) (payload='{"schema":"knight26.aggregate.v1","metrics":{"notes":"raw audio"},"metrics":{"score":0.5}}')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/knight26/worktrees/hf/evals/artifact_store/test_duplicate_json.py", line 37, in test_top_level_and_nested_duplicate_artifact_keys_rejected_before_copy
+    with self.subTest(payload=payload), self.assertRaises(ArtifactError):
+                                        ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+AssertionError: ArtifactError not raised
+
+======================================================================
+FAIL: test_top_level_and_nested_duplicate_artifact_keys_rejected_before_copy (evals.artifact_store.test_duplicate_json.DuplicateJSONTests.test_top_level_and_nested_duplicate_artifact_keys_rejected_before_copy)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/knight26/worktrees/hf/evals/artifact_store/test_duplicate_json.py", line 39, in test_top_level_and_nested_duplicate_artifact_keys_rejected_before_copy
+    self.assertFalse(self.pack.exists())
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.010s
+
+FAILED (failures=7)

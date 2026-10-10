@@ -1,0 +1,1 @@
+{"output": "evals/intake/artifacts/c3-per-claim/exact-head-review-trace.json", "provider": "rule_baseline", "accepted_command_count": 1, "simulator_mutation": false}

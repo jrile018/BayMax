@@ -1,0 +1,85 @@
+[
+  {
+    "filename": "transformers-4.57.6-py3-none-any.whl",
+    "sha256": "4c9e9de11333ddfe5114bc872c9f370509198acf0b87a832a0ab9458e2bd0550",
+    "name": "transformers",
+    "version": "4.57.6",
+    "license_expression": null,
+    "license_metadata": "Apache 2.0 License",
+    "license_files": [
+      {
+        "name": "transformers-4.57.6.dist-info/licenses/LICENSE",
+        "sha256": "77fd4710def9ec3c0f6225800e0235f15a425abd4a8b03559127fcd782612049"
+      }
+    ]
+  },
+  {
+    "filename": "huggingface_hub-0.36.2-py3-none-any.whl",
+    "sha256": "48f0c8eac16145dfce371e9d2d7772854a4f591bcb56c9cf548accf531d54270",
+    "name": "huggingface_hub",
+    "version": "0.36.2",
+    "license_expression": null,
+    "license_metadata": "Apache",
+    "license_files": [
+      {
+        "name": "huggingface_hub-0.36.2.dist-info/licenses/LICENSE",
+        "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+      }
+    ]
+  },
+  {
+    "filename": "regex-2026.9.29-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
+    "sha256": "2f7f7aa47b229f2b39a2ae2596d2ad5625d77b5eb9856fac2dab3eb506cdd0a0",
+    "name": "regex",
+    "version": "2026.9.29",
+    "license_expression": "Apache-2.0 AND CNRI-Python",
+    "license_metadata": null,
+    "license_files": [
+      {
+        "name": "regex-2026.9.29.dist-info/licenses/",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "regex-2026.9.29.dist-info/licenses/LICENSE.txt",
+        "sha256": "bff55ef4cdcc8c14ce259f8e8ab60e264418440d6335f4dc138273fbd506144d"
+      }
+    ]
+  },
+  {
+    "filename": "tokenizers-0.22.2-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+    "sha256": "369cc9fc8cc10cb24143873a0d95438bb8ee257bb80c71989e3ee290e8d72c67",
+    "name": "tokenizers",
+    "version": "0.22.2",
+    "license_expression": null,
+    "license_metadata": null,
+    "license_files": []
+  },
+  {
+    "filename": "safetensors-0.8.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+    "sha256": "fd6f3f93c9a0a7cc2788ee63fb763353d4bd2e89b0751bc78fcf7dda00bea774",
+    "name": "safetensors",
+    "version": "0.8.0",
+    "license_expression": null,
+    "license_metadata": null,
+    "license_files": [
+      {
+        "name": "safetensors-0.8.0.dist-info/licenses/LICENSE",
+        "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+      }
+    ]
+  },
+  {
+    "filename": "hf_xet-1.7.0-cp38-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+    "sha256": "2814a6e999d13464c4d679b788cc5d784eb5a4edfc638a31f10e9a11ab531ef8",
+    "name": "hf-xet",
+    "version": "1.7.0",
+    "license_expression": "Apache-2.0",
+    "license_metadata": null,
+    "license_files": [
+      {
+        "name": "hf_xet-1.7.0.dist-info/licenses/LICENSE",
+        "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+      }
+    ]
+  }
+]

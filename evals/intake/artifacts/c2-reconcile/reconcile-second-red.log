@@ -1,0 +1,46 @@
+...................FF                                                    [100%]
+=================================== FAILURES ===================================
+_ test_unambiguous_following_road_restriction_blocks_open[Highway A is open. This road is open to bicycles only.] _
+
+text = 'Highway A is open. This road is open to bicycles only.'
+
+    @pytest.mark.parametrize('text', [
+        'Highway A is open. This road is open to bicycles only.',
+        'Highway A is open. Only bicycles may cross.',
+    ])
+    def test_unambiguous_following_road_restriction_blocks_open(text):
+        report = Report('audit:continued-access:' + text, 'fictional', 10, text)
+        raw = proposal(claim(text, kind='access', label='open',
+                             evidence='Highway A is open', location='Highway A'))
+        store = ReviewStore({'Highway A': {'entity_id': 'highway-a',
+                                          'entity_type': 'edge', 'source': 'fictional graph'}})
+        rec = store.submit(report, raw, 'scripted')
+>       assert 'qualified_access' in rec.proposal.claims[0].flags
+E       AssertionError: assert 'qualified_access' in ()
+E        +  where () = Claim(claim_id='audit', kind='access', label='open', evidence=Evidence(start=0, end=17, quote='Highway A is open'), qu...t=None, urgency=None, location=Slot(value='Highway A', evidence=Evidence(start=0, end=9, quote='Highway A')), flags=()).flags
+
+services/intake/tests/test_intake_audit.py:192: AssertionError
+_ test_unambiguous_following_road_restriction_blocks_open[Highway A is open. Only bicycles may cross.] _
+
+text = 'Highway A is open. Only bicycles may cross.'
+
+    @pytest.mark.parametrize('text', [
+        'Highway A is open. This road is open to bicycles only.',
+        'Highway A is open. Only bicycles may cross.',
+    ])
+    def test_unambiguous_following_road_restriction_blocks_open(text):
+        report = Report('audit:continued-access:' + text, 'fictional', 10, text)
+        raw = proposal(claim(text, kind='access', label='open',
+                             evidence='Highway A is open', location='Highway A'))
+        store = ReviewStore({'Highway A': {'entity_id': 'highway-a',
+                                          'entity_type': 'edge', 'source': 'fictional graph'}})
+        rec = store.submit(report, raw, 'scripted')
+>       assert 'qualified_access' in rec.proposal.claims[0].flags
+E       AssertionError: assert 'qualified_access' in ()
+E        +  where () = Claim(claim_id='audit', kind='access', label='open', evidence=Evidence(start=0, end=17, quote='Highway A is open'), qu...t=None, urgency=None, location=Slot(value='Highway A', evidence=Evidence(start=0, end=9, quote='Highway A')), flags=()).flags
+
+services/intake/tests/test_intake_audit.py:192: AssertionError
+=========================== short test summary info ============================
+FAILED services/intake/tests/test_intake_audit.py::test_unambiguous_following_road_restriction_blocks_open[Highway A is open. This road is open to bicycles only.]
+FAILED services/intake/tests/test_intake_audit.py::test_unambiguous_following_road_restriction_blocks_open[Highway A is open. Only bicycles may cross.]
+2 failed, 19 passed in 0.06s
