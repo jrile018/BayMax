@@ -224,5 +224,90 @@ class ComparisonTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 MockWorld(s,future())
 
+
+
+    def test_servicing_snapshot_uses_only_remaining_duration_and_counts_once(self):
+        s=snapshot()
+        bus=s["vehicles"][0]
+        bus.update(phase="servicing",node_id="S",current_edge_id=None,
+                   progress_m=0,remaining_path=[],service_remaining_s=3)
+        s["requests"][0]["service_s"]=20
+        f=build_ensemble(s,[1],100)[0]
+        f["truth_events"]=[];f["observation_events"]=[]
+        f["latent"]["travel_delay_multiplier"]=1.0
+        w=MockWorld(s,f)
+        w.advance_to(22)
+        self.assertEqual(w.outcome()["metrics"]["safe_arrivals"],0)
+        self.assertEqual(w.state["vehicles"][0]["service_remaining_s"],1)
+        midway=copy.deepcopy(w.outcome()["final_state"])
+        g=build_ensemble(midway,[1],100)[0]
+        g["truth_events"]=[];g["observation_events"]=[]
+        g["latent"]["travel_delay_multiplier"]=1.0
+        resumed=MockWorld(midway,g)
+        resumed.advance_to(23)
+        self.assertEqual(resumed.outcome()["metrics"]["safe_arrivals"],6)
+        self.assertEqual(resumed.state["ledger"]["reservations"],{})
+        self.assertEqual(resumed.state["ledger"]["occupancy"]["S"],6)
+        self.assertEqual(resumed.state["ledger"]["delivered"]["ongoing-evac"],6)
+        self.assertEqual(len([e for e in resumed.events if e["kind"]=="service_completed"]),1)
+        resumed.advance_to(40)
+        self.assertEqual(resumed.outcome()["metrics"]["safe_arrivals"],6)
+
+
+    def test_closure_at_edge_exit_allows_completed_traversal(self):
+        f=future()
+        f["truth_events"]=[{"event_id":"exit","kind":"road_closed",
+                            "edge_id":"active","time_s":32}]
+        w=MockWorld(snapshot(),f)
+        w.advance_to(33)
+        bus=w.state["vehicles"][0]
+        self.assertEqual(bus["phase"],"idle")
+        self.assertEqual(bus["node_id"],"S")
+        self.assertEqual(w.outcome()["metrics"]["safe_arrivals"],6)
+        self.assertEqual(w.outcome()["metrics"]["route_failures"],0)
+
+
+    def test_closure_before_edge_exit_strands_vehicle(self):
+        f=future()
+        f["truth_events"]=[{"event_id":"before-exit","kind":"road_closed",
+                            "edge_id":"active","time_s":31}]
+        w=MockWorld(snapshot(),f)
+        w.advance_to(33)
+        bus=w.state["vehicles"][0]
+        self.assertEqual(bus["phase"],"stranded")
+        self.assertEqual(bus["progress_m"],95)
+        self.assertEqual(w.outcome()["metrics"]["safe_arrivals"],0)
+
+
+    def test_closure_at_next_edge_entry_blocks_at_reached_junction(self):
+        f=future()
+        f["truth_events"]=[{"event_id":"next-entry","kind":"road_closed",
+                            "edge_id":"clinic","time_s":28}]
+        w=MockWorld(snapshot(),f)
+        w.commit(PriorityGreedy().choose(w.policy_view()))
+        w.advance_to(29)
+        ambulance=w.state["vehicles"][1]
+        self.assertEqual(ambulance["phase"],"waiting")
+        self.assertEqual(ambulance["node_id"],"B")
+        self.assertEqual(ambulance["current_edge_id"],None)
+        self.assertEqual(ambulance["load"]["patients"],1)
+        self.assertEqual(w.state["ledger"]["reservations"]["urgent-medical"],1)
+
+    def test_closure_at_advance_boundary_is_observed_immediately(self):
+        f=future()
+        f["truth_events"]=[{"event_id":"at-decision","kind":"road_closed",
+                            "edge_id":"active","time_s":25}]
+        w=MockWorld(snapshot(),f)
+        w.advance_to(25)
+        bus=w.state["vehicles"][0]
+        self.assertEqual(bus["phase"],"stranded")
+        self.assertEqual(bus["progress_m"],65)
+        self.assertEqual(w.outcome()["metrics"]["route_failures"],1)
+        self.assertEqual(w.state["ledger"]["reservations"]["ongoing-evac"],6)
+        w.advance_to(26)
+        self.assertEqual(bus["progress_m"],65)
+        self.assertEqual(w.outcome()["metrics"]["route_failures"],1)
+
+
 if __name__=="__main__":
     unittest.main()

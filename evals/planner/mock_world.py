@@ -33,6 +33,9 @@ class MockWorld:
         self.stranded_at={}
         self.route_faults=set()
         self._validate_resources()
+        for vehicle in self.vehicles.values():
+            if vehicle["phase"]=="servicing":
+                self.service_end[vehicle["vehicle_id"]]=self.time+vehicle["service_remaining_s"]
         self.initial_urgent_remaining=sum(r["remaining"] for r in self.requests.values() if r["kind"] in ("evacuation","medical"))
         multiplier=self.future["latent"]["travel_delay_multiplier"]
         if not math.isfinite(multiplier) or multiplier<=0:
@@ -104,6 +107,13 @@ class MockWorld:
                     raise ValueError("committed load does not match reservation")
             elif sum(v["load"].values()):
                 raise ValueError("unassigned vehicle carries aid")
+            if v["phase"]=="servicing":
+                remaining=v.get("service_remaining_s")
+                rid=v["request_id"]
+                if rid is None or isinstance(remaining,bool) or not isinstance(remaining,(int,float)) or not math.isfinite(remaining) or remaining<0 or remaining>self.requests[rid]["service_s"]:
+                    raise ValueError("servicing snapshot requires valid remaining service duration")
+                if v["node_id"]!=self.requests[rid]["destination"] or v["current_edge_id"] is not None or v["remaining_path"] or v["progress_m"]!=0:
+                    raise ValueError("servicing snapshot must be at the committed destination")
         if assigned!=set(self.ledger["reservations"]):
             raise ValueError("reservation has no committed vehicle")
 
@@ -216,7 +226,7 @@ class MockWorld:
                 continue
             if ev["time_s"]<=entry:
                 closed=ev["kind"]=="road_closed"
-            elif ev["time_s"]<=exit and ev["kind"]=="road_closed":
+            elif ev["time_s"]<exit and ev["kind"]=="road_closed":
                 return entry if closed else ev["time_s"]
         return entry if closed else None
 
@@ -266,6 +276,8 @@ class MockWorld:
         v["load"]={"people":0,"patients":0,"supplies":0}
         v["phase"]="idle"
         v["request_id"]=None
+        v.pop("service_remaining_s",None)
+        self.service_end.pop(v["vehicle_id"],None)
 
     def _advance_vehicle(self,v,target):
         now=self.last[v["vehicle_id"]]
@@ -273,6 +285,7 @@ class MockWorld:
             if v["phase"]=="servicing":
                 end=self.service_end[v["vehicle_id"]]
                 if end>target:
+                    v["service_remaining_s"]=end-target
                     break
                 self._complete(v,end)
                 now=end
@@ -283,8 +296,8 @@ class MockWorld:
             duration=edge["travel_time_s"]*self.future["latent"]["travel_delay_multiplier"]
             speed=edge["length_m"]/duration
             exit=now+(edge["length_m"]-v["progress_m"])/speed
-            closure=self._closure_time(eid,now,min(exit,target))
-            if closure is not None:
+            closure=self._closure_time(eid,now,exit)
+            if closure is not None and closure<=target:
                 elapsed=max(0,closure-now)
                 v["progress_m"]+=elapsed*speed
                 self.metrics["travel_s"]+=elapsed
@@ -312,6 +325,7 @@ class MockWorld:
                 r=self.requests[v["request_id"]]
                 end=now+r["service_s"]
                 self.service_end[v["vehicle_id"]]=end
+                v["service_remaining_s"]=r["service_s"]
                 if end<=target:
                     self._complete(v,end)
                     now=end
