@@ -60,6 +60,15 @@ def _hash(value):
     return hashlib.sha256(_canonical(value).encode("utf-8")).hexdigest()
 
 
+def record_fingerprint(record):
+    """Canonical SHA-256 of every untrusted evidence field reviewed by a human."""
+    value = _json_copy(record)
+    if not isinstance(value, dict) or set(value) != RECORD_FIELDS:
+        raise ValueError("record fingerprint requires the complete raw record")
+    value["source_url"], _ = _url(value["source_url"])
+    return _hash(value)
+
+
 def _string(value, name, *, limit=4096, nullable=False):
     if value is None and nullable:
         return
@@ -179,6 +188,7 @@ class HumanReview:
     reviewed_fields: tuple[str, ...]
     reviewed_at: str
     authenticated: bool
+    record_sha256: str
 
 
 class EvidenceLog:
@@ -280,6 +290,16 @@ class EvidenceLog:
             _time(r[field], field, nullable=True)
         for field in ("first_seen_at", "fetched_at", "accepted_at"):
             _time(r[field], field)
+        if r["source_kind"] == "observed" and r["observed_at"] is None:
+            raise ValueError("observed source kind requires observed_at")
+        if (r["observed_at"] is not None and
+                _time(r["observed_at"], "observed_at") >
+                _time(r["accepted_at"], "accepted_at")):
+            raise ValueError("observation cannot be after acceptance")
+        if (r["valid_from"] is not None and r["valid_through"] is not None and
+                _time(r["valid_from"], "valid_from") >
+                _time(r["valid_through"], "valid_through")):
+            raise ValueError("valid_from cannot be after valid_through")
         if _time(r["first_seen_at"], "first_seen_at") > _time(r["fetched_at"], "fetched_at"):
             raise ValueError("first seen cannot be after fetch")
         if _time(r["fetched_at"], "fetched_at") > _time(r["accepted_at"], "accepted_at"):
@@ -345,6 +365,7 @@ class EvidenceLog:
             if (not isinstance(review, HumanReview) or review.authenticated is not True or
                     tuple(review.identity) != identity or
                     review.raw_sha256 != r["raw_sha256"] or
+                    review.record_sha256 != record_fingerprint(r) or
                     set(review.reviewed_fields) != set(r["payload"]) or
                     len(review.reviewed_fields) != len(r["payload"])):
                 raise ValueError("authenticated per-record field review required")
@@ -355,7 +376,8 @@ class EvidenceLog:
                 raise ValueError("review must follow fetch and precede acceptance")
             return {"method": "human_review", "reviewer_id": review.reviewer_id,
                     "reviewed_fields": sorted(review.reviewed_fields),
-                    "reviewed_at": review.reviewed_at}
+                    "reviewed_at": review.reviewed_at,
+                    "reviewed_record_sha256": review.record_sha256}
         policy = self._policies.get(r["source_id"])
         reference = r["source_reference"]
         if (policy is None or r["source_type"] != "official_api" or
@@ -459,9 +481,11 @@ def projection_input(snapshot, *, horizon_minutes, model_version,
         for name, description in value.items():
             _id(name, f"{label} key")
             _string(description, f"{label} value")
+    # Presence is not completeness. V1 has no typed operational capability
+    # validator, so even authored labels cannot authorize outcome calculation.
     missing = [category for category in OPERATIONAL
                if s["categories"][category] is None]
-    can_calculate = all(category in (training or {}) for category in missing)
+    unverified = list(OPERATIONAL)
     result = {
         "schema_version": VERSION,
         "projection_input_version": VERSION,
@@ -479,8 +503,11 @@ def projection_input(snapshot, *, horizon_minutes, model_version,
         "model_version": model_version,
         "authored_assumptions": authored,
         "authored_training_assumptions": training,
-        "unknown_operational_categories": missing,
-        "can_calculate_operational_outcomes": can_calculate,
+        "missing_operational_categories": missing,
+        "unknown_operational_categories": unverified,
+        "unverified_operational_categories": unverified,
+        "operational_completeness": "not_validated",
+        "can_calculate_operational_outcomes": False,
         "calibrated": False,
         "frequency_label": "uncalibrated_scenario_frequencies",
     }
