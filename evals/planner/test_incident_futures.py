@@ -152,3 +152,31 @@ def test_rejects_unsupported_version_and_does_not_erase_superseded_history():
 def test_dependency_is_the_independently_reviewed_frozen_contract():
     assert incident_contract.VERSION == "knight26-incident-v1"
     assert hashlib.sha256(Path(incident_contract.__file__).read_bytes()).hexdigest() == REVIEWED_CONTRACT_SHA256
+
+
+@pytest.mark.parametrize("change", [
+    lambda value: value.update(calibrated=0),
+    lambda value: value["accepted_source_refs"][0].update(revision=True),
+])
+def test_rejects_type_coerced_projection_fields_with_stale_hash(change):
+    store = _log()
+    _append(store, _record())
+    snapshot = store.snapshot(CUT)
+    projected = _input(snapshot)
+    changed = copy.deepcopy(projected)
+    change(changed)
+    assert changed != projected or json.dumps(changed, sort_keys=True) != json.dumps(projected, sort_keys=True)
+    with pytest.raises(ValueError):
+        pin_incident_projection(snapshot, changed)
+
+
+def test_runtime_rejects_unreviewed_contract_source(monkeypatch):
+    from services.planner.futures import incident as adapter
+
+    store = _log()
+    _append(store, _record())
+    snapshot = store.snapshot(CUT)
+    projected = _input(snapshot)
+    monkeypatch.setattr(adapter, "REVIEWED_CONTRACT_SHA256", "0" * 64)
+    with pytest.raises(ValueError, match="frozen reviewed"):
+        adapter.pin_incident_projection(snapshot, projected)

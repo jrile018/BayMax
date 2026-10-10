@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from pathlib import Path
 from collections.abc import Mapping
 from typing import Any
 
@@ -56,16 +57,19 @@ def pin_incident_projection(
     # Re-derive the complete projection from the frozen root contract. This
     # validates the snapshot hash and every field of the supplied projection,
     # including cutoff, source references, assumptions, and capability flags.
-    from contracts.incident import projection_input
+    from contracts import incident as contract
+    if (contract.VERSION != INCIDENT_SCHEMA_VERSION or
+            hashlib.sha256(Path(contract.__file__).read_bytes()).hexdigest() != REVIEWED_CONTRACT_SHA256):
+        raise ValueError("incident contract is not the frozen reviewed v1 source")
 
-    expected = projection_input(
+    expected = contract.projection_input(
         snapshot,
         horizon_minutes=projection.get("horizon_minutes"),
         model_version=projection["model_version"],
         assumptions=projection.get("authored_assumptions"),
         training_assumptions=projection.get("authored_training_assumptions"),
     )
-    if projection != expected:
+    if _digest(projection) != _digest(expected):
         raise ValueError("projection input does not match accepted snapshot and reviewed contract")
     if projection["can_calculate_operational_outcomes"] is not False:
         raise ValueError("incident v1 cannot authorize operational outcomes")
