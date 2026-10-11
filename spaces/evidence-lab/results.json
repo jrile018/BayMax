@@ -1,0 +1,68 @@
+{
+  "schema": "baymax.evidence.v1",
+  "components": {
+    "taxonomy": {
+      "status": "pending",
+      "reason": "The pinned HUMSET pilot has not been evaluated. Existing authored controls remain a separate benchmark.",
+      "methodology": "Target 16 development and 64 held-out historical excerpts, deterministic selection with document/lead separation. Report actual language counts, rejected outputs, micro/macro F1 and denominators after independent review. No quantity or location gold is inferred.",
+      "sources": [
+        "https://huggingface.co/datasets/nlp-thedeep/humset",
+        "https://huggingface.co/Qwen/Qwen3-4B"
+      ],
+      "dataset": {
+        "repo_id": "nlp-thedeep/humset",
+        "revision": "0dcf8311cae5a45dee0ded3fea676a1551c1cd68"
+      },
+      "model": {
+        "repo_id": "Qwen/Qwen3-4B",
+        "revision": "1cfa9a7208912126459214e8b04321603b3df60c"
+      }
+    },
+    "retrieval": {
+      "status": "pending",
+      "reason": "Independent query judgments and the measured E5 comparison are pending.",
+      "methodology": "Compare lexical and E5 ranking on the same bounded corpus with at least 30 independently annotated English/Spanish queries, relevant passages and hard negatives. Publish Recall@5, Precision@3 and MRR only with reviewed counts and source-link checks.",
+      "sources": [
+        "https://huggingface.co/intfloat/multilingual-e5-small"
+      ],
+      "model": {
+        "repo_id": "intfloat/multilingual-e5-small",
+        "revision": "fd1525a9fd15316a2d503bf26ab031a61d056e98"
+      }
+    },
+    "transcription": {
+      "status": "pending",
+      "reason": "Rights-reviewed audio and independent reference transcripts have not been supplied.",
+      "methodology": "Use permitted mono 16 kHz audio, original-language timestamped transcription and offline reference scoring. Measure WER, latency, critical-field errors and silence behavior; no reference transcript enters inference.",
+      "sources": [
+        "https://huggingface.co/openai/whisper-base"
+      ],
+      "model": {
+        "repo_id": "openai/whisper-base",
+        "revision": "e37978b90ca9030d5170a5c07aadb050351a65bb"
+      }
+    }
+  },
+  "replays": [
+    {
+      "id": "synthetic-clinic",
+      "kind": "synthetic",
+      "label": "Replay",
+      "text": "Training example: a clinic may need supplies; its stock has not been checked.",
+      "proposal": "Candidate health need. Stock and quantity remain unknown. Requires source review."
+    },
+    {
+      "id": "synthetic-road",
+      "kind": "synthetic",
+      "label": "Replay",
+      "text": "Training example: a resident reports an obstructed road. No official closure record is available.",
+      "proposal": "Reported access concern. Closure and safe route remain unconfirmed."
+    }
+  ],
+  "storage": {
+    "status": "pending",
+    "purpose": "Retrieve finalized numeric simulation packs across machines and verify their bytes.",
+    "holds": "Typed configuration, seed, numeric snapshots, allowlisted aggregates and integrity manifest.",
+    "excludes": "Raw reports, audio/transcripts, names, sensitive locations, secrets, datasets and model weights."
+  }
+}
