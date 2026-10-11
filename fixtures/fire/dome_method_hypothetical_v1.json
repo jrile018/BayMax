@@ -1,0 +1,367 @@
+{
+  "config": {
+    "engine": "pyretechnics",
+    "epoch_utc": "2026-10-10T20:20:00Z",
+    "grid": {
+      "aspect_deg": [
+        [
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180
+        ],
+        [
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180
+        ],
+        [
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180
+        ],
+        [
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180
+        ],
+        [
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180
+        ],
+        [
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180
+        ],
+        [
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180
+        ],
+        [
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180
+        ],
+        [
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180,
+          180
+        ]
+      ],
+      "cell_size_m": 10,
+      "crs": "LOCAL_METRIC",
+      "fuel_model": [
+        [
+          101,
+          101,
+          101,
+          101,
+          101,
+          101,
+          101,
+          101,
+          101
+        ],
+        [
+          101,
+          101,
+          101,
+          101,
+          101,
+          101,
+          101,
+          101,
+          101
+        ],
+        [
+          101,
+          101,
+          101,
+          101,
+          101,
+          101,
+          101,
+          101,
+          101
+        ],
+        [
+          101,
+          101,
+          101,
+          102,
+          102,
+          102,
+          101,
+          101,
+          101
+        ],
+        [
+          101,
+          101,
+          101,
+          102,
+          102,
+          102,
+          101,
+          101,
+          101
+        ],
+        [
+          101,
+          101,
+          101,
+          102,
+          102,
+          102,
+          101,
+          101,
+          101
+        ],
+        [
+          101,
+          101,
+          101,
+          101,
+          101,
+          101,
+          101,
+          101,
+          101
+        ],
+        [
+          101,
+          101,
+          101,
+          101,
+          101,
+          101,
+          101,
+          101,
+          101
+        ],
+        [
+          101,
+          101,
+          101,
+          101,
+          101,
+          101,
+          101,
+          101,
+          101
+        ]
+      ],
+      "origin_m": [
+        0,
+        0
+      ],
+      "slope_rise_run": [
+        [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ]
+      ]
+    },
+    "horizon_s": 900,
+    "ignitions": [
+      {
+        "col": 4,
+        "row": 4,
+        "time_s": 0
+      }
+    ],
+    "output_step_s": 60,
+    "physical_assumptions": {
+      "foliar_moisture": 1.0,
+      "residence_time_s": 120,
+      "surface_only": true,
+      "wind_height_m": 10
+    },
+    "scenario_id": "dome-method-hypothetical-v1",
+    "scenario_kind": "hypothetical",
+    "seed": 7,
+    "source_ledger": [
+      {
+        "description": "Authored unlocated grid and weather; real Dome, NWS and WFIGS values are deliberately excluded.",
+        "kind": "synthetic",
+        "license": "CC0-1.0",
+        "observed_at_utc": null,
+        "retrieved_at_utc": "2026-10-10T20:20:00Z",
+        "source_id": "dome-method-synthetic-v1",
+        "uri": null
+      },
+      {
+        "kind": "model_reference",
+        "license": "EPL-2.0",
+        "observed_at_utc": null,
+        "retrieved_at_utc": "2026-10-10T20:20:00Z",
+        "source_id": "pyretechnics-2026.8.10-reference",
+        "uri": "https://pypi.org/project/pyretechnics/2026.8.10/"
+      }
+    ],
+    "weather": {
+      "moisture_dead_100hr": 0.15,
+      "moisture_dead_10hr": 0.1,
+      "moisture_dead_1hr": 0.05,
+      "moisture_live_herbaceous": 0.9,
+      "moisture_live_woody": 0.6,
+      "wind_east_m_s": 2,
+      "wind_north_m_s": 0
+    }
+  },
+  "description": "Dome research method exercise only. All cells, fuels, slope, weather, moisture and ignition are authored synthetic assumptions in an unlocated local metric grid. This does not depict the Dome Fire, Yosemite, a real road, or any current fire spread.",
+  "edges": [],
+  "safety_buffer_s": 0,
+  "schema_version": "wildfire-fixture-v1"
+}
