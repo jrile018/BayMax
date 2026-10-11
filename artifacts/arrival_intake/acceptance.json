@@ -1,0 +1,142 @@
+{
+  "blocked": [
+    {
+      "item": "real_browser_phone_and_dashboard_acceptance",
+      "performed": false,
+      "reason": "Existing signed-in Jupyter proxy routes return 404; sandboxed file preview does not provide an application/API route."
+    },
+    {
+      "item": "live_demo_activation",
+      "performed": false,
+      "reason": "Live role credentials and a supported private application route have not been activated."
+    }
+  ],
+  "branch": "codex/bus-arrival-intake",
+  "execution": {
+    "intake_discovery": "unittest discover -s services/arrival_intake/tests -p test_*.py -t .",
+    "javascript_command": [
+      ".tools/node-v24.21.0/bin/node",
+      "--experimental-vm-modules",
+      "--test",
+      "services/arrival_intake/tests/test_web_state.mjs",
+      "services/arrival_intake/tests/test_web_integration.mjs"
+    ],
+    "javascript_exit_code": 0,
+    "javascript_runtime_note": "Node VM modules emit an expected ExperimentalWarning; these tests do not establish browser acceptance.",
+    "python_errors": 0,
+    "python_exit_code": 0,
+    "python_failures": 0,
+    "python_seconds": 16.9828,
+    "python_skipped": 0,
+    "python_tests": 122,
+    "routing_modules": [
+      "fixtures.routing.test_trip",
+      "fixtures.routing.test_adapters",
+      "fixtures.routing.test_integration"
+    ]
+  },
+  "format": "bus-arrival-acceptance-v1",
+  "recorded_at": "2026-10-10T23:36:42.723147+00:00",
+  "retained_media": false,
+  "separate_model_gate": {
+    "available_YuNet_capability": "face_localization_only",
+    "exercise_media": "operator_created_illustration",
+    "genuine_bruise_analysis": "unavailable_and_unvalidated",
+    "results": "scripted_training_or_honest_unavailable_Unsure"
+  },
+  "source_sha256s": {
+    "docs/BUS_ARRIVAL_INTAKE.md": "69d324b4f3f95921cec5432fcf24bd1f23fb9c7949bcd788224e5036f8804c07",
+    "services/arrival_intake/__init__.py": "22d48a9d132eac16a02c76a065efbd85958ec68ed60adcf077947c68aea56e5e",
+    "services/arrival_intake/assessment.py": "c8345100c935ce2571022a33eda010b07094430936865d955e74ce214cdf2367",
+    "services/arrival_intake/auth.py": "449260e3c6c320e1c615d55bf1425b8bae7e3d874c17a2716094ca9b442531da",
+    "services/arrival_intake/contracts.py": "138716b191f7af446f0656f5974885da1b5c65bd7e0423e687f1f908a1711a8c",
+    "services/arrival_intake/demo.py": "4b4ef25c64b41d335a4fc28593af1adcf6ffb0e4ed0da3c1d299face2abf02b9",
+    "services/arrival_intake/photos.py": "db6aef8aa865f17357a3119b7e0e94ddbf11990bd52bb0b120abb283b2e2f1af",
+    "services/arrival_intake/policy.py": "a648b3a46a1129c50395f6e3ae250bd1a6ea705b44ce367a55eadd1453664a5d",
+    "services/arrival_intake/schema.sql": "517ac38781cf46436e8a5c1edf971292df95b589b0277a8a44c41d9492dde1e2",
+    "services/arrival_intake/server.py": "350cdf9437344c1110a143d6a9e5d60c18a532256cd7164af24c8e5b084a2f17",
+    "services/arrival_intake/store.py": "0e53f01195a7361726c8f8ab4cffce84d7bd5fbe1d7edf1f9afe58f571f9245f",
+    "services/arrival_intake/tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "services/arrival_intake/tests/fixtures/legacy_schema.sql": "7ef4ecc2548de34b64fb87b45be548bb9a318e0e7a0b31a71533dd1fdfc335e6",
+    "services/arrival_intake/tests/test_assessment.py": "bb98433148a8da18d510f8b64aa54892e4a91d632bf60a06b4055f783b73a5ee",
+    "services/arrival_intake/tests/test_attendance.py": "0e13705c69e5a32711f9d8495b840e7b5a89c8a67b70555fa783d9b6c740f60e",
+    "services/arrival_intake/tests/test_authorization.py": "233e3daecde40503e56e8abefc798b2bb6ae43df9ba4a1983392db3c19793dea",
+    "services/arrival_intake/tests/test_care_review.py": "526d7ee91adb25e49340904c7a1f6d7babadba5ef0747223b37d118f61e56e55",
+    "services/arrival_intake/tests/test_end_to_end.py": "fb29b1d67e589225310c7fc04a71a3f984b81137444e9dd84a906cbfee46f586",
+    "services/arrival_intake/tests/test_http.py": "77a98dc5f8858f21e1569ed111c3795ee6d320cb69e0d1c46a28f6a56df57767",
+    "services/arrival_intake/tests/test_photos.py": "8d955ce72572846595d2f651a4b73ced7a0ff3eba5fa37fcc98cf0612372f090",
+    "services/arrival_intake/tests/test_server_config.py": "dd19a20b17c7f1350df019973c039c0f92de7cdf2303ceca40d1b503bfbfd616",
+    "services/arrival_intake/tests/test_sessions.py": "30012e40d19cb2e3620687dab42298a58c0b8765a4673033a16ca8a4edc0fbba",
+    "services/arrival_intake/tests/test_store_invariants.py": "8c05ae0136a9facb41ab99070104691936f956ba72522023bfe0ddb69911da1c",
+    "services/arrival_intake/tests/test_web_contract.py": "dfcd7fecdffe85138416f877adc1717ce6aa6a6ca13a56d921515c02133c589a",
+    "services/arrival_intake/tests/test_web_integration.mjs": "bfb0539a32c3cc325973afe8b29e54850f9072e3fcab33cf8d8c4bbe42a9d838",
+    "services/arrival_intake/tests/test_web_state.mjs": "1d3439f912cfdc694a4b0ea56fc5f1a0e4181edfbf8d92eff67a2c7b1b14ecf9",
+    "services/arrival_intake/tests/test_workflow_http.py": "8564b5c3584ddda22a699d6893db2c8fd7c4d1c5dfd071df0a0bcb1616f481ec",
+    "services/arrival_intake/trip_adapter.py": "5ef10f2b70c9e4ee9a3e54e42eff3febca8b626d1991f918a72a2b95170a0f1c",
+    "services/arrival_intake/workflow.py": "1a306517c538d4b7529e6418d9a2e17afee55cf6e023b90dea919dfa4a471be9",
+    "web/app.js": "2d89b3690b2cd53816cab20eef8698a2513b99d6523a5609c023cdd329f2f46a",
+    "web/arrival-summary.js": "00eb32580ba7d7da865589c47328132ada77b281210ae5fe11a6c4e204c93b20",
+    "web/index.html": "16f5a98698158cd78cbbb81198b204259400c848a35a2fe3161eff459acb0542",
+    "web/intake/app.js": "904984bc2e607f05901b50176085963db03d97e0afd1f845c393c159dd66cdd1",
+    "web/intake/index.html": "516fe338f0a27e8d169b4e2a62fc86d4dddceed4c4e4bb83d385f345d8ec35bc",
+    "web/intake/style.css": "130d7f1b6e00459c324cd6e88f43dd7163fe01fa8da9289fa933e5ba22d93e7c"
+  },
+  "status": "controlled_workflow_verified",
+  "tested_parent_head": "6c06ad28bf17d32262cfb944baba88d09a502e52",
+  "verified": {
+    "after_finish": {
+      "awaiting_reviews": 2,
+      "confirmed_count": 29,
+      "difference": 1,
+      "expected_count": 30
+    },
+    "after_human_reviews": {
+      "awaiting_reviews": 0,
+      "completed_reviews": 2,
+      "confirmed_count": 29,
+      "difference": 1
+    },
+    "before_finish": {
+      "awaiting_reviews": 2,
+      "confirmed_count": 29,
+      "difference": 1,
+      "expected_count": 30
+    },
+    "cleanup": {
+      "actor_id": "coordinator-e2e",
+      "awaiting_reviews": 0,
+      "case_id": "http-end-to-end",
+      "completed_reviews": 2,
+      "confirmed_count": 29,
+      "difference": 1,
+      "expected_count": 30,
+      "kind": "arrival-intake-media-cleanup",
+      "recorded_at": "2026-10-10T23:36:26.358546+00:00",
+      "remaining_captures": 0,
+      "remaining_images": 0,
+      "removed_images": 29,
+      "session_id": "e9813b08-e642-4942-ac1f-7bda2e3125f2"
+    },
+    "correction_difference": [
+      -1,
+      1
+    ],
+    "deleted_photo_http_404_count": 29,
+    "reopened_database": {
+      "journal_sizes": {
+        "-journal": 0,
+        "-wal": 0
+      },
+      "remaining_captures": 0,
+      "remaining_images": 0
+    },
+    "source_origin": "validated_TripExecutor_ledger_adapter",
+    "source_refs": {
+      "arrival_event_id": "ledger-3",
+      "boarding_event_id": "ledger-1",
+      "departure_event_id": "ledger-2"
+    },
+    "source_sha256": "ac6f9ee3d40d8bd566388dbe9d8c9ffecb4cee7f75d6fe77296cf7838fb30f67"
+  },
+  "publication_note": "Historical controlled exercise receipt, using fictional temporary test data. Internal controller identity, runner/log paths and temporary receipt path are omitted. This is not live-camera or model acceptance."
+}

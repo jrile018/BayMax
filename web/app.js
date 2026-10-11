@@ -176,4 +176,19 @@ function wireCoverage(){const check=async e=>{e.preventDefault();const out=$("co
 function wireBasemap(){const b=$("basemap-toggle");b.onclick=()=>{S.basemap=S.basemap==="satellite"?"vectors":"satellite";b.setAttribute("aria-pressed",String(S.basemap==="satellite"));b.textContent=S.basemap==="satellite"?"SAT":"VEC";document.body.classList.toggle("satellite",S.basemap==="satellite");$("esri-credit").hidden=S.basemap!=="satellite";window.KnightSatellite?.render(S,project,unproject);txt("source-chip",S.tab==="situation"?(S.basemap==="satellite"?"Esri imagery + source geometry":"Source geometry + OSM vectors"):(S.basemap==="satellite"?"Esri satellite + OSM vectors":"OSM vector geometry"));if(!document.body.classList.contains("earth-mode")){txt("view-chip",S.tab==="situation"?(S.basemap==="satellite"?"SITUATION SATELLITE MAP":"SITUATION VECTOR MAP"):(S.basemap==="satellite"?"REAL-WORLD SATELLITE MAP":"OSM VECTOR MAP"));txt("source-banner",S.roads.length?(S.basemap==="satellite"?"ESRI SATELLITE IMAGERY + OSM GEOMETRY":"OSM VECTOR GEOMETRY")+" · "+(String(S.boot?.mode||"").startsWith("mock")?"CONSTRUCTED TRAINING REPLAY":"RECORDED REPLAY"):(S.basemap==="satellite"?"ESRI SATELLITE IMAGERY":"OSM VECTOR VIEW")+" · NO ROAD DATA · OVERLAYS ARE CONSTRUCTED");situationBanner()}};document.body.classList.add("satellite")}
 function wireTheme(){$("theme-toggle").onclick=()=>{const old={...S.view},light=document.body.classList.toggle("light");$("theme-toggle").setAttribute("aria-label",light?"Switch to dark theme":"Switch to light theme");$("theme-toggle").textContent=light?"☾":"☼";if(S.boot){drawBase(S.boot.area);setView(old);drawFrame();restoreSituationLabels()}}}
 async function init(){bannerHeight();if(window.ResizeObserver){const b=document.querySelector(".saved-preview-banner");if(b)new ResizeObserver(bannerHeight).observe(b)}wireMap();wirePanels();if(innerWidth<=760){setPanel("left",false);setPanel("right",false)}wireReplay();wireDialogs();wireKeys();wireCoverage();wireTheme();wireBasemap();window.KnightEarth?.bind({setPanel,restoreMapLabels:restoreSituationLabels});renderLayerToggles();renderPins();try{const b=await getJSON("/api/bootstrap");if(!b.area||!b.replay||!Number.isInteger(Number(b.replay.frame_count))||Number(b.replay.frame_count)<1)throw Error("Bootstrap missing area or replay");S.boot=b;drawBase(b.area);scheduleMapRail();renderCoverage(b.area);renderDates();markMode();txt("run-id","Run "+String(b.replay.run_id||"--"));txt("data-run",b.replay.run_id||"--");txt("scenario-description",b.replay.description||b.label||"Recorded exercise");txt("top-status","Replay ready");$("frame-slider").max=Number(b.replay.frame_count)-1;$("frame-slider").disabled=false;$("play-button").disabled=false;const times=b.replay.frame_times_s||[];txt("start-time",time(times[0]));txt("end-time",time(times.at(-1)));await loadFrame(0);preloadEvents();if(S.tab==="situation")loadSituation();else window.KnightEarth?.open()}catch(err){txt("top-status","Unavailable");$("global-error").textContent="Could not open exercise: "+err.message;$("global-error").hidden=false}}
-init();
+init().then(async () => {
+  let container;
+  try {
+    container = document.getElementById("arrival-intake-summary");
+    const configuration = {
+      entry_url: S.boot?.arrival_intake_url,
+      summary: S.boot?.arrival_intake_summary
+    };
+    if (!container || (!configuration.entry_url && !configuration.summary)) return;
+    const {mountConfiguredArrivalIntake} = await import("./arrival-summary.js");
+    mountConfiguredArrivalIntake(container, configuration);
+  } catch (error) {
+    if (container) container.hidden = true;
+    console.warn("Bus intake summary could not be loaded");
+  }
+});
