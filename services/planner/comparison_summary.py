@@ -173,6 +173,8 @@ def _validate_manifest(manifest, metric_specs, rate_catalog):
             raise ValueError("invalid metric value_path")
         if spec["kind"] == "completion_time" and path != ["completion_time_s"]:
             raise ValueError("completion_time requires canonical value_path")
+        if spec["kind"] == "completion_time" and spec["unit"] != "s":
+            raise ValueError("completion_time requires unit s")
         q = spec.get("quantile")
         if q is not None:
             if not isinstance(q, Mapping):

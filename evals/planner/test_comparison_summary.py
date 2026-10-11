@@ -585,6 +585,59 @@ class ComparisonAccountingVectors(unittest.TestCase):
         self.assertIsNone(metric["quantiles"][0]["value"])
         self.assertIn("no_completed_samples", metric["quantiles"][0]["reasons"])
 
+    def test_f9_rejects_hours_for_canonical_completion_quantile(self):
+        manifest, results, specs = fixture()
+        completion = {
+            "name": "completion", "unit": "hours", "required": False,
+            "supported": True, "capability_version": "accounting.fixture.v1",
+            "value_path": ["completion_time_s"], "kind": "completion_time",
+            "quantile": {"method": "linear_type7", "probabilities": [0.5],
+                         "minimum_completed_samples": 2},
+        }
+        with self.assertRaises(ValueError):
+            summarize_comparison(manifest, results,
+                                 metric_specs=specs + [completion])
+        completion["unit"] = "s"
+        summary = summarize_comparison(manifest, results,
+                                       metric_specs=specs + [completion])
+        row = candidate(summary)
+        metric = next(item for item in row["metrics"] if item["name"] == "completion")
+        self.assertEqual(metric["unit"], "s")
+        self.assertIsNone(metric["value"])
+        self.assertEqual(metric["quantiles"][0]["value"], 15)
+        self.assertEqual(metric["quantiles"][0]["unit"], "s")
+        self.assertEqual((metric["quantiles"][0]["count"],
+                          metric["quantiles"][0]["denominator"]), (2, 3))
+
+    def test_f9_rejects_people_and_keeps_completed_mean_seconds(self):
+        manifest, results, specs = fixture()
+        for result in results:
+            outcome = result["outcome"]
+            if outcome["completion_time_s"] is None:
+                outcome["target_attained"] = True
+                outcome["completion_time_s"] = 30
+                outcome["modeled_termination_reason"] = None
+                outcome["metrics"]["safe_arrivals"] = 1
+        completion = {
+            "name": "completion", "unit": "people", "required": True,
+            "supported": True, "capability_version": "accounting.fixture.v1",
+            "value_path": ["completion_time_s"], "kind": "completion_time",
+        }
+        with self.assertRaises(ValueError):
+            summarize_comparison(manifest, results,
+                                 metric_specs=specs + [completion])
+        completion["unit"] = "s"
+        summary = summarize_comparison(manifest, results,
+                                       metric_specs=specs + [completion])
+        row = candidate(summary)
+        metric = next(item for item in row["metrics"] if item["name"] == "completion")
+        self.assertEqual(row["completion"]["completed"], 3)
+        self.assertEqual(metric["value"], 20)
+        self.assertEqual(metric["unit"], "s")
+        self.assertEqual((metric["count"], metric["denominator"]), (3, 3))
+        self.assertTrue(summary["strict_ranking_eligible"])
+
+
 
 
 
