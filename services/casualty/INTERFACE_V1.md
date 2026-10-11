@@ -35,3 +35,26 @@ A face miss does not downgrade or suppress a medical need. A human can confirm e
 ## Owned detector boundary
 
 `DETECTOR_V1.md` documents the lazy CPU YuNet adapter. Its mocked controls establish adapter behavior only. `RUNTIME_PROBE.md` describes the separate verified blank-input runtime check; permitted-photo localization and actual case-pipeline evidence remain pending. Shared integration still requires root approval of this interface.
+
+## Pending incident provenance handoff
+
+make_pending_incident_evidence(proposal, request, review_actor_kind=...) in
+incident_gate.py produces a frozen PendingIncidentEvidence for the root
+owner to inspect. It checks case, image, authored request and local receipt
+bindings. The accepted actor kinds are scripted_demo and
+unverified_human; this owner module has no authenticated-operator mode.
+rights_status_claim preserves the case manifest's own statement and is
+not independent item-level rights verification. The result always has
+adoption_status=pending, operational_eligible=false, and blockers for
+root-verified casualty source bytes, authenticated review bound to the full
+incident record, and root record construction. Synthetic examples carry an
+additional training-only blocker. It is not a VerifiedSource, HumanReview,
+accepted incident record, resource request, or dispatch instruction.
+
+The illustrated geometric.svg/case-001.json demo emits this handoff in
+incident_gate next to its scripted review trace. Its face box and cue are
+authored controls; its medical transport need is fictional authored exercise
+metadata. A no-face control retains that metadata while visual evidence
+abstains. Root must use its trusted source and identity services to construct
+a complete record and obtain authenticated human review before considering
+EvidenceLog.append. This module provides no path to clear those gates.

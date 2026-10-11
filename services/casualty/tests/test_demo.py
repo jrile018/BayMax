@@ -17,6 +17,12 @@ def test_scripted_case_review_trace_preserves_abstention_and_need(tmp_path):
     assert data["control_evaluation"]["performance_claim"]=="harness_geometry_only"
     assert data["learning_debrief"]["urgency_source"]=="exercise_metadata_with_human_confirmation"
     assert data["integration_status"]=="pending_root_adapter"
+    gate=data["incident_gate"]
+    assert gate["adoption_status"]=="pending"
+    assert gate["operational_eligible"] is False
+    assert gate["source_kind"]=="synthetic"
+    assert gate["review_actor_kind"]=="scripted_demo"
+    assert "synthetic_fixture_training_only" in gate["blockers"]
 
 
 def test_demo_cannot_evaluate_without_evaluation_permission(tmp_path,monkeypatch):

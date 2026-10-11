@@ -1,0 +1,39 @@
+{
+  "format": "faces-jcs-vectors-v1",
+  "scope": "Synthetic codec vectors only; deliberately not schema-admissible observation records. SHA256 covers canonical_utf8 as UTF8 without BOM/newline. Editorial bytes/digest check, not product implementation validation.",
+  "canonicalization": "RFC8785",
+  "vectors": [
+    {
+      "id": "envelope-scope",
+      "input_json": "{\"schema_version\":\"faces-live-observation-v1\",\"record\":{\"z\":null,\"a\":true},\"message_kind\":\"codec_fixture\"}",
+      "canonical_utf8": "{\"message_kind\":\"codec_fixture\",\"record\":{\"a\":true,\"z\":null},\"schema_version\":\"faces-live-observation-v1\"}",
+      "sha256": "ae867b3cb4c60cdaf0f1ee56ea6e75858aba9add21fec0f0ce6c710b2006c4ed"
+    },
+    {
+      "id": "number-spelling",
+      "input_json": "{\"small\":1e-7,\"negative_zero\":-0,\"plain\":1.0,\"large\":1e21,\"tiny_plain\":0.000001,\"fraction\":4.50}",
+      "canonical_utf8": "{\"fraction\":4.5,\"large\":1e+21,\"negative_zero\":0,\"plain\":1,\"small\":1e-7,\"tiny_plain\":0.000001}",
+      "sha256": "8708352a1af7eb61568de67c191f79bfee2a6da24336509af93e4c9aae6a9dfc"
+    },
+    {
+      "id": "utf16-key-order",
+      "input_json": "{\"\\ue000\":\"bmp\",\"\\ud83d\\ude00\":\"supplementary\",\"a\":\"ascii\"}",
+      "canonical_utf8": "{\"a\":\"ascii\",\"😀\":\"supplementary\",\"\":\"bmp\"}",
+      "sha256": "0f5b258e171ca8001cab64fcabbbcdcbd263d383c7ffc6757b17a8da9a430081"
+    },
+    {
+      "id": "unicode-not-normalized",
+      "input_json": "{\"composed\":\"\\u00e9\",\"decomposed\":\"e\\u0301\",\"line\":\"a\\nb\",\"quote\":\"\\\"\",\"backslash\":\"\\\\\"}",
+      "canonical_utf8": "{\"backslash\":\"\\\\\",\"composed\":\"é\",\"decomposed\":\"é\",\"line\":\"a\\nb\",\"quote\":\"\\\"\"}",
+      "sha256": "a3efb5525f222dd6f723f8b878a579ea6ce92873cf7b92f5bc50314e2fc6a904"
+    }
+  ],
+  "reject_inputs": [
+    "{\"a\":1,\"a\":2}",
+    "{\"x\":NaN}",
+    "{\"x\":Infinity}",
+    "{\"x\":\"\\udead\"}",
+    "{\"capture_revision\":9007199254740992}"
+  ],
+  "rejection_note": "First four are invalid JCS/I-JSON; final integer violates the Faces domain safe-integer limit. Reject before hashing."
+}

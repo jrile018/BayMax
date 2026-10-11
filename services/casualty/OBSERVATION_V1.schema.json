@@ -1,0 +1,1528 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Faces live webcam observation contract candidate v1",
+  "description": "Controller-only reviewed design candidate. Shape validation does not verify permission, model execution, evaluation, reviewer authentication, or clinical status. Cross-field invariants and external trust checks are mandatory in OBSERVATION_V1.md. Fingerprints use RFC 8785 JCS on the entire envelope; finite IEEE-754 numbers and integer values at most 2^53-1. Dedicated evaluation permission is independent of routine demo capture.",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "faces-live-observation-v1"
+        },
+        "message_kind": {
+          "const": "capture_permission"
+        },
+        "record": {
+          "$ref": "#/$defs/permission"
+        }
+      },
+      "required": [
+        "schema_version",
+        "message_kind",
+        "record"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "faces-live-observation-v1"
+        },
+        "message_kind": {
+          "const": "localization"
+        },
+        "record": {
+          "$ref": "#/$defs/localization"
+        }
+      },
+      "required": [
+        "schema_version",
+        "message_kind",
+        "record"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "faces-live-observation-v1"
+        },
+        "message_kind": {
+          "const": "concern_observation"
+        },
+        "record": {
+          "$ref": "#/$defs/observation"
+        }
+      },
+      "required": [
+        "schema_version",
+        "message_kind",
+        "record"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "faces-live-observation-v1"
+        },
+        "message_kind": {
+          "const": "evaluation_receipt"
+        },
+        "record": {
+          "$ref": "#/$defs/evaluation"
+        }
+      },
+      "required": [
+        "schema_version",
+        "message_kind",
+        "record"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "faces-live-observation-v1"
+        },
+        "message_kind": {
+          "const": "human_review"
+        },
+        "record": {
+          "$ref": "#/$defs/review"
+        }
+      },
+      "required": [
+        "schema_version",
+        "message_kind",
+        "record"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "faces-live-observation-v1"
+        },
+        "message_kind": {
+          "const": "capture_receipt"
+        },
+        "record": {
+          "$ref": "#/$defs/capture_receipt"
+        }
+      },
+      "required": [
+        "schema_version",
+        "message_kind",
+        "record"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "faces-live-observation-v1"
+        },
+        "message_kind": {
+          "const": "runner_request"
+        },
+        "record": {
+          "$ref": "#/$defs/runner_request"
+        }
+      },
+      "required": [
+        "schema_version",
+        "message_kind",
+        "record"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "faces-live-observation-v1"
+        },
+        "message_kind": {
+          "const": "execution_receipt"
+        },
+        "record": {
+          "$ref": "#/$defs/execution_receipt"
+        }
+      },
+      "required": [
+        "schema_version",
+        "message_kind",
+        "record"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "faces-live-observation-v1"
+        },
+        "message_kind": {
+          "const": "evaluation_permission"
+        },
+        "record": {
+          "$ref": "#/$defs/evaluation_permission"
+        }
+      },
+      "required": [
+        "schema_version",
+        "message_kind",
+        "record"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "faces-live-observation-v1"
+        },
+        "message_kind": {
+          "const": "localization_request"
+        },
+        "record": {
+          "$ref": "#/$defs/localization_request"
+        }
+      },
+      "required": [
+        "schema_version",
+        "message_kind",
+        "record"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "faces-live-observation-v1"
+        },
+        "message_kind": {
+          "const": "localization_execution_receipt"
+        },
+        "record": {
+          "$ref": "#/$defs/localization_execution_receipt"
+        }
+      },
+      "required": [
+        "schema_version",
+        "message_kind",
+        "record"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "faces-live-observation-v1"
+        },
+        "message_kind": {
+          "const": "localization_evaluation_receipt"
+        },
+        "record": {
+          "$ref": "#/$defs/localization_evaluation_receipt"
+        }
+      },
+      "required": [
+        "schema_version",
+        "message_kind",
+        "record"
+      ]
+    }
+  ],
+  "$defs": {
+    "box": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "x1": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "y1": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "x2": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "y2": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "required": [
+        "x1",
+        "y1",
+        "x2",
+        "y2"
+      ]
+    },
+    "frame": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "frame_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "camera_session_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "arrival_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "arrival_revision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "capture_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "capture_revision": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_kind": {
+          "const": "live_webcam"
+        },
+        "captured_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "source_image_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "image_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8192
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8192
+        },
+        "orientation": {
+          "const": "upright_raw_raster"
+        },
+        "permission_receipt_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "frame_id",
+        "camera_session_id",
+        "arrival_id",
+        "arrival_revision",
+        "capture_id",
+        "capture_revision",
+        "source_kind",
+        "captured_at",
+        "source_image_sha256",
+        "image_sha256",
+        "width",
+        "height",
+        "orientation",
+        "permission_receipt_sha256"
+      ]
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "model_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "model_revision": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "weights_manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "processor_manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "runtime_manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "prompt_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "decoding_config_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "adapter_source_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "model_id",
+        "model_revision",
+        "weights_manifest_sha256",
+        "processor_manifest_sha256",
+        "runtime_manifest_sha256",
+        "prompt_sha256",
+        "decoding_config_sha256",
+        "adapter_source_sha256"
+      ]
+    },
+    "permission": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "camera_session_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "arrival_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "actor_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "assigned_role": {
+          "enum": [
+            "volunteer"
+          ]
+        },
+        "purposes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "preview_face_localization",
+              "capture",
+              "visual_assessment",
+              "private_display",
+              "human_review"
+            ]
+          },
+          "uniqueItems": true,
+          "minItems": 1,
+          "maxItems": 5
+        },
+        "consent_receipt_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "rights_review_receipt_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "issued_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "retention_deadline": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "withdrawal_epoch": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "session_scope": {
+          "const": "private_exercise"
+        },
+        "capture_source": {
+          "const": "live_webcam"
+        },
+        "staging_label": {
+          "enum": [
+            "ordinary_appearance",
+            "non_injury_stage_makeup"
+          ]
+        },
+        "public_use_allowed": {
+          "const": false
+        },
+        "dataset_reuse_allowed": {
+          "const": false
+        },
+        "derived_retention_deadline": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "camera_session_id",
+        "arrival_id",
+        "actor_id",
+        "assigned_role",
+        "purposes",
+        "consent_receipt_sha256",
+        "rights_review_receipt_sha256",
+        "issued_at",
+        "expires_at",
+        "retention_deadline",
+        "withdrawal_epoch",
+        "session_scope",
+        "capture_source",
+        "staging_label",
+        "public_use_allowed",
+        "dataset_reuse_allowed",
+        "derived_retention_deadline"
+      ]
+    },
+    "localization": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "frame": {
+          "$ref": "#/$defs/frame"
+        },
+        "artifact": {
+          "$ref": "#/$defs/artifact"
+        },
+        "status": {
+          "enum": [
+            "localized",
+            "no_face",
+            "occluded",
+            "failed",
+            "multiple_faces"
+          ]
+        },
+        "boxes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/box"
+          },
+          "maxItems": 50
+        },
+        "selected_face_index": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "origin": {
+          "enum": [
+            "actual_detector",
+            "contract_test_fixture"
+          ]
+        },
+        "execution_receipt_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reason": {
+          "enum": [
+            "face_localized",
+            "no_face_found",
+            "face_occluded",
+            "detector_failed",
+            "multiple_faces_ambiguous",
+            "capture_unusable"
+          ]
+        },
+        "round_trip_ms": {
+          "type": "number",
+          "minimum": 0
+        },
+        "capture_receipt_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "frame",
+        "artifact",
+        "status",
+        "boxes",
+        "selected_face_index",
+        "origin",
+        "execution_receipt_sha256",
+        "reason",
+        "round_trip_ms",
+        "capture_receipt_sha256"
+      ]
+    },
+    "cue": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cue_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "category": {
+          "enum": [
+            "bruise_like_discoloration",
+            "cut_or_abrasion",
+            "visible_blood"
+          ]
+        },
+        "region": {
+          "$ref": "#/$defs/box"
+        },
+        "reason_code": {
+          "enum": [
+            "bruise_like_color_pattern",
+            "visible_surface_break",
+            "visible_red_fluid"
+          ]
+        }
+      },
+      "required": [
+        "cue_id",
+        "category",
+        "region",
+        "reason_code"
+      ]
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "observation_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "frame": {
+          "$ref": "#/$defs/frame"
+        },
+        "localization_receipt_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "outcome": {
+          "enum": [
+            "possible_visible_concern",
+            "no_visible_concern_detected",
+            "unable_to_assess"
+          ]
+        },
+        "assessment_region": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/box"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/cue"
+          },
+          "maxItems": 16
+        },
+        "reason_code": {
+          "enum": [
+            "supported_visible_cue",
+            "no_supported_cue_in_region",
+            "face_not_localized",
+            "multiple_faces_ambiguous",
+            "capture_unusable",
+            "unsupported_input",
+            "evaluation_not_accepted",
+            "runner_unavailable",
+            "runner_failed",
+            "invalid_runner_output",
+            "stale_capture",
+            "permission_invalid",
+            "category_not_evaluated",
+            "uncertain_visible_evidence"
+          ]
+        },
+        "origin": {
+          "enum": [
+            "actual_evaluated_runner",
+            "unavailable",
+            "contract_test_fixture",
+            "scripted_training"
+          ]
+        },
+        "evaluation_receipt_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "execution_receipt_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "latency_ms": {
+          "type": "number",
+          "minimum": 0
+        },
+        "operational_eligible": {
+          "const": false
+        },
+        "capture_receipt_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "observation_id",
+        "frame",
+        "localization_receipt_sha256",
+        "outcome",
+        "assessment_region",
+        "cues",
+        "reason_code",
+        "origin",
+        "evaluation_receipt_sha256",
+        "execution_receipt_sha256",
+        "created_at",
+        "latency_ms",
+        "operational_eligible",
+        "capture_receipt_sha256"
+      ]
+    },
+    "evaluation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "evaluation_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "artifact": {
+          "$ref": "#/$defs/artifact"
+        },
+        "task": {
+          "const": "visible_facial_concerns"
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "bruise_like_discoloration",
+              "cut_or_abrasion",
+              "visible_blood"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 3,
+          "uniqueItems": true
+        },
+        "plan_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "dataset_manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "split_manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "metrics_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "review_receipt_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "scope": {
+          "const": "consented_staged_webcam_demo"
+        },
+        "decision": {
+          "enum": [
+            "accepted_for_staged_demo",
+            "rejected",
+            "incomplete"
+          ]
+        },
+        "evaluated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "evaluation_permission_manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "evaluation_id",
+        "artifact",
+        "task",
+        "categories",
+        "plan_sha256",
+        "dataset_manifest_sha256",
+        "split_manifest_sha256",
+        "metrics_sha256",
+        "review_receipt_sha256",
+        "scope",
+        "decision",
+        "evaluated_at",
+        "evaluation_permission_manifest_sha256"
+      ]
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "review_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "observation_fingerprint": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "arrival_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "capture_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "capture_revision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "reviewer_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "reviewer_identity_receipt_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "assigned_role": {
+          "const": "care_reviewer"
+        },
+        "decision": {
+          "enum": [
+            "confirm_visible_concern",
+            "no_additional_visible_concern",
+            "needs_further_human_review"
+          ]
+        },
+        "confirmed_cue_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+          },
+          "uniqueItems": true,
+          "maxItems": 16
+        },
+        "reviewed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "operational_eligible": {
+          "const": false
+        }
+      },
+      "required": [
+        "review_id",
+        "observation_fingerprint",
+        "arrival_id",
+        "capture_id",
+        "capture_revision",
+        "reviewer_id",
+        "reviewer_identity_receipt_sha256",
+        "assigned_role",
+        "decision",
+        "confirmed_cue_ids",
+        "reviewed_at",
+        "operational_eligible"
+      ]
+    },
+    "runner_output": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "outcome": {
+          "enum": [
+            "possible_visible_concern",
+            "no_visible_concern_detected",
+            "unable_to_assess"
+          ]
+        },
+        "assessment_region": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/box"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/cue"
+          },
+          "maxItems": 16
+        },
+        "reason_code": {
+          "enum": [
+            "supported_visible_cue",
+            "no_supported_cue_in_region",
+            "face_not_localized",
+            "multiple_faces_ambiguous",
+            "capture_unusable",
+            "unsupported_input",
+            "evaluation_not_accepted",
+            "runner_unavailable",
+            "runner_failed",
+            "invalid_runner_output",
+            "stale_capture",
+            "permission_invalid",
+            "category_not_evaluated",
+            "uncertain_visible_evidence"
+          ]
+        }
+      },
+      "required": [
+        "outcome",
+        "assessment_region",
+        "cues",
+        "reason_code"
+      ]
+    },
+    "capture_receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "frame_fingerprint": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "permission_receipt_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "normalization_manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "normalized_image_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "accepted_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "withdrawal_epoch": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "purpose": {
+          "enum": [
+            "preview_face_localization",
+            "capture"
+          ]
+        },
+        "storage_kind": {
+          "enum": [
+            "transient_preview",
+            "private_selected_capture"
+          ]
+        },
+        "issuer_identity_receipt_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "frame_fingerprint",
+        "permission_receipt_sha256",
+        "normalization_manifest_sha256",
+        "normalized_image_sha256",
+        "accepted_at",
+        "expires_at",
+        "withdrawal_epoch",
+        "purpose",
+        "storage_kind",
+        "issuer_identity_receipt_sha256"
+      ]
+    },
+    "runner_request": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "frame": {
+          "$ref": "#/$defs/frame"
+        },
+        "capture_receipt_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "localization_receipt_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "evaluation_receipt_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "artifact": {
+          "$ref": "#/$defs/artifact"
+        },
+        "task": {
+          "const": "visible_facial_concerns"
+        },
+        "deadline_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "request_id",
+        "frame",
+        "capture_receipt_sha256",
+        "localization_receipt_sha256",
+        "evaluation_receipt_sha256",
+        "artifact",
+        "task",
+        "deadline_at"
+      ]
+    },
+    "execution_receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "execution_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "runner_request_fingerprint": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "artifact": {
+          "$ref": "#/$defs/artifact"
+        },
+        "origin": {
+          "enum": [
+            "actual_visual_runner",
+            "contract_test_fixture"
+          ]
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "ended_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "state": {
+          "enum": [
+            "completed",
+            "failed",
+            "cancelled"
+          ]
+        },
+        "output": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/runner_output"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "output_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "runtime_log_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "process_exit_code": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": -2147483648,
+              "maximum": 2147483647
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "issuer_identity_receipt_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "execution_id",
+        "runner_request_fingerprint",
+        "artifact",
+        "origin",
+        "started_at",
+        "ended_at",
+        "state",
+        "output",
+        "output_sha256",
+        "runtime_log_sha256",
+        "process_exit_code",
+        "issuer_identity_receipt_sha256"
+      ]
+    },
+    "evaluation_permission": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "participant_ref": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "camera_session_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+          },
+          "minItems": 1,
+          "maxItems": 128,
+          "uniqueItems": true
+        },
+        "consent_receipt_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "rights_review_receipt_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "purposes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "evaluation_collection",
+              "annotation",
+              "calibration",
+              "heldout_evaluation",
+              "private_report_retention"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 5,
+          "uniqueItems": true
+        },
+        "issued_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "media_retention_deadline": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "derived_retention_deadline": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "withdrawal_epoch": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "scope": {
+          "const": "dedicated_consented_staged_evaluation"
+        },
+        "model_training_allowed": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        },
+        "deidentified_aggregate_retention_allowed": {
+          "type": "boolean"
+        },
+        "issuer_identity_receipt_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "participant_ref",
+        "camera_session_ids",
+        "consent_receipt_sha256",
+        "rights_review_receipt_sha256",
+        "purposes",
+        "issued_at",
+        "expires_at",
+        "media_retention_deadline",
+        "derived_retention_deadline",
+        "withdrawal_epoch",
+        "scope",
+        "model_training_allowed",
+        "public_use_allowed",
+        "deidentified_aggregate_retention_allowed",
+        "issuer_identity_receipt_sha256"
+      ]
+    },
+    "localization_output": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "localized",
+            "no_face",
+            "occluded",
+            "failed",
+            "multiple_faces"
+          ]
+        },
+        "boxes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/box"
+          },
+          "maxItems": 50
+        },
+        "selected_face_index": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reason": {
+          "enum": [
+            "face_localized",
+            "no_face_found",
+            "face_occluded",
+            "detector_failed",
+            "multiple_faces_ambiguous",
+            "capture_unusable"
+          ]
+        }
+      },
+      "required": [
+        "status",
+        "boxes",
+        "selected_face_index",
+        "reason"
+      ]
+    },
+    "localization_request": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "frame": {
+          "$ref": "#/$defs/frame"
+        },
+        "capture_receipt_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "artifact": {
+          "$ref": "#/$defs/artifact"
+        },
+        "task": {
+          "const": "face_localization"
+        },
+        "evaluation_receipt_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "deadline_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "request_id",
+        "frame",
+        "capture_receipt_sha256",
+        "artifact",
+        "task",
+        "evaluation_receipt_sha256",
+        "deadline_at"
+      ]
+    },
+    "localization_execution_receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "execution_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "artifact": {
+          "$ref": "#/$defs/artifact"
+        },
+        "origin": {
+          "enum": [
+            "actual_detector",
+            "contract_test_fixture"
+          ]
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "ended_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "state": {
+          "enum": [
+            "completed",
+            "failed",
+            "cancelled"
+          ]
+        },
+        "output": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/localization_output"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "output_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "runtime_log_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "process_exit_code": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": -2147483648,
+              "maximum": 2147483647
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "issuer_identity_receipt_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "localization_request_fingerprint": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "execution_id",
+        "artifact",
+        "origin",
+        "started_at",
+        "ended_at",
+        "state",
+        "output",
+        "output_sha256",
+        "runtime_log_sha256",
+        "process_exit_code",
+        "issuer_identity_receipt_sha256",
+        "localization_request_fingerprint"
+      ]
+    },
+    "localization_evaluation_receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "evaluation_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "artifact": {
+          "$ref": "#/$defs/artifact"
+        },
+        "task": {
+          "const": "face_localization"
+        },
+        "plan_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "dataset_manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "split_manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "metrics_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "review_receipt_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "scope": {
+          "const": "consented_staged_webcam_demo"
+        },
+        "decision": {
+          "enum": [
+            "accepted_for_staged_demo",
+            "rejected",
+            "incomplete"
+          ]
+        },
+        "evaluated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "evaluation_permission_manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "evaluation_id",
+        "artifact",
+        "task",
+        "plan_sha256",
+        "dataset_manifest_sha256",
+        "split_manifest_sha256",
+        "metrics_sha256",
+        "review_receipt_sha256",
+        "scope",
+        "decision",
+        "evaluated_at",
+        "evaluation_permission_manifest_sha256"
+      ]
+    }
+  }
+}
