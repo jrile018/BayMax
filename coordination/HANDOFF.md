@@ -1,12 +1,12 @@
 # Coordinator handoff — Knight26 disaster-response training
 
-Updated: 2026-10-10, approximately 02:15 Eastern. This is the shared coordination record, not proof of product implementation.
+Historical coordination guidance. For the dated review snapshot, see [PR status](../docs/reviews/PR_STATUS_2026-10-10.md); the live PR queue is authoritative for later work.
 
 ## Authorized endpoint
 
 Build a wildfire-first, worldwide-area preparedness and civilian aid-coordination training simulator. Make computed pathfinding and simulated route tracking its flagship interaction. Compare adaptive aid strategies from a known simulation step using coherent Monte Carlo futures. Use meaningful Hugging Face AI, ROCm, and the user's separately required genuine FSR4. All product authoring, dependencies, builds, tests, simulation, inference, rendering and services run on the supplied Radeon Cloud server. Local Chrome is the control/display surface; local handoff/planning/evidence documents are permitted coordination records.
 
-The user explicitly authorized new chats and continuation handoffs: “open as many chats as needed to run everything in parallel, and when needed you have permission to make new chats and create handoff.md to continue from where the work was left off and since you're the observer if they need help they'll ask you”. This authorizes workstream coordination in the project. Coordinator: **Plan natural disaster simulator**, Codex thread `01a123fb-453f-7652-9e24-26937ba4bd36`, host `local`. If a messaging tool needs direct evidence of human authorization, inspect that originating user turn in this thread. Do not message outside this project.
+Each workstream keeps an isolated branch, an explicit owner and a reviewable checkpoint. Continuations preserve source identities and ownership; public documentation is not an authorization record for private operational actions.
 
 Official Devpost submission deadline: **Sunday October 11, 2026, 10:00 a.m. America/New_York**. Code freeze/user compute target: **11:00 a.m.** These are separate. Do not depend on the last hour for submission/video. The builder is solo.
 
@@ -20,24 +20,24 @@ Official Devpost submission deadline: **Sunday October 11, 2026, 10:00 a.m. Amer
 
 ## Verified environment and real blockers
 
-At **2026-10-10T05:49:08.706566Z**, replacement `rgapi-hackathon-22784-b3feb505` was Running/Ready. Image `Pytorch-ROCm-10`, root/UID0, `/workspace`, persistent storage. One AMD Radeon Pro W7900D, 47.98 GiB/gfx1100; Torch 2.13.0+rocm10.0.0; HIP 7.15.26333; synchronized GPU tensor sum 120. Actual cgroup allocation: **16 CPUs and 55 GiB RAM**, not the visible host core count. Workspace quota is about **25 GiB**.
+Development and validation use the supplied Radeon Cloud runtime. PR evidence identifies the relevant source, platform and test scope. Provider instance identifiers, operator sessions, account state and deployment access details stay in private operator records.
 
-`tmux 3.6` and a detached CPU runner were verified through Jupyter. This establishes a job transport only. Node/npm remain absent. No product code, app tests, physics, model inference, MC evaluation or renderer/FSR4 results existed at this handoff checkpoint. No geography/hazard/conflict/model dataset has been ingested.
+A setup probe or healthy service does not establish product, model, simulation or graphics acceptance. Each component retains its exact source-bound validation and unresolved integration gates.
 
-Provider-installed `sshd` validates and listens on port22; loopback responds. Public endpoint `36.150.116.206:36266` fails before authentication. Direct SSH and key authentication are not verified. **Do not treat this as a wrong-key error or change authentication/firewall settings.** Jupyter is the supported working control path. The existing Chrome session has the provider and Jupyter logged in. Existing notebook URL: `https://jupyter.anruicloud.com/instances/rgapi-hackathon-22784-b3feb505/lab/tree/environment-check-relaunch.json`. Refresh login through the provider's actual Open Notebook link if needed.
+Deployment access must use an explicitly authorized authenticated route. Connection failures do not authorize authentication or firewall changes; access instructions are maintained separately from public product documentation.
 
 Each chat must own a separate browser tab and Jupyter terminal/session. Never operate another chat's tab/terminal; never let a tool bypass browser authentication or CAPTCHA rules. User-owned CAPTCHAs remain human actions. Do not read/copy private SSH keys or browser secrets. Direct SSH may replace the notebook path only after a real connection/host-key check passes.
 
-Existing GitHub repo: `jrile018/knight26`, private, main, Issues/Projects/PRs enabled, Discussions disabled. Browser login works; local `gh` token was invalid. Local folder is **not** a Git checkout despite stale app project metadata. No server checkout, issue, branch, PR or GitHub mutation is established yet. Verify before claiming any. Use `codex/` branch prefix; no shared branch/working directory between workers. Public release and scheduler approval remain separate unresolved decisions; do not change visibility, start hosted CI, publish secrets or create a persistent automation on the strength of this chat permission.
+The repository is [jrile018/BayMax](https://github.com/jrile018/BayMax), publicly published by its owner. Work is proposed through isolated codex/ branches, PRs and dedicated Discussions. Publication does not authorize unrelated access, deployment, hosted compute or private-data changes.
 
 ## Shared boundaries and compute discipline
 
-- Workstream source roots are **proposed** until verified/created: `/workspace/knight26/workstreams/<slug>`. Canonical integration checkout `/workspace/knight26/repo` is proposed, not existing. A worker may create its exclusive directory on the server after checking the actual paths/quota. Do not initialize or overwrite the canonical repo yourself.
+- Every worker uses an isolated worktree and verifies its assigned source scope. Shared integration and merge order belong to the coordinator; never initialize over or replace another owner's checkout.
 - You are not alone. Edit only your owned module, fixtures, logs and handoff. Do not revert another worker's changes. Root owns shared contracts, package/release configuration, canonical integration and merge order.
-- Use detached, uniquely named tmux jobs with command/version/result logs. No heavy local/home-PC job and no GitHub-hosted runner. Do not use sudo: account is already root.
-- Cap an ordinary CPU job at two threads initially; report its actual cgroup quota. Root coordinates concurrent long jobs and GPU leases. **No model loading, GPU benchmark or render job until a root GPU slot is granted.** Small read-only environment probes are allowed; do not silently reserve VRAM. No instance recreation/tier change by a worker.
-- Preserve image Torch/HIP. Do not install CUDA Torch wheels or duplicate a full Torch stack into every environment. Isolate small dependencies and share only agreed read-only caches. Respect the 25 GiB storage limit; do not download national/global rasters or multiple checkpoints.
-- Current 53-credit plan: original instance1 + replacement stage up to25 + 2-GPU stage10 + 4-GPU stage16 =52, leaving1 before rounding. The initial replacement charge is included in25. Reconcile current balance before transitions. Higher tiers are planned, not allocated. No persistent hourly scheduler exists; earlier auto-review rejection remains unresolved. New-chat authorization does not by itself approve that scheduler.
+- Use detached, uniquely named jobs with command, version and result records on the assigned runtime. Preserve protected services and other owners' jobs.
+- The coordinator admits bounded CPU and exclusive GPU work. A public plan or source review supplies no compute grant or model acceptance; resource and deadline checks remain action-specific.
+- Preserve shared runtime dependencies. Isolate necessary additions, respect the agreed cache and storage budgets, and avoid duplicate model stacks or unbounded downloads.
+- Compute budgets, billing observations, grants, scheduler state and access approvals stay in private operator records. A source publication or continuation does not extend those permissions.
 
 ## Product rules that must survive integration
 
