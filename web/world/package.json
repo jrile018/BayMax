@@ -1,0 +1,17 @@
+{
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.14 <25"
+  },
+  "scripts": {
+    "build": "vite build && node build-assets.mjs",
+    "test": "node --test --test-concurrency=1 tests/*.test.mjs"
+  },
+  "dependencies": {
+    "@cesium/engine": "22.3.0"
+  },
+  "devDependencies": {
+    "vite": "6.4.3"
+  }
+}
