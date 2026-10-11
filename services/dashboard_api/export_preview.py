@@ -3,38 +3,46 @@ import argparse
 import base64
 import json
 import re
+from html import escape
 from html.parser import HTMLParser
 from urllib.parse import unquote, urlsplit
 from pathlib import Path
 from .replay import ReplayStore
 from .server import ROOT
+from .situation import PublicationReader
 
 
-def render_preview(store, web_root):
+def render_preview(store, web_root, situation_provider=None):
     web_root=Path(web_root)
     bootstrap=store.bootstrap()
     saved={'bootstrap':bootstrap,'frames':[store.frame(i) for i in range(bootstrap['replay']['frame_count'])]}
+    accepted=situation_provider() if situation_provider is not None else None
+    saved['situation']={'status':'available','snapshot':accepted} if accepted is not None else {'status':'unavailable','reason':'No accepted snapshot embedded in this saved preview'}
     encoded=json.dumps(saved,ensure_ascii=False,allow_nan=False,separators=(',',':')).replace('<',r'\u003c')
     bridge=r"""
 const savedReplay = SAVED;
 window.fetch = async function(input) {
   const url = new URL(String(input), window.location.href);
   let data, status = 200;
-  if (url.pathname === '/api/bootstrap') data = savedReplay.bootstrap;
-  else if (url.pathname === '/api/frame') {
+  if (url.origin !== window.location.origin) {status=404;data={error:'Saved replay has no live service endpoint'};}
+  else if (url.pathname.endsWith('/api/bootstrap')) data = savedReplay.bootstrap;
+  else if (url.pathname.endsWith('/api/frame')) {
     const indices = url.searchParams.getAll('index');
     const raw = indices.length === 1 ? indices[0] : '';
     const index = /^-?[0-9]+$/.test(raw) ? Number(raw) : NaN;
     if (!Number.isInteger(index) || index < 0 || index >= savedReplay.frames.length) {status=400;data={error:'Saved frame index out of range'};}
     else data = savedReplay.frames[index];
-  } else if (url.pathname === '/api/coverage') {
+  } else if (url.pathname.endsWith('/api/coverage')) {
     data={available:false,area_id:null,label:'Saved replay',coverage:[],message:'Live coverage query unavailable in this saved replay. The recorded area/source panel remains authoritative.'};
+  } else if (url.pathname.endsWith('/api/situation')) {
+    data=savedReplay.situation;
   } else {status=404;data={error:'Saved replay has no live service endpoint'};}
   return new Response(JSON.stringify(data), {status,headers:{'Content-Type':'application/json'}});
 };
 """.replace('SAVED',encoded)
     mode_label='Saved mock replay' if bootstrap.get('mode') == 'mock-replay' else 'Saved recorded replay'
-    banner='<div class="saved-preview-banner" role="note">'+mode_label+' · generated on Radeon Cloud · exact recorded frames · Earth globe and satellite imagery require an internet connection · live actions and coverage queries unavailable</div>'
+    accepted_label=' · accepted source as-of '+escape(str(accepted['cutoff_utc']))+' · saved snapshot, not live' if accepted is not None else ' · no accepted source embedded'
+    banner='<div class="saved-preview-banner" role="note">'+mode_label+' · generated on Radeon Cloud · exact recorded frames'+accepted_label+' · Earth globe and satellite imagery require an internet connection · live actions and coverage queries unavailable</div>'
     texture_path=web_root/'assets/nasa-blue-marble-2009.jpg'
     texture=None
     if texture_path.is_file():
@@ -141,9 +149,11 @@ def main():
     parser.add_argument('--area',type=Path,default=ROOT/'fixtures/geography/paradise/area.json')
     parser.add_argument('--replay',type=Path,default=ROOT/'fixtures/replay_ui/paradise_mock.json')
     parser.add_argument('--web',type=Path,default=ROOT/'web')
+    parser.add_argument('--incident-publication-dir',type=Path,help='Trusted accepted publication directory to embed as an as-of snapshot')
     parser.add_argument('--output',type=Path,required=True)
     args=parser.parse_args();store=ReplayStore(args.area,args.replay)
-    args.output.parent.mkdir(parents=True,exist_ok=True);args.output.write_text(render_preview(store,args.web))
+    reader=PublicationReader(args.incident_publication_dir) if args.incident_publication_dir else None
+    args.output.parent.mkdir(parents=True,exist_ok=True);args.output.write_text(render_preview(store,args.web,reader.read if reader else None))
     print(f'Saved recorded preview: {args.output}')
 
 if __name__=='__main__':main()

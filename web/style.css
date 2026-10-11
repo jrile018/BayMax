@@ -99,3 +99,65 @@ body.light .situation-intro{background:#d9efec}body.light .situation-card{backgr
 #map g[hidden],.map-legend[hidden]{display:none}.legend-accepted-point{background:#21d3cf!important;border:2px solid #072e36!important;border-radius:50%}.legend-accepted-area{background:#23c9c730!important;border:2px dashed #23e5dd!important}
 
 .situation-nav{display:flex;gap:7px;padding:10px 15px;border-bottom:1px solid var(--line)}.situation-nav button{flex:1;min-height:32px;border:1px solid #4b7080;border-radius:3px;background:#1b3b48;color:var(--cyan);font-size:10px;font-weight:700}.situation-nav button:disabled{opacity:.45}.situation-mode .replay-dock{pointer-events:none;opacity:.4}.situation-mode .header-metrics{display:none}
+
+
+/* Earth keeps the whole workspace; replay controls belong to the local map. */
+body.earth-mode .app-shell{grid-template-rows:64px minmax(0,1fr)}
+body.earth-mode .replay-dock{display:none}
+@media(max-width:900px){body.earth-mode .app-shell{grid-template-rows:58px minmax(0,1fr)}}
+@media(max-width:760px){body.earth-mode .app-shell{grid-template-rows:56px minmax(0,1fr)}}
+
+
+/* Earth is a full-window source context, with its own compact controls. */
+body.earth-mode .app-shell,body.earth-mode:has(.saved-preview-banner) .app-shell{height:100dvh;grid-template-rows:minmax(0,1fr)}
+body.earth-mode .topbar,body.earth-mode .replay-dock,body.earth-mode .saved-preview-banner,body.earth-mode .map-topline,body.earth-mode .source-banner,body.earth-mode .map-tools,body.earth-mode .panel,body.earth-mode .collapsed-rail,body.earth-mode .mobile-scrim{display:none!important}
+.earth-head{position:absolute;z-index:7;left:22px;right:22px;top:18px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;pointer-events:none}
+.earth-brand{display:grid;gap:3px;padding:11px 14px;background:#071927d9;border:1px solid #446571;border-radius:5px;box-shadow:var(--shadow)}
+.earth-brand strong{font-size:15px;letter-spacing:-.02em}.earth-brand small{font:10px var(--mono);color:#accbd1;max-width:350px;line-height:1.4}
+.earth-head button{pointer-events:auto;background:#a8e3da;color:#052730;border:1px solid #c8f5ec;border-radius:4px;padding:11px 14px;font:700 11px var(--mono);box-shadow:var(--shadow)}
+.earth-head button:hover{background:#dcfff6}
+.earth-mode .earth-hero{left:22px;top:145px;bottom:auto;right:auto;transform:none;width:min(315px,calc(100vw - 44px));max-width:none;padding:16px;background:#071927db;border:1px solid #446571;border-radius:5px;box-shadow:var(--shadow);pointer-events:auto}
+.earth-hero h2{font-size:clamp(27px,2.8vw,40px);margin:9px 0}.earth-hero p{margin:0 0 13px;font-size:11px;line-height:1.5}
+.earth-place-list{display:grid;gap:5px;max-height:min(33vh,290px);overflow:auto;padding-right:3px}
+.earth-hero .earth-place-list button{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0;padding:9px 10px;width:100%;text-align:left;background:#163243e8;color:#edf7f5;border:1px solid #426774;box-shadow:none;font:600 11px var(--body)}
+.earth-hero .earth-place-list button:hover,.earth-hero .earth-place-list button[aria-pressed=true]{border-color:#a8e3da;background:#245160}
+.earth-place-list button small{display:block;color:#a7c4ca;font:9px var(--mono);margin:2px 0 0}.earth-place-list button b{color:#b3e7e0;font:14px var(--mono)}
+.earth-hero #earth-state{margin-top:10px;line-height:1.4}
+.earth-pin-layer{position:absolute;inset:0;z-index:4;pointer-events:none}
+.earth-pin{position:absolute;width:19px;height:19px;transform:translate(-50%,-50%);pointer-events:auto;border:3px solid #ffe5b4;border-radius:50%;background:#e99650;box-shadow:0 0 0 7px #e996504d,0 0 18px #e99650aa;font-size:0;cursor:pointer}
+.earth-pin.accepted{width:14px;height:14px;border-color:#c6fffa;background:#2cd0ce;box-shadow:0 0 0 5px #2cd0ce4d,0 0 16px #2cd0ceaa}
+.earth-pin:hover,.earth-pin[aria-pressed=true]{outline:2px solid white;outline-offset:7px}
+.earth-hover{position:absolute;z-index:8;max-width:265px;padding:9px 11px;background:#0d2534ed;border:1px solid #8ad8d6;border-radius:4px;box-shadow:var(--shadow);pointer-events:none}
+.earth-hover strong{font-size:12px}.earth-hover p{margin:4px 0 0;color:#bfd4d7;font-size:10px;line-height:1.4}
+.earth-detail{position:absolute;z-index:7;right:22px;top:105px;width:min(350px,calc(100vw - 44px));max-height:calc(100% - 158px);overflow:auto;padding:17px;background:#0a2231f0;border:1px solid #5b8991;border-radius:5px;box-shadow:var(--shadow)}
+.earth-detail-close{float:right;border:1px solid #567783;border-radius:3px;background:#163c4d;color:#eaf8f5;width:32px;height:32px;font-size:22px}.earth-detail>small:first-of-type{display:block;color:#8bd8d5;font:10px var(--mono);letter-spacing:.1em}.earth-detail h2{font-size:20px;line-height:1.15;margin:10px 32px 16px 0}.earth-detail h3{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#8bd8d5;margin:16px 0 7px}.earth-detail p{font-size:11px;line-height:1.55;color:#cadadd;margin:4px 0}.earth-detail .earth-detail-stat{color:#ffcf93;font:11px var(--mono)}.earth-detail a{display:inline-block;margin:5px 0;color:#9ce6e1;font-size:10px}.earth-detail-news{border-top:1px solid #3a5c69;padding-top:10px;color:#f7c588!important}.earth-detail #earth-detail-evidence{display:block;color:#91aeb7;line-height:1.45;margin-top:11px}.earth-detail #earth-detail-map{margin-top:13px;padding:9px 12px;background:#a8e3da;color:#052730;border:0;border-radius:3px;font:700 10px var(--mono)}
+.earth-mode .earth-credit{left:22px;right:auto;bottom:14px;max-width:calc(100% - 44px);line-height:1.4}
+@media(max-width:900px){.earth-mode .earth-hero{top:125px;width:260px}.earth-hero h2{font-size:27px}.earth-detail{right:12px;width:285px}}
+@media(max-width:760px){.earth-head{left:10px;right:10px;top:9px}.earth-brand{padding:7px 9px;max-width:55%}.earth-brand strong{font-size:12px}.earth-brand small{font-size:8px}.earth-head button{padding:9px;font-size:9px;min-height:44px}.earth-mode .earth-hero{left:10px;top:auto;bottom:42px;right:auto;width:min(250px,calc(100vw - 20px));max-height:42vh;overflow:auto;padding:10px}.earth-hero h2{font-size:22px;margin:5px 0}.earth-hero p{font-size:10px;margin-bottom:7px}.earth-place-list{max-height:17vh}.earth-hero .earth-place-list button{min-height:38px;padding:6px 8px}.earth-detail{left:10px;right:10px;top:75px;width:auto;max-height:calc(100% - 137px)}.earth-mode .earth-credit{left:auto;right:8px;bottom:7px;max-width:calc(100% - 270px);font-size:7px;text-align:right}}
+.earth-detail #earth-detail-evidence{overflow-wrap:anywhere}
+.earth-fleet{position:absolute;z-index:5;top:114px;right:20px;width:270px;padding:12px;border:1px solid #527e89;border-radius:5px;background:#071f2de8;color:#deefec;box-shadow:var(--shadow)}.earth-fleet>div{display:grid;gap:3px}.earth-fleet small{color:#8bd8d5;font:9px var(--mono);letter-spacing:.08em}.earth-fleet strong{font-size:16px}.earth-fleet span{color:#ffcd8e;font:10px var(--mono)}.earth-fleet svg{display:block;width:100%;height:116px;margin:8px 0;border:1px solid #355b69;background:linear-gradient(90deg,#163343 1px,transparent 1px),linear-gradient(#163343 1px,transparent 1px),#0a2635;background-size:22px 22px}.earth-fleet p{margin:4px 0 8px;color:#a8c6ca;font:9px/1.4 var(--mono)}.earth-fleet button{width:100%;padding:8px;border:1px solid #98d9d7;border-radius:3px;background:#a8e3da;color:#052730;font:700 10px var(--mono);cursor:pointer}.earth-fleet path{fill:none;stroke-width:2}.earth-fleet circle{stroke:#06202c;stroke-width:2}.earth-fleet text{fill:#ecf8f5;font:700 10px var(--mono)}.earth-panel:has(.earth-detail:not([hidden])) .earth-fleet{display:none}
+@media(max-width:900px){.earth-fleet{top:110px;right:10px;width:220px}.earth-fleet svg{height:95px}}@media(max-width:760px){.earth-fleet{top:72px;right:9px;width:195px;padding:7px}.earth-fleet strong{font-size:12px}.earth-fleet svg{height:75px;margin:5px 0}.earth-fleet p{display:none}.earth-fleet button{font-size:8px;padding:6px}.earth-fleet small{font-size:7px}}
+.earth-counts{padding:8px 10px;margin:0 0 8px;border:1px solid #3e6d79;background:#0a2735;color:#d8eceb;font:10px/1.4 var(--mono)}
+.earth-filters{display:flex;gap:4px;flex-wrap:wrap;margin:0 0 8px}
+.earth-hero .earth-filters button{margin:0;padding:5px 7px;border-color:#436875;background:#153341;color:#c9e1e1;box-shadow:none;font:10px var(--mono)}
+.earth-hero .earth-filters button[aria-pressed=true]{background:#a8e3da;color:#082b33;border-color:#d4fff6}
+.earth-place-list .earth-row.regional{border-left:3px solid #e9ad68}
+.earth-place-list .earth-row.quake{border-left:3px solid #41d2d2}
+.earth-place-list .earth-row.unconfirmed{border-left:3px dashed #f5c782}
+.earth-place-list .earth-row.context{border-left:3px solid #92a9b5}
+.earth-place-list>p{margin:6px 0;color:#bfd3d7;font:11px/1.4 var(--body)}
+
+/* Paradise OSM footprint scene. Heights/ground are illustrative, never terrain evidence. */
+body.local3d-mode .app-shell,body.local3d-mode:has(.saved-preview-banner) .app-shell{height:100dvh;grid-template-rows:minmax(0,1fr)}
+body.local3d-mode .topbar,body.local3d-mode .replay-dock,body.local3d-mode .saved-preview-banner,body.local3d-mode .map-topline,body.local3d-mode .source-banner,body.local3d-mode .map-tools,body.local3d-mode .map-legend,body.local3d-mode .map-telemetry,body.local3d-mode .map-attribution,body.local3d-mode .panel,body.local3d-mode .collapsed-rail,body.local3d-mode .mobile-scrim{display:none!important}
+.local3d-panel{position:absolute;inset:0;z-index:12;overflow:hidden;color:#eef6f3;background:#071827}
+.local3d-canvas,.local3d-canvas canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.local3d-head{position:absolute;z-index:2;top:18px;left:18px;right:18px;display:flex;align-items:flex-start;justify-content:space-between;gap:15px;pointer-events:none}
+.local3d-brand{max-width:min(460px,48vw);padding:13px 15px;border:1px solid #477284;border-radius:5px;background:#061b2bdc;box-shadow:var(--shadow);pointer-events:auto}
+.local3d-brand small,.local3d-training>small{font:10px var(--mono);letter-spacing:.12em;color:#8bd9dc}.local3d-brand h2{margin:5px 0;font-size:clamp(19px,2vw,28px)}.local3d-brand span{font:11px var(--mono);color:#ffcd8e}.local3d-brand p{margin:7px 0 0;color:#bed3d7;font:10px/1.5 var(--body)}
+.local3d-head-actions{display:flex;gap:8px;pointer-events:auto}.local3d-panel button,.local3d-panel select{border:1px solid #6294a0;border-radius:4px;background:#163949;color:#eaf7f5;padding:8px 10px;font:700 10px var(--mono)}.local3d-panel button:hover,.local3d-panel button:focus-visible{border-color:#b8f8ef;background:#255767}.local3d-head-actions button:last-child{background:#ace3d8;color:#062a32;border-color:#ddfff4}
+.local3d-training{position:absolute;z-index:2;top:128px;right:18px;width:min(340px,31vw);max-height:calc(100% - 185px);overflow:auto;padding:14px;border:1px solid #588594;border-radius:5px;background:#081f2eea;box-shadow:var(--shadow)}
+.local3d-frame{margin:8px 0;color:#ffce8d;font:700 11px var(--mono)}.local3d-fleet-list{display:grid;gap:5px;max-height:28vh;overflow:auto}.local3d-fleet-list button{text-align:left;border-left:4px solid var(--vehicle-color,#8dd9d9);background:#123442}.local3d-fleet-list button[aria-pressed=true]{background:#245768;border-color:var(--vehicle-color,#8dd9d9)}
+.local3d-hud{padding:10px;margin:10px 0;color:#d6e8e7;background:#0f3040;border:1px solid #426a77;font:10px/1.5 var(--mono)}.local3d-camera-controls,.local3d-playback{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}.local3d-camera-controls button:nth-child(2){background:#f3bd7e;color:#1a2b31;border-color:#ffe0ab}.local3d-playback label{align-self:center;margin-left:4px;color:#b8d2d6;font:10px var(--mono)}
+.local3d-credit{position:absolute;z-index:2;left:18px;bottom:14px;max-width:calc(100% - 36px);padding:6px 8px;color:#b4d0d4;background:#051824d9;border:1px solid #3c6974;font:10px/1.4 var(--mono)}.local3d-credit a{color:#b4e6e2}
+@media(max-width:760px){.local3d-head{left:9px;right:9px;top:9px;gap:6px}.local3d-brand{max-width:55%;padding:8px}.local3d-brand h2{font-size:16px}.local3d-brand p{font-size:9px}.local3d-head-actions{display:grid;gap:4px}.local3d-panel button,.local3d-panel select{min-height:38px;padding:6px;font-size:9px}.local3d-training{left:9px;right:9px;top:auto;bottom:38px;width:auto;max-height:42vh;padding:9px}.local3d-fleet-list{display:flex;gap:4px;max-height:none;overflow-x:auto;overflow-y:hidden}.local3d-fleet-list button{flex:0 0 145px;min-height:52px}.local3d-credit{left:9px;right:9px;bottom:5px;max-width:none;font-size:8px}}

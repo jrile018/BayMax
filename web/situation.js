@@ -75,7 +75,7 @@ window.KnightSituation=(()=>{
   if(!health||!Object.keys(health).length)text(healthSection,"p","situation-unknown","Unknown — no source health published");
   else for(const [sourceId,state] of Object.entries(health)){
    const row=el("div","situation-card");
-   text(row,"strong","",sourceId+" · "+(state?.status||"unknown"));
+   text(row,"strong","",sourceId+" · "+(state?.status||"unknown")+" at cutoff");
    if(state?.source_time)text(row,"small","","Last source time: "+when(state.source_time));
    if(state?.reason)text(row,"small","","Refresh status: "+state.reason);
    healthSection.append(row);
