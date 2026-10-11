@@ -33,5 +33,5 @@ export async function buildAssets(packageRoot,outDir){
  await fs.writeFile(path.join(outDir,'asset-manifest.json'),JSON.stringify(manifest,null,2)+'\n');return manifest;
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
- const manifest=await buildAssets(new URL('node_modules/@cesium/engine/',import.meta.url).pathname,new URL('dist/',import.meta.url).pathname);console.log('Assets verified:',manifest.files.length);
+ const manifest=await buildAssets(fileURLToPath(new URL('node_modules/@cesium/engine/',import.meta.url)),fileURLToPath(new URL('dist/',import.meta.url)));console.log('Assets verified:',manifest.files.length);
 }
